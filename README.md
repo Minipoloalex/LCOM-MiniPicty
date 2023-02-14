@@ -1,10 +1,10 @@
 # LCOM Project
 
-LCOM Project for group T&lt;m&gt;&lt;n&gt;G&lt;p&gt;&lt;q&gt;.
+LCOM Project for group T13G05.
 
 Group members:
 
-1. &lt;first name&gt; &lt;family name&gt; (&lt;email address&gt;)
-2. &lt;first name&gt; &lt;family name&gt; (&lt;email address&gt;)
-3. &lt;first name&gt; &lt;family name&gt; (&lt;email address&gt;)
-4. &lt;first name&gt; &lt;family name&gt; (&lt;email address&gt;)
+1. Félix Martins (up202108837@edu.fe.up.pt)
+2. Francisco da Ana (up202108762@edu.fe.up.pt)
+3. João Pereira (up202108848@edu.fe.up.pt)
+4. Tomás Vicente (up202108717@edu.fe.up.pt)
