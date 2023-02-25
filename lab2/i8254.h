@@ -18,6 +18,7 @@
 #define TIMER_1    0x41 /**< @brief Timer 1 count register */
 #define TIMER_2    0x42 /**< @brief Timer 2 count register */
 #define TIMER_CTRL 0x43 /**< @brief Control register */
+#define TIMER(n)   TIMER_0 + (n)
 
 #define SPEAKER_CTRL 0x61 /**< @brief Register for speaker control  */
 
