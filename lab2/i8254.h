@@ -18,7 +18,7 @@
 #define TIMER_1    0x41 /**< @brief Timer 1 count register */
 #define TIMER_2    0x42 /**< @brief Timer 2 count register */
 #define TIMER_CTRL 0x43 /**< @brief Control register */
-#define TIMER(n)   TIMER_0 + (n)
+#define TIMER(n)   TIMER_0 + (n)  /**< @brief Timer n (0, 1 or 2) count register */
 
 #define SPEAKER_CTRL 0x61 /**< @brief Register for speaker control  */
 
@@ -38,6 +38,7 @@
 #define TIMER_LSB_MSB (TIMER_LSB | TIMER_MSB) /**< @brief Initialize LSB first and MSB afterwards */
 
 /* Operating mode: bits 3, 2 and 1 */
+#define TIMER_NUMBER_MODES 6    /**< @brief Number of existing modes: from 0 to 5 */
 
 #define TIMER_SQR_WAVE (BIT(2) | BIT(1)) /**< @brief Mode 3: square wave generator */
 #define TIMER_RATE_GEN BIT(2)            /**< @brief Mode 2: rate generator */

@@ -5,16 +5,19 @@
 
 #include "i8254.h"
 
-uint16_t (convert_to_bcd)(uint16_t value) {
+int (convert_to_bcd)(uint16_t *ptr_value) {
+  uint16_t value = *ptr_value;
+  if (value >= 10000) return EXIT_FAILURE; /* doesn't fit in BCD */
+  
   uint16_t digit;
-  uint16_t result = 0;
+  *ptr_value = 0;
 
   for (int i = 0; value; i++) {
     digit = value % 10;
     value = value / 10;
-    result |= digit << (i * 4);
+    *ptr_value |= digit << (i * 4);
   }
-  return result;
+  return EXIT_SUCCESS;
 }
 
 int (timer_set_frequency)(uint8_t timer, uint32_t freq) {
@@ -41,7 +44,7 @@ int (timer_set_frequency)(uint8_t timer, uint32_t freq) {
   uint16_t value = (uint16_t) (TIMER_FREQ / freq);
 
   if (config & TIMER_BCD) {
-    value = convert_to_bcd(value);
+    if (convert_to_bcd(&value) != 0) return EXIT_FAILURE;
   }
   uint8_t lsb = 0;
   if (util_get_LSB(value, &lsb) != 0) return EXIT_FAILURE;
@@ -97,11 +100,10 @@ int (timer_display_conf)(uint8_t timer, uint8_t st,
       break;
     case tsf_mode:
       mask = BIT(1) | BIT(2) | BIT(3);
-      timer_status_field.count_mode = (st & mask) >> 1; // TODO: check for bugs
-      if ((timer_status_field.count_mode) > 5) {  /* there only exist 5 modes */
+      timer_status_field.count_mode = (st & mask) >> 1;
+      if ((timer_status_field.count_mode) > TIMER_NUMBER_MODES - 1) {
         timer_status_field.count_mode &= 3; /* e.g. mode 110 is mode 2 */
       }
-      
       break;
     case tsf_initial:
       mask = BIT(4) | BIT(5);
