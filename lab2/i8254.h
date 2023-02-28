@@ -24,12 +24,22 @@
 
 /* Timer control */
 
+/* Timer Maks */
+#define TIMER_MODE_MASK (BIT(1) | BIT(2) | BIT(3))
+#define TIMER_INITIAL_MASK (BIT(4) | BIT(5))
+#define TIMER_BASE_MASK BIT(0)
+
+/* Timer Positions */
+#define TIMER_COUNT_MODE_POSITION 1
+#define TIMER_INITIAL_MODE_POSITION 4
+
 /* Timer selection: bits 7 and 6 */
 
 #define TIMER_SEL0   0x00              /**< @brief Control Word for Timer 0 */
 #define TIMER_SEL1   BIT(6)            /**< @brief Control Word for Timer 1 */
 #define TIMER_SEL2   BIT(7)            /**< @brief Control Word for Timer 2 */
 #define TIMER_RB_CMD (BIT(7) | BIT(6)) /**< @brief Read Back Command */
+#define TIMER_CLEAR_TIMER_SEL 0x3F     /**< @brief Clear Timer Selector bits: 7 and 6 */
 
 /* Register selection: bits 5 and 4 */
 

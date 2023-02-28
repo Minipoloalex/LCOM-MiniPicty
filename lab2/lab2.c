@@ -42,9 +42,53 @@ int(timer_test_time_base)(uint8_t timer, uint32_t freq) {
   return EXIT_SUCCESS;
 }
 
-int(timer_test_int)(uint8_t time) {
-  /* To be implemented by the students */
-  printf("%s is not yet implemented!\n", __func__);
+extern int counter;
 
-  return 1;
+int(timer_test_int)(uint8_t time) {
+  uint8_t bit_no_timer;
+
+  /* Subscribe */
+  if(timer_subscribe_int(&bit_no_timer) != 0) return EXIT_FAILURE;
+
+  int ipc_status;
+  message msg;
+
+  while(time > 0){
+
+    int r;
+    if((r = driver_receive(ANY, &msg, &ipc_status)) != 0 ) {
+        printf("driver_receive failed with: %d", r);
+        continue;
+    }
+
+    if (is_ipc_notify(ipc_status)) { /* received notification */
+      switch (_ENDPOINT_P(msg.m_source)) {
+        case HARDWARE: /* hardware interrupt notification */
+          if (msg.m_notify.interrupts & BIT(bit_no_timer)) { 
+            /* Interrupt Handler */
+            timer_int_handler();
+
+            /* counter increses 60 times per second */
+            /* we want to print between intervals of 1 seconds */
+            if((counter % (int) sys_hz()) == 0){
+              timer_print_elapsed_time();
+              time--;
+            }
+          }
+          break;
+        default:
+          break; 
+          /* no other notifications expected: do nothi */
+      }
+    } else { 
+        /* 
+          received a standard message, not a notification
+          no standard messages expected: do nothing 
+        */
+    }
+  }
+
+  if(timer_unsubscribe_int() != 0) return EXIT_FAILURE;
+
+  return EXIT_SUCCESS;
 }
