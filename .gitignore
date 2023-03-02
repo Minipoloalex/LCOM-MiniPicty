@@ -1,1 +1,10 @@
+trace.txt
 .DS_Store
+*o
+output.txt
+trace.txt
+.gdbinit
+
+
+
+
