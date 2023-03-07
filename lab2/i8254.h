@@ -18,13 +18,13 @@
 #define TIMER_1    0x41 /**< @brief Timer 1 count register */
 #define TIMER_2    0x42 /**< @brief Timer 2 count register */
 #define TIMER_CTRL 0x43 /**< @brief Control register */
-#define TIMER(n) TIMER_0 + (n)
+#define TIMER(n)   TIMER_0 + (n)  /**< @brief Timer n (0, 1 or 2) count register */
 
 #define SPEAKER_CTRL 0x61 /**< @brief Register for speaker control  */
 
 /* Timer control */
 
-/* Timer Masks */
+/* Timer Maks */
 #define TIMER_MODE_MASK (BIT(1) | BIT(2) | BIT(3))
 #define TIMER_INITIAL_MASK (BIT(4) | BIT(5))
 #define TIMER_BASE_MASK BIT(0)
@@ -33,14 +33,13 @@
 #define TIMER_COUNT_MODE_POSITION 1
 #define TIMER_INITIAL_MODE_POSITION 4
 
-
 /* Timer selection: bits 7 and 6 */
 
 #define TIMER_SEL0   0x00              /**< @brief Control Word for Timer 0 */
 #define TIMER_SEL1   BIT(6)            /**< @brief Control Word for Timer 1 */
 #define TIMER_SEL2   BIT(7)            /**< @brief Control Word for Timer 2 */
 #define TIMER_RB_CMD (BIT(7) | BIT(6)) /**< @brief Read Back Command */
-#define TIMER_CLEAR_TIMER_SEL 0x37;
+#define TIMER_CLEAR_TIMER_SEL 0x3F     /**< @brief Clear Timer Selector bits: 7 and 6 */
 
 /* Register selection: bits 5 and 4 */
 
