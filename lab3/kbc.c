@@ -1,9 +1,8 @@
 #include "kbc.h"
-#include "utils.c"
 
-void (wait)(uint8_t *attemps){
-    tickdelay(micros_to_ticks(WAIT_KBC));
+void (delay)(uint8_t *attemps){
     (*attemps)--;
+    tickdelay(micros_to_ticks(WAIT_KBC));
 }
 
 int (read_KBC_status)(uint8_t *status){
@@ -14,7 +13,7 @@ int (read_KBC_output)(int8_t port, uint8_t* output){
   /*
   1- Verificar se o output buffer está cheio
   2- Verificar erros de Paridade ou Timeout
-  3- Se sim, lê-se (port 0x60 e conteúdo em *output)
+  3- Se sim, lê-se
   */
 
   uint8_t status;
@@ -40,16 +39,16 @@ int (read_KBC_output)(int8_t port, uint8_t* output){
         return EXIT_FAILURE;
       }
 
-      return 0;
+      return EXIT_SUCCESS;
     }
 
-    wait(&attemps);
+    delay(&attemps);
   }
 
-  return 1;
+  return EXIT_FAILURE;
 }
 
-int (write_KBC_command)(uint8_t port, uint8_t* cmd_byte){
+int (write_KBC_command)(uint8_t port, uint8_t cmd_byte){
   uint8_t status;
   uint8_t attemps = MAX_ATTEMPS;
 
@@ -66,18 +65,18 @@ int (write_KBC_command)(uint8_t port, uint8_t* cmd_byte){
     }
 
     // 1
-    if((status & FULL_IN_BUF)==0){
+    if((status & FULL_IN_BUF) == 0){
       
       // 2
-      if(util_sys_outb(port, cmd_byte)){
+      if(sys_outb(port, cmd_byte)){
         return EXIT_FAILURE;
       }
 
-      return 0;
+      return EXIT_SUCCESS;
     }
 
-    wait(&attemps);
+    delay(&attemps);
   }
 
-  return 1;
+  return EXIT_FAILURE;
 }

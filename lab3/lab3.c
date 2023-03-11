@@ -4,7 +4,6 @@
 #include "i8042.h"
 #include "keyboard.h"
 
-
 int main(int argc, char *argv[]) {
   // sets the language of LCF messages (can be either EN-US or PT-PT)
   lcf_set_language("EN-US");
@@ -35,7 +34,7 @@ uint32_t cnt_sysinb = 0;
 
 int(kbd_test_scan)() {
   uint8_t bit_no_keyboard;
-  if(keyboard_subscribe_int(&bit_no_keyboard) != 0) return EXIT_FAILURE;
+  if(keyboard_subscribe_interrupts(&bit_no_keyboard) != 0) return EXIT_FAILURE;
   
   int ipc_status;
   message msg;
@@ -53,12 +52,10 @@ int(kbd_test_scan)() {
       switch (_ENDPOINT_P(msg.m_source)) {
         case HARDWARE: /* hardware interrupt notification */
           if (msg.m_notify.interrupts & BIT(bit_no_keyboard)) { // BIT(KEYBOARD_IRQ)
-            /* Keyboard Handler */
+
             kbc_ih();
             
             if(return_value == 0){
-              
-              // LÓGICA ESTRANHA
               if(i == 0){
                 array[i] = scancode;
                 if (scancode == TWO_BYTES) {
@@ -86,31 +83,50 @@ int(kbd_test_scan)() {
     }
   }
 
-  if (keyboard_unsubscribe_int() != 0) return EXIT_FAILURE;
-  kbd_print_no_sysinb(cnt_sysinb);
+  if (keyboard_unsubscribe_interrupts() != 0) return EXIT_FAILURE;
+  if (kbd_print_no_sysinb(cnt_sysinb) != 0) return EXIT_FAILURE;
   return EXIT_SUCCESS;
 }
 
 
 int(kbd_test_poll)() {
+  uint8_t array[2];
+  bool reading2bytes = false;
   
   while (scancode != BREAK_ESC){
+    
     kbc_ih();
-    //kbd_print_scancode(!(scancode & BREAK_CODE), ) //?
-
+    
+    if(return_value != 0) continue;
+    
+    int i = reading2bytes ? 1 : 0;
+    array[i] = scancode;
+    
+    if(reading2bytes){
+      kbd_print_scancode(!(scancode & BREAK_CODE), 2, array);
+      reading2bytes = false;
+    }
+    else if(scancode == TWO_BYTES){
+      reading2bytes = true;
+    }
+    else{
+      kbd_print_scancode(!(scancode & BREAK_CODE), 1, array);
+    }
   }
 
-   enable_int();
+  if(keyboard_restore() != 0) return EXIT_FAILURE;
 
+  if (kbd_print_no_sysinb(cnt_sysinb) != 0) return EXIT_FAILURE;
 
-  return 1;
+  return EXIT_SUCCESS;
 }
 
 
+// Próxima aula prática
 int(kbd_test_timed_scan)(uint8_t n) {
   /* To be completed by the students */
   printf("%s is not yet implemented!\n", __func__);
 
-  return 1;
+  return EXIT_SUCCESS;
 }
 

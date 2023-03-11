@@ -1,5 +1,4 @@
-#ifndef _LCOM_KBC_H_
-#define _LCOM_KBC_H_
+#pragma once
 
 #include <minix/sysutil.h>
 #include "i8042.h"
@@ -7,7 +6,5 @@
 
 int (read_KBC_status)(uint8_t *status);
 int (read_KBC_output)(int8_t port, uint8_t* output);
-int (write_KBC_command)(uint8_t port, uint8_t* cmd_byte);
-void (wait)(uint8_t *attemps);
-
-#endif
+int (write_KBC_command)(uint8_t port, uint8_t cmd_byte);
+void (delay)(uint8_t *attemps);
