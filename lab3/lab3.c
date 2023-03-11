@@ -42,7 +42,7 @@ int(kbd_test_scan)() {
   
   int ipc_status;
   message msg;
-  uint8_t array[3];
+  uint8_t array[2];
   int i = 0;
   while(scancode != ESC_BREAK){
 
