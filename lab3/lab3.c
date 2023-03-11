@@ -59,7 +59,6 @@ int(kbd_test_scan)() {
             /* Keyboard Handler */
             kbc_ih();
             
-            //TODO: Perguntar
             if(return_value == 0){
               
               if(i == 0){
@@ -95,15 +94,20 @@ int(kbd_test_scan)() {
 }
 
 int(kbd_test_poll)() {
-  
+  uint8_t array[2];
+  int i = 0;
+  // tickdelay(micros_to_ticks(WAIT_KBC));
   while (scancode != ESC_BREAK){
-    kbc_ih();
-    kbd_print_scancode(!(scancode & BREAK_CODE), ) //?
+    uint8_t status;
+    util_sys_inb(KBC_STATUS_REG, &status);
+
+    kbd_print_scancode(!(scancode & BREAK_CODE), i , array);
 
   }
 
-   enable_int();
+  enable_int();
 
+  if (kbd_print_no_sysinb(cnt_sysinb) != 0) return EXIT_FAILURE;
 
   return 1;
 }

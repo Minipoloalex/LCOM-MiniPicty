@@ -21,7 +21,10 @@ extern uint8_t scancode;
 extern int return_value;
 void (kbc_ih)(){
   uint8_t status;
-  util_sys_inb(KBC_STATUS_REG, &status);
+  if (util_sys_inb(KBC_STATUS_REG, &status) != 0) {
+    return_value = EXIT_FAILURE;
+    return;
+  }
 
   // status might contain error: kbc_parity_err | kbc_timeout_err = 11000000
   if(status & (KBC_PARITY_ERR | KBC_TIMEOUT_ERR)){ 
@@ -40,8 +43,11 @@ void (kbc_ih)(){
 int (enable_int)(){
     sys_outb(KBC_STATUS_REG, KBC_READ_CMD);
     uint8_t cmd;
-    util_sys_inb(KBC_OUT_REG, &cmd);
+    util_sys_inb(KBC_OUT_BUF, &cmd);
+
     cmd |= KBC_ENABLE_INT;
-    sys_outb(KBC_CMD_REG, KBC_WRITE_CMD);
-    sys_outb(KBC_IN_REG, &cmd);
+    if(sys_outb(KBC_CMD_REG, KBC_WRITE_CMD) != 0) return EXIT_FAILURE;
+
+    if(sys_outb(KBC_IN_REG, cmd) != 0) return EXIT_FAILURE;
+    return EXIT_SUCCESS;
 }

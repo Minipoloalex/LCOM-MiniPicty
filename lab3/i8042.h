@@ -25,6 +25,9 @@
 
 #define KBC_PARITY_ERR BIT(7)
 #define KBC_TIMEOUT_ERR BIT(6)
+#define KBC_AUX BIT(5)
+#define KBC_IBF BIT(1)
+#define KBC_OBF BIT(0)
 
 #define KBC_ENABLE_INT BIT(0)
 
