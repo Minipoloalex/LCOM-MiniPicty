@@ -7,11 +7,11 @@
   "editor.wordWrap": "bounded",
   "editor.wordWrapColumn": 100,
   "files.associations": {
-    "i8042.h": "c",
-    "lcf.h": "c",
-    "stdint.h": "c",
-    "keyboard.h": "c",
     "lab3.h": "c",
-    "stdbool.h": "c"
+    "i8042.h": "c",
+    "kbc.h": "c",
+    "lcf.h": "c",
+    "keyboard.h": "c",
+    "stdint.h": "c"
   },
 }
