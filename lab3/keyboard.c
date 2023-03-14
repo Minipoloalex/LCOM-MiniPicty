@@ -4,7 +4,7 @@ static int hook_id = IRQ_KEYBOARD;
 
 int (keyboard_subscribe_interrupts)(uint8_t *bit_no){
   *bit_no = hook_id;
-  return sys_irqsetpolicy(KEYBOARD_IRQ, IRQ_REENABLE | IRQ_EXCLUSIVE, &hook_id);
+  return sys_irqsetpolicy(IRQ_KEYBOARD, IRQ_REENABLE | IRQ_EXCLUSIVE, &hook_id);
 }
 
 int (keyboard_unsubscribe_interrupts)(){

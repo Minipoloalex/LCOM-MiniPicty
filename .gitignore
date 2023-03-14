@@ -1,15 +1,5 @@
-trace.txt
-<<<<<<< HEAD
-output.txt
-.DS_Store
-=======
 .DS_Store
 *o
 output.txt
 trace.txt
 .gdbinit
-
-
-
-
->>>>>>> francisco_ana

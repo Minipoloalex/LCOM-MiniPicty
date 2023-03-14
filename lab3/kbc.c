@@ -19,15 +19,14 @@ int (read_KBC_output)(int8_t port, uint8_t* output){
   uint8_t status;
 
   uint8_t attemps = MAX_ATTEMPTS;
-  while(attemps){
+  for (int i = 0; i < 5; i++){
 
-    // error reading status
+    // error reading status    
     if(read_KBC_status(&status)){
       return EXIT_FAILURE;
     }
-
-    // 1
-    if(status & FULL_OUT_BUF){
+        // 1
+    if((status & FULL_OUT_BUF) && ((status & BIT(5)) == 0)){
       
       // 3
       if(util_sys_inb(port, output)){
@@ -35,17 +34,18 @@ int (read_KBC_output)(int8_t port, uint8_t* output){
       }
 
       // 2
-      if((status & PARITY_ERR) || (status & TIMEOUT_ERR)){
+      if((status & PARITY_ERR) | (status & TIMEOUT_ERR)){
         return EXIT_FAILURE;
       }
 
       return EXIT_SUCCESS;
     }
 
-    delay(&attemps);
+    attemps--;
+    tickdelay(micros_to_ticks(WAIT_KBC));
   }
 
-  return EXIT_FAILURE;
+  return EXIT_SUCCESS;
 }
 
 int (write_KBC_command)(uint8_t port, uint8_t cmd_byte){

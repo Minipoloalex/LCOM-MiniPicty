@@ -18,16 +18,12 @@
 #define TIMER_1    0x41 /**< @brief Timer 1 count register */
 #define TIMER_2    0x42 /**< @brief Timer 2 count register */
 #define TIMER_CTRL 0x43 /**< @brief Control register */
-<<<<<<< HEAD
 #define TIMER(n)   TIMER_0 + (n)  /**< @brief Timer n (0, 1 or 2) count register */
-=======
->>>>>>> francisco_ana
 
 #define SPEAKER_CTRL 0x61 /**< @brief Register for speaker control  */
 
 /* Timer control */
 
-<<<<<<< HEAD
 /* Timer Maks */
 #define TIMER_MODE_MASK (BIT(1) | BIT(2) | BIT(3))
 #define TIMER_INITIAL_MASK (BIT(4) | BIT(5))
@@ -37,18 +33,13 @@
 #define TIMER_COUNT_MODE_POSITION 1
 #define TIMER_INITIAL_MODE_POSITION 4
 
-=======
->>>>>>> francisco_ana
 /* Timer selection: bits 7 and 6 */
 
 #define TIMER_SEL0   0x00              /**< @brief Control Word for Timer 0 */
 #define TIMER_SEL1   BIT(6)            /**< @brief Control Word for Timer 1 */
 #define TIMER_SEL2   BIT(7)            /**< @brief Control Word for Timer 2 */
 #define TIMER_RB_CMD (BIT(7) | BIT(6)) /**< @brief Read Back Command */
-<<<<<<< HEAD
 #define TIMER_CLEAR_TIMER_SEL 0x3F     /**< @brief Clear Timer Selector bits: 7 and 6 */
-=======
->>>>>>> francisco_ana
 
 /* Register selection: bits 5 and 4 */
 
@@ -57,10 +48,7 @@
 #define TIMER_LSB_MSB (TIMER_LSB | TIMER_MSB) /**< @brief Initialize LSB first and MSB afterwards */
 
 /* Operating mode: bits 3, 2 and 1 */
-<<<<<<< HEAD
 #define TIMER_NUMBER_MODES 6    /**< @brief Number of existing modes: from 0 to 5 */
-=======
->>>>>>> francisco_ana
 
 #define TIMER_SQR_WAVE (BIT(2) | BIT(1)) /**< @brief Mode 3: square wave generator */
 #define TIMER_RATE_GEN BIT(2)            /**< @brief Mode 2: rate generator */

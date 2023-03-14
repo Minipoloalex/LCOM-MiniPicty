@@ -17,7 +17,7 @@
 
 #define KBC_STATUS_REG 0x64     // Status is read from 0x64
 #define KBC_OUT_REG    0x60     // Output (scancode) is read from 0x60
-#define KBC_CMD_REG     0x64     // Input command: read KBC_cmd_Byte (0x20) or KBC_cmd_Byte (0x60)
+#define KBC_CMD_REG    0x64     // Input command: read KBC_cmd_Byte (0x20) or KBC_cmd_Byte (0x60)
 #define KBC_READ_CMD   0x20
 #define KBC_WRITE_CMD  0x60
 //    KBC Command Byte
@@ -25,7 +25,7 @@
 //    | x | x | Disable Mouse | Dis. Keyboard | x | x | Enable Mouse Interr. | En. Keyboard Interr.
 #define ENABLE_INT  BIT(0)
 
-#define WAIT_KBC    20000
-#define MAX_ATTEMPTS 10
+#define WAIT_KBC    0
+#define MAX_ATTEMPTS 5
 
 #endif

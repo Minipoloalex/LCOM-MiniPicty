@@ -93,12 +93,12 @@ int(kbd_test_scan)() {
 int(kbd_test_poll)() {
   uint8_t array[2];
   bool reading2bytes = false;
-  
+  int ret = 0;
   while (scancode != BREAK_ESC){
     
-    kbc_ih();
-    
-    if(return_value != 0) continue;
+    ret = read_KBC_output(KBC_OUT_REG, &scancode);
+  
+    if(ret != 0) continue;
     
     int i = reading2bytes ? 1 : 0;
     array[i] = scancode;
@@ -113,8 +113,8 @@ int(kbd_test_poll)() {
     else{
       kbd_print_scancode(!(scancode & BREAK_CODE), 1, array);
     }
-  }
 
+  }
   if(keyboard_restore() != 0) return EXIT_FAILURE;
 
   if (kbd_print_no_sysinb(cnt_sysinb) != 0) return EXIT_FAILURE;
@@ -122,13 +122,6 @@ int(kbd_test_poll)() {
   return EXIT_SUCCESS;
 }
 
-/*
-  1. Interrupções Timer
-  2. Interrupções Keyboard
-  3. Teacher cycle
-  4. Unsubscribe Keyboard
-  5. Unsubscribe Timer
-*/
 int(kbd_test_timed_scan)(uint8_t max_seconds) {
   uint8_t max_counter = max_seconds * (int) sys_hz();
 
