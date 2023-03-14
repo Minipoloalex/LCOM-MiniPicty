@@ -12,6 +12,7 @@
     "kbc.h": "c",
     "lcf.h": "c",
     "keyboard.h": "c",
-    "stdint.h": "c"
+    "stdint.h": "c",
+    "i8254.h": "c"
   },
 }

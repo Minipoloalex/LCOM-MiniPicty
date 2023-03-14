@@ -1,6 +1,6 @@
 #include "keyboard.h"
 
-static int hook_id;
+static int hook_id = IRQ_KEYBOARD;
 
 int (keyboard_subscribe_interrupts)(uint8_t *bit_no){
   *bit_no = hook_id;
@@ -25,11 +25,11 @@ void (kbc_ih)(){
 
 int (keyboard_restore)(){
   uint8_t commandWord;
-  if(write_KBC_command(KBC_IN_REG, KBC_READ_CMD) != 0) return EXIT_FAILURE;
+  if(write_KBC_command(KBC_CMD_REG, KBC_READ_CMD) != 0) return EXIT_FAILURE;
   if(read_KBC_output(KBC_OUT_REG, &commandWord) != 0) return EXIT_FAILURE;
 
   commandWord |= ENABLE_INT;
   
-  if(write_KBC_command(KBC_IN_REG, KBC_WRITE_CMD) != 0) return EXIT_FAILURE;
+  if(write_KBC_command(KBC_CMD_REG, KBC_WRITE_CMD) != 0) return EXIT_FAILURE;
   return write_KBC_command(KBC_OUT_REG, commandWord);
 }

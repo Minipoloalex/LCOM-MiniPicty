@@ -3,6 +3,7 @@
 
 #include "i8042.h"
 #include "keyboard.h"
+#include "i8254.h"
 
 int main(int argc, char *argv[]) {
   // sets the language of LCF messages (can be either EN-US or PT-PT)
@@ -121,12 +122,76 @@ int(kbd_test_poll)() {
   return EXIT_SUCCESS;
 }
 
+/*
+  1. Interrupções Timer
+  2. Interrupções Keyboard
+  3. Teacher cycle
+  4. Unsubscribe Keyboard
+  5. Unsubscribe Timer
+*/
+int(kbd_test_timed_scan)(uint8_t max_seconds) {
+  uint8_t max_counter = max_seconds * (int) sys_hz();
 
-// Próxima aula prática
-int(kbd_test_timed_scan)(uint8_t n) {
-  /* To be completed by the students */
-  printf("%s is not yet implemented!\n", __func__);
+  uint8_t timer0_bit_no;
+  uint8_t keyboard_bit_no;
+  if (timer_subscribe_int(&timer0_bit_no) != 0) return EXIT_FAILURE;
+  if (keyboard_subscribe_interrupts(&keyboard_bit_no) != 0) return EXIT_FAILURE;
+  
+  int ipc_status;
+  message msg;
+  
+  uint8_t array[2];
+  int i = 0;
+  extern int counter;
+  while(scancode != BREAK_ESC && counter < max_counter ){  
 
+    int r;
+    if((r = driver_receive(ANY, &msg, &ipc_status)) != 0 ) {
+        printf("driver_receive failed with: %d", r);
+        continue;
+    }
+
+    if (is_ipc_notify(ipc_status)) { /* received notification */
+      switch (_ENDPOINT_P(msg.m_source)) {
+        case HARDWARE: /* hardware interrupt notification */
+          if (msg.m_notify.interrupts & BIT(timer0_bit_no)){
+            timer_int_handler();
+          }
+          if (msg.m_notify.interrupts & BIT(keyboard_bit_no)) { // BIT(KEYBOARD_IRQ)
+            
+            counter = 0;
+
+            kbc_ih();
+            
+            if(return_value == 0){
+              if(i == 0){
+                array[i] = scancode;
+                if (scancode == TWO_BYTES) {
+                  i = 1;
+                }
+                else kbd_print_scancode(!(scancode & BREAK_CODE), i + 1, array);
+              }
+              else {
+                array[i] = scancode;
+                kbd_print_scancode(!(scancode & BREAK_CODE), i + 1, array);
+                i = 0;
+              }
+            }
+          }
+          break;
+        default:
+          break;
+          /* no other notifications expected: do nothing */
+      }
+    } else {
+        /* 
+          received a standard message, not a notification
+          no standard messages expected: do nothing
+        */
+    }
+  }
+
+  if (keyboard_unsubscribe_interrupts() != 0) return EXIT_FAILURE;
+  if (timer_unsubscribe_int() != 0) return EXIT_FAILURE;
   return EXIT_SUCCESS;
 }
-
