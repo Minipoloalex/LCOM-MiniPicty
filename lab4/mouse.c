@@ -2,7 +2,7 @@
 
 static int hook_id = IRQ_MOUSE;
 int return_value_mouse = 0;
-extern int output;
+uint8_t packet_byte = 0;
 
 int (mouse_subscribe_interrupts)(uint8_t *bit_no){
   *bit_no = hook_id;
@@ -13,12 +13,14 @@ int (mouse_unsubscribe_interrupts)(){
   return sys_irqrmpolicy(&hook_id);
 }
 
-int (mouse_disable_data_reporting)(){
-  if(write_KBC_command(KBC_CMD_REG, KBC_WRITE_B_TO_MOUSE) != 0) return EXIT_FAILURE;
-  if(write_KBC_command(KBC_OUT_REG, MOUSE_DISABLE_DATA_REP) != 0) return EXIT_FAILURE;
-  return EXIT_SUCCESS;
+int (mouse_enable_data_report)() {
+  return write_to_mouse(MOUSE_ENABLE_DATA_REP);
+}
+
+int (mouse_disable_data_report)(){
+  return write_to_mouse(MOUSE_DISABLE_DATA_REP);
 }
 
 void (mouse_ih)(){
-  return_value_mouse = kbc_ih(1);
+  return_value_mouse = read_KBC_output(KBC_OUT_REG, &packet_byte, 1);
 }

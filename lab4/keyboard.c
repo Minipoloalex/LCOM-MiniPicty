@@ -2,7 +2,7 @@
 
 static int hook_id = IRQ_KEYBOARD;
 int return_value_keyboard = 0;
-extern int output;
+uint8_t scancode_byte = 0;
 
 int (keyboard_subscribe_interrupts)(uint8_t *bit_no){
   *bit_no = hook_id;
@@ -14,16 +14,16 @@ int (keyboard_unsubscribe_interrupts)(){
 }
 
 void (keyboard_ih)(){
-  return_value_keyboard = kbc_ih(0);
+  return_value_keyboard = read_KBC_output(KBC_OUT_REG, &scancode_byte, 0);
 }
 
 int (keyboard_restore)(){
   uint8_t commandWord;
-  if(write_KBC_command(KBC_CMD_REG, KBC_READ_CMD) != 0) return EXIT_FAILURE;
+  if(write_KBC_command(KBC_IN_REG, KBC_READ_CMD_BYTE) != 0) return EXIT_FAILURE;
   if(read_KBC_output(KBC_OUT_REG, &commandWord, 0) != 0) return EXIT_FAILURE;
 
-  commandWord |= ENABLE_INT;
+  commandWord |= KEYBOARD_ENABLE_INT;
   
-  if(write_KBC_command(KBC_CMD_REG, KBC_WRITE_CMD) != 0) return EXIT_FAILURE;
+  if(write_KBC_command(KBC_IN_REG, KBC_WRITE_CMD_BYTE) != 0) return EXIT_FAILURE;
   return write_KBC_command(KBC_OUT_REG, commandWord);
 }

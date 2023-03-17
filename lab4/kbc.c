@@ -54,6 +54,19 @@ int (write_KBC_command)(uint8_t port, uint8_t cmd_byte){
   return EXIT_FAILURE;
 }
 
-int (kbc_ih)(uint8_t mouse){
-  return read_KBC_output(KBC_OUT_REG, &output, mouse);
+int (write_to_mouse)(uint8_t command){
+  uint8_t attempts = MAX_ATTEMPTS;
+  uint8_t mouse_response = 0;
+
+  while(attempts > 0 && mouse_response != MOUSE_ACK){
+
+    if (write_KBC_command(KBC_IN_REG, KBC_WRITE_MOUSE_CMD) != 0) return EXIT_FAILURE;
+    if (write_KBC_command(KBC_OUT_REG, command) != 0) return EXIT_FAILURE;
+    
+    tickdelay(micros_to_ticks(WAIT_KBC));
+    
+    if (read_KBC_output(KBC_OUT_REG, &mouse_response, 1)) return EXIT_FAILURE;
+    attempts--;
+  }
+  return EXIT_SUCCESS;
 }

@@ -3,11 +3,15 @@
 
 #include <stdint.h>
 #include <stdio.h>
+#include <stdbool.h>
 
 #include "mouse.h"
 
 extern int return_value_mouse;
 extern int return_value_keyboard;
+
+extern uint8_t scancode_byte;
+extern uint8_t packet_byte;
 
 // Any header files included below this line should have been created by you
 int main(int argc, char *argv[]) {
@@ -36,27 +40,57 @@ int main(int argc, char *argv[]) {
 
 int (mouse_test_packet)(uint32_t cnt) {
   struct packet packet;
-  int mouse_bit_no;
-
-  if(mouse_subscribe_interrupts(mouse_bit_no) != 0) return EXIT_FAILURE;
-
+  uint8_t mouse_bit_no;
+  
+  if(mouse_subscribe_interrupts(&mouse_bit_no) != 0) return EXIT_FAILURE;
+  if(mouse_enable_data_report() != 0) return EXIT_FAILURE;
+  
   int ipc_status;
   message msg;
-
-  if(mouse_enable_data_reporting() != 0) return EXIT_FAILURE;
-
-  while(cnt > 0){  
+  int index = 0;
+  
+  while(cnt > 0){
     int r;
     if((r = driver_receive(ANY, &msg, &ipc_status)) != 0 ) {
         printf("driver_receive failed with: %d", r);
         continue;
     }
-
+  
     if (is_ipc_notify(ipc_status)) { /* received notification */
       switch (_ENDPOINT_P(msg.m_source)) {
         case HARDWARE: /* hardware interrupt notification */
           if (msg.m_notify.interrupts & BIT(mouse_bit_no)){
+            mouse_ih();
+            if (return_value_mouse != 0) {
+              continue;
+            }
+            
+            packet.bytes[index] = packet_byte;
+            if(index == 0 && (packet_byte & FIRST_BYTE_VALIDATION)){
+              packet.lb = LB(packet_byte);
+              packet.rb = RB(packet_byte);
+              packet.mb = MB(packet_byte);
+              
+              packet.x_ov = X_OV(packet_byte);
+              packet.y_ov = Y_OV(packet_byte);
 
+              packet.delta_x = DELTA_X(packet_byte) ? 0xFF00 : 0x0000;
+              packet.delta_y = DELTA_Y(packet_byte) ? 0xFF00 : 0x0000;
+
+              index++;
+            }
+            else if(index == 1){
+              packet.delta_x |= packet_byte;
+              index++;
+            }
+            else if(index == 2){
+              packet.delta_y |= packet_byte;
+              index = 0;
+              mouse_print_packet(&packet);
+              cnt--;
+            }else{
+              //choura
+            }
           }
           break;
         default:
@@ -70,7 +104,8 @@ int (mouse_test_packet)(uint32_t cnt) {
         */
     }
   }
-  if(mouse_disable_data_reporting() != 0) return EXIT_FAILURE;
+
+  if(mouse_disable_data_report() != 0) return EXIT_FAILURE;
   if(mouse_unsubscribe_interrupts() != 0) return EXIT_FAILURE;
   return EXIT_SUCCESS;
 }
@@ -81,7 +116,7 @@ int (mouse_test_async)(uint8_t idle_time) {
     return 1;
 }
 
-int (mouse_test_gesture)() {
+int (mouse_test_gesture)(uint8_t x_len, uint8_t tolerance) {
     /* To be completed */
     printf("%s: under construction\n", __func__);
     return 1;
