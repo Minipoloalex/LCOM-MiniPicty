@@ -1,0 +1,122 @@
+@lcflib.a:2019, lcf_start
+  mouse_test_packet(cnt)
+> mouse_test_packet(1)
+  @mouse.c:9, mouse_subscribe_interrupts
+    sys_irqsetpolicy(IRQ_MOUSE, IRQ_REENABLE | IRQ_EXCLUSIVE, &hook_id)
+  > sys_irqsetpolicy(12, 3, addr: 0x822cbb0 [12])
+  < sys_irqsetpolicy(12, 3, addr: 0x822cbb0 [10]) -> (ret: 0)
+  @utils.c:19, util_sys_inb
+    sys_inb(port, &temp)
+  > sys_inb(0x64, addr: 0xeffff61c)
+  < sys_inb(0x64, addr: 0xeffff61c [0x1c = 0b00011100])
+  @kbc.c:45, write_KBC_command
+    sys_outb(port, cmd_byte)
+  > sys_outb(0x64, 0xd4 = 0b11010100)
+  @utils.c:19, util_sys_inb
+    sys_inb(port, &temp)
+  > sys_inb(0x64, addr: 0xeffff61c)
+  < sys_inb(0x64, addr: 0xeffff61c [0x1c = 0b00011100])
+  @kbc.c:45, write_KBC_command
+    sys_outb(port, cmd_byte)
+  > sys_outb(0x60, 0xf4 = 0b11110100)
+  @kbc.c:66, write_to_mouse
+    micros_to_ticks(WAIT_KBC)
+  @kbc.c:66, write_to_mouse
+    tickdelay(micros_to_ticks(WAIT_KBC))
+  > tickdelay(1 [16.7 ms])
+  @utils.c:19, util_sys_inb
+    sys_inb(port, &temp)
+  > sys_inb(0x64, addr: 0xeffff620)
+  < sys_inb(0x64, addr: 0xeffff620 [0x3d = 0b00111101])
+  @utils.c:19, util_sys_inb
+    sys_inb(port, &temp)
+  > sys_inb(0x60, addr: 0xeffff620)
+  < sys_inb(0x60, addr: 0xeffff620 [0xfa = 0b11111010])
+  @lab4.c:54, mouse_test_packet
+    driver_receive(ANY, &msg, &ipc_status)
+  > driver_receive(ANY, addr: 0xeffff6b0, addr: 0xeffff6f8)
+  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000001000000000000]>)
+  @lab4.c:63, mouse_test_packet
+    mouse_ih()
+    @utils.c:19, util_sys_inb
+      sys_inb(port, &temp)
+    > sys_inb(0x64, addr: 0xeffff5ac)
+    < sys_inb(0x64, addr: 0xeffff5ac [0x1c = 0b00011100])
+  @lab4.c:54, mouse_test_packet
+    driver_receive(ANY, &msg, &ipc_status)
+  > driver_receive(ANY, addr: 0xeffff6b0, addr: 0xeffff6f8)
+  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000001000000000000]>)
+  @lab4.c:63, mouse_test_packet
+    mouse_ih()
+    @utils.c:19, util_sys_inb
+      sys_inb(port, &temp)
+    > sys_inb(0x64, addr: 0xeffff5ac)
+    < sys_inb(0x64, addr: 0xeffff5ac [0x3d = 0b00111101])
+    @utils.c:19, util_sys_inb
+      sys_inb(port, &temp)
+    > sys_inb(0x60, addr: 0xeffff5ac)
+    < sys_inb(0x60, addr: 0xeffff5ac [0x38 = 0b00111000]) //B1
+  @lab4.c:54, mouse_test_packet
+    driver_receive(ANY, &msg, &ipc_status)
+  > driver_receive(ANY, addr: 0xeffff6b0, addr: 0xeffff6f8)
+  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000001000000000000]>)
+  @lab4.c:63, mouse_test_packet
+    mouse_ih()
+    @utils.c:19, util_sys_inb
+      sys_inb(port, &temp)
+    > sys_inb(0x64, addr: 0xeffff5ac)
+    < sys_inb(0x64, addr: 0xeffff5ac [0x3d = 0b00111101])
+    @utils.c:19, util_sys_inb
+      sys_inb(port, &temp)
+    > sys_inb(0x60, addr: 0xeffff5ac)
+    < sys_inb(0x60, addr: 0xeffff5ac [0xf2 = 0b11110010])
+  @lab4.c:54, mouse_test_packet
+    driver_receive(ANY, &msg, &ipc_status)
+  > driver_receive(ANY, addr: 0xeffff6b0, addr: 0xeffff6f8)
+  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000001000000000000]>)
+  @lab4.c:63, mouse_test_packet
+    mouse_ih()
+    @utils.c:19, util_sys_inb
+      sys_inb(port, &temp)
+    > sys_inb(0x64, addr: 0xeffff5ac)
+    < sys_inb(0x64, addr: 0xeffff5ac [0x3d = 0b00111101])
+    @utils.c:19, util_sys_inb
+      sys_inb(port, &temp)
+    > sys_inb(0x60, addr: 0xeffff5ac)
+    < sys_inb(0x60, addr: 0xeffff5ac [0xff = 0b11111111])
+  @lab4.c:89, mouse_test_packet
+    mouse_print_packet(&packet)
+  > mouse_print_packet(addr: 0xeffff700)
+    "B1=0x38 B2=0xf2 B3=0xff LB=0 MB=0 RB=0 XOV=0 X=-14 YOV=0 Y=-1"
+  @utils.c:19, util_sys_inb
+    sys_inb(port, &temp)
+  > sys_inb(0x64, addr: 0xeffff61c)
+  < sys_inb(0x64, addr: 0xeffff61c [0x1c = 0b00011100])
+  @kbc.c:45, write_KBC_command
+    sys_outb(port, cmd_byte)
+  > sys_outb(0x64, 0xd4 = 0b11010100)
+  @utils.c:19, util_sys_inb
+    sys_inb(port, &temp)
+  > sys_inb(0x64, addr: 0xeffff61c)
+  < sys_inb(0x64, addr: 0xeffff61c [0x1c = 0b00011100])
+  @kbc.c:45, write_KBC_command
+    sys_outb(port, cmd_byte)
+  > sys_outb(0x60, 0xf5 = 0b11110101) //DISABLE
+  @kbc.c:66, write_to_mouse
+    micros_to_ticks(WAIT_KBC)
+  @kbc.c:66, write_to_mouse
+    tickdelay(micros_to_ticks(WAIT_KBC))
+  > tickdelay(1 [16.7 ms])
+  @utils.c:19, util_sys_inb
+    sys_inb(port, &temp)
+  > sys_inb(0x64, addr: 0xeffff620)
+  < sys_inb(0x64, addr: 0xeffff620 [0x3d = 0b00111101])
+  @utils.c:19, util_sys_inb
+    sys_inb(port, &temp)
+  > sys_inb(0x60, addr: 0xeffff620)
+  < sys_inb(0x60, addr: 0xeffff620 [0xfa = 0b11111010])
+  @mouse.c:13, mouse_unsubscribe_interrupts
+    sys_irqrmpolicy(&hook_id)
+  > sys_irqrmpolicy(addr: 0x822cbb0 [10])
+  < sys_irqrmpolicy(addr: 0x822cbb0 [10]) -> (ret: 0)
+< mouse_test_packet(1) -> (ret: 0)

@@ -31,13 +31,14 @@ int main(int argc, char *argv[]) {
 
 int(timer_test_read_config)(uint8_t timer, enum timer_status_field field) {
   uint8_t config = 0;
+  if(timer > 2) return EXIT_FAILURE;
   if (timer_get_conf(timer, &config) != 0) return EXIT_FAILURE;
   if (timer_display_conf(timer, config, field) != 0) return EXIT_FAILURE;
   return EXIT_SUCCESS;
 }
 
 int(timer_test_time_base)(uint8_t timer, uint32_t freq) {
-  if (freq == 0) return EXIT_FAILURE;
+  if(timer > 2 || freq == 0) return EXIT_FAILURE;
   if (timer_set_frequency(timer, freq) != 0) return EXIT_FAILURE;
   return EXIT_SUCCESS;
 }
