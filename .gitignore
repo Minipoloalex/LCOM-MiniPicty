@@ -1,3 +1,4 @@
 trace.txt
 output.txt
 .DS_Store
+*.o
