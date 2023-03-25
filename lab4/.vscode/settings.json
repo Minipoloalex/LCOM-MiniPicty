@@ -14,6 +14,7 @@
     "timer.h": "c",
     "stdbool.h": "c",
     "lcf.h": "c",
-    "i8042.h": "c"
+    "i8042.h": "c",
+    "kbc.h": "c"
   },
 }

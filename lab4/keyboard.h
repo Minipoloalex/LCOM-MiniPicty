@@ -1,5 +1,6 @@
 #pragma once
 #include <stdint.h>
+#include <lcom/lcf.h>
 #include "i8042.h"
 #include "kbc.h"
 

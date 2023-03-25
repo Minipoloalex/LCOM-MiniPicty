@@ -205,13 +205,13 @@ typedef enum {INIT, DRAW_LEFT, VERTEX, DRAW_RIGHT, FINAL} state_t;
 
 static state_t state = INIT;
 
-struct mouse_ev *(mouse_detect_event)(struct packet *pp) {
+// struct mouse_ev *(mouse_detect_event)(struct packet *pp) {
 
-}
+// }
 
 void process_event(struct packet* pp) {
 
-  static x;
+  static int x;
 
   switch (state) {
     case INIT:
