@@ -7,7 +7,13 @@
   "editor.wordWrap": "bounded",
   "editor.wordWrapColumn": 100,
   "files.associations": {
+    "*.embeddedhtml": "html",
     "mouse.h": "c",
-    "stdint.h": "c"
+    "stdint.h": "c",
+    "stdio.h": "c",
+    "timer.h": "c",
+    "stdbool.h": "c",
+    "lcf.h": "c",
+    "i8042.h": "c"
   },
 }
