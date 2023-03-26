@@ -102,8 +102,54 @@ int(kbd_test_poll)() {
 }
 
 int(kbd_test_timed_scan)(uint8_t n) {
-  /* To be completed by the students */
-  printf("%s is not yet implemented!\n", __func__);
+  uint8_t keyboard_bit_no;
+  uint8_t timer_bit_no;
+  if (keyboard_subscribe_int(&keyboard_bit_no)) return 1;
+  if (timer_subscribe_int(&timer_bit_no)) return 1;
+  
+  int r;
+  message msg;
+  int ipc_status;
+  
+  int index = 0;
+  uint8_t scancodes_array[2];
+  extern uint8_t scancode;
+  extern int return_value;
+  
+  extern int counter;
+  int max_count = n * (int) sys_hz();
+  do {
+    if ((r = driver_receive(ANY, &msg, &ipc_status)) != 0) {
+      printf("driver_receive failed with %d", r);
+    }
+    if (is_ipc_notify(ipc_status)) {
+      switch(_ENDPOINT_P(msg.m_source)) {
+        case HARDWARE:
+          if (msg.m_notify.interrupts & BIT(timer_bit_no)) {
+            timer_int_handler();
+          }
+          if (msg.m_notify.interrupts & BIT(keyboard_bit_no)) {
+            kbc_ih();
+            counter = 0;
+            if (return_value) continue;
 
-  return 1;
+            scancodes_array[index] = scancode;
+            if (index == 0 && scancode == SCANCODE_TWO_BYTES) {
+              index = 1;
+            }
+            else {
+              if (kbd_print_scancode(!(scancode & BREAK_CODE), index + 1, scancodes_array))
+                return 1;
+              index = 0;
+            }
+          }
+          break;
+        default:
+          break;
+      }
+    }
+  } while (scancode != ESC_BREAK_CODE && counter < max_count);
+
+  if (timer_unsubscribe_int()) return 1;
+  return keyboard_unsubscribe_int();
 }
