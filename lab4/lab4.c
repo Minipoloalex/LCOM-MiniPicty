@@ -44,15 +44,28 @@ int (mouse_test_packet)(uint32_t cnt) {
   struct packet packet;
   uint8_t mouse_bit_no;
   
-  if(mouse_enable_data_report() != 0) return EXIT_FAILURE;
-  if(mouse_subscribe_interrupts(&mouse_bit_no) != 0) return EXIT_FAILURE;
+  if(mouse_subscribe_interrupts(&mouse_bit_no) != 0) {
+    printf("mouse_subscribe_interrupts inside %s\n", __func__);
+    return EXIT_FAILURE;
+  }
+  if (mouse_disable_int() != 0) {
+    printf("mouse_disable_int inside %s\n", __func__);
+    return EXIT_FAILURE;
+  }
+  if(mouse_enable_data_report() != 0) {
+    printf("mouse_enable_data_report inside %s\n", __func__);
+    return EXIT_FAILURE;
+  }
+  if (mouse_enable_int() != 0) {
+    printf("mouse_enable_int inside %s\n", __func__);
+    return EXIT_FAILURE;
+  }
   
-  int ipc_status;
+  int ipc_status, r;
   message msg;
   int index = 0;
   
   while(cnt > 0){
-    int r;
     if((r = driver_receive(ANY, &msg, &ipc_status)) != 0 ) {
         printf("driver_receive failed with: %d", r);
         continue;
@@ -90,8 +103,6 @@ int (mouse_test_packet)(uint32_t cnt) {
               index = 0;
               mouse_print_packet(&packet);
               cnt--;
-            }else{
-              //choura
             }
           }
           break;
@@ -106,8 +117,20 @@ int (mouse_test_packet)(uint32_t cnt) {
         */
     }
   }
-  if(mouse_unsubscribe_interrupts() != 0) return EXIT_FAILURE;
-  if(mouse_disable_data_report() != 0) return EXIT_FAILURE;
+  if (mouse_disable_int()) {
+    printf("mouse_disable_int inside %s\n", __func__);
+    return EXIT_FAILURE;
+  }
+  if(mouse_disable_data_report() != 0) {
+    printf("mouse_disable_data_report inside %s\n", __func__);
+    return EXIT_FAILURE;    
+  }
+
+  if (mouse_enable_int() != 0) {
+    printf("mouse_enable_int inside %s\n", __func__);
+    return EXIT_FAILURE;
+  }
+  if(mouse_unsubscribe_interrupts() != 0) return EXIT_FAILURE;  
   return EXIT_SUCCESS;
 }
 
@@ -115,9 +138,21 @@ int (mouse_test_async)(uint8_t idle_time) {
   uint8_t timer0_bit_no;
   uint8_t mouse_bit_no;
   
-  if(timer_subscribe_int(&timer0_bit_no) != 0) return EXIT_FAILURE;
-  if(mouse_enable_data_report() != 0) return EXIT_FAILURE;
+  if(timer_subscribe_int(&timer0_bit_no) != 0) return EXIT_FAILURE;  
   if(mouse_subscribe_interrupts(&mouse_bit_no) != 0) return EXIT_FAILURE;
+
+  if (mouse_disable_int() != 0) {
+    printf("mouse_disable_int inside %s\n", __func__);
+    return EXIT_FAILURE;
+  }
+  if(mouse_enable_data_report() != 0) {
+    printf("mouse_enable_data_report inside %s\n", __func__);
+    return EXIT_FAILURE;
+  }
+  if (mouse_enable_int() != 0) {
+    printf("mouse_enable_int inside %s\n", __func__);
+    return EXIT_FAILURE;
+  }
   
   int ipc_status;
   message msg;
@@ -185,8 +220,21 @@ int (mouse_test_async)(uint8_t idle_time) {
   }
 
   if(timer_unsubscribe_int() != 0) return EXIT_FAILURE;
+  
+  if (mouse_disable_int() != 0) {
+    printf("mouse_disable_int inside %s\n", __func__);
+    return EXIT_FAILURE;
+  }
+  if(mouse_disable_data_report() != 0) {
+    printf("mouse_disable_data_report inside %s\n", __func__);
+    return EXIT_FAILURE;
+  }
+  if (mouse_enable_int() != 0) {
+    printf("mouse_enable_int inside %s\n", __func__);
+    return EXIT_FAILURE;
+  }
+
   if(mouse_unsubscribe_interrupts() != 0) return EXIT_FAILURE;
-  if(mouse_disable_data_report() != 0) return EXIT_FAILURE;
   return EXIT_SUCCESS;
 }
 

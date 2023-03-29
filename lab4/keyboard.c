@@ -14,10 +14,10 @@ int (keyboard_unsubscribe_interrupts)(){
 }
 
 void (keyboard_ih)(){
-  return_value_keyboard = read_KBC_output(KBC_OUT_REG, &scancode_byte, 0);
+  return_value_keyboard = read_KBC_output(KBC_OUT_REG, &scancode_byte, false);
 }
 
-int (keyboard_restore)(){
+int (keyboard_enable_int)(){
   uint8_t commandWord;
   if(write_KBC_command(KBC_IN_REG, KBC_READ_CMD_BYTE) != 0) return EXIT_FAILURE;
   if(read_KBC_output(KBC_OUT_REG, &commandWord, 0) != 0) return EXIT_FAILURE;
