@@ -63,7 +63,7 @@ int (mouse_test_packet)(uint32_t cnt) {
   
   int ipc_status, r;
   message msg;
-  int index = 0;
+  uint8_t index = 0;
   
   while(cnt > 0){
     if((r = driver_receive(ANY, &msg, &ipc_status)) != 0 ) {
@@ -79,27 +79,8 @@ int (mouse_test_packet)(uint32_t cnt) {
             if (return_value_mouse != 0) {
               continue;
             }
-            
-            packet.bytes[index] = packet_byte;
-            if(index == 0 && (packet_byte & FIRST_BYTE_VALIDATION)){
-              packet.lb = LB(packet_byte);
-              packet.rb = RB(packet_byte);
-              packet.mb = MB(packet_byte);
-              
-              packet.x_ov = X_OV(packet_byte);
-              packet.y_ov = Y_OV(packet_byte);
-
-              packet.delta_x = DELTA_X(packet_byte) ? 0xFF00 : 0x0000;
-              packet.delta_y = DELTA_Y(packet_byte) ? 0xFF00 : 0x0000;
-
-              index++;
-            }
-            else if(index == 1){
-              packet.delta_x |= packet_byte;
-              index++;
-            }
-            else if(index == 2){
-              packet.delta_y |= packet_byte;
+            if (mouse_get_packet(&packet, &index, packet_byte) != 0) return EXIT_FAILURE;
+            if (index == 3) {
               index = 0;
               mouse_print_packet(&packet);
               cnt--;
@@ -182,26 +163,8 @@ int (mouse_test_async)(uint8_t idle_time) {
             if (return_value_mouse != 0) {
               continue;
             }
-            packet.bytes[index] = packet_byte;
-            if(index == 0 && (packet_byte & FIRST_BYTE_VALIDATION)){
-              packet.lb = LB(packet_byte);
-              packet.rb = RB(packet_byte);
-              packet.mb = MB(packet_byte);
-              
-              packet.x_ov = X_OV(packet_byte);
-              packet.y_ov = Y_OV(packet_byte);
-
-              packet.delta_x = DELTA_X(packet_byte) ? 0xFF00 : 0x0000;
-              packet.delta_y = DELTA_Y(packet_byte) ? 0xFF00 : 0x0000;
-
-              index++;
-            }
-            else if(index == 1){
-              packet.delta_x |= packet_byte;
-              index++;
-            }
-            else if(index == 2){
-              packet.delta_y |= packet_byte;
+            if (mouse_get_packet(&packet, &index, packet_byte) != 0) return EXIT_FAILURE;
+            if (index == 3) {
               index = 0;
               mouse_print_packet(&packet);
             }
@@ -308,8 +271,20 @@ int (mouse_test_gesture)(uint8_t x_len, uint8_t tolerance) {
   uint8_t mouse_bit_no;
   state_t state = INIT;
 
-  if (mouse_enable_data_report() != 0) return EXIT_FAILURE;
-  if (mouse_subscribe_interrupts(&mouse_bit_no) != 0) return EXIT_FAILURE;
+  if(mouse_subscribe_interrupts(&mouse_bit_no) != 0) return EXIT_FAILURE;
+
+  if (mouse_disable_int() != 0) {
+    printf("mouse_disable_int inside %s\n", __func__);
+    return EXIT_FAILURE;
+  }
+  if(mouse_enable_data_report() != 0) {
+    printf("mouse_enable_data_report inside %s\n", __func__);
+    return EXIT_FAILURE;
+  }
+  if (mouse_enable_int() != 0) {
+    printf("mouse_enable_int inside %s\n", __func__);
+    return EXIT_FAILURE;
+  }
   
   int ipc_status;
   message msg;
@@ -332,30 +307,11 @@ int (mouse_test_gesture)(uint8_t x_len, uint8_t tolerance) {
             if (return_value_mouse != 0) {
               continue;
             }
-            
-            packet.bytes[index] = packet_byte;
-            if(index == 0 && (packet_byte & FIRST_BYTE_VALIDATION)){
-              packet.lb = LB(packet_byte);
-              packet.rb = RB(packet_byte);
-              packet.mb = MB(packet_byte);
-              
-              packet.x_ov = X_OV(packet_byte);
-              packet.y_ov = Y_OV(packet_byte);
-
-              packet.delta_x = DELTA_X(packet_byte) ? 0xFF00 : 0x0000;
-              packet.delta_y = DELTA_Y(packet_byte) ? 0xFF00 : 0x0000;
-
-              index++;
-            }
-            else if(index == 1){
-              packet.delta_x |= packet_byte;
-              index++;
-            }
-            else if(index == 2){
-              packet.delta_y |= packet_byte;
+            if (mouse_get_packet(&packet, &index, packet_byte) != 0) return EXIT_FAILURE;
+            if (index == 3) {
               index = 0;
-              //mouse_print_packet(&packet);
-              //struct mouse_ev *ev = mouse_detect_event(&packet);
+              // mouse_print_packet(&packet);
+              // struct mouse_ev *ev = mouse_detect_event(&packet);
               process_event(&packet);
             }
           }
@@ -372,8 +328,20 @@ int (mouse_test_gesture)(uint8_t x_len, uint8_t tolerance) {
     }
   }
   
+  if (mouse_disable_int() != 0) {
+    printf("mouse_disable_int inside %s\n", __func__);
+    return EXIT_FAILURE;
+  }
+  if(mouse_disable_data_report() != 0) {
+    printf("mouse_disable_data_report inside %s\n", __func__);
+    return EXIT_FAILURE;
+  }
+  if (mouse_enable_int() != 0) {
+    printf("mouse_enable_int inside %s\n", __func__);
+    return EXIT_FAILURE;
+  }
   if(mouse_unsubscribe_interrupts() != 0) return EXIT_FAILURE;
-  if(mouse_disable_data_report() != 0) return EXIT_FAILURE;
+
   return EXIT_SUCCESS;
 } 
 

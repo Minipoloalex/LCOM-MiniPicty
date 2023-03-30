@@ -14,4 +14,4 @@ void (mouse_ih)();
 int (write_to_mouse)(uint8_t command);
 int (mouse_enable_int)();
 int (mouse_disable_int)();
-
+int (mouse_get_packet)(struct packet* packet, uint8_t *index, uint8_t packet_byte);

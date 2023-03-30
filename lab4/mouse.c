@@ -67,3 +67,38 @@ int (mouse_disable_int)() {
   }
   return EXIT_SUCCESS;
 }
+
+int (mouse_get_packet)(struct packet* packet, uint8_t *index, uint8_t packet_byte) {
+  uint8_t byte_index = *index;
+  
+  if (byte_index > 2) {
+    printf("index > 2 inside %s\n", __func__);
+    return EXIT_FAILURE;
+  }
+  
+  packet->bytes[byte_index] = packet_byte;
+  
+  if (byte_index == 0 && (packet_byte & FIRST_BYTE_VALIDATION)) {
+    packet->lb = LB(packet_byte);
+    packet->rb = RB(packet_byte);
+    packet->mb = MB(packet_byte);
+    
+    packet->x_ov = X_OV(packet_byte);
+    packet->y_ov = Y_OV(packet_byte);
+
+    packet->delta_x = DELTA_X(packet_byte) ? 0xFF00 : 0x0000;
+    packet->delta_y = DELTA_Y(packet_byte) ? 0xFF00 : 0x0000;
+
+    byte_index++;
+  }
+  else if (*index == 1) {
+    packet->delta_x |= packet_byte;
+    byte_index++;
+  }
+  else if (*index == 2) {
+    packet->delta_y |= packet_byte;
+    byte_index++;
+  }
+  *index = byte_index;
+  return EXIT_SUCCESS;
+}
