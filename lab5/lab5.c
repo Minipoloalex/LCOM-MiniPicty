@@ -12,17 +12,15 @@
 #include "keyboard.h"
 
 // bytes per pixel
-uint8_t bpp;
+uint8_t bytes_per_pixel;
 unsigned int vram_base;  /* VRAM's physical addresss */
 unsigned int vram_size;  /* VRAM's size, but you can use the frame buffer size instead */
 
 
-char *video_mem;		/* Process (virtual) address to which VRAM is mapped */
+uint8_t *video_mem;		/* Process (virtual) address to which VRAM is mapped */
 
-unsigned h_res;	        /* Horizontal resolution in pixels */
-unsigned v_res;	        /* Vertical resolution in pixels */
-unsigned bits_per_pixel; /* Number of VRAM bits per pixel */
-
+unsigned int h_res;	        /* Horizontal resolution in pixels */
+unsigned int v_res;	        /* Vertical resolution in pixels */
 
 int main(int argc, char *argv[]) {
   // sets the language of LCF messages (can be either EN-US or PT-PT)
@@ -68,44 +66,18 @@ int(video_test_rectangle)(uint16_t mode, uint16_t x, uint16_t y,
   uint8_t bit_no;
   if(keyboard_subscribe_interrupts(&bit_no) != 0) return EXIT_FAILURE;
   
+  if (map_phys_mem_to_virtual(mode) != OK){
+    printf("map_phys_mem_to_virtual inside %s\n", __func__);
+    return EXIT_FAILURE;
+  }
   if (vg_enter(mode) != OK) return EXIT_FAILURE;
-  
-  
 
-
-  // Map phys memory to virtual address space of process
-  int r;
-  vbe_mode_info_t vmi_p;
-  if (vbe_get_mode_info(mode, &vmi_p) != 0) return EXIT_FAILURE;
-
-  bits_per_pixel = vmi_p.BitsPerPixel;
-  bpp = vmi_p.BitsPerPixel / 8;
-  vram_size = vmi_p.XResolution * vmi_p.YResolution * bpp;
-  vram_base = vmi_p.PhysBasePtr;
-  
-  struct minix_mem_range mr;
-
-  mr.mr_base = (phys_bytes) vram_base;	
-  mr.mr_limit = mr.mr_base + vram_size;  
-
-  if( OK != (r = sys_privctl(SELF, SYS_PRIV_ADD_MEM, &mr)))
-    panic("sys_privctl (ADD_MEM) failed: %d\n", r);
-
-/* Map memory */
-
-video_mem = vm_map_phys(SELF, (void *)mr.mr_base, vram_size);
-
-if(video_mem == MAP_FAILED) panic("couldn't map video memory");
-
-
-// Draw rectangle
-
-
+  // Draw rectangle
   if (vg_draw_rectangle(x, y, width, height, color) != OK) return EXIT_FAILURE;
 
-  int ipc_status;
+  int ipc_status, r;
   message msg;
-
+  
   extern uint8_t scancode;
   extern int return_value;
   do {
@@ -116,7 +88,7 @@ if(video_mem == MAP_FAILED) panic("couldn't map video memory");
         switch(_ENDPOINT_P(msg.m_source)) {
           case HARDWARE:
             if (msg.m_notify.interrupts & BIT(bit_no)) {
-              kbc_ih();
+              keyboard_ih();
               if (return_value) continue;
             }
             break;
@@ -129,7 +101,6 @@ if(video_mem == MAP_FAILED) panic("couldn't map video memory");
   if(vg_exit() != 0) return EXIT_FAILURE;
   
   return keyboard_unsubscribe_interrupts();
-  
 }
 
 int(video_test_pattern)(uint16_t mode, uint8_t no_rectangles, uint32_t first, uint8_t step) {
