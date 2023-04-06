@@ -259,9 +259,7 @@ void process_event(struct packet* pp, uint8_t x_len, uint8_t tolerance) {
       if (only_lb_pressed && tolerant) {
         break;
       }
-      if (!(only_lb_pressed && correct_slope)) { 
-        
-        printf("Sou merda a desenhar o 1o traco\n");
+      if (!only_lb_pressed || !correct_slope) {
         state = INIT;
         break;
       }
@@ -273,20 +271,21 @@ void process_event(struct packet* pp, uint8_t x_len, uint8_t tolerance) {
       y = 0;
       x += pp->delta_x;
       y += pp->delta_y;
-
+      only_lb_pressed = pp->lb && !pp->mb && !pp->rb;
+      only_rb_pressed = !pp->lb && !pp->mb && pp->rb;
       if (pp->mb || (abs(x) > tolerance) || (abs(y) > tolerance)) {
         state = INIT;
         break;
       }
       
-      if (pp->lb) {
+      if (only_lb_pressed) {
         state = DRAW_LEFT;
         x = 0;
         y = 0;
         break;
       }
       
-      if(pp->rb) {
+      if(only_rb_pressed) {
         state = DRAW_RIGHT;
         x = 0;
         y = 0;
@@ -311,8 +310,7 @@ void process_event(struct packet* pp, uint8_t x_len, uint8_t tolerance) {
       if (only_rb_pressed && tolerant) {
         break;
       }
-      if (!(only_rb_pressed && correct_slope)){
-        printf("Sou merda a desenhar o 2o traco\n");
+      if (!only_rb_pressed || !correct_slope){
         state = INIT;
         break;
       }
