@@ -220,45 +220,111 @@ static state_t state = INIT;
 
 // }
 
-void process_event(struct packet* pp) {
+void process_event(struct packet* pp, uint8_t x_len, uint8_t tolerance) {
 
-  static int x;
+  static int x = 0;
+  static int y = 0;
 
+  bool only_lb_pressed, only_rb_pressed, none_pressed, correct_slope, min_dist, tolerant;
+  
+  printf("x: %d ", x);
+  printf("y: %d\n", y);
+  printf("dx: %d ", pp->delta_x);
+  printf("dy: %d\n", pp->delta_y);
   switch (state) {
     case INIT:
+      printf("INIT\n");
+      only_lb_pressed = pp->lb && !pp->rb && !pp->mb;
+      if (only_lb_pressed) {
+        state = DRAW_LEFT;
+        x = 0;
+        y = 0;
+      }
+      break;
+
+    case DRAW_LEFT:
+      printf("DRAW_LEFT\n");
+      x += pp->delta_x;
+      y += pp->delta_y;
+      
+      only_lb_pressed = pp->lb && !pp->rb && !pp->mb;
+      none_pressed = !pp->lb && !pp->rb && !pp->mb;
+      correct_slope = abs(y) > x && y>0 && x>0;
+      min_dist = x >= x_len;  // if none_pressed && x < x_len => go to INIT
+      tolerant = (pp->delta_x < 0) && (abs(pp->delta_x) < tolerance) && (pp->delta_y < 0) && (abs(pp->delta_y) < tolerance);
+      if(none_pressed && correct_slope && min_dist){
+        state = VERTEX;
+        break;
+      }
+      if (only_lb_pressed && tolerant) {
+        break;
+      }
+      if (!(only_lb_pressed && correct_slope)) { 
+        
+        printf("Sou merda a desenhar o 1o traco\n");
+        state = INIT;
+        break;
+      }
+      break;
+
+    case VERTEX:
+      printf("VERTEX\n");
+      x = 0;
+      y = 0;
+      x += pp->delta_x;
+      y += pp->delta_y;
+
+      if (pp->mb || (abs(x) > tolerance) || (abs(y) > tolerance)) {
+        state = INIT;
+        break;
+      }
+      
       if (pp->lb) {
         state = DRAW_LEFT;
         x = 0;
+        y = 0;
+        break;
       }
-      break;
-    case DRAW_LEFT:
-      x += pp->delta_x;
       
-      if (!pp->lb) {
-        state = VERTEX;
-      }
-      break;
-    case VERTEX:
-      if (pp->rb) {
+      if(pp->rb) {
         state = DRAW_RIGHT;
+        x = 0;
+        y = 0;
+        break;
       }
+      break;
 
-      break;
     case DRAW_RIGHT:
+      printf("DRAW_RIGHT\n");
       x += pp->delta_x;
-      if (!pp->rb) {
-        // x_len
-        // state = FINAL;
-      }
+      y += pp->delta_y;
       
+      only_rb_pressed = !pp->lb && pp->rb && !pp->mb;
+      none_pressed = !pp->lb && !pp->rb && !pp->mb;
+      correct_slope = abs(y) > x && y<0 && x>0;
+      min_dist = x >= x_len;  // if none_pressed && x < x_len => go to INIT
+      tolerant = (pp->delta_x < 0) && (abs(pp->delta_x) < tolerance) && (pp->delta_y < 0) && (abs(pp->delta_y) < tolerance);
+      if(none_pressed && min_dist && correct_slope) {
+        state = FINAL;
+        break;
+      }
+      if (only_rb_pressed && tolerant) {
+        break;
+      }
+      if (!(only_rb_pressed && correct_slope)){
+        printf("Sou merda a desenhar o 2o traco\n");
+        state = INIT;
+        break;
+      }
       break;
+
     case FINAL:
-      break;
+      printf("FINAL\n");
     default:
       break;
   }
 }
- 
+
 int (mouse_test_gesture)(uint8_t x_len, uint8_t tolerance) {
 
   /*  Escrito no quadro
@@ -269,7 +335,6 @@ int (mouse_test_gesture)(uint8_t x_len, uint8_t tolerance) {
   */
   
   uint8_t mouse_bit_no;
-  state_t state = INIT;
 
   if(mouse_subscribe_interrupts(&mouse_bit_no) != 0) return EXIT_FAILURE;
 
@@ -310,9 +375,9 @@ int (mouse_test_gesture)(uint8_t x_len, uint8_t tolerance) {
             if (mouse_get_packet(&packet, &index, packet_byte) != 0) return EXIT_FAILURE;
             if (index == 3) {
               index = 0;
-              // mouse_print_packet(&packet);
+              mouse_print_packet(&packet);
               // struct mouse_ev *ev = mouse_detect_event(&packet);
-              process_event(&packet);
+              process_event(&packet, x_len, tolerance);
             }
           }
           break;
@@ -343,7 +408,7 @@ int (mouse_test_gesture)(uint8_t x_len, uint8_t tolerance) {
   if(mouse_unsubscribe_interrupts() != 0) return EXIT_FAILURE;
 
   return EXIT_SUCCESS;
-} 
+}
 
 int (mouse_test_remote)(uint16_t period, uint8_t cnt) {
     /* This year you need not implement this. */
