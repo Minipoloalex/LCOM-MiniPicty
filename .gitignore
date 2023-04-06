@@ -1,5 +1,8 @@
 .DS_Store
-*o
-output.txt
-trace.txt
+*output.txt
+*trace.txt
 .gdbinit
+lab*
+!lab*/
+!lab*.*
+*.o
