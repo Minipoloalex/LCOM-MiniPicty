@@ -11,8 +11,8 @@
 #include "vbe.h"
 #include "keyboard.h"
 
-// bytes per pixel
 uint8_t bytes_per_pixel;
+uint8_t bits_per_pixel;
 unsigned int vram_base;  /* VRAM's physical addresss */
 unsigned int vram_size;  /* VRAM's size, but you can use the frame buffer size instead */
 
@@ -21,6 +21,7 @@ uint8_t *video_mem;		/* Process (virtual) address to which VRAM is mapped */
 
 unsigned int h_res;	        /* Horizontal resolution in pixels */
 unsigned int v_res;	        /* Vertical resolution in pixels */
+vbe_mode_info_t vmi;
 
 int main(int argc, char *argv[]) {
   // sets the language of LCF messages (can be either EN-US or PT-PT)
@@ -104,11 +105,78 @@ int(video_test_rectangle)(uint16_t mode, uint16_t x, uint16_t y,
 }
 
 int(video_test_pattern)(uint16_t mode, uint8_t no_rectangles, uint32_t first, uint8_t step) {
-  /* To be completed */
-  printf("%s(0x%03x, %u, 0x%08x, %d): under construction\n", __func__,
-         mode, no_rectangles, first, step);
+  uint8_t bit_no;
+  if(keyboard_subscribe_interrupts(&bit_no) != 0) return EXIT_FAILURE;
+  
+  if (map_phys_mem_to_virtual(mode) != OK){
+    printf("map_phys_mem_to_virtual inside %s\n", __func__);
+    return EXIT_FAILURE;
+  }
+  if (vg_enter(mode) != OK) return EXIT_FAILURE;
+  
+  unsigned int rec_width = h_res / no_rectangles;
+  unsigned int rec_height = v_res / no_rectangles;
+  uint32_t color;
+  uint8_t red = 0;
+  uint8_t green = 0;
+  uint8_t blue = 0;
 
-  return 1;
+  for (int row = 0; row < no_rectangles; row++) {
+    for (int col = 0; col < no_rectangles; col++) {
+      if (mode == 0x105) {
+        color = (first + (row * no_rectangles + col) * step) % (1 << bits_per_pixel);
+        printf("col: %d, row: %d, color_index: %d\n", col, row, color);
+      }
+      else { /* mode is direct */
+        // print all of the mask sizes
+        printf("r size 0x%02x, g size 0x%02x b size 0x%02x ", vmi.RedMaskSize, vmi.GreenMaskSize, vmi.BlueMaskSize);
+        printf("r pos 0x%02x, g pos 0x%02x b pos 0x%02x ", vmi.RedFieldPosition, vmi.GreenFieldPosition, vmi.BlueFieldPosition);
+        uint8_t red_first = 0;
+        uint8_t green_first = 0;
+        uint8_t blue_first = 0;
+        get_rgb_component(first, vmi.RedMaskSize, vmi.RedFieldPosition, &red_first);
+        get_rgb_component(first, vmi.GreenMaskSize, vmi.GreenFieldPosition, &green_first);
+        get_rgb_component(first, vmi.BlueMaskSize, vmi.BlueFieldPosition, &blue_first);
+        red = (red_first + col * step) % (1 << vmi.RedMaskSize);
+	      green = (green_first + row * step) % (1 << vmi.GreenMaskSize);
+	      blue = (blue_first + (col + row) * step) % (1 << vmi.BlueMaskSize);
+        color = (red << vmi.RedFieldPosition) | (green << vmi.GreenFieldPosition) | (blue << vmi.BlueFieldPosition);
+        printf("col: %d, row: %d, color_rgb: 0x%08x, %ld\n", col, row, color, color);
+      }
+      if (vg_draw_rectangle(col * rec_width, row * rec_height, rec_width, rec_height, color) != OK) {
+          printf("vg_draw_rectangle inside %s\n", __func__);
+          return EXIT_FAILURE;
+        }
+    }
+  }
+  printf("Finished drawing rectangles with success\n");
+
+  int r, ipc_status;
+  message msg;
+  extern uint8_t scancode;
+  extern int return_value;
+  do {
+      if ((r = driver_receive(ANY, &msg, &ipc_status)) != 0) {
+        printf("driver_receive failed with %d", r);
+      }
+      if (is_ipc_notify(ipc_status)) {
+        switch(_ENDPOINT_P(msg.m_source)) {
+          case HARDWARE:
+            if (msg.m_notify.interrupts & BIT(bit_no)) {
+              keyboard_ih();
+              if (return_value) continue;
+            }
+            break;
+          default:
+            break;
+        }
+      }
+    } while (scancode != BREAK_ESC);
+
+  if (vg_enter(mode) != OK) return EXIT_FAILURE;
+  if(vg_exit() != 0) return EXIT_FAILURE;
+  
+  return keyboard_unsubscribe_interrupts();
 }
 
 int(video_test_xpm)(xpm_map_t xpm, uint16_t x, uint16_t y) {

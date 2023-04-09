@@ -1,6 +1,8 @@
 #include "vbe.h"
 
+
 extern uint8_t bytes_per_pixel;
+extern uint8_t bits_per_pixel;
 extern unsigned int vram_base;  /* VRAM's physical addresss */
 extern unsigned int vram_size;  /* VRAM's size, but you can use the frame buffer size instead */
 
@@ -9,21 +11,23 @@ extern uint8_t *video_mem;		/* Process (virtual) address to which VRAM is mapped
 
 extern unsigned h_res;	        /* Horizontal resolution in pixels */
 extern unsigned v_res;	        /* Vertical resolution in pixels */
+extern vbe_mode_info_t vmi;
 
 
 int (vg_enter)(uint16_t mode) {
   vbe_mode_info_t vmi_p;
   if (vbe_get_mode_info(mode, &vmi_p) != 0) return EXIT_FAILURE;
-  
+  vmi = vmi_p;  // copy
   struct reg86 reg86p;
 
   memset(&reg86p, 0, sizeof(reg86p));
   reg86p.intno = 0x10; /* BIOS video services */
   reg86p.ah = 0x4F;    /* Set Video Mode function */
   reg86p.al = 0x02;    /* 80x25 graphics mode */
-  reg86p.bx = mode | BIT(14);
+  reg86p.bx = mode | BIT(14); /* Set bit 14: linear framebuffer */
+  reg86p.bx &= 0x7FFF;  /* bit 15 of the BX register cleared, thus ensuring that the display memory is cleared after switching to the desired graphics mode.*/
+  
   /* Make the BIOS call */
-
   if( sys_int86(&reg86p) != OK ) {
     printf("\tvg_exit(): sys_int86() failed \n");
     return EXIT_FAILURE;
@@ -38,20 +42,11 @@ int (vg_enter)(uint16_t mode) {
 int (vg_draw_pixel)(uint16_t x, uint16_t y, uint32_t color){
   if (x >= h_res || y >= v_res) {
     // printf("x or y outside limits inside %s\n", __func__);
-    return EXIT_SUCCESS; 
+    return EXIT_SUCCESS;
   }
   unsigned int index = (y * h_res + x) * bytes_per_pixel;
   // printf("index: %lu\n", index);
   memcpy(&video_mem[index], &color, bytes_per_pixel);
-  /*
-  for (int i = 0; i < bytes_per_pixel; i++){
-    if (memcpy(&video_mem[index], &color, bytes_per_pixel) != 0) {
-      printf("memcpy inside %s\n", __func__);
-      return EXIT_FAILURE;
-    }
-    printf("i = %s\n", i);
-  }
-  */
   return EXIT_SUCCESS;
 }
 
@@ -68,6 +63,7 @@ int (vg_draw_hline)(uint16_t x, uint16_t y, uint16_t len, uint32_t color){
 
 int (vg_draw_rectangle)(uint16_t x, uint16_t y, uint16_t width, uint16_t height, uint32_t color){
   unsigned limit_y = y + height;
+  // this print is already wrong
   for (unsigned int verticalIndex = y; verticalIndex < limit_y; verticalIndex++) {
     if (vg_draw_hline(x, verticalIndex, width, color) != OK) {
       printf("vg_draw_hline inside %s\n", __func__);
@@ -85,7 +81,8 @@ int (map_phys_mem_to_virtual)(uint16_t mode) {
   if (vbe_get_mode_info(mode, &vmi_p) != 0) return EXIT_FAILURE;
 
   bytes_per_pixel = (vmi_p.BitsPerPixel + 7) / 8; // rounding by excess
-  
+  bits_per_pixel = vmi_p.BitsPerPixel;
+
   h_res = vmi_p.XResolution;
   v_res = vmi_p.YResolution;
 
@@ -112,5 +109,15 @@ int (map_phys_mem_to_virtual)(uint16_t mode) {
     printf("couldn't map video memory inside %s\n", __func__);
     return EXIT_FAILURE;
   }
+  return EXIT_SUCCESS;
+}
+
+int (get_rgb_component)(uint32_t color, uint8_t component_size, uint8_t component_position, uint8_t *component) {
+  uint32_t shifted = color >> component_position;
+  uint8_t mask = BIT(component_size) - 1;
+  uint8_t final = (uint8_t) (shifted & (mask));
+  *component = final;
+  printf("component: 0x%02x ", final);
+
   return EXIT_SUCCESS;
 }
