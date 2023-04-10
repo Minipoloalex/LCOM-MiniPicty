@@ -16,6 +16,7 @@ extern vbe_mode_info_t vmi;
 
 int (vg_enter)(uint16_t mode) {
   vbe_mode_info_t vmi_p;
+  memset(&vmi_p, 0, sizeof(vmi_p));
   if (vbe_get_mode_info(mode, &vmi_p) != 0) return EXIT_FAILURE;
   vmi = vmi_p;  // copy
   struct reg86 reg86p;
@@ -119,5 +120,24 @@ int (get_rgb_component)(uint32_t color, uint8_t component_size, uint8_t componen
   *component = final;
   printf("component: 0x%02x ", final);
 
+  return EXIT_SUCCESS;
+}
+
+int (vg_draw_xpm)(xpm_image_t *img, uint16_t x, uint16_t y) {
+  uint8_t *colors = img->bytes;
+  uint16_t width = img->width;
+  uint16_t height = img->height;
+
+  uint16_t limit_y = y + height;
+  uint16_t limit_x = x + width;
+  for (int row = y; row < limit_y; row++) {
+    for (int col = x; col < limit_x; col++) {
+      if (vg_draw_pixel(col, row, *colors)) {
+        printf("vg_draw_pixel inside %s\n", __func__);
+        return EXIT_FAILURE;
+      }
+      colors++;
+    }
+  }
   return EXIT_SUCCESS;
 }
