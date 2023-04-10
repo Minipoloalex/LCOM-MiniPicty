@@ -141,3 +141,52 @@ int (vg_draw_xpm)(xpm_image_t *img, uint16_t x, uint16_t y) {
   }
   return EXIT_SUCCESS;
 }
+
+int (vg_erase_xpm)(xpm_image_t *img, uint16_t x, uint16_t y) {
+  
+  uint16_t width = img->width;
+  uint16_t height = img->height;
+
+  uint16_t limit_y = y + height;
+  uint16_t limit_x = x + width;
+  for (int row = y; row < limit_y; row++) {
+    for (int col = x; col < limit_x; col++) {
+      if (vg_draw_pixel(col, row, 0)) {
+        printf("vg_draw_pixel inside %s\n", __func__);
+        return EXIT_FAILURE;
+      }
+    }
+  }
+  return EXIT_SUCCESS;
+}
+
+int (update_position)(uint16_t *x, uint16_t xf, uint16_t *y, uint16_t yf, int16_t speed) {
+  uint16_t x_val = *x;
+  uint16_t y_val = *y;
+  if (x_val == xf && y_val == yf) return EXIT_SUCCESS;
+  if (x_val != xf && y_val != yf) return EXIT_FAILURE;
+  
+  uint16_t diff = speed;
+  if (speed < 0) {
+    diff = 1;
+  }
+
+  /* This function could have problems because of overflow/underflow: if x - diff is < 0 */
+  if (x_val < xf) {
+    *x = x_val + diff;
+    if (*x > xf) *x = xf;
+  }
+  else if (x_val > xf) {
+    *x = x_val - diff;
+    if (*x < xf) *x = xf;
+  }
+  else if (y_val < yf) {
+    *y = y_val + diff;
+    if (*y > yf) *y = yf;
+  }
+  else if (y_val > yf) {
+    *y = y_val - diff;
+    if (*y < yf) *y = yf;
+  }
+  return EXIT_SUCCESS;
+}

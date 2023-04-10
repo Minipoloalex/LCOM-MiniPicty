@@ -16,6 +16,7 @@
     "stdio.h": "c",
     "kbc.h": "c",
     "xpm.h": "c",
-    "pixmap.h": "c"
+    "pixmap.h": "c",
+    "stdlib.h": "c"
   },
 }

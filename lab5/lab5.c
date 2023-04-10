@@ -10,7 +10,7 @@
 
 #include "vbe.h"
 #include "keyboard.h"
-
+#include "timer.c"
 
 uint8_t bytes_per_pixel;
 uint8_t bits_per_pixel;
@@ -191,22 +191,20 @@ int(video_test_xpm)(xpm_map_t xpm, uint16_t x, uint16_t y) {
   if (vg_enter(0x105) != OK) return EXIT_FAILURE;
 
 
-  // draw xpm
+  
   xpm_image_t xpm_image;
   uint8_t *colors = xpm_load(xpm, XPM_INDEXED, &xpm_image);
-  xpm_image.bytes = colors;
   if (colors == NULL) {
     printf("xpm_load inside %s\n", __func__);
     return EXIT_FAILURE;
   }
+  xpm_image.bytes = colors;
   if (xpm_image.type == INVALID_XPM) {
     printf("xpm_image.type inside %s\n", __func__);
     return EXIT_FAILURE;
   }
-  // print xpm_image information
-  printf("xpm_image.width: %d, xpm_image.height: %d\n", xpm_image.width, xpm_image.height);
-  printf("xpm_image.type: %d, xpm_image.size: %d\n", xpm_image.type, xpm_image.size);
-  printf("xpm_image.bytes: %p\n", xpm_image.bytes);
+
+
   if (vg_draw_xpm(&xpm_image, x, y) != OK) {
     printf("vg_draw_xpm inside %s\n", __func__);
     return EXIT_FAILURE;
@@ -243,11 +241,84 @@ int(video_test_xpm)(xpm_map_t xpm, uint16_t x, uint16_t y) {
 
 int(video_test_move)(xpm_map_t xpm, uint16_t xi, uint16_t yi, uint16_t xf, uint16_t yf,
                      int16_t speed, uint8_t fr_rate) {
-  /* To be completed */
-  printf("%s(%8p, %u, %u, %u, %u, %d, %u): under construction\n",
-         __func__, xpm, xi, yi, xf, yf, speed, fr_rate);
+  /* movement only along one axis */  /* assume speed is positive */
+  uint8_t keyboard_bit_no;
+  uint8_t timer_bit_no;
+  if(keyboard_subscribe_interrupts(&keyboard_bit_no) != 0) return EXIT_FAILURE;
+  if(timer_subscribe_int(&timer_bit_no) != 0) return EXIT_FAILURE;
 
-  return 1;
+  if (map_phys_mem_to_virtual(0x105) != OK){
+    printf("map_phys_mem_to_virtual inside %s\n", __func__);
+    return EXIT_FAILURE;
+  }
+
+  if (vg_enter(0x105) != OK) return EXIT_FAILURE;
+
+  xpm_image_t xpm_image;
+  uint8_t *colors = xpm_load(xpm, XPM_INDEXED, &xpm_image);
+  xpm_image.bytes = colors;
+  if (colors == NULL) {
+    printf("xpm_load inside %s\n", __func__);
+    return EXIT_FAILURE;
+  }
+  if (xpm_image.type == INVALID_XPM) {
+    printf("xpm_image.type inside %s\n", __func__);
+    return EXIT_FAILURE;
+  }
+
+  if (vg_draw_xpm(&xpm_image, xi, yi) != OK) {
+    printf("vg_draw_xpm inside %s\n", __func__);
+    return EXIT_FAILURE;
+  }
+
+  int r, ipc_status;
+  message msg;
+  extern uint8_t scancode;
+  extern int return_value;
+  extern int counter;
+  int ints_per_frame = sys_hz() / fr_rate;
+  do {
+      if ((r = driver_receive(ANY, &msg, &ipc_status)) != 0) {
+        printf("driver_receive failed with %d", r);
+      }
+      if (is_ipc_notify(ipc_status)) {
+        switch(_ENDPOINT_P(msg.m_source)) {
+          case HARDWARE:
+            if (msg.m_notify.interrupts & BIT(timer_bit_no)) {
+              timer_int_handler();
+              if (counter % ints_per_frame == 0) {  // general frame rate
+                /* check with professor if processing the interrupt here is ok */
+                if (speed > 0 || (speed < 0 && counter % (ints_per_frame * abs(speed)) == 0)) {
+                  if (vg_erase_xpm(&xpm_image, xi, yi) != OK) {
+                  printf("vg_erase_xpm inside %s\n", __func__);
+                  return EXIT_FAILURE;
+                  }
+                  if (update_position(&xi, xf, &yi, yf, speed) != OK) {
+                    printf("update_position inside %s\n", __func__);
+                    return EXIT_FAILURE;
+                  }
+                  if (vg_draw_xpm(&xpm_image, xi, yi) != OK) {
+                    printf("vg_draw_xpm inside %s\n", __func__);
+                    return EXIT_FAILURE;
+                  }
+                }
+              }
+            }
+            if (msg.m_notify.interrupts & BIT(keyboard_bit_no)) {
+              keyboard_ih();
+              if (return_value) continue;
+            }
+            break;
+          default:
+            break;
+        }
+      }
+    } while (scancode != BREAK_ESC);
+
+  if(vg_exit() != OK) return EXIT_FAILURE;
+
+  if(timer_unsubscribe_int() != OK) return EXIT_FAILURE;
+  return keyboard_unsubscribe_interrupts();
 }
 
 int(video_test_controller)() {
