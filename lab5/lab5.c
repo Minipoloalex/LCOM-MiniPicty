@@ -8,21 +8,21 @@
 
 // Any header files included below this line should have been created by you
 
-#include "vbe.h"
+#include "video_card.h"
 #include "keyboard.h"
+#include "timer.c"
 
-// bytes per pixel
-uint8_t bpp;
+uint8_t bytes_per_pixel;
+uint8_t bits_per_pixel;
 unsigned int vram_base;  /* VRAM's physical addresss */
 unsigned int vram_size;  /* VRAM's size, but you can use the frame buffer size instead */
 
 
-char *video_mem;		/* Process (virtual) address to which VRAM is mapped */
+uint8_t *video_mem;		/* Process (virtual) address to which VRAM is mapped */
 
-unsigned h_res;	        /* Horizontal resolution in pixels */
-unsigned v_res;	        /* Vertical resolution in pixels */
-unsigned bits_per_pixel; /* Number of VRAM bits per pixel */
-
+unsigned int h_res;	        /* Horizontal resolution in pixels */
+unsigned int v_res;	        /* Vertical resolution in pixels */
+vbe_mode_info_t vmi;
 
 int main(int argc, char *argv[]) {
   // sets the language of LCF messages (can be either EN-US or PT-PT)
@@ -68,44 +68,18 @@ int(video_test_rectangle)(uint16_t mode, uint16_t x, uint16_t y,
   uint8_t bit_no;
   if(keyboard_subscribe_interrupts(&bit_no) != 0) return EXIT_FAILURE;
   
+  if (map_phys_mem_to_virtual(mode) != OK){
+    printf("map_phys_mem_to_virtual inside %s\n", __func__);
+    return EXIT_FAILURE;
+  }
   if (vg_enter(mode) != OK) return EXIT_FAILURE;
-  
-  
 
-
-  // Map phys memory to virtual address space of process
-  int r;
-  vbe_mode_info_t vmi_p;
-  if (vbe_get_mode_info(mode, &vmi_p) != 0) return EXIT_FAILURE;
-
-  bits_per_pixel = vmi_p.BitsPerPixel;
-  bpp = vmi_p.BitsPerPixel / 8;
-  vram_size = vmi_p.XResolution * vmi_p.YResolution * bpp;
-  vram_base = vmi_p.PhysBasePtr;
-  
-  struct minix_mem_range mr;
-
-  mr.mr_base = (phys_bytes) vram_base;	
-  mr.mr_limit = mr.mr_base + vram_size;  
-
-  if( OK != (r = sys_privctl(SELF, SYS_PRIV_ADD_MEM, &mr)))
-    panic("sys_privctl (ADD_MEM) failed: %d\n", r);
-
-/* Map memory */
-
-video_mem = vm_map_phys(SELF, (void *)mr.mr_base, vram_size);
-
-if(video_mem == MAP_FAILED) panic("couldn't map video memory");
-
-
-// Draw rectangle
-
-
+  // Draw rectangle
   if (vg_draw_rectangle(x, y, width, height, color) != OK) return EXIT_FAILURE;
 
-  int ipc_status;
+  int ipc_status, r;
   message msg;
-
+  
   extern uint8_t scancode;
   extern int return_value;
   do {
@@ -116,7 +90,7 @@ if(video_mem == MAP_FAILED) panic("couldn't map video memory");
         switch(_ENDPOINT_P(msg.m_source)) {
           case HARDWARE:
             if (msg.m_notify.interrupts & BIT(bit_no)) {
-              kbc_ih();
+              keyboard_ih();
               if (return_value) continue;
             }
             break;
@@ -129,31 +103,216 @@ if(video_mem == MAP_FAILED) panic("couldn't map video memory");
   if(vg_exit() != 0) return EXIT_FAILURE;
   
   return keyboard_unsubscribe_interrupts();
-  
 }
 
 int(video_test_pattern)(uint16_t mode, uint8_t no_rectangles, uint32_t first, uint8_t step) {
-  /* To be completed */
-  printf("%s(0x%03x, %u, 0x%08x, %d): under construction\n", __func__,
-         mode, no_rectangles, first, step);
+  uint8_t bit_no;
+  if(keyboard_subscribe_interrupts(&bit_no) != 0) return EXIT_FAILURE;
+  
+  if (map_phys_mem_to_virtual(mode) != OK){
+    printf("map_phys_mem_to_virtual inside %s\n", __func__);
+    return EXIT_FAILURE;
+  }
+  if (vg_enter(mode) != OK) return EXIT_FAILURE;
+  
+  unsigned int rec_width = h_res / no_rectangles;
+  unsigned int rec_height = v_res / no_rectangles;
+  uint32_t color;
+  uint8_t red = 0;
+  uint8_t green = 0;
+  uint8_t blue = 0;
 
-  return 1;
+  for (int row = 0; row < no_rectangles; row++) {
+    for (int col = 0; col < no_rectangles; col++) {
+      if (mode == 0x105) {
+        color = (first + (row * no_rectangles + col) * step) % (1 << bits_per_pixel);
+      }
+      else { /* mode is direct */
+        uint8_t red_first = 0;
+        uint8_t green_first = 0;
+        uint8_t blue_first = 0;
+        get_rgb_component(first, vmi.RedMaskSize, vmi.RedFieldPosition, &red_first);
+        get_rgb_component(first, vmi.GreenMaskSize, vmi.GreenFieldPosition, &green_first);
+        get_rgb_component(first, vmi.BlueMaskSize, vmi.BlueFieldPosition, &blue_first);
+        red = (red_first + col * step) % (1 << vmi.RedMaskSize);
+	      green = (green_first + row * step) % (1 << vmi.GreenMaskSize);
+	      blue = (blue_first + (col + row) * step) % (1 << vmi.BlueMaskSize);
+        color = (red << vmi.RedFieldPosition) | (green << vmi.GreenFieldPosition) | (blue << vmi.BlueFieldPosition);
+      }
+      if (vg_draw_rectangle(col * rec_width, row * rec_height, rec_width, rec_height, color) != OK) {
+          printf("vg_draw_rectangle inside %s\n", __func__);
+          return EXIT_FAILURE;
+        }
+    }
+  }
+
+  int r, ipc_status;
+  message msg;
+  extern uint8_t scancode;
+  extern int return_value;
+  do {
+      if ((r = driver_receive(ANY, &msg, &ipc_status)) != 0) {
+        printf("driver_receive failed with %d", r);
+      }
+      if (is_ipc_notify(ipc_status)) {
+        switch(_ENDPOINT_P(msg.m_source)) {
+          case HARDWARE:
+            if (msg.m_notify.interrupts & BIT(bit_no)) {
+              keyboard_ih();
+              if (return_value) continue;
+            }
+            break;
+          default:
+            break;
+        }
+      }
+    } while (scancode != BREAK_ESC);
+
+  if(vg_exit() != 0) return EXIT_FAILURE;
+  
+  return keyboard_unsubscribe_interrupts();
 }
 
 int(video_test_xpm)(xpm_map_t xpm, uint16_t x, uint16_t y) {
-  /* To be completed */
-  printf("%s(%8p, %u, %u): under construction\n", __func__, xpm, x, y);
+  uint8_t bit_no;
+  if(keyboard_subscribe_interrupts(&bit_no) != 0) return EXIT_FAILURE;
+  
+  if (map_phys_mem_to_virtual(0x105) != OK){
+    printf("map_phys_mem_to_virtual inside %s\n", __func__);
+    return EXIT_FAILURE;
+  }
 
-  return 1;
+  if (vg_enter(0x105) != OK) return EXIT_FAILURE;
+
+
+  
+  xpm_image_t xpm_image;
+  uint8_t *colors = xpm_load(xpm, XPM_INDEXED, &xpm_image);
+  if (colors == NULL) {
+    printf("xpm_load inside %s\n", __func__);
+    return EXIT_FAILURE;
+  }
+  xpm_image.bytes = colors;
+  if (xpm_image.type == INVALID_XPM) {
+    printf("xpm_image.type inside %s\n", __func__);
+    return EXIT_FAILURE;
+  }
+
+
+  if (vg_draw_xpm(&xpm_image, x, y) != OK) {
+    printf("vg_draw_xpm inside %s\n", __func__);
+    return EXIT_FAILURE;
+  }
+
+
+  int r, ipc_status;
+  message msg;
+  extern uint8_t scancode;
+  extern int return_value;
+  do {
+      if ((r = driver_receive(ANY, &msg, &ipc_status)) != 0) {
+        printf("driver_receive failed with %d", r);
+      }
+      if (is_ipc_notify(ipc_status)) {
+        switch(_ENDPOINT_P(msg.m_source)) {
+          case HARDWARE:
+            if (msg.m_notify.interrupts & BIT(bit_no)) {
+              keyboard_ih();
+              if (return_value) continue;
+            }
+            break;
+          default:
+            break;
+        }
+      }
+    } while (scancode != BREAK_ESC);
+
+  
+  if(vg_exit() != 0) return EXIT_FAILURE;
+
+  return keyboard_unsubscribe_interrupts();
 }
 
 int(video_test_move)(xpm_map_t xpm, uint16_t xi, uint16_t yi, uint16_t xf, uint16_t yf,
                      int16_t speed, uint8_t fr_rate) {
-  /* To be completed */
-  printf("%s(%8p, %u, %u, %u, %u, %d, %u): under construction\n",
-         __func__, xpm, xi, yi, xf, yf, speed, fr_rate);
+  /* movement only along one axis */  /* assume speed is positive */
+  uint8_t keyboard_bit_no;
+  uint8_t timer_bit_no;
+  if(keyboard_subscribe_interrupts(&keyboard_bit_no) != 0) return EXIT_FAILURE;
+  if(timer_subscribe_int(&timer_bit_no) != 0) return EXIT_FAILURE;
 
-  return 1;
+  if (map_phys_mem_to_virtual(0x105) != OK){
+    printf("map_phys_mem_to_virtual inside %s\n", __func__);
+    return EXIT_FAILURE;
+  }
+
+  if (vg_enter(0x105) != OK) return EXIT_FAILURE;
+
+  xpm_image_t xpm_image;
+  uint8_t *colors = xpm_load(xpm, XPM_INDEXED, &xpm_image);
+  xpm_image.bytes = colors;
+  if (colors == NULL) {
+    printf("xpm_load inside %s\n", __func__);
+    return EXIT_FAILURE;
+  }
+  if (xpm_image.type == INVALID_XPM) {
+    printf("xpm_image.type inside %s\n", __func__);
+    return EXIT_FAILURE;
+  }
+
+  if (vg_draw_xpm(&xpm_image, xi, yi) != OK) {
+    printf("vg_draw_xpm inside %s\n", __func__);
+    return EXIT_FAILURE;
+  }
+
+  int r, ipc_status;
+  message msg;
+  extern uint8_t scancode;
+  extern int return_value;
+  extern int counter;
+  int ints_per_frame = sys_hz() / fr_rate;
+  do {
+      if ((r = driver_receive(ANY, &msg, &ipc_status)) != 0) {
+        printf("driver_receive failed with %d", r);
+      }
+      if (is_ipc_notify(ipc_status)) {
+        switch(_ENDPOINT_P(msg.m_source)) {
+          case HARDWARE:
+            if (msg.m_notify.interrupts & BIT(timer_bit_no)) {
+              timer_int_handler();
+              if (counter % ints_per_frame == 0) {  // general frame rate
+                /* check with professor if processing the interrupt here is ok */
+                if (speed > 0 || (speed < 0 && counter % (ints_per_frame * abs(speed)) == 0)) {
+                  if (vg_erase_xpm(&xpm_image, xi, yi) != OK) {
+                  printf("vg_erase_xpm inside %s\n", __func__);
+                  return EXIT_FAILURE;
+                  }
+                  if (update_position(&xi, xf, &yi, yf, speed) != OK) {
+                    printf("update_position inside %s\n", __func__);
+                    return EXIT_FAILURE;
+                  }
+                  if (vg_draw_xpm(&xpm_image, xi, yi) != OK) {
+                    printf("vg_draw_xpm inside %s\n", __func__);
+                    return EXIT_FAILURE;
+                  }
+                }
+              }
+            }
+            if (msg.m_notify.interrupts & BIT(keyboard_bit_no)) {
+              keyboard_ih();
+              if (return_value) continue;
+            }
+            break;
+          default:
+            break;
+        }
+      }
+    } while (scancode != BREAK_ESC);
+
+  if(vg_exit() != OK) return EXIT_FAILURE;
+
+  if(timer_unsubscribe_int() != OK) return EXIT_FAILURE;
+  return keyboard_unsubscribe_interrupts();
 }
 
 int(video_test_controller)() {
