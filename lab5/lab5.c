@@ -8,7 +8,7 @@
 
 // Any header files included below this line should have been created by you
 
-#include "vbe.h"
+#include "video_card.h"
 #include "keyboard.h"
 #include "timer.c"
 
@@ -126,12 +126,8 @@ int(video_test_pattern)(uint16_t mode, uint8_t no_rectangles, uint32_t first, ui
     for (int col = 0; col < no_rectangles; col++) {
       if (mode == 0x105) {
         color = (first + (row * no_rectangles + col) * step) % (1 << bits_per_pixel);
-        printf("col: %d, row: %d, color_index: %d\n", col, row, color);
       }
       else { /* mode is direct */
-        // print all of the mask sizes
-        printf("r size 0x%02x, g size 0x%02x b size 0x%02x ", vmi.RedMaskSize, vmi.GreenMaskSize, vmi.BlueMaskSize);
-        printf("r pos 0x%02x, g pos 0x%02x b pos 0x%02x ", vmi.RedFieldPosition, vmi.GreenFieldPosition, vmi.BlueFieldPosition);
         uint8_t red_first = 0;
         uint8_t green_first = 0;
         uint8_t blue_first = 0;
@@ -142,7 +138,6 @@ int(video_test_pattern)(uint16_t mode, uint8_t no_rectangles, uint32_t first, ui
 	      green = (green_first + row * step) % (1 << vmi.GreenMaskSize);
 	      blue = (blue_first + (col + row) * step) % (1 << vmi.BlueMaskSize);
         color = (red << vmi.RedFieldPosition) | (green << vmi.GreenFieldPosition) | (blue << vmi.BlueFieldPosition);
-        printf("col: %d, row: %d, color_rgb: 0x%08x, %ld\n", col, row, color, color);
       }
       if (vg_draw_rectangle(col * rec_width, row * rec_height, rec_width, rec_height, color) != OK) {
           printf("vg_draw_rectangle inside %s\n", __func__);
@@ -150,7 +145,6 @@ int(video_test_pattern)(uint16_t mode, uint8_t no_rectangles, uint32_t first, ui
         }
     }
   }
-  printf("Finished drawing rectangles with success\n");
 
   int r, ipc_status;
   message msg;

@@ -1,4 +1,4 @@
-#include "vbe.h"
+#include "video_card.h"
 
 
 extern uint8_t bytes_per_pixel;
@@ -33,10 +33,6 @@ int (vg_enter)(uint16_t mode) {
     printf("\tvg_exit(): sys_int86() failed \n");
     return EXIT_FAILURE;
   }
-  printf("intno: %02x\n", reg86p.intno);
-  printf("ah: %02x\n", reg86p.ah);
-  printf("al: %02x\n", reg86p.al);
-  printf("bx: %04x\n", reg86p.bx);
   return EXIT_SUCCESS;
 }
 
@@ -118,7 +114,6 @@ int (get_rgb_component)(uint32_t color, uint8_t component_size, uint8_t componen
   uint8_t mask = BIT(component_size) - 1;
   uint8_t final = (uint8_t) (shifted & (mask));
   *component = final;
-  printf("component: 0x%02x ", final);
 
   return EXIT_SUCCESS;
 }
@@ -143,7 +138,6 @@ int (vg_draw_xpm)(xpm_image_t *img, uint16_t x, uint16_t y) {
 }
 
 int (vg_erase_xpm)(xpm_image_t *img, uint16_t x, uint16_t y) {
-  
   uint16_t width = img->width;
   uint16_t height = img->height;
 
