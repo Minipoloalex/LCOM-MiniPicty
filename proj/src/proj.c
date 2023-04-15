@@ -39,12 +39,27 @@ int (proj_main_loop)(int argc, char *argv[]) {
   uint8_t bits_per_char = 8;
   uint8_t stop_bits = 1;
   int8_t parity = -1;
-  uint16_t rate = 1200;
+  uint32_t rate = 1200;
   if (ser_test_set(base_addr, bits_per_char, stop_bits, parity, rate) != OK) {
     printf("Error in ser_test_set()\n");
     return EXIT_FAILURE;
   }
   
-
+  // printf("\n");
+  // printf("testing ser_test_poll()\n");
+  
+  // char *strings[] = {"Hello", "World"};   // must not have dots (dot is the termination symbol)
+  // int stringc = 2;
+  // uint8_t is_transmitter = 1; // it is the receiver only if this value is 0
+  // // if it is the transmitter, it will send the strings
+  // // sends strings and a space ' ' in between them
+  // // dot to terminate
+  
+  // // as a receiver, it should receive the strings and display them, until it receives a dot (should also be displayed)
+  // if (ser_test_poll(base_addr, is_transmitter, bits_per_char, stop_bits, parity, rate, stringc, strings) != OK) {
+  //   printf("Error in ser_test_poll()\n");
+  //   return EXIT_FAILURE;
+  // }
+  printf("proj_main_loop() ended successfully\n");
   return EXIT_SUCCESS;
 }

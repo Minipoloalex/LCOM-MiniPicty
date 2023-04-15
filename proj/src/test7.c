@@ -1,20 +1,20 @@
 #include "test7.h"
 #include "serial_port.h"
+#include "i8042.h"
 
 int (ser_test_conf)(unsigned short base_addr) {
     ser_set_base_addr(base_addr);
-    uint8_t updated_lcr, ier;
+    uint8_t lcr, ier;
     uint16_t divisor;
-    if (ser_read_line_control(&updated_lcr)) {
+    if (ser_read_line_control(&lcr)) {
         printf("Error reading LCR\n");
         return 1;
     }
-    uint8_t lcr = updated_lcr;
-    if (ser_read_int_enable(&ier, &updated_lcr)) {
+    if (ser_read_int_enable(&ier)) {
         printf("Error reading IER\n");
         return 1;
     }
-    if (ser_read_divisor(&divisor, &updated_lcr)) {
+    if (ser_read_divisor(&divisor)) {
         printf("Error reading divisor\n");
         return 1;
     }
@@ -121,70 +121,64 @@ int (ser_test_conf)(unsigned short base_addr) {
 int ser_test_set(unsigned short base_addr, unsigned long bits, unsigned long stop, 
 	           long parity, unsigned long rate) { 
     ser_set_base_addr(base_addr);
-
-    ser_test_conf(base_addr);
-
-    uint8_t lcr;
-    if (ser_read_line_control(&lcr)) {
-        printf("Error reading lcr: ser_read_line_control() inside %s\n", __func__);
-        return EXIT_FAILURE;
-    }
     
-    
-    uint32_t divisor = SER_MAX_BITRATE / rate;
-    if (ser_write_divisor(divisor, &lcr)) {
-        printf("Error writing divisor: ser_write_divisor() inside %s\n", __func__);
+    if (ser_set_baud_rate(rate)) {
+        printf("Error setting baud rate: ser_set_baud_rate() inside %s\n", __func__);
         return EXIT_FAILURE;
     }
 
-    lcr &= ~(SER_LCR_BITS_PER_CHAR | SER_LCR_STOP_BIT | SER_LCR_PARITY_CTRL);
-    switch (parity) {
-        case -1:
-            lcr |= SER_LCR_PARITY_NONE;
-            break;
-        case 0:
-            lcr |= SER_LCR_PARITY_EVEN;
-            break;
-        case 1:
-            lcr |= SER_LCR_PARITY_ODD;
-            break;
-        default:
-            printf("Invalid parity value: %d\n", parity);
-            return EXIT_FAILURE;
-    }
-    switch (bits) {
-        case 5:
-            lcr |= SER_LCR_5_BITS_PER_CHAR;
-            break;
-        case 6:
-            lcr |= SER_LCR_6_BITS_PER_CHAR;
-            break;
-        case 7:
-            lcr |= SER_LCR_7_BITS_PER_CHAR;
-            break;
-        case 8:
-            lcr |= SER_LCR_8_BITS_PER_CHAR;
-            break;
-        default:
-            printf("Invalid number of bits per character: %d\n", bits);
-            return EXIT_FAILURE;
-    }
-    switch (stop) {
-        case 1:
-            lcr |= SER_LCR_1_STOP_BIT;
-            break;
-        case 2:
-            lcr |= SER_LCR_2_STOP_BIT;
-            break;
-        default:
-            printf("Invalid number of stop bits: %d\n", stop);
-            return EXIT_FAILURE;
-    }
-
-    if (ser_write_line_control(lcr)) {
-        printf("Error writing lcr: ser_write_line_control() inside %s\n", __func__);
+    if (ser_set_line_config(bits, stop, parity)) {
+        printf("Error setting line config: ser_set_line_config() inside %s\n", __func__);
         return EXIT_FAILURE;
     }
+    // lcr &= ~(SER_LCR_BITS_PER_CHAR | SER_LCR_STOP_BIT | SER_LCR_PARITY_CTRL);
+    // switch (parity) {
+    //     case -1:
+    //         lcr |= SER_LCR_PARITY_NONE;
+    //         break;
+    //     case 0:
+    //         lcr |= SER_LCR_PARITY_EVEN;
+    //         break;
+    //     case 1:
+    //         lcr |= SER_LCR_PARITY_ODD;
+    //         break;
+    //     default:
+    //         printf("Invalid parity value: %d\n", parity);
+    //         return EXIT_FAILURE;
+    // }
+    // switch (bits) {
+    //     case 5:
+    //         lcr |= SER_LCR_5_BITS_PER_CHAR;
+    //         break;
+    //     case 6:
+    //         lcr |= SER_LCR_6_BITS_PER_CHAR;
+    //         break;
+    //     case 7:
+    //         lcr |= SER_LCR_7_BITS_PER_CHAR;
+    //         break;
+    //     case 8:
+    //         lcr |= SER_LCR_8_BITS_PER_CHAR;
+    //         break;
+    //     default:
+    //         printf("Invalid number of bits per character: %d\n", bits);
+    //         return EXIT_FAILURE;
+    // }
+    // switch (stop) {
+    //     case 1:
+    //         lcr |= SER_LCR_1_STOP_BIT;
+    //         break;
+    //     case 2:
+    //         lcr |= SER_LCR_2_STOP_BIT;
+    //         break;
+    //     default:
+    //         printf("Invalid number of stop bits: %d\n", stop);
+    //         return EXIT_FAILURE;
+    // }
+
+    // if (ser_write_line_control(lcr)) {
+    //     printf("Error writing lcr: ser_write_line_control() inside %s\n", __func__);
+    //     return EXIT_FAILURE;
+    // }
     
     ser_test_conf(base_addr);
     return EXIT_SUCCESS;
@@ -193,8 +187,68 @@ int ser_test_set(unsigned short base_addr, unsigned long bits, unsigned long sto
 int ser_test_poll(unsigned short base_addr, unsigned char tx, unsigned long bits, 
                     unsigned long stop, long parity, unsigned long rate, 
                     int stringc, char *strings[]) {
-    
-    return 0;
+    /*
+    Importante notes:
+    - When the UART is operating in polled mode, the device driver must continually check the LSR to detect whether a relevant event such as receiving a character has occured. 
+    - In the case of the transmitter, it must check the LSR for the THRE bit (Transmitter Holding Register Empty): checks if can send another byte
+    */
+
+    ser_set_base_addr(base_addr);
+    if (ser_test_set(base_addr, bits, stop, parity, rate) != OK) {
+        printf("Error setting serial port: ser_test_set() inside %s\n", __func__);
+        return EXIT_FAILURE;
+    }
+    if (tx == 0) {  /* receiver */
+        while(true) {
+            uint8_t character;
+            for (int i = 0; i < MAX_ATTEMPTS; i++) {
+                /* read a character from the receiver buffer */
+                if (ser_read_char(&character) == OK) {
+                    break;  /* got a valid char (multiple attempts may be needed - polling) */
+                }
+                printf("Error reading character: ser_read_char() inside %s\n", __func__);
+            }
+            printf("Character read: %c\n", character);
+        }        
+    }
+    else {  /* transmiter */
+        for (int i = 0; i < stringc; i++) {
+            char *string = strings[i];
+            for (int j = 0; string[j] != '\0'; j++) {
+                char character = string[j];
+                for (int k = 0; k < MAX_ATTEMPTS; k++) {
+                    /* write a character to the transmitter buffer */
+                    if (ser_write_char(character) == OK) {
+                        break;  /* wrote a valid char (multiple attempts may be needed - polling) */
+                    }
+                    printf("Error writing character: ser_write_char() inside %s\n", __func__);
+                }
+                printf("Character written: %c\n", character);
+            }
+
+            if (i != stringc - 1) {
+                for (int k = 0; k < MAX_ATTEMPTS; k++) {
+                    /* write a character to the transmitter buffer */
+                    if (ser_write_char(' ') == OK) {
+                        break;  /* wrote a valid char (multiple attempts may be needed - polling) */
+                    }
+                    printf("Error writing character: ser_write_char() inside %s\n", __func__);
+                }
+                printf("Character written: %c\n", ' ');
+            }
+        }
+
+        for (int k = 0; k < MAX_ATTEMPTS; k++) {
+            /* write a character to the transmitter buffer */
+            if (ser_write_char('.') == OK) {
+                break;  /* wrote a valid char (multiple attempts may be needed - polling) */
+            }
+            printf("Error writing character: ser_write_char() inside %s\n", __func__);
+        }
+        printf("Character written: %c\n", '.');
+    }
+
+    return EXIT_SUCCESS;
 }
 
 int ser_test_int(/* details to be provided */) { 

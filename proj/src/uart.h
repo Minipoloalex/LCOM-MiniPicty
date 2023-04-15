@@ -78,7 +78,7 @@ To access DLL and DLM, a programmer must first set the DL Access bit (DLAB) in t
 Then, access DLL/DLM register and finally reset the DLAB bit, so other registers can be accessed.
 */
 
-#define SER_LSR_DR BIT(0)   // data ready
+#define SER_LSR_DATA_READY BIT(0)   // data ready
 #define SER_LSR_OE BIT(1)   // overrun error
 #define SER_LSR_PE BIT(2)   // parity error
 #define SER_LSR_FE BIT(3)   // framing error
