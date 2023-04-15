@@ -1,6 +1,27 @@
 #pragma once
 
+#include <lcom/lcf.h>
+#include <stdint.h>
 #include "uart.h"
+
+
+int (set_base_addr)(uint16_t addr);
+
+int (ser_read_line_control)(uint8_t *lcr);
+int (ser_write_line_control)(uint8_t lcr);
+
+/**
+ * @brief Reads the divisor latch register
+ * if lcr is NULL, it will read the line control register and set the DLAB bit to be able to access DLL and DLM
+ * 
+ */
+int (ser_read_divisor)(uint16_t *divisor, uint8_t *lcr);
+int (ser_write_divisor)(uint16_t divisor, uint8_t *lcr);
+
+int (ser_read_int_enable)(uint8_t *ier, uint8_t *lcr);
+int (ser_write_int_enable)(uint8_t ier, uint8_t *lcr);
+
+
 
 int (ser_subscribe_int)(uint8_t *bit_no);
 int (ser_unsubscribe_int)();
@@ -23,18 +44,13 @@ int (ser_write_modem)(uint8_t modem);
 int (ser_read_line)(uint8_t *line);
 int (ser_write_line)(uint8_t line);
 
-int (ser_read_divisor)(uint16_t *divisor);
-int (ser_write_divisor)(uint16_t divisor);
 
 int (ser_read_data)(uint8_t *data);
 int (ser_write_data)(uint8_t data);
-int (ser_read_int_enable)(uint8_t *int_enable);
-int (ser_write_int_enable)(uint8_t int_enable);
+
 int (ser_read_int_id_fifo)(uint8_t *int_id_fifo);
 int (ser_write_int_id_fifo)(uint8_t int_id_fifo);
 
-int (ser_read_line_control)(uint8_t *line_control);
-int (ser_write_line_control)(uint8_t line_control);
 
 int (ser_read_modem_control)(uint8_t *modem_control);
 int (ser_write_modem_control)(uint8_t modem_control);

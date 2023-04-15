@@ -2,14 +2,27 @@
 #include "serial_port.h"
 
 int (ser_test_conf)(unsigned short base_addr) {
-    /* LCR and IER */
-    uint8_t lcr, ier;
-    if (util_sys_inb(base_addr + SER_LCR, &lcr)) {  // read line control register
+    set_base_addr(base_addr);
+    uint8_t updated_lcr, ier;
+    uint16_t divisor;
+    if (ser_read_line_control(&updated_lcr)) {
         printf("Error reading LCR\n");
         return 1;
-    };
+    }
+    uint8_t lcr = updated_lcr;
+    if (ser_read_int_enable(&ier, &updated_lcr)) {
+        printf("Error reading IER\n");
+        return 1;
+    }
+    if (ser_read_divisor(&divisor, &updated_lcr)) {
+        printf("Error reading divisor\n");
+        return 1;
+    }
+    
     printf("LCR: 0x%02x\n", lcr);
-
+    printf("IER: 0x%02x\n", ier);
+    printf("Divisor: 0x%04x\n", divisor);
+    
     // LCR fields
     uint8_t n_bits_per_char;
     switch (lcr & SER_LCR_BITS_PER_CHAR) {  // switch case equivalent to (lcr & SER_LCR_BITS_PER_CHAR) + 5
@@ -57,19 +70,7 @@ int (ser_test_conf)(unsigned short base_addr) {
     printf("Break control: %d\n", break_control);
     printf("DLAB: %d\n", dlab);
     
-    if (dlab == SER_LCR_DIVISOR_LATCH_ACCESS) {
-        // set dlab to 0
-        if (sys_outb(base_addr + SER_LCR, lcr & ~SER_LCR_DLAB) != OK) return EXIT_FAILURE;
 
-        printf("Sent to LCR: 0x%02x\n", lcr & ~SER_LCR_DLAB);
-    }
-
-    if (util_sys_inb(base_addr + SER_IER, &ier)) {  // read interrupt enable register
-        printf("Error reading IER\n");
-        return 1;
-    };
-    
-    printf("IER: 0x%02x\n", ier);
     // IER fields
     uint8_t rda_interrupt = (ier & SER_IER_RDA) ? 1 : 0;  // case 0: RDA interrupt disabled, case 1: RDA interrupt enabled
     uint8_t thre_interrupt = (ier & SER_IER_THRE) ? 1 : 0;  // case 0: THRE interrupt disabled, case 1: THRE interrupt enabled
@@ -80,34 +81,16 @@ int (ser_test_conf)(unsigned short base_addr) {
     printf("THRE interrupt: %d\n", thre_interrupt);
     printf("RLS interrupt: %d\n", rls_interrupt);
     printf("MS interrupt: %d\n", ms_interrupt);
-    
+
 
     /* DL - Divisor latch (bitrate) */
-    
-    // set dlab to 1
-    if (sys_outb(base_addr + SER_LCR, lcr | SER_LCR_DLAB) != OK) return EXIT_FAILURE;
-    printf("Sent to LCR: 0x%02x\n", lcr | SER_LCR_DLAB);
-
-    uint8_t dll, dlm;
-    if (util_sys_inb(base_addr + SER_DLL, &dll)) {  // read divisor latch LSB
-        printf("Error reading DLL\n");
-        return 1;
-    };
-    if (util_sys_inb(base_addr + SER_DLM, &dlm)) {  // read divisor latch MSB
-        printf("Error reading DLM\n");
-        return 1;
-    };
-    printf("DLL: 0x%02x\n", dll);
-    printf("DLM: 0x%02x\n", dlm);
-    uint16_t divisor = (dlm << 8) | dll;
-    printf("Divisor: %d\n", divisor);
     uint32_t bitrate = SER_MAX_BITRATE / divisor;
     printf("Bitrate: %d\n", bitrate);
 
-    // reset lcr (reset dlab to beginning value)
-    if (sys_outb(base_addr + SER_LCR, lcr) != OK) return EXIT_FAILURE;
-    
-    
+    if (ser_write_line_control(lcr)) {
+        printf("Error writing lcr: ser_write_line_control() inside %s\n", __func__);
+        return EXIT_FAILURE;
+    }
     // uint8_t lcr, ier, iir, fcr, mcr, lsr, msr, scr;
     // uint16_t dll, dlm;
     // int r;

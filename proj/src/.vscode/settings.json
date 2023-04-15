@@ -12,6 +12,7 @@
     "stdint.h": "c",
     "lcf.h": "c",
     "test7.h": "c",
-    "serial_port.h": "c"
+    "serial_port.h": "c",
+    "uart.h": "c"
   },
 }
