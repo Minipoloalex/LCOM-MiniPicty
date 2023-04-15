@@ -2,7 +2,7 @@
 #include "serial_port.h"
 
 int (ser_test_conf)(unsigned short base_addr) {
-    set_base_addr(base_addr);
+    ser_set_base_addr(base_addr);
     uint8_t updated_lcr, ier;
     uint16_t divisor;
     if (ser_read_line_control(&updated_lcr)) {
@@ -26,16 +26,16 @@ int (ser_test_conf)(unsigned short base_addr) {
     // LCR fields
     uint8_t n_bits_per_char;
     switch (lcr & SER_LCR_BITS_PER_CHAR) {  // switch case equivalent to (lcr & SER_LCR_BITS_PER_CHAR) + 5
-        case SER_LCR_5BIT:
+        case SER_LCR_5_BITS_PER_CHAR:
             n_bits_per_char = 5;
             break;
-        case SER_LCR_6BIT:
+        case SER_LCR_6_BITS_PER_CHAR:
             n_bits_per_char = 6;
             break;
-        case SER_LCR_7BIT:
+        case SER_LCR_7_BITS_PER_CHAR:
             n_bits_per_char = 7;
             break;
-        case SER_LCR_8BIT:
+        case SER_LCR_8_BITS_PER_CHAR:
             n_bits_per_char = 8;
             break;
     }
@@ -120,8 +120,74 @@ int (ser_test_conf)(unsigned short base_addr) {
 
 int ser_test_set(unsigned short base_addr, unsigned long bits, unsigned long stop, 
 	           long parity, unsigned long rate) { 
-    // 
-    return 0;
+    ser_set_base_addr(base_addr);
+
+    ser_test_conf(base_addr);
+
+    uint8_t lcr;
+    if (ser_read_line_control(&lcr)) {
+        printf("Error reading lcr: ser_read_line_control() inside %s\n", __func__);
+        return EXIT_FAILURE;
+    }
+    
+    
+    uint32_t divisor = SER_MAX_BITRATE / rate;
+    if (ser_write_divisor(divisor, &lcr)) {
+        printf("Error writing divisor: ser_write_divisor() inside %s\n", __func__);
+        return EXIT_FAILURE;
+    }
+
+    lcr &= ~(SER_LCR_BITS_PER_CHAR | SER_LCR_STOP_BIT | SER_LCR_PARITY_CTRL);
+    switch (parity) {
+        case -1:
+            lcr |= SER_LCR_PARITY_NONE;
+            break;
+        case 0:
+            lcr |= SER_LCR_PARITY_EVEN;
+            break;
+        case 1:
+            lcr |= SER_LCR_PARITY_ODD;
+            break;
+        default:
+            printf("Invalid parity value: %d\n", parity);
+            return EXIT_FAILURE;
+    }
+    switch (bits) {
+        case 5:
+            lcr |= SER_LCR_5_BITS_PER_CHAR;
+            break;
+        case 6:
+            lcr |= SER_LCR_6_BITS_PER_CHAR;
+            break;
+        case 7:
+            lcr |= SER_LCR_7_BITS_PER_CHAR;
+            break;
+        case 8:
+            lcr |= SER_LCR_8_BITS_PER_CHAR;
+            break;
+        default:
+            printf("Invalid number of bits per character: %d\n", bits);
+            return EXIT_FAILURE;
+    }
+    switch (stop) {
+        case 1:
+            lcr |= SER_LCR_1_STOP_BIT;
+            break;
+        case 2:
+            lcr |= SER_LCR_2_STOP_BIT;
+            break;
+        default:
+            printf("Invalid number of stop bits: %d\n", stop);
+            return EXIT_FAILURE;
+    }
+
+    if (ser_write_line_control(lcr)) {
+        printf("Error writing lcr: ser_write_line_control() inside %s\n", __func__);
+        return EXIT_FAILURE;
+    }
+    
+    ser_test_conf(base_addr);
+    return EXIT_SUCCESS;
 }
 
 int ser_test_poll(unsigned short base_addr, unsigned char tx, unsigned long bits, 

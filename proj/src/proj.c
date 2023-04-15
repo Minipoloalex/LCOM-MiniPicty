@@ -29,10 +29,22 @@ int main(int argc, char* argv[]) {
 }
 
 int (proj_main_loop)(int argc, char *argv[]) {
+  printf("testing ser_test_conf()\n");
   unsigned short base_addr = SER_COM1;
   if (ser_test_conf(base_addr) != OK) {
     printf("Error in ser_test_conf()\n");
     return EXIT_FAILURE;
   }
+  printf("testing ser_test_set()\n");
+  uint8_t bits_per_char = 8;
+  uint8_t stop_bits = 1;
+  int8_t parity = -1;
+  uint16_t rate = 1200;
+  if (ser_test_set(base_addr, bits_per_char, stop_bits, parity, rate) != OK) {
+    printf("Error in ser_test_set()\n");
+    return EXIT_FAILURE;
+  }
+  
+
   return EXIT_SUCCESS;
 }

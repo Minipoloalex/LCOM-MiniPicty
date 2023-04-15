@@ -5,7 +5,7 @@
 #include "uart.h"
 
 
-int (set_base_addr)(uint16_t addr);
+int (ser_set_base_addr)(uint16_t addr);
 
 int (ser_read_line_control)(uint8_t *lcr);
 int (ser_write_line_control)(uint8_t lcr);

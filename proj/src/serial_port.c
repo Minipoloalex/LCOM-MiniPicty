@@ -2,7 +2,7 @@
 
 static uint16_t base_addr;
 
-int (set_base_addr)(uint16_t addr) {
+int (ser_set_base_addr)(uint16_t addr) {
   base_addr = addr;
   return EXIT_SUCCESS;
 }
@@ -50,6 +50,34 @@ int (ser_read_divisor)(uint16_t *divisor, uint8_t *lcr) {
   }
   *divisor = (dlm << 8) | dll;
 
+  return EXIT_SUCCESS;
+}
+
+int (ser_write_divisor)(uint16_t divisor, uint8_t *lcr) {
+  if (lcr == NULL) {
+    if (ser_read_line_control(lcr) != OK) {
+      printf("ser_read_line_control() inside %s\n", __func__);
+      return EXIT_FAILURE;
+    }
+  }
+  // if dlab is not set, we have to set it to access DLL and DLM
+  if (!(*lcr & SER_LCR_DLAB)) {
+    *lcr |= SER_LCR_DLAB;
+    if (ser_write_line_control(*lcr) != OK) {
+      printf("ser_write_line_control() inside %s\n", __func__);
+      return EXIT_FAILURE;
+    }
+  }
+  uint8_t dll = (uint8_t) (divisor & 0xFF);
+  uint8_t dlm = (uint8_t) ((divisor >> 8) & 0xFF);
+  if (sys_outb(base_addr + SER_DLL, dll) != OK) {
+    printf("sys_outb() inside %s\n", __func__);
+    return EXIT_FAILURE;
+  }
+  if (sys_outb(base_addr + SER_DLM, dlm) != OK) {
+    printf("sys_outb() inside %s\n", __func__);
+    return EXIT_FAILURE;
+  }
   return EXIT_SUCCESS;
 }
 

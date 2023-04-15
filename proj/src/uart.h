@@ -31,18 +31,13 @@
 #define SER_IER_MS BIT(3)   // enable modem status interrupt
 /* Dubious defines (end) */
 
-#define SER_LCR_5BIT 0x00   // 5 bits, no parity, 1 stop bit
-#define SER_LCR_6BIT BIT(0) // 6 bits, no parity, 1 stop bit
-#define SER_LCR_7BIT BIT(1) // 7 bits, no parity, 1 stop bit
-#define SER_LCR_8BIT 0x03   // 8 bits, no parity, 1 stop bit
-
-/* CHECK IF PARITIES ARE CORRECT */
-#define SER_LCR_8BIT_PAR BIT(3) // 8 bits, parity, 1 stop bit
-#define SER_LCR_8BIT_2SB BIT(2) // 8 bits, no parity, 2 stop bits
-#define SER_LCR_8BIT_PAR_2SB (BIT(3) | BIT(2)) // 8 bits, parity, 2 stop bits
-
 
 #define SER_LCR_BITS_PER_CHAR BIT(0) | BIT(1) // bits per character
+#define SER_LCR_5_BITS_PER_CHAR 0x00   // 5 bits
+#define SER_LCR_6_BITS_PER_CHAR BIT(0) // 6 bits
+#define SER_LCR_7_BITS_PER_CHAR BIT(1) // 7 bits
+#define SER_LCR_8_BITS_PER_CHAR 0x03   // 8 bits
+
 #define SER_LCR_STOP_BIT BIT(2) // stop bit (0 for 1 stop bit, 1 for 2 stop bits)
 #define SER_LCR_1_STOP_BIT 0x00
 #define SER_LCR_2_STOP_BIT BIT(2)
@@ -55,14 +50,19 @@
  * 1 1 1 - parity bit is 0 (always)
  */
 #define SER_LCR_PARITY_CTRL BIT(3) | BIT(4) | BIT(5)
+/* CHECK IF PARITIES ARE CORRECT */
+#define SER_LCR_8BIT_PAR BIT(3) // 8 bits, parity, 1 stop bit
+#define SER_LCR_8BIT_2SB BIT(2) // 8 bits, no parity, 2 stop bits
+#define SER_LCR_8BIT_PAR_2SB (BIT(3) | BIT(2)) // 8 bits, parity, 2 stop bits
+
 #define SER_LCR_BREAK_CTRL BIT(6)
+
 /**
  * @brief 
  * 1 - Divisor latch access
  * 0 - RBR (read) or THR (write)
  */
 #define SER_LCR_DLAB BIT(7) // divisor latch access
-#define SER_LCR_DIVISOR_LATCH_ACCESS 1
 
 
 #define SER_LCR_PARITY_NONE 0x00
