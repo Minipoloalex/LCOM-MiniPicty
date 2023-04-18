@@ -4,6 +4,8 @@
 #include <stdint.h>
 #include <stdio.h>
 
+#include "modules/interrupts/interrupts.h"
+
 int main(int argc, char *argv[]) {
   lcf_set_language("EN-US");
   lcf_trace_calls("/home/lcom/labs/proj/trace.txt");
@@ -15,5 +17,17 @@ int main(int argc, char *argv[]) {
 }
 
 int(proj_main_loop)(int argc, char *argv[]) {
-  
+
+  //load resources
+
+  //subscribe interrupts
+  if(subscribe_interrupts()) return 1;
+
+  //loop
+  printf("Hello World!");
+
+  //unsubscribe interrupts
+  if(unsubscribe_interrupts()) return 1;
+
+  return 0;
 }

@@ -12,6 +12,14 @@
     "i8042.h": "c",
     "stdint.h": "c",
     "kbc.h": "c",
-    "sysutil.h": "c"
+    "sysutil.h": "c",
+    "timer.h": "c",
+    "i8254.h": "c",
+    "types.h": "c",
+    "lab5.h": "c",
+    "lab4.h": "c",
+    "lab3.h": "c",
+    "lab2.h": "c",
+    "interrupts.h": "c"
   },
 }

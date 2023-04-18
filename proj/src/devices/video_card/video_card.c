@@ -1,17 +1,15 @@
 #include "video_card.h"
 
+uint8_t bytes_per_pixel;
+uint8_t bits_per_pixel;
+unsigned int vram_base;  /* VRAM's physical addresss */
+unsigned int vram_size;  /* VRAM's size, but you can use the frame buffer size instead */
 
-extern uint8_t bytes_per_pixel;
-extern uint8_t bits_per_pixel;
-extern unsigned int vram_base;  /* VRAM's physical addresss */
-extern unsigned int vram_size;  /* VRAM's size, but you can use the frame buffer size instead */
+uint8_t *video_mem;		/* Process (virtual) address to which VRAM is mapped */
 
-
-extern uint8_t *video_mem;		/* Process (virtual) address to which VRAM is mapped */
-
-extern unsigned h_res;	        /* Horizontal resolution in pixels */
-extern unsigned v_res;	        /* Vertical resolution in pixels */
-extern vbe_mode_info_t vmi;
+unsigned h_res;	        /* Horizontal resolution in pixels */
+unsigned v_res;	        /* Vertical resolution in pixels */
+vbe_mode_info_t vmi;
 
 
 int (vg_enter)(uint16_t mode) {

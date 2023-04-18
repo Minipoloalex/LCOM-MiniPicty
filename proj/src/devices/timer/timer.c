@@ -1,9 +1,8 @@
 #include <lcom/lcf.h>
-#include <lcom/timer.h>
-
 #include <stdint.h>
 
 #include "../controllers/i8254.h"
+#include "timer.h"
 
 static int hook_id = TIMER0_IRQ;
 
