@@ -174,6 +174,26 @@ int(ser_read_int_enable)(uint8_t *ier) {
   return EXIT_SUCCESS;
 }
 
+int (ser_write_int_enable)(uint8_t ier) {
+  uint8_t lcr;
+  if (ser_read_line_control(&lcr) != OK) {
+    printf("ser_read_line_control() inside %s\n", __func__);
+    return EXIT_FAILURE;
+  }
+    // if dlab is set, we need to unset it (set it to 0)
+  if (lcr & SER_LCR_DLAB) {
+    if (ser_write_line_control(lcr & ~SER_LCR_DLAB) != OK) {
+      printf("ser_write_line_control() inside %s\n", __func__);
+      return EXIT_FAILURE;
+    }
+  }
+  if (sys_outb(base_addr + SER_IER, ier) != OK) {
+    printf("sys_outb() inside %s\n", __func__);
+    return EXIT_FAILURE;
+  }
+  return EXIT_SUCCESS;
+}
+
 int(ser_read_line_status)(uint8_t *status) {
   if (util_sys_inb(base_addr + SER_LSR, status) != OK) {
     printf("util_sys_inb() inside %s\n", __func__);

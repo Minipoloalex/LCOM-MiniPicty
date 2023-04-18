@@ -194,21 +194,32 @@ int ser_test_poll(unsigned short base_addr, unsigned char tx, unsigned long bits
     */
 
     ser_set_base_addr(base_addr);
+    uint8_t initial_ier;
+    if (ser_read_int_enable(&initial_ier) != OK) {
+        printf("Error reading ier: ser_read_int_enable() inside %s\n", __func__);
+        return EXIT_FAILURE;
+    }
+    
     if (ser_test_set(base_addr, bits, stop, parity, rate) != OK) {
         printf("Error setting serial port: ser_test_set() inside %s\n", __func__);
+        return EXIT_FAILURE;
+    }
+    if (ser_write_int_enable(initial_ier & ~(SER_IER_RDA | SER_IER_THRE | SER_IER_RLS)) != OK) {
+        printf("Error enabling interrupts: ser_enable_int() inside %s\n", __func__);
         return EXIT_FAILURE;
     }
     if (tx == 0) {  /* receiver */
         while(true) {
             uint8_t character;
-            for (int i = 0; i < MAX_ATTEMPTS; i++) {
+            for (int i = 0; i < 100000; i++) {
                 /* read a character from the receiver buffer */
                 if (ser_read_char(&character) == OK) {
                     break;  /* got a valid char (multiple attempts may be needed - polling) */
                 }
-                printf("Error reading character: ser_read_char() inside %s\n", __func__);
+                // printf("Error reading character: ser_read_char() inside %s\n", __func__);
             }
             printf("Character read: %c\n", character);
+            if (character == '.') break;
         }        
     }
     else {  /* transmiter */
@@ -248,6 +259,10 @@ int ser_test_poll(unsigned short base_addr, unsigned char tx, unsigned long bits
         printf("Character written: %c\n", '.');
     }
 
+    if (ser_write_int_enable(initial_ier) != OK) {
+        printf("Error enabling interrupts: ser_enable_int() inside %s\n", __func__);
+        return EXIT_FAILURE;
+    }
     return EXIT_SUCCESS;
 }
 
