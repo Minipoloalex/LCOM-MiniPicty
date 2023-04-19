@@ -1,12 +1,15 @@
 #pragma once
 
 #define SER_COM1 0x3F8  // IRQ 4, vector 0x0C
+#define SER_COM1_IRQ 4
+
 #define SER_COM2 0x2F8  // IRQ3, vector 0x0B
+#define SER_COM2_IRQ 3
 
 #define SER_MAX_BITRATE 115200
 
 #define SER_DATA 0      // data register
-#define SER_TX_RDY BIT(5)  // transmitter ready
+#define SER_TX_RDY BITSER_COM1_IRQ(5)  // transmitter ready
 
 
 #define SER_DLL 0x00    // divisor latch low (lsb)
@@ -86,3 +89,21 @@ Then, access DLL/DLM register and finally reset the DLAB bit, so other registers
 #define SER_LSR_THRE BIT(5) // transmitter holding register empty
 // #define SER_LSR_TEMT BIT(6) // transmitter empty
 // #define SER_LSR_ERR BIT(7)  // error
+
+/**
+ * @brief IIR bits
+ * 
+ */
+#define SER_IIR_INT_PEND 0x00
+#define SER_IIR_INT_ID (BIT(1) | BIT(2) | BIT(3))
+#define SER_IIR_INT_ID_POSITION 1
+
+#define SER_IIR_INT_ID_NONE 0x01
+
+// #define SER_IIR_INT_ID_MSI 0x00  // not necessary
+#define SER_IIR_INT_ID_LS (BIT(0) | BIT(1))
+#define SER_IIR_INT_ID_RDA BIT(1)
+#define SER_IIR_INT_ID_CTI BIT(2)
+#define SER_IIR_INT_ID_THRE BIT(0)
+
+#define SER_IIR_FIFO_EN (BIT(6) | BIT(7))

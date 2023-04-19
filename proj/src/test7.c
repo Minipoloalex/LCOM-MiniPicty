@@ -3,7 +3,7 @@
 #include "i8042.h"
 
 int (ser_test_conf)(unsigned short base_addr) {
-    ser_set_base_addr(base_addr);
+    ser_set_base_addr(base_addr, 0);
     uint8_t lcr, ier;
     uint16_t divisor;
     if (ser_read_line_control(&lcr)) {
@@ -120,7 +120,7 @@ int (ser_test_conf)(unsigned short base_addr) {
 
 int ser_test_set(unsigned short base_addr, unsigned long bits, unsigned long stop, 
 	           long parity, unsigned long rate) { 
-    ser_set_base_addr(base_addr);
+    ser_set_base_addr(base_addr, 0);
     
     if (ser_set_baud_rate(rate)) {
         printf("Error setting baud rate: ser_set_baud_rate() inside %s\n", __func__);
@@ -193,7 +193,7 @@ int ser_test_poll(unsigned short base_addr, unsigned char tx, unsigned long bits
     - In the case of the transmitter, it must check the LSR for the THRE bit (Transmitter Holding Register Empty): checks if can send another byte
     */
 
-    ser_set_base_addr(base_addr);
+    ser_set_base_addr(base_addr, tx);
     uint8_t initial_ier;
     if (ser_read_int_enable(&initial_ier) != OK) {
         printf("Error reading ier: ser_read_int_enable() inside %s\n", __func__);
@@ -211,16 +211,17 @@ int ser_test_poll(unsigned short base_addr, unsigned char tx, unsigned long bits
     if (tx == 0) {  /* receiver */
         while(true) {
             uint8_t character;
-            for (int i = 0; i < 100000; i++) {
+            for (int i = 0; i < 500; i++) {
                 /* read a character from the receiver buffer */
                 if (ser_read_char(&character) == OK) {
                     break;  /* got a valid char (multiple attempts may be needed - polling) */
                 }
                 // printf("Error reading character: ser_read_char() inside %s\n", __func__);
+                tickdelay(micros_to_ticks(20000));
             }
             printf("Character read: %c\n", character);
             if (character == '.') break;
-        }        
+        }
     }
     else {  /* transmiter */
         for (int i = 0; i < stringc; i++) {
@@ -266,9 +267,67 @@ int ser_test_poll(unsigned short base_addr, unsigned char tx, unsigned long bits
     return EXIT_SUCCESS;
 }
 
-int ser_test_int(/* details to be provided */) { 
-    /* To be completed */
-    return 0;
+int ser_test_int(unsigned short base_addr, unsigned char tx, unsigned long bits, 
+                    unsigned long stop, long parity, unsigned long rate, 
+                    int stringc, char *strings[]) { 
+    if (ser_set_base_addr(base_addr, tx) != OK) {
+        printf("Error setting base address: ser_set_base_addr() inside %s\n", __func__);
+        return EXIT_FAILURE;
+    }
+    if (ser_test_set(base_addr, bits, stop, parity, rate) != OK) {
+        printf("Error setting serial port: ser_test_set() inside %s\n", __func__);
+        return EXIT_FAILURE;
+    }
+
+    uint8_t iir;
+    if (ser_read_int_id(&iir) != OK) {
+        printf("Error reading iir: ser_read_int_id() inside %s\n", __func__);
+        return EXIT_FAILURE;
+    };
+    printf("iir: %02x\n", iir);
+
+    uint8_t initial_ier;
+    if (ser_read_int_enable(&initial_ier) != OK) {
+        printf("Error reading ier: ser_read_int_enable() inside %s\n", __func__);
+        return EXIT_FAILURE;
+    }
+    printf("initial_ier: %02x\n", initial_ier);
+    // subscribe interrupts
+    uint8_t ser_bit_no;
+    if (ser_subscribe_int(&ser_bit_no) != OK) {
+        printf("Error subscribing interrupts: ser_subscribe_int() inside %s\n", __func__);
+        return EXIT_FAILURE;
+    }
+    printf("ser_bit_no: %02x\n", ser_bit_no);
+    int r, ipc_status;
+    message msg;
+    extern uint8_t c;
+    extern int ser_return_value;
+    do { // while the message hasn't been fully delivered
+        if ((r = driver_receive(ANY, &msg, &ipc_status)) != 0) {
+        printf("driver_receive failed with %d", r);
+      }
+      if (is_ipc_notify(ipc_status)) {
+        switch(_ENDPOINT_P(msg.m_source)) {
+          case HARDWARE:
+            if (msg.m_notify.interrupts & BIT(ser_bit_no)) {
+                printf("Processing interrupts\n");
+                ser_ih();
+                if (ser_return_value != OK) {
+                    printf("ser_ih() returned error: %d inside %s\n", ser_return_value, __func__);
+                    continue;
+                }
+                printf("Char read: c = %c\n", c);
+            }
+        }
+      }
+    } while (c != '.');
+    if (ser_unsubscribe_int() != OK) {
+        printf("Error unsubscribing interrupts: ser_unsubscribe_int() inside %s\n", __func__);
+        return EXIT_FAILURE;
+    }
+
+    return EXIT_SUCCESS;
 }
 
 int ser_test_fifo(/* details to be provided */) {

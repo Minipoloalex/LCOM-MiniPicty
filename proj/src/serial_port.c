@@ -1,10 +1,31 @@
 #include "serial_port.h"
 
 static uint16_t base_addr;
+static int hook_id;
+static uint8_t is_transmitter = 0;
+uint8_t c;
+int ser_return_value = 0;
 
-int(ser_set_base_addr)(uint16_t addr) {
+int(ser_set_base_addr)(uint16_t addr, uint8_t is_transmitter) {
   base_addr = addr;
+  switch (addr) {
+    case SER_COM1:
+      hook_id = SER_COM1_IRQ;
+      break;
+    case SER_COM2:
+      hook_id = SER_COM2_IRQ;
+      break;
+    default: return EXIT_FAILURE;
+  }
   return EXIT_SUCCESS;
+}
+int (ser_subscribe_int)(uint8_t *bit_no) {
+  *bit_no = hook_id;
+  return sys_irqsetpolicy(*bit_no, IRQ_REENABLE | IRQ_EXCLUSIVE, &hook_id);
+}
+
+int (ser_unsubscribe_int)() {
+  return sys_irqrmpolicy(&hook_id);
 }
 
 int(ser_read_line_control)(uint8_t *lcr) {
@@ -262,3 +283,107 @@ int (ser_write_char)(uint8_t c) {
   }
   return EXIT_FAILURE;
 }
+
+int (ser_read_int_id)(uint8_t *id) {
+  printf("Reading interrupt id\n");
+  printf("Base addr: %x\n", base_addr);
+  if (util_sys_inb(base_addr + SER_IIR, id)) {
+    printf("util_sys_inb() inside %s\n", __func__);
+    return EXIT_FAILURE;
+  }
+  return EXIT_SUCCESS;
+}
+
+/**
+ * @brief 
+ * This is the serial port interrupt handler. It should be called when an interrupt is received.
+ * It should read the interrupt id and handle the interrupt accordingly.
+ * This is for simple interrupts and not fifo interrupts. Might get changed later.
+ */
+void (ser_ih)() {
+  uint8_t iir;
+  if (ser_read_int_id(&iir) != OK) {
+    printf("ser_read_int_id() inside %s\n", __func__);
+    ser_return_value = EXIT_FAILURE;
+    return;
+  }
+
+  uint8_t lsr;
+  if (iir & SER_IIR_INT_PEND) {
+    switch ((iir & SER_IIR_INT_ID) >> SER_IIR_INT_ID_POSITION) {
+      case SER_IIR_INT_ID_RDA:  // SER_IIR_RX_INT (data ready)
+        printf("Received interrupt: can read another character\n");
+        if (ser_read_char(&c)) {
+          ser_return_value = EXIT_FAILURE;
+          return;
+        }
+        break;
+      case SER_IIR_INT_ID_THRE:  // SER_IIR_TX_INT (transmitter empty)
+        printf("Transmit interrupt: can write another character\n");
+        // if (ser_write_char(c)) { /* Where does c come from */ }
+
+        break;
+      case SER_IIR_INT_ID_LS:       // SER_IIR_RX_ERR (error interrupt: Line status)
+        printf("Receive error interrupt\n");
+        ser_return_value = EXIT_FAILURE;
+        if (ser_read_line_status(&lsr) != OK) {
+          printf("ser_read_line_status() inside %s\n", __func__);
+          return;
+        }
+        if (lsr & SER_LSR_OE) {
+          printf("Overrun Error inside %s: a character in RBR was overwritten by another\n", __func__);
+          return;
+        }
+        if (lsr & SER_LSR_PE) {
+          printf("Parity Error inside %s: received character does not have expected parity\n", __func__);
+          return;
+        }
+        if (lsr & SER_LSR_FE) {
+          printf("Framing Error inside %s: received character does not have expected stop bit\n", __func__);
+          return;
+        }
+        return;
+      // case SER_IIR_XXXX:            // SER_IIR_XXXX
+      //   printf("XXXX interrupt\n");
+      //   break;
+      default:
+        printf("Unknown interrupt\n");
+        ser_return_value = EXIT_FAILURE;
+        return;
+    }
+    ser_return_value = EXIT_SUCCESS;
+  }
+}
+
+// void ser_ih() {
+// sys_inb(ser_port + SER_IIR, &iir);
+// if( iir & SER_INT_PEND ) {
+// switch( iir & INT_ID ) {
+// case SER_RX_INT:
+// ... /* read received character */
+// case SER_TX_INT:
+// ... /* put character to sent */
+// case SER_RX_ERR:
+// ... /* notify upper level */
+// case SER_XXXX:
+// ... /* depends on XXX */
+// }
+// }
+// }
+
+
+/* FIFO Reading chars */
+// sys_outb(ser_port + SER_FCR, 0x??); // Enable FIFOs
+// sys_inb(ser_port + SER_IIR, &iir); // Check FIFO state
+// void ser_ih() { // serial port IH
+//   while( lsr & SER_RX_RDY ) { // Read all characters in FIFO
+//   // check errors
+//   util_sys_inb(ser_port + SER_DATA, &c);
+//   // "process" character read
+// sys_inb(ser_port + SER_LSR, &lsr);
+// }
+// void ser_ih() { // serial port IH
+// ...
+// while( !queue_is_full(qptr) && (lsr & SER_RX_RDY)) {
+// ...
+// }
