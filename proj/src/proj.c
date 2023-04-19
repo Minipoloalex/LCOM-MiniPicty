@@ -49,15 +49,15 @@ int (proj_main_loop)(int argc, char *argv[]) {
   // printf("\n");
   // printf("testing ser_test_poll()\n");
   
-  // if (argc != 1 || (strcmp(argv[0], "host") != 0 && strcmp(argv[0], "remote") != 0)) {
-  //   printf("Usage: lcom_run proj <host|remote>\n");
-  //   return EXIT_FAILURE;
-  // }
+  if (argc != 1 || (strcmp(argv[0], "host") != 0 && strcmp(argv[0], "remote") != 0)) {
+    printf("Usage: lcom_run proj <host|remote>\n");
+    return EXIT_FAILURE;
+  }
   
 
-  // char *strings[] = {"Hello", "World", "Hello", "Again"};   // must not have dots (dot is the termination symbol)
-  // int stringc = 4;
-  // uint8_t is_transmitter = strcmp(argv[0], "host") ? 0 : 1; // 1 if host, 0 if remote
+  char *strings[] = {"Hello", "World", "Hello", "Again"};   // must not have dots (dot is the termination symbol)
+  int stringc = 4;
+  uint8_t is_transmitter = strcmp(argv[0], "host") ? 0 : 1; // 1 if host, 0 if remote
   // // it is the receiver only if this value is 0
   // // if it is the transmitter, it will send the strings
   // // sends strings and a space ' ' in between them
@@ -68,7 +68,7 @@ int (proj_main_loop)(int argc, char *argv[]) {
   //   printf("Error in ser_test_poll()\n");
   //   return EXIT_FAILURE;
   // }
-  if (ser_test_int(base_addr, 1, bits_per_char, stop_bits, parity, rate, 0, NULL) != OK) {
+  if (ser_test_int(base_addr, is_transmitter, bits_per_char, stop_bits, parity, rate, stringc, strings) != OK) {
     printf("Error in ser_test_int()\n");
     return EXIT_FAILURE;
   }

@@ -3,11 +3,26 @@
 static uint16_t base_addr;
 static int hook_id;
 static uint8_t is_transmitter = 0;
+
+static const uint8_t queue_size = QUEUE_SIZE;
+
+uint8_t transmitter_queue[QUEUE_SIZE]; // can send 100 bytes
+uint8_t transmitter_processed_ind = 0;  // bytes that were already processed (written to THR)
+uint8_t write_ind = 0;
+uint8_t to_process_write = 0;
+
+uint8_t receiver_queue[QUEUE_SIZE];    // can receive 100 bytes
+uint8_t receiver_processed_ind = 0;     // bytes that were already processed (read from RBR)
+uint8_t read_ind = 0;
+uint8_t to_process_read = 0;
+
 uint8_t c;
 int ser_return_value = 0;
 
-int(ser_set_base_addr)(uint16_t addr, uint8_t is_transmitter) {
+
+int(ser_set_base_addr)(uint16_t addr, uint8_t is_tr) {
   base_addr = addr;
+  is_transmitter = is_tr;
   switch (addr) {
     case SER_COM1:
       hook_id = SER_COM1_IRQ;
@@ -19,6 +34,33 @@ int(ser_set_base_addr)(uint16_t addr, uint8_t is_transmitter) {
   }
   return EXIT_SUCCESS;
 }
+
+int (ser_add_byte_to_transmitter_queue)(uint8_t c) {
+  if (write_ind == queue_size) {
+    write_ind = 0;
+  }
+  if (write_ind == transmitter_processed_ind && to_process_write != 0) {
+    return EXIT_FAILURE;
+  }
+  transmitter_queue[write_ind++] = c;
+  to_process_write++;
+  return EXIT_SUCCESS;
+}
+
+int (ser_add_byte_to_receiver_queue)(uint8_t c) {
+  if (read_ind == queue_size) {
+    read_ind = 0;
+  }
+  if (read_ind == receiver_processed_ind && to_process_read != 0) {
+    return EXIT_FAILURE;
+  }
+  receiver_queue[read_ind++] = c;
+  to_process_read++;
+  return EXIT_SUCCESS;
+}
+
+
+
 int (ser_subscribe_int)(uint8_t *bit_no) {
   *bit_no = hook_id;
   return sys_irqsetpolicy(*bit_no, IRQ_REENABLE | IRQ_EXCLUSIVE, &hook_id);
@@ -285,8 +327,6 @@ int (ser_write_char)(uint8_t c) {
 }
 
 int (ser_read_int_id)(uint8_t *id) {
-  printf("Reading interrupt id\n");
-  printf("Base addr: %x\n", base_addr);
   if (util_sys_inb(base_addr + SER_IIR, id)) {
     printf("util_sys_inb() inside %s\n", __func__);
     return EXIT_FAILURE;
@@ -313,15 +353,25 @@ void (ser_ih)() {
     switch ((iir & SER_IIR_INT_ID) >> SER_IIR_INT_ID_POSITION) {
       case SER_IIR_INT_ID_RDA:  // SER_IIR_RX_INT (data ready)
         printf("Received interrupt: can read another character\n");
-        if (ser_read_char(&c)) {
+        if (ser_read_char(&c) != OK) {
+          ser_return_value = EXIT_FAILURE;
+          return;
+        }
+        if (ser_add_byte_to_receiver_queue(c) != OK) {
           ser_return_value = EXIT_FAILURE;
           return;
         }
         break;
       case SER_IIR_INT_ID_THRE:  // SER_IIR_TX_INT (transmitter empty)
         printf("Transmit interrupt: can write another character\n");
-        // if (ser_write_char(c)) { /* Where does c come from */ }
-
+        if (ser_write_char(transmitter_queue[transmitter_processed_ind++]) != OK) {
+          ser_return_value = EXIT_FAILURE;
+          return;
+        }
+        if (transmitter_processed_ind == queue_size) {
+          transmitter_processed_ind = 0;
+          return;
+        }
         break;
       case SER_IIR_INT_ID_LS:       // SER_IIR_RX_ERR (error interrupt: Line status)
         printf("Receive error interrupt\n");

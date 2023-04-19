@@ -5,7 +5,7 @@
 #include "uart.h"
 
 
-int (ser_set_base_addr)(uint16_t addr, uint8_t is_transmitter);
+int (ser_set_base_addr)(uint16_t addr, uint8_t is_tr);
 
 int (ser_read_line_control)(uint8_t *lcr);
 int (ser_write_line_control)(uint8_t lcr);
@@ -53,6 +53,8 @@ int (ser_subscribe_int)(uint8_t *bit_no);
 int (ser_unsubscribe_int)();
 
 void (ser_ih)();
+int (ser_add_byte_to_transmitter_queue)(uint8_t c);
+
 
 
 int (ser_enable_fifo)();

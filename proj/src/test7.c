@@ -292,13 +292,36 @@ int ser_test_int(unsigned short base_addr, unsigned char tx, unsigned long bits,
         return EXIT_FAILURE;
     }
     printf("initial_ier: %02x\n", initial_ier);
-    // subscribe interrupts
+
     uint8_t ser_bit_no;
     if (ser_subscribe_int(&ser_bit_no) != OK) {
         printf("Error subscribing interrupts: ser_subscribe_int() inside %s\n", __func__);
         return EXIT_FAILURE;
     }
     printf("ser_bit_no: %02x\n", ser_bit_no);
+
+    if (tx) {
+        for (int i = 0; i < stringc; i++) {
+            for (int k = 0; strings[i][k] != '\0'; k++) {
+                if (ser_add_byte_to_transmitter_queue(strings[i][k]) != OK) {
+                    printf("Error writing character: ser_write_char() inside %s\n", __func__);
+                    return EXIT_FAILURE;
+                }
+            }
+        }
+        if (ser_add_byte_to_transmitter_queue('.') != OK) {
+            printf("Error writing character: ser_write_char() inside %s\n", __func__);
+            return EXIT_FAILURE;
+        }
+
+        if (ser_write_char('_') != OK) {
+            printf("Error writing character: ser_write_char() inside %s\n", __func__);
+            return EXIT_FAILURE;
+        }
+
+    }
+
+    printf("Going inside driver receive loop\n");
     int r, ipc_status;
     message msg;
     extern uint8_t c;
@@ -317,7 +340,9 @@ int ser_test_int(unsigned short base_addr, unsigned char tx, unsigned long bits,
                     printf("ser_ih() returned error: %d inside %s\n", ser_return_value, __func__);
                     continue;
                 }
-                printf("Char read: c = %c\n", c);
+                if (! tx) {
+                    printf("Char read: c = %c\n", c);
+                }
             }
         }
       }
