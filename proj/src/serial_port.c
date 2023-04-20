@@ -347,9 +347,9 @@ void (ser_ih)() {
     ser_return_value = EXIT_FAILURE;
     return;
   }
-
+  printf("Interrupt id: %02x\n", iir);
   uint8_t lsr;
-  if (iir & SER_IIR_INT_PEND) {
+  if (!(iir & SER_IIR_INT_NOT_PEND)) {  /* interrupt pending */
     switch ((iir & SER_IIR_INT_ID) >> SER_IIR_INT_ID_POSITION) {
       case SER_IIR_INT_ID_RDA:  // SER_IIR_RX_INT (data ready)
         printf("Received interrupt: can read another character\n");
@@ -364,6 +364,13 @@ void (ser_ih)() {
         break;
       case SER_IIR_INT_ID_THRE:  // SER_IIR_TX_INT (transmitter empty)
         printf("Transmit interrupt: can write another character\n");
+        if (to_process_write == 0) {
+          printf("No more characters to write inside %s\n", __func__);
+          ser_return_value = EXIT_SUCCESS;
+          return;
+        }
+        printf("Writing character %c\n", transmitter_queue[transmitter_processed_ind]);
+
         if (ser_write_char(transmitter_queue[transmitter_processed_ind++]) != OK) {
           ser_return_value = EXIT_FAILURE;
           return;
@@ -372,6 +379,7 @@ void (ser_ih)() {
           transmitter_processed_ind = 0;
           return;
         }
+        to_process_write--;
         break;
       case SER_IIR_INT_ID_LS:       // SER_IIR_RX_ERR (error interrupt: Line status)
         printf("Receive error interrupt\n");
@@ -402,7 +410,10 @@ void (ser_ih)() {
         return;
     }
     ser_return_value = EXIT_SUCCESS;
+    return;
   }
+  printf("No interrupt pending inside %s\n", __func__);
+  ser_return_value = EXIT_FAILURE;
 }
 
 // void ser_ih() {

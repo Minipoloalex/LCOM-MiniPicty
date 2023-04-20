@@ -94,7 +94,12 @@ Then, access DLL/DLM register and finally reset the DLAB bit, so other registers
  * @brief IIR bits
  * 
  */
-#define SER_IIR_INT_PEND 0x00
+
+/**
+ * @brief Interrupt not pending
+ * 
+ */
+#define SER_IIR_INT_NOT_PEND BIT(0)
 #define SER_IIR_INT_ID (BIT(1) | BIT(2) | BIT(3))
 #define SER_IIR_INT_ID_POSITION 1
 

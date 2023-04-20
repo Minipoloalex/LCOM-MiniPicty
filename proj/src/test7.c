@@ -330,6 +330,7 @@ int ser_test_int(unsigned short base_addr, unsigned char tx, unsigned long bits,
         if ((r = driver_receive(ANY, &msg, &ipc_status)) != 0) {
         printf("driver_receive failed with %d", r);
       }
+      printf("Received interrupt driver_receive\n");
       if (is_ipc_notify(ipc_status)) {
         switch(_ENDPOINT_P(msg.m_source)) {
           case HARDWARE:
@@ -337,7 +338,7 @@ int ser_test_int(unsigned short base_addr, unsigned char tx, unsigned long bits,
                 printf("Processing interrupts\n");
                 ser_ih();
                 if (ser_return_value != OK) {
-                    printf("ser_ih() returned error: %d inside %s\n", ser_return_value, __func__);
+                    printf("ser_ih() returned error inside %s\n", __func__);
                     continue;
                 }
                 if (! tx) {
