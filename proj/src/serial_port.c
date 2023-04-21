@@ -6,21 +6,34 @@ static uint8_t is_transmitter = 0;
 
 static const uint8_t queue_size = QUEUE_SIZE;
 
-uint8_t transmitter_queue[QUEUE_SIZE]; // can send 100 bytes
-uint8_t transmitter_processed_ind = 0;  // bytes that were already processed (written to THR)
-uint8_t write_ind = 0;
-uint8_t to_process_write = 0;
+queue_t *transmitter_queue = NULL;
+queue_t *receiver_queue = NULL;
 
-uint8_t receiver_queue[QUEUE_SIZE];    // can receive 100 bytes
-uint8_t receiver_processed_ind = 0;     // bytes that were already processed (read from RBR)
-uint8_t read_ind = 0;
-uint8_t to_process_read = 0;
+// uint8_t transmitter_queue[QUEUE_SIZE]; // can send 100 bytes
+// uint8_t transmitter_processed_ind = 0;  // bytes that were already processed (written to THR)
+// uint8_t write_ind = 0;
+// uint8_t to_process_write = 0;
+
+// uint8_t receiver_queue[QUEUE_SIZE];    // can receive 100 bytes
+// uint8_t receiver_processed_ind = 0;     // bytes that were already processed (read from RBR)
+// uint8_t read_ind = 0;
+// uint8_t to_process_read = 0;
 
 uint8_t c;
 int ser_return_value = 0;
 
 
 int(ser_set_base_addr)(uint16_t addr, uint8_t is_tr) {
+  transmitter_queue = create_queue(queue_size, sizeof(uint8_t));
+  if (transmitter_queue == NULL) {
+    printf("Error creating transmitter queue inside %s\n", __func__);
+    return EXIT_FAILURE;
+  }
+  receiver_queue = create_queue(queue_size, sizeof(uint8_t));
+  if (receiver_queue == NULL) {
+    printf("Error creating receiver queue inside %s\n", __func__);
+    return EXIT_FAILURE;
+  }
   base_addr = addr;
   is_transmitter = is_tr;
   switch (addr) {
@@ -36,32 +49,28 @@ int(ser_set_base_addr)(uint16_t addr, uint8_t is_tr) {
 }
 
 int (ser_add_byte_to_transmitter_queue)(uint8_t c) {
-  if (write_ind == queue_size) {
-    write_ind = 0;
-  }
-  if (write_ind == transmitter_processed_ind && to_process_write != 0) {
+  if (push_queue(transmitter_queue, &c) != OK) {
+    printf("push_queue() (queue is full) inside %s failed\n", __func__);
     return EXIT_FAILURE;
   }
-  transmitter_queue[write_ind++] = c;
-  to_process_write++;
   return EXIT_SUCCESS;
 }
 
 int (ser_add_byte_to_receiver_queue)(uint8_t c) {
-  if (read_ind == queue_size) {
-    read_ind = 0;
-  }
-  if (read_ind == receiver_processed_ind && to_process_read != 0) {
+  if (push_queue(receiver_queue, &c) != OK) {
+    printf("push_queue() inside %s failed\n", __func__);
     return EXIT_FAILURE;
   }
-  receiver_queue[read_ind++] = c;
-  to_process_read++;
   return EXIT_SUCCESS;
 }
 
 
 
 int (ser_subscribe_int)(uint8_t *bit_no) {
+  if (bit_no == NULL) {
+    printf("bit_no is NULL inside %s\n", __func__);
+    return EXIT_FAILURE;
+  }
   *bit_no = hook_id;
   return sys_irqsetpolicy(*bit_no, IRQ_REENABLE | IRQ_EXCLUSIVE, &hook_id);
 }
@@ -71,6 +80,10 @@ int (ser_unsubscribe_int)() {
 }
 
 int(ser_read_line_control)(uint8_t *lcr) {
+  if (lcr == NULL) {
+    printf("lcr is NULL inside %s\n", __func__);
+    return EXIT_FAILURE;
+  }
   if (util_sys_inb(base_addr + SER_LCR, lcr) != OK) {
     printf("util_sys_inb() inside %s\n", __func__);
     return EXIT_FAILURE;
@@ -144,6 +157,10 @@ int (ser_set_line_config)(uint8_t word_length, uint8_t stop_bit, int8_t parity) 
 }
 
 int(ser_read_divisor)(uint16_t *divisor) {
+  if (divisor == NULL) {
+    printf("divisor is NULL inside %s\n", __func__);
+    return EXIT_FAILURE;
+  }
   uint8_t lcr;
   if (ser_read_line_control(&lcr) != OK) {
     printf("ser_read_line_control() inside %s\n", __func__);
@@ -216,6 +233,10 @@ int (ser_set_baud_rate)(uint32_t rate) {
 }
 
 int(ser_read_int_enable)(uint8_t *ier) {
+  if (ier == NULL) {
+    printf("ier is NULL inside %s\n", __func__);
+    return EXIT_FAILURE;
+  }
   uint8_t lcr;
   if (ser_read_line_control(&lcr) != OK) {
     printf("ser_read_line_control() inside %s\n", __func__);
@@ -258,6 +279,10 @@ int (ser_write_int_enable)(uint8_t ier) {
 }
 
 int(ser_read_line_status)(uint8_t *status) {
+  if (status == NULL) {
+    printf("status is NULL inside %s\n", __func__);
+    return EXIT_FAILURE;
+  }
   if (util_sys_inb(base_addr + SER_LSR, status) != OK) {
     printf("util_sys_inb() inside %s\n", __func__);
     return EXIT_FAILURE;
@@ -267,6 +292,10 @@ int(ser_read_line_status)(uint8_t *status) {
 
 
 int (ser_read_data)(uint8_t *data) {
+  if (data == NULL) {
+    printf("data is NULL inside %s\n", __func__);
+    return EXIT_FAILURE;
+  }
   if (util_sys_inb(base_addr + SER_RBR, data) != OK) {
     printf("util_sys_inb() inside %s\n", __func__);
     return EXIT_FAILURE;
@@ -283,6 +312,10 @@ int (ser_write_data)(uint8_t data) {
 }
 
 int(ser_read_char)(uint8_t *data) {
+  if (data == NULL) {
+    printf("Invalid pointer inside %s\n", __func__);
+    return EXIT_FAILURE;
+  }
   uint8_t status;
   if (ser_read_line_status(&status) != OK) {
     printf("ser_read_line_status() inside %s\n", __func__);
@@ -327,6 +360,10 @@ int (ser_write_char)(uint8_t c) {
 }
 
 int (ser_read_int_id)(uint8_t *id) {
+  if (id == NULL) {
+    printf("Invalid pointer inside %s\n", __func__);
+    return EXIT_FAILURE;
+  }
   if (util_sys_inb(base_addr + SER_IIR, id)) {
     printf("util_sys_inb() inside %s\n", __func__);
     return EXIT_FAILURE;
@@ -357,6 +394,7 @@ void (ser_ih)() {
           ser_return_value = EXIT_FAILURE;
           return;
         }
+        printf("Read a character: %c\n", c);
         if (ser_add_byte_to_receiver_queue(c) != OK) {
           ser_return_value = EXIT_FAILURE;
           return;
@@ -364,22 +402,15 @@ void (ser_ih)() {
         break;
       case SER_IIR_INT_ID_THRE:  // SER_IIR_TX_INT (transmitter empty)
         printf("Transmit interrupt: can write another character\n");
-        if (to_process_write == 0) {
-          printf("No more characters to write inside %s\n", __func__);
-          ser_return_value = EXIT_SUCCESS;
-          return;
+        if (pop_queue(transmitter_queue, &c) != OK) {
+          printf("pop_queue() (queue is empty) inside %s\n", __func__);
         }
-        printf("Writing character %c\n", transmitter_queue[transmitter_processed_ind]);
+        printf("Writing character %c\n", c);
 
-        if (ser_write_char(transmitter_queue[transmitter_processed_ind++]) != OK) {
+        if (ser_write_char(c) != OK) {
           ser_return_value = EXIT_FAILURE;
           return;
         }
-        if (transmitter_processed_ind == queue_size) {
-          transmitter_processed_ind = 0;
-          return;
-        }
-        to_process_write--;
         break;
       case SER_IIR_INT_ID_LS:       // SER_IIR_RX_ERR (error interrupt: Line status)
         printf("Receive error interrupt\n");

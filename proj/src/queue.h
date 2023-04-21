@@ -1,3 +1,4 @@
+#pragma once
 #include <lcom/lcf.h>
 #include <stdint.h>
 
@@ -5,10 +6,13 @@ struct queue;
 typedef struct queue queue_t;
 
 /**
- * @brief Create a queue object
- * Constructor for the queue object
+ * @brief Create a queue object\n
+ *
+ * Constructor for the queue object.
+ * Creates a queue object with the given size and element size, returns NULL if it fails.
  * @param size 
- * @return queue_t* 
+ * @param element_size
+ * @return queue_t* pointer to the queue object, null if fails
  */
 queue_t *(create_queue)(unsigned int size, int element_size);
 
@@ -24,6 +28,7 @@ void (delete_queue)(queue_t *q);
  * 
  * @param q 
  * @param element 
+ * @return int 0 if success, different than 0 if the queue is full
  */
 int (push_queue)(queue_t *q, void *element);
 
@@ -31,18 +36,18 @@ int (push_queue)(queue_t *q, void *element);
  * @brief Pops an element from the queue
  * 
  * @param q
- * @return void* 
+ * @return int 0 if success, different than 0 if the queue is empty
  */
 int (pop_queue)(queue_t *q, void *element);
 
 /**
  * @brief Returns true if the queue is full
- * 
+ * @return int true if the queue is full, false otherwise
  */
 int (is_full_queue)(queue_t *q);
 
 /**
  * @brief Returns true if the queue is empty
- * 
+ * @return int true if the queue is empty, false otherwise
  */
 int (is_empty_queue)(queue_t *q);

@@ -13,6 +13,7 @@
     "lcf.h": "c",
     "test7.h": "c",
     "serial_port.h": "c",
-    "uart.h": "c"
+    "uart.h": "c",
+    "queue.h": "c"
   },
 }

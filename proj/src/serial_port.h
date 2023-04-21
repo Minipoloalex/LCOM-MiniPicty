@@ -3,7 +3,7 @@
 #include <lcom/lcf.h>
 #include <stdint.h>
 #include "uart.h"
-
+#include "queue.h"
 
 int (ser_set_base_addr)(uint16_t addr, uint8_t is_tr);
 

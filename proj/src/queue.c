@@ -41,14 +41,12 @@ int (is_full_queue)(queue_t *q) {
 int (is_empty_queue)(queue_t *q) {
   return q->count == 0;
 }
+
 int (push_queue)(queue_t *q, void *element) {
   if (is_full_queue(q)) {
     return EXIT_FAILURE;
   }
-  if (memcpy(q->elements + q->back * q->element_size, element, q->element_size) == NULL) {
-    printf("memcpy inside %s failed\n", __func__);
-    return EXIT_FAILURE;
-  }
+  memcpy(q->elements + q->back * q->element_size, element, q->element_size);
   q->back = (q->back + 1) % q->size;
   q->count++;
   return EXIT_SUCCESS;
@@ -58,7 +56,7 @@ int (pop_queue)(queue_t *q, void *element) {
   if (is_empty_queue(q)) {
     return EXIT_FAILURE;
   }
-  if (memcpy(element, q->elements + q->front * q->element_size, q->element_size) == NULL) return EXIT_FAILURE;
+  memcpy(element, q->elements + q->front * q->element_size, q->element_size);
   q->front = (q->front + 1) % q->size;
   q->count--;
   return EXIT_SUCCESS;
