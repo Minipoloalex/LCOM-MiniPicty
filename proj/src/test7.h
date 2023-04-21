@@ -1,6 +1,8 @@
 #include <lcom/lcf.h>
 #include <stdint.h>
 
+int (test_queue)();
+
 int (ser_test_conf)(unsigned short base_addr);
 
 int ser_test_set(unsigned short base_addr, unsigned long bits, unsigned long stop, 

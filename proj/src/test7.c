@@ -1,6 +1,27 @@
 #include "test7.h"
 #include "serial_port.h"
 #include "i8042.h"
+#include "queue.h"
+
+int (test_queue)() {
+  typedef struct {int time, freq;} note_t;
+  queue_t *nq = create_queue(10, sizeof(note_t));
+  if (nq == NULL) return EXIT_FAILURE;
+  note_t in, on;
+
+  for(int i = 0; i<30; i++) {
+    in.time = 1; in.freq = (i + 2) * 10;
+    if(push_queue(nq, &in) != 0) printf("Full queue\n");
+    if(pop_queue(nq, &on) == 0) {
+      printf("%d-%d \n", on.time, on.freq);
+    } else {
+      // This should never occur
+      printf("Empty queue\n");
+    }
+  }
+  delete_queue(nq);
+  return EXIT_SUCCESS;
+}
 
 int (ser_test_conf)(unsigned short base_addr) {
     ser_set_base_addr(base_addr, 0);
