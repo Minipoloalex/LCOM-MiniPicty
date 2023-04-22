@@ -16,17 +16,49 @@ int main(int argc, char *argv[]) {
   return 0;
 }
 
+typedef enum {
+  MENU,
+  GAME,
+} state_t;
+
+
 int(proj_main_loop)(int argc, char *argv[]) {
 
-  //load resources
+  // Load resources
 
-  //subscribe interrupts
+  // Subscribe interrupts
   if(subscribe_interrupts()) return 1;
 
-  //loop
-  printf("Hello World!");
+  int ipc_status;
+  message msg;
+  state_t state = MENU;
 
-  //unsubscribe interrupts
+
+  // Game Loop
+  while(true){
+
+    // Handle the user input with interrupts
+    int r;
+    if((r = driver_receive(ANY, &msg, &ipc_status)) != 0 ) {
+        printf("driver_receive failed with: %d", r);
+        continue;
+    }
+  
+    if (is_ipc_notify(ipc_status)) { 
+      switch (_ENDPOINT_P(msg.m_source)) {
+        //TODO: implement receiving interrupts
+        default:
+          break;
+      }
+    } else {
+        /* 
+          received a standard message, not a notification
+          no standard messages expected: do nothing
+        */
+    }
+  }
+
+  // Unsubscribe interrupts
   if(unsubscribe_interrupts()) return 1;
 
   return 0;
