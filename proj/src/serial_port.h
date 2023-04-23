@@ -45,6 +45,10 @@ int (ser_write_data)(uint8_t data);
 int (ser_write_char)(uint8_t c);
 int (ser_read_char)(uint8_t *c);
 
+int (ser_read_char_int)(uint8_t *data);
+int (ser_write_char_int)(uint8_t data);
+
+
 int (ser_read_int_id)(uint8_t *id);
 
 
@@ -57,6 +61,23 @@ int (ser_add_byte_to_transmitter_queue)(uint8_t c);
 
 
 
+
+int (ser_read_int_id_fifo)(uint8_t *int_id_fifo);
+int (ser_write_int_id_fifo)(uint8_t int_id_fifo);
+
+int (ser_write_fifo_control)(uint8_t config);
+int (ser_write_fifo_control_default)();
+int (ser_read_bytes_from_receiver_queue)();
+void (ser_ih_fifo)();
+
+
+
+
+
+
+
+
+
 int (ser_enable_fifo)();
 
 int (ser_enable_int)();
@@ -65,22 +86,3 @@ int (ser_disable_int)();
 
 int (ser_read_fifo)(uint8_t *fifo);
 int (ser_write_fifo)(uint8_t fifo);
-int (ser_read_modem)(uint8_t *modem);
-int (ser_write_modem)(uint8_t modem);
-int (ser_read_line)(uint8_t *line);
-int (ser_write_line)(uint8_t line);
-
-
-
-int (ser_read_int_id_fifo)(uint8_t *int_id_fifo);
-int (ser_write_int_id_fifo)(uint8_t int_id_fifo);
-
-
-int (ser_read_modem_control)(uint8_t *modem_control);
-int (ser_write_modem_control)(uint8_t modem_control);
-int (ser_read_line_status)(uint8_t *line_status);
-int (ser_write_line_status)(uint8_t line_status);
-int (ser_read_modem_status)(uint8_t *modem_status);
-int (ser_write_modem_status)(uint8_t modem_status);
-int (ser_read_scratch)(uint8_t *scratch);
-int (ser_write_scratch)(uint8_t scratch);

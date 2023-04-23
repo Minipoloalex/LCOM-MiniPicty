@@ -15,5 +15,7 @@ int ser_test_int(unsigned short base_addr, unsigned char tx, unsigned long bits,
                     unsigned long stop, long parity, unsigned long rate, 
                     int stringc, char *strings[]);
 
-int ser_test_fifo(/* details to be provided */);
+int ser_test_fifo(unsigned short base_addr, unsigned char tx, unsigned long bits, 
+                    unsigned long stop, long parity, unsigned long rate, 
+                    int stringc, char *strings[]);
 

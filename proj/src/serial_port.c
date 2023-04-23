@@ -48,22 +48,33 @@ int(ser_set_base_addr)(uint16_t addr, uint8_t is_tr) {
   return EXIT_SUCCESS;
 }
 
-int (ser_add_byte_to_transmitter_queue)(uint8_t c) {
-  if (push_queue(transmitter_queue, &c) != OK) {
+int (ser_add_byte_to_transmitter_queue)(uint8_t byte) {
+  if (push_queue(transmitter_queue, &byte) != OK) {
     printf("push_queue() (queue is full) inside %s failed\n", __func__);
     return EXIT_FAILURE;
   }
   return EXIT_SUCCESS;
 }
 
-int (ser_add_byte_to_receiver_queue)(uint8_t c) {
-  if (push_queue(receiver_queue, &c) != OK) {
+int (ser_add_byte_to_receiver_queue)(uint8_t byte) {
+  if (push_queue(receiver_queue, &byte) != OK) {
     printf("push_queue() inside %s failed\n", __func__);
     return EXIT_FAILURE;
   }
   return EXIT_SUCCESS;
 }
 
+int (ser_read_bytes_from_receiver_queue)() {
+  uint8_t byte;
+  while (!is_empty_queue(receiver_queue)) {
+    if (pop_queue(receiver_queue, &byte) != OK) {
+      printf("pop_queue() inside %s failed\n", __func__);
+      return EXIT_FAILURE;
+    }
+    printf("Byte read from receiver queue: %c\n", byte);
+  }
+  return EXIT_SUCCESS;
+}
 
 
 int (ser_subscribe_int)(uint8_t *bit_no) {
@@ -311,6 +322,18 @@ int (ser_write_data)(uint8_t data) {
   return EXIT_SUCCESS;
 }
 
+int (ser_read_char_int)(uint8_t *data) {
+  if (data == NULL) {
+    printf("Invalid pointer inside %s\n", __func__);
+    return EXIT_FAILURE;
+  }
+  if (ser_read_data(data) != OK) {
+    printf("ser_read_data() inside %s\n", __func__);
+    return EXIT_FAILURE;
+  }
+  return EXIT_SUCCESS;
+}
+
 int(ser_read_char)(uint8_t *data) {
   if (data == NULL) {
     printf("Invalid pointer inside %s\n", __func__);
@@ -341,6 +364,14 @@ int(ser_read_char)(uint8_t *data) {
     return EXIT_SUCCESS;
   }
   return EXIT_FAILURE;
+}
+
+int (ser_write_char_int)(uint8_t data) {
+  if (ser_write_data(data) != OK) {
+    printf("ser_read_data() inside %s\n", __func__);
+    return EXIT_FAILURE;
+  }
+  return EXIT_SUCCESS;
 }
 
 int (ser_write_char)(uint8_t c) {
@@ -385,12 +416,19 @@ void (ser_ih)() {
     return;
   }
   printf("Interrupt id: %02x\n", iir);
+  uint8_t ier;
+  if (ser_read_int_enable(&ier) != OK) {
+    printf("ser_read_int_enable() inside %s\n", __func__);
+    ser_return_value = EXIT_FAILURE;
+    return;
+  }
+  printf("ier: %02x\n", ier);
   uint8_t lsr;
   if (!(iir & SER_IIR_INT_NOT_PEND)) {  /* interrupt pending */
     switch ((iir & SER_IIR_INT_ID) >> SER_IIR_INT_ID_POSITION) {
       case SER_IIR_INT_ID_RDA:  // SER_IIR_RX_INT (data ready)
         printf("Received interrupt: can read another character\n");
-        if (ser_read_char(&c) != OK) {
+        if (ser_read_char_int(&c) != OK) {
           ser_return_value = EXIT_FAILURE;
           return;
         }
@@ -404,11 +442,181 @@ void (ser_ih)() {
         printf("Transmit interrupt: can write another character\n");
         if (pop_queue(transmitter_queue, &c) != OK) {
           printf("pop_queue() (queue is empty) inside %s\n", __func__);
+          ser_return_value = EXIT_SUCCESS;
+          return;
         }
         printf("Writing character %c\n", c);
 
-        if (ser_write_char(c) != OK) {
+        if (ser_write_char_int(c) != OK) {
           ser_return_value = EXIT_FAILURE;
+          return;
+        }
+        // if (ser_read_int_id(&iir) != OK) {
+        //   printf("ser_read_int_id() inside %s\n", __func__);
+        //   ser_return_value = EXIT_FAILURE;
+        //   return;
+        // }
+        // printf("Interrupt id: %02x\n", iir);
+        break;
+      case SER_IIR_INT_ID_LS:       // SER_IIR_RX_ERR (error interrupt: Line status)
+        printf("Receive error interrupt\n");
+        ser_return_value = EXIT_FAILURE;
+        if (ser_read_line_status(&lsr) != OK) {
+          printf("ser_read_line_status() inside %s\n", __func__);
+          return;
+        }
+        if (lsr & SER_LSR_OE) {
+          printf("Overrun Error inside %s: a character in RBR was overwritten by another\n", __func__);
+          return;
+        }
+        if (lsr & SER_LSR_PE) {
+          printf("Parity Error inside %s: received character does not have expected parity\n", __func__);
+          return;
+        }
+        if (lsr & SER_LSR_FE) {
+          printf("Framing Error inside %s: received character does not have expected stop bit\n", __func__);
+          return;
+        }
+        return;
+      // case SER_IIR_XXXX:            // SER_IIR_XXXX
+      //   printf("XXXX interrupt\n");
+      //   break;
+      default:
+        printf("Unknown interrupt\n");
+        ser_return_value = EXIT_FAILURE;
+        return;
+    }
+    ser_return_value = EXIT_SUCCESS;
+    return;
+  }
+  printf("No interrupt pending inside %s\n", __func__);
+  ser_return_value = EXIT_FAILURE;
+}
+
+
+
+
+
+
+/* FIFO Reading chars */
+
+// void ser_ih() {
+// sys_inb(ser_port + SER_IIR, &iir);
+// if( iir & SER_INT_PEND ) {
+// switch( iir & INT_ID ) {
+// case SER_RX_INT:
+// ... /* read received character */
+// case SER_TX_INT:
+// ... /* put character to sent */
+// case SER_RX_ERR:
+// ... /* notify upper level */
+// case SER_XXXX:
+// ... /* depends on XXX */
+// }
+// }
+// }
+
+
+/* FIFO Reading chars */
+// sys_outb(ser_port + SER_FCR, 0x??); // Enable FIFOs
+// sys_inb(ser_port + SER_IIR, &iir); // Check FIFO state
+// void ser_ih() { // serial port IH
+//   while( lsr & SER_RX_RDY ) { // Read all characters in FIFO
+//   // check errors
+//   util_sys_inb(ser_port + SER_DATA, &c);
+//   // "process" character read
+// sys_inb(ser_port + SER_LSR, &lsr);
+// }
+// void ser_ih() { // serial port IH
+// ...
+// while( !queue_is_full(qptr) && (lsr & SER_RX_RDY)) {
+// ...
+// }
+int (ser_write_fifo_control_default)() {
+  return ser_write_fifo_control(SER_FCR_DEFAULT);
+}
+
+int (ser_write_fifo_control)(uint8_t config) {
+  if (sys_outb(base_addr + SER_FCR, config) != OK) {
+    printf("sys_outb() inside %s\n", __func__);
+    return EXIT_FAILURE;
+  }
+  return EXIT_SUCCESS;
+}
+
+int (ser_read_from_fifo)() {
+  uint8_t lsr;
+  uint8_t data;
+  if (ser_read_line_status(&lsr) != OK) {
+    printf("ser_read_line_status() inside %s\n", __func__);
+    return EXIT_FAILURE;
+  }
+  while( lsr & SER_LSR_DATA_READY ) { // Read all characters in FIFO
+    if (ser_read_data(&data) != OK) {
+      printf("ser_read_data() inside %s\n", __func__);
+      return EXIT_FAILURE;
+    }
+    if (ser_add_byte_to_receiver_queue(data) != OK) {
+      printf("ser_add_byte_to_receiver_queue() inside %s\n", __func__);
+      return EXIT_FAILURE;
+    }
+    if (ser_read_line_status(&lsr) != OK) {
+      printf("ser_read_line_status() inside %s\n", __func__);
+      return EXIT_FAILURE;
+    }
+  }
+  return EXIT_SUCCESS;
+}
+int (ser_write_to_fifo)() {
+  uint8_t lsr;
+  uint8_t data;
+  if (ser_read_line_status(&lsr) != OK) {
+    printf("ser_read_line_status() inside %s\n", __func__);
+    return EXIT_FAILURE;
+  }
+  while (lsr & SER_LSR_THRE) {
+    if (is_empty_queue(transmitter_queue)) {
+      printf("transmitter queue empty inside %s\n", __func__);
+      return EXIT_SUCCESS;
+    }
+    if (pop_queue(transmitter_queue, &data) != OK) return EXIT_FAILURE;
+
+    if (ser_write_data(data) != OK) {
+      printf("ser_write_data() inside %s\n", __func__);
+      return EXIT_FAILURE;
+    }
+    printf("Character sent: %c\n", data);
+    if (ser_read_line_status(&lsr) != OK) {
+      printf("ser_read_line_status() inside %s\n", __func__);
+      return EXIT_FAILURE;
+    }
+  }
+  return EXIT_SUCCESS;
+}
+
+
+void (ser_ih_fifo)() {
+  uint8_t iir;
+  if (ser_read_int_id(&iir) != OK) {
+    printf("ser_read_int_id() inside %s\n", __func__);
+    ser_return_value = EXIT_FAILURE;
+    return;
+  }
+  printf("Interrupt id: %02x\n", iir);
+  uint8_t lsr;
+  if (!(iir & SER_IIR_INT_NOT_PEND)) {  /* interrupt pending */
+    switch ((iir & SER_IIR_INT_ID) >> SER_IIR_INT_ID_POSITION) {
+      case SER_IIR_INT_ID_RDA:  // SER_IIR_RX_INT (data ready)
+        printf("Received interrupt RDA\n");
+        if (ser_read_from_fifo() != OK) {
+          printf("ser_read_from_fifo() inside %s\n", __func__);
+          return;
+        }
+        break;
+      case SER_IIR_INT_ID_THRE:  // SER_IIR_TX_INT (transmitter empty)
+        printf("Transmit interrupt THRE\n");
+        if (ser_write_to_fifo() != OK) {
+          printf("ser_write_to_fifo() inside %s\n", __func__);
           return;
         }
         break;
@@ -446,36 +654,3 @@ void (ser_ih)() {
   printf("No interrupt pending inside %s\n", __func__);
   ser_return_value = EXIT_FAILURE;
 }
-
-// void ser_ih() {
-// sys_inb(ser_port + SER_IIR, &iir);
-// if( iir & SER_INT_PEND ) {
-// switch( iir & INT_ID ) {
-// case SER_RX_INT:
-// ... /* read received character */
-// case SER_TX_INT:
-// ... /* put character to sent */
-// case SER_RX_ERR:
-// ... /* notify upper level */
-// case SER_XXXX:
-// ... /* depends on XXX */
-// }
-// }
-// }
-
-
-/* FIFO Reading chars */
-// sys_outb(ser_port + SER_FCR, 0x??); // Enable FIFOs
-// sys_inb(ser_port + SER_IIR, &iir); // Check FIFO state
-// void ser_ih() { // serial port IH
-//   while( lsr & SER_RX_RDY ) { // Read all characters in FIFO
-//   // check errors
-//   util_sys_inb(ser_port + SER_DATA, &c);
-//   // "process" character read
-// sys_inb(ser_port + SER_LSR, &lsr);
-// }
-// void ser_ih() { // serial port IH
-// ...
-// while( !queue_is_full(qptr) && (lsr & SER_RX_RDY)) {
-// ...
-// }

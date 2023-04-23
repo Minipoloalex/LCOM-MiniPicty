@@ -41,10 +41,10 @@ int (proj_main_loop)(int argc, char *argv[]) {
   int8_t parity = -1;
   uint32_t rate = 1200;
 
-  char *strings[] = {"Hello", "World", "Hello", "Again"};   // must not have dots (dot is the termination symbol)
-  int stringc = 4;
+  char *strings[] = {"Hello", "World", "Hello", "Again", "qwertyuiopasdfghjklzxcvbnm", "abcdefghijklmnopqrstuvwxyz"};   // must not have dots (dot is the termination symbol)
+  int stringc = 6;
   uint8_t is_transmitter = strcmp(argv[0], "host") ? 0 : 1; // 1 if host, 0 if remote
-  
+  printf("is_transmitter: %02x\n", is_transmitter);
   // printf("testing ser_test_conf()\n");
 
   // if (ser_test_conf(base_addr) != OK) {
@@ -62,16 +62,32 @@ int (proj_main_loop)(int argc, char *argv[]) {
   // printf("\n");
   // printf("testing ser_test_poll()\n");  
 
+  // if (!is_transmitter) {
+  //   if (ser_test_int(base_addr, is_transmitter, bits_per_char, stop_bits, parity, rate, stringc, strings) != OK) {
+  //     printf("Error in ser_test_int()\n");
+  //     return EXIT_FAILURE;
+  //   }
+  // }
+  // else {
+  //   if (ser_test_poll(base_addr, is_transmitter, bits_per_char, stop_bits, parity, rate, stringc, strings) != OK) {
+  //   printf("Error in ser_test_poll()\n");
+  //   return EXIT_FAILURE;
+  // }  
+  // }
   // if (ser_test_poll(base_addr, is_transmitter, bits_per_char, stop_bits, parity, rate, stringc, strings) != OK) {
   //   printf("Error in ser_test_poll()\n");
   //   return EXIT_FAILURE;
   // }
-  if (ser_test_int(base_addr, is_transmitter, bits_per_char, stop_bits, parity, rate, stringc, strings) != OK) {
-    printf("Error in ser_test_int()\n");
+
+  // if (ser_test_int(base_addr, is_transmitter, bits_per_char, stop_bits, parity, rate, stringc, strings) != OK) {
+  //   printf("Error in ser_test_int()\n");
+  //   return EXIT_FAILURE;
+  // }
+
+  if (ser_test_fifo(base_addr, is_transmitter, bits_per_char, stop_bits, parity, rate, stringc, strings) != OK) {
+    printf("Error in ser_test_fifo()\n");
     return EXIT_FAILURE;
   }
-
-  // if (ser_test_fifo(base_addr, is_transmitter, bits_per_char, stop_bits, parity, rate, stringc, strings) != OK) {
 
   printf("proj_main_loop() ended successfully\n");
   return EXIT_SUCCESS;

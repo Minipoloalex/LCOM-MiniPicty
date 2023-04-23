@@ -152,55 +152,7 @@ int ser_test_set(unsigned short base_addr, unsigned long bits, unsigned long sto
         printf("Error setting line config: ser_set_line_config() inside %s\n", __func__);
         return EXIT_FAILURE;
     }
-    // lcr &= ~(SER_LCR_BITS_PER_CHAR | SER_LCR_STOP_BIT | SER_LCR_PARITY_CTRL);
-    // switch (parity) {
-    //     case -1:
-    //         lcr |= SER_LCR_PARITY_NONE;
-    //         break;
-    //     case 0:
-    //         lcr |= SER_LCR_PARITY_EVEN;
-    //         break;
-    //     case 1:
-    //         lcr |= SER_LCR_PARITY_ODD;
-    //         break;
-    //     default:
-    //         printf("Invalid parity value: %d\n", parity);
-    //         return EXIT_FAILURE;
-    // }
-    // switch (bits) {
-    //     case 5:
-    //         lcr |= SER_LCR_5_BITS_PER_CHAR;
-    //         break;
-    //     case 6:
-    //         lcr |= SER_LCR_6_BITS_PER_CHAR;
-    //         break;
-    //     case 7:
-    //         lcr |= SER_LCR_7_BITS_PER_CHAR;
-    //         break;
-    //     case 8:
-    //         lcr |= SER_LCR_8_BITS_PER_CHAR;
-    //         break;
-    //     default:
-    //         printf("Invalid number of bits per character: %d\n", bits);
-    //         return EXIT_FAILURE;
-    // }
-    // switch (stop) {
-    //     case 1:
-    //         lcr |= SER_LCR_1_STOP_BIT;
-    //         break;
-    //     case 2:
-    //         lcr |= SER_LCR_2_STOP_BIT;
-    //         break;
-    //     default:
-    //         printf("Invalid number of stop bits: %d\n", stop);
-    //         return EXIT_FAILURE;
-    // }
 
-    // if (ser_write_line_control(lcr)) {
-    //     printf("Error writing lcr: ser_write_line_control() inside %s\n", __func__);
-    //     return EXIT_FAILURE;
-    // }
-    
     ser_test_conf(base_addr);
     return EXIT_SUCCESS;
 }
@@ -299,13 +251,18 @@ int ser_test_int(unsigned short base_addr, unsigned char tx, unsigned long bits,
         printf("Error setting serial port: ser_test_set() inside %s\n", __func__);
         return EXIT_FAILURE;
     }
-
-    uint8_t iir;
-    if (ser_read_int_id(&iir) != OK) {
-        printf("Error reading iir: ser_read_int_id() inside %s\n", __func__);
-        return EXIT_FAILURE;
-    };
-    printf("iir: %02x\n", iir);
+    if (tx == 0) {  /* receiver */
+        ser_write_int_enable(SER_IER_RDA | SER_IER_RLS);
+    }
+    else {  /* transmiter */
+        ser_write_int_enable(SER_IER_THRE | SER_IER_RLS);
+    }
+    // uint8_t iir;
+    // if (ser_read_int_id(&iir) != OK) {
+    //     printf("Error reading iir: ser_read_int_id() inside %s\n", __func__);
+    //     return EXIT_FAILURE;
+    // };
+    // printf("iir: %02x\n", iir);
 
     uint8_t initial_ier;
     if (ser_read_int_enable(&initial_ier) != OK) {
@@ -328,18 +285,25 @@ int ser_test_int(unsigned short base_addr, unsigned char tx, unsigned long bits,
                     printf("Error writing character: ser_write_char() inside %s\n", __func__);
                     return EXIT_FAILURE;
                 }
+                // if (ser_write_char(strings[i][k]) != OK) {
+                //     printf("Error writing character: ser_write_char() inside %s\n", __func__);
+                //     return EXIT_FAILURE;
+                // }
             }
         }
         if (ser_add_byte_to_transmitter_queue('.') != OK) {
             printf("Error writing character: ser_write_char() inside %s\n", __func__);
             return EXIT_FAILURE;
         }
-
-        if (ser_write_char('_') != OK) {
+        // if (ser_write_char('.') != OK) {
+        //     printf("Error writing character: ser_write_char() inside %s\n", __func__);
+        //     return EXIT_FAILURE;
+        // }
+    
+        if (ser_write_char_int('A') != OK) {
             printf("Error writing character: ser_write_char() inside %s\n", __func__);
             return EXIT_FAILURE;
         }
-
     }
 
     printf("Going inside driver receive loop\n");
@@ -377,7 +341,99 @@ int ser_test_int(unsigned short base_addr, unsigned char tx, unsigned long bits,
     return EXIT_SUCCESS;
 }
 
-int ser_test_fifo(/* details to be provided */) {
-    /* To be completed */
-    return 0;
+int ser_test_fifo(unsigned short base_addr, unsigned char tx, unsigned long bits, 
+                    unsigned long stop, long parity, unsigned long rate, 
+                    int stringc, char *strings[]) {
+    
+    if (ser_set_base_addr(base_addr, tx) != OK) {
+        printf("Error setting base address: ser_set_base_addr() inside %s\n", __func__);
+        return EXIT_FAILURE;
+    }
+    
+    if (ser_test_set(base_addr, bits, stop, parity, rate) != OK) {
+        printf("Error setting serial port: ser_test_set() inside %s\n", __func__);
+        return EXIT_FAILURE;
+    }
+    
+    if (tx == 0) {  /* receiver */
+        ser_write_int_enable(SER_IER_RDA | SER_IER_RLS);
+    }
+    else {  /* transmiter */
+        ser_write_int_enable(SER_IER_THRE | SER_IER_RLS);
+    }
+
+    uint8_t initial_ier;
+    if (ser_read_int_enable(&initial_ier) != OK) {
+        printf("Error reading ier: ser_read_int_enable() inside %s\n", __func__);
+        return EXIT_FAILURE;
+    }
+    printf("initial_ier: %02x\n", initial_ier);
+
+    uint8_t ser_bit_no;
+    if (ser_subscribe_int(&ser_bit_no) != OK) {
+        printf("Error subscribing interrupts: ser_subscribe_int() inside %s\n", __func__);
+        return EXIT_FAILURE;
+    }
+    printf("ser_bit_no: %02x\n", ser_bit_no);
+
+    if (tx) {
+        for (int i = 0; i < stringc; i++) {
+            for (int k = 0; strings[i][k] != '\0'; k++) {
+                if (ser_add_byte_to_transmitter_queue(strings[i][k]) != OK) {
+                    printf("Error writing character: ser_write_char() inside %s\n", __func__);
+                    return EXIT_FAILURE;
+                }
+                // if (ser_write_char(strings[i][k]) != OK) {
+                //     printf("Error writing character: ser_write_char() inside %s\n", __func__);
+                //     return EXIT_FAILURE;
+                // }
+            }
+        }
+        if (ser_add_byte_to_transmitter_queue('.') != OK) {
+            printf("Error writing character: ser_write_char() inside %s\n", __func__);
+            return EXIT_FAILURE;
+        }
+        // if (ser_write_char('.') != OK) {
+        //     printf("Error writing character: ser_write_char() inside %s\n", __func__);
+        //     return EXIT_FAILURE;
+        // }
+    
+        if (ser_write_char_int('A') != OK) {
+            printf("Error writing character: ser_write_char() inside %s\n", __func__);
+            return EXIT_FAILURE;
+        }
+    }
+
+    printf("Going inside driver receive loop\n");
+    int r, ipc_status;
+    message msg;
+    extern int ser_return_value;
+    do { // while the message hasn't been fully delivered
+        if ((r = driver_receive(ANY, &msg, &ipc_status)) != 0) {
+        printf("driver_receive failed with %d", r);
+      }
+      printf("Received interrupt driver_receive\n");
+      if (is_ipc_notify(ipc_status)) {
+        switch(_ENDPOINT_P(msg.m_source)) {
+          case HARDWARE:
+            if (msg.m_notify.interrupts & BIT(ser_bit_no)) {
+                printf("Processing interrupts\n");
+                ser_ih_fifo();
+                if (ser_return_value != OK) {
+                    printf("ser_ih() returned error inside %s\n", __func__);
+                    continue;
+                }
+                if (! tx) {
+                    ser_read_bytes_from_receiver_queue();
+                }
+            }
+        }
+      }
+    } while (true);
+    if (ser_unsubscribe_int() != OK) {
+        printf("Error unsubscribing interrupts: ser_unsubscribe_int() inside %s\n", __func__);
+        return EXIT_FAILURE;
+    }
+
+    return EXIT_SUCCESS;
 }
