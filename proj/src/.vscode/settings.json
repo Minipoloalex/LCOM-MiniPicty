@@ -20,6 +20,7 @@
     "lab4.h": "c",
     "lab3.h": "c",
     "lab2.h": "c",
-    "interrupts.h": "c"
+    "interrupts.h": "c",
+    "video_card.h": "c"
   },
 }
