@@ -38,26 +38,14 @@ int (proj_main_loop)(int argc, char *argv[]) {
   unsigned short base_addr = SER_COM1;
   uint8_t bits_per_char = 8;
   uint8_t stop_bits = 1;
-  int8_t parity = -1;
-  uint32_t rate = 1200;
+  int8_t parity = 1;
+  uint32_t rate = SER_MAX_BITRATE;
 
-  char *strings[] = {"Hello", "World", "Hello", "Again", "qwertyuiopasdfghjklzxcvbnm", "abcdefghijklmnopqrstuvwxyz"};   // must not have dots (dot is the termination symbol)
+  char *strings[] = {"Hello", "World", "Hello", "Again", "qwertyuiopasdfghjklzxcvbnm", "abcdefghij"};   // must not have dots (dot is the termination symbol)
   int stringc = 6;
   uint8_t is_transmitter = strcmp(argv[0], "host") ? 0 : 1; // 1 if host, 0 if remote
   printf("is_transmitter: %02x\n", is_transmitter);
-  // printf("testing ser_test_conf()\n");
 
-  // if (ser_test_conf(base_addr) != OK) {
-  //   printf("Error in ser_test_conf()\n");
-  //   return EXIT_FAILURE;
-  // }
-  
-  // printf("testing ser_test_set()\n");
-  
-  // if (ser_test_set(base_addr, bits_per_char, stop_bits, parity, rate) != OK) {
-  //   printf("Error in ser_test_set()\n");
-  //   return EXIT_FAILURE;
-  // }
   
   // printf("\n");
   // printf("testing ser_test_poll()\n");  
@@ -92,4 +80,3 @@ int (proj_main_loop)(int argc, char *argv[]) {
   printf("proj_main_loop() ended successfully\n");
   return EXIT_SUCCESS;
 }
-

@@ -5,7 +5,9 @@
 #include "uart.h"
 #include "queue.h"
 
-int (ser_set_base_addr)(uint16_t addr, uint8_t is_tr);
+// int (ser_init)(uint16_t base_addr, uint32_t baud_rate, uint8_t word_length, uint8_t stop_bit, int8_t parity);
+int (ser_set_base_addr)(uint16_t addr);
+
 
 int (ser_read_line_control)(uint8_t *lcr);
 int (ser_write_line_control)(uint8_t lcr);
@@ -21,7 +23,7 @@ int (ser_set_line_config)(uint8_t word_length, uint8_t stop_bit, int8_t parity);
  */
 int (ser_read_divisor)(uint16_t *divisor);
 int (ser_write_divisor)(uint16_t divisor);
-int (ser_set_baud_rate)(uint32_t rate); // TODO: implement this
+int (ser_set_baud_rate)(uint32_t rate);
 
 
 int (ser_read_int_enable)(uint8_t *ier);
@@ -57,32 +59,12 @@ int (ser_subscribe_int)(uint8_t *bit_no);
 int (ser_unsubscribe_int)();
 
 void (ser_ih)();
-int (ser_add_byte_to_transmitter_queue)(uint8_t c);
-
-
-
-
-int (ser_read_int_id_fifo)(uint8_t *int_id_fifo);
-int (ser_write_int_id_fifo)(uint8_t int_id_fifo);
+void (ser_ih_fifo)();
 
 int (ser_write_fifo_control)(uint8_t config);
 int (ser_write_fifo_control_default)();
+
+int (ser_add_byte_to_transmitter_queue)(uint8_t c);
 int (ser_read_bytes_from_receiver_queue)();
-void (ser_ih_fifo)();
 
 
-
-
-
-
-
-
-
-int (ser_enable_fifo)();
-
-int (ser_enable_int)();
-int (ser_disable_int)();
-
-
-int (ser_read_fifo)(uint8_t *fifo);
-int (ser_write_fifo)(uint8_t fifo);

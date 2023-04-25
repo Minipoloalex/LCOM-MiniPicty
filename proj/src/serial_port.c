@@ -2,40 +2,31 @@
 
 static uint16_t base_addr;
 static int hook_id;
-static uint8_t is_transmitter = 0;
 
-static const uint8_t queue_size = QUEUE_SIZE;
+static queue_t *transmitter_queue = NULL;
+static queue_t *receiver_queue = NULL;
 
-queue_t *transmitter_queue = NULL;
-queue_t *receiver_queue = NULL;
-
-// uint8_t transmitter_queue[QUEUE_SIZE]; // can send 100 bytes
-// uint8_t transmitter_processed_ind = 0;  // bytes that were already processed (written to THR)
-// uint8_t write_ind = 0;
-// uint8_t to_process_write = 0;
-
-// uint8_t receiver_queue[QUEUE_SIZE];    // can receive 100 bytes
-// uint8_t receiver_processed_ind = 0;     // bytes that were already processed (read from RBR)
-// uint8_t read_ind = 0;
-// uint8_t to_process_read = 0;
 
 uint8_t c;
 int ser_return_value = 0;
 
+// TODO: remove reading of lcr each time we read data (checking that DLAB is not set)
+// assure that DLAB is not set normally, only set for setting the divisor
+// we can already do that in the init of the serial port
 
-int(ser_set_base_addr)(uint16_t addr, uint8_t is_tr) {
-  transmitter_queue = create_queue(queue_size, sizeof(uint8_t));
+
+int(ser_set_base_addr)(uint16_t addr) {
+  transmitter_queue = create_queue(QUEUE_SIZE, sizeof(uint8_t));
   if (transmitter_queue == NULL) {
     printf("Error creating transmitter queue inside %s\n", __func__);
     return EXIT_FAILURE;
   }
-  receiver_queue = create_queue(queue_size, sizeof(uint8_t));
+  receiver_queue = create_queue(QUEUE_SIZE, sizeof(uint8_t));
   if (receiver_queue == NULL) {
     printf("Error creating receiver queue inside %s\n", __func__);
     return EXIT_FAILURE;
   }
   base_addr = addr;
-  is_transmitter = is_tr;
   switch (addr) {
     case SER_COM1:
       hook_id = SER_COM1_IRQ;
@@ -58,7 +49,7 @@ int (ser_add_byte_to_transmitter_queue)(uint8_t byte) {
 
 int (ser_add_byte_to_receiver_queue)(uint8_t byte) {
   if (push_queue(receiver_queue, &byte) != OK) {
-    printf("push_queue() inside %s failed\n", __func__);
+    printf("push_queue() (queue is full) inside %s failed\n", __func__);
     return EXIT_FAILURE;
   }
   return EXIT_SUCCESS;
@@ -606,21 +597,21 @@ void (ser_ih_fifo)() {
   uint8_t lsr;
   if (!(iir & SER_IIR_INT_NOT_PEND)) {  /* interrupt pending */
     switch ((iir & SER_IIR_INT_ID) >> SER_IIR_INT_ID_POSITION) {
-      case SER_IIR_INT_ID_RDA:  // SER_IIR_RX_INT (data ready)
+      case SER_IIR_INT_ID_RDA:      // data ready
         printf("Received interrupt RDA\n");
         if (ser_read_from_fifo() != OK) {
           printf("ser_read_from_fifo() inside %s\n", __func__);
           return;
         }
         break;
-      case SER_IIR_INT_ID_THRE:  // SER_IIR_TX_INT (transmitter empty)
+      case SER_IIR_INT_ID_THRE:   // transmitter empty
         printf("Transmit interrupt THRE\n");
         if (ser_write_to_fifo() != OK) {
           printf("ser_write_to_fifo() inside %s\n", __func__);
           return;
         }
         break;
-      case SER_IIR_INT_ID_LS:       // SER_IIR_RX_ERR (error interrupt: Line status)
+      case SER_IIR_INT_ID_LS:       // error interrupt: Line status
         printf("Receive error interrupt\n");
         ser_return_value = EXIT_FAILURE;
         if (ser_read_line_status(&lsr) != OK) {
@@ -640,9 +631,6 @@ void (ser_ih_fifo)() {
           return;
         }
         return;
-      // case SER_IIR_XXXX:            // SER_IIR_XXXX
-      //   printf("XXXX interrupt\n");
-      //   break;
       default:
         printf("Unknown interrupt\n");
         ser_return_value = EXIT_FAILURE;

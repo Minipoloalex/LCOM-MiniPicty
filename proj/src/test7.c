@@ -24,7 +24,7 @@ int (test_queue)() {
 }
 
 int (ser_test_conf)(unsigned short base_addr) {
-    ser_set_base_addr(base_addr, 0);
+    ser_set_base_addr(base_addr);
     uint8_t lcr, ier;
     uint16_t divisor;
     if (ser_read_line_control(&lcr)) {
@@ -141,7 +141,7 @@ int (ser_test_conf)(unsigned short base_addr) {
 
 int ser_test_set(unsigned short base_addr, unsigned long bits, unsigned long stop, 
 	           long parity, unsigned long rate) { 
-    ser_set_base_addr(base_addr, 0);
+    ser_set_base_addr(base_addr);
     
     if (ser_set_baud_rate(rate)) {
         printf("Error setting baud rate: ser_set_baud_rate() inside %s\n", __func__);
@@ -166,7 +166,7 @@ int ser_test_poll(unsigned short base_addr, unsigned char tx, unsigned long bits
     - In the case of the transmitter, it must check the LSR for the THRE bit (Transmitter Holding Register Empty): checks if can send another byte
     */
 
-    ser_set_base_addr(base_addr, tx);
+    ser_set_base_addr(base_addr);
     uint8_t initial_ier;
     if (ser_read_int_enable(&initial_ier) != OK) {
         printf("Error reading ier: ser_read_int_enable() inside %s\n", __func__);
@@ -243,7 +243,8 @@ int ser_test_poll(unsigned short base_addr, unsigned char tx, unsigned long bits
 int ser_test_int(unsigned short base_addr, unsigned char tx, unsigned long bits, 
                     unsigned long stop, long parity, unsigned long rate, 
                     int stringc, char *strings[]) { 
-    if (ser_set_base_addr(base_addr, tx) != OK) {
+    /* Not working properly */
+    if (ser_set_base_addr(base_addr) != OK) {
         printf("Error setting base address: ser_set_base_addr() inside %s\n", __func__);
         return EXIT_FAILURE;
     }
@@ -257,12 +258,6 @@ int ser_test_int(unsigned short base_addr, unsigned char tx, unsigned long bits,
     else {  /* transmiter */
         ser_write_int_enable(SER_IER_THRE | SER_IER_RLS);
     }
-    // uint8_t iir;
-    // if (ser_read_int_id(&iir) != OK) {
-    //     printf("Error reading iir: ser_read_int_id() inside %s\n", __func__);
-    //     return EXIT_FAILURE;
-    // };
-    // printf("iir: %02x\n", iir);
 
     uint8_t initial_ier;
     if (ser_read_int_enable(&initial_ier) != OK) {
@@ -285,21 +280,12 @@ int ser_test_int(unsigned short base_addr, unsigned char tx, unsigned long bits,
                     printf("Error writing character: ser_write_char() inside %s\n", __func__);
                     return EXIT_FAILURE;
                 }
-                // if (ser_write_char(strings[i][k]) != OK) {
-                //     printf("Error writing character: ser_write_char() inside %s\n", __func__);
-                //     return EXIT_FAILURE;
-                // }
             }
         }
         if (ser_add_byte_to_transmitter_queue('.') != OK) {
             printf("Error writing character: ser_write_char() inside %s\n", __func__);
             return EXIT_FAILURE;
         }
-        // if (ser_write_char('.') != OK) {
-        //     printf("Error writing character: ser_write_char() inside %s\n", __func__);
-        //     return EXIT_FAILURE;
-        // }
-    
         if (ser_write_char_int('A') != OK) {
             printf("Error writing character: ser_write_char() inside %s\n", __func__);
             return EXIT_FAILURE;
@@ -344,8 +330,7 @@ int ser_test_int(unsigned short base_addr, unsigned char tx, unsigned long bits,
 int ser_test_fifo(unsigned short base_addr, unsigned char tx, unsigned long bits, 
                     unsigned long stop, long parity, unsigned long rate, 
                     int stringc, char *strings[]) {
-    
-    if (ser_set_base_addr(base_addr, tx) != OK) {
+    if (ser_set_base_addr(base_addr) != OK) {
         printf("Error setting base address: ser_set_base_addr() inside %s\n", __func__);
         return EXIT_FAILURE;
     }
@@ -383,21 +368,12 @@ int ser_test_fifo(unsigned short base_addr, unsigned char tx, unsigned long bits
                     printf("Error writing character: ser_write_char() inside %s\n", __func__);
                     return EXIT_FAILURE;
                 }
-                // if (ser_write_char(strings[i][k]) != OK) {
-                //     printf("Error writing character: ser_write_char() inside %s\n", __func__);
-                //     return EXIT_FAILURE;
-                // }
             }
         }
         if (ser_add_byte_to_transmitter_queue('.') != OK) {
             printf("Error writing character: ser_write_char() inside %s\n", __func__);
             return EXIT_FAILURE;
         }
-        // if (ser_write_char('.') != OK) {
-        //     printf("Error writing character: ser_write_char() inside %s\n", __func__);
-        //     return EXIT_FAILURE;
-        // }
-    
         if (ser_write_char_int('A') != OK) {
             printf("Error writing character: ser_write_char() inside %s\n", __func__);
             return EXIT_FAILURE;
