@@ -46,32 +46,6 @@ int (proj_main_loop)(int argc, char *argv[]) {
   uint8_t is_transmitter = strcmp(argv[0], "host") ? 0 : 1; // 1 if host, 0 if remote
   printf("is_transmitter: %02x\n", is_transmitter);
 
-  
-  // printf("\n");
-  // printf("testing ser_test_poll()\n");  
-
-  // if (!is_transmitter) {
-  //   if (ser_test_int(base_addr, is_transmitter, bits_per_char, stop_bits, parity, rate, stringc, strings) != OK) {
-  //     printf("Error in ser_test_int()\n");
-  //     return EXIT_FAILURE;
-  //   }
-  // }
-  // else {
-  //   if (ser_test_poll(base_addr, is_transmitter, bits_per_char, stop_bits, parity, rate, stringc, strings) != OK) {
-  //   printf("Error in ser_test_poll()\n");
-  //   return EXIT_FAILURE;
-  // }  
-  // }
-  // if (ser_test_poll(base_addr, is_transmitter, bits_per_char, stop_bits, parity, rate, stringc, strings) != OK) {
-  //   printf("Error in ser_test_poll()\n");
-  //   return EXIT_FAILURE;
-  // }
-
-  // if (ser_test_int(base_addr, is_transmitter, bits_per_char, stop_bits, parity, rate, stringc, strings) != OK) {
-  //   printf("Error in ser_test_int()\n");
-  //   return EXIT_FAILURE;
-  // }
-
   if (ser_test_fifo(base_addr, is_transmitter, bits_per_char, stop_bits, parity, rate, stringc, strings) != OK) {
     printf("Error in ser_test_fifo()\n");
     return EXIT_FAILURE;

@@ -92,7 +92,7 @@ Then, access DLL/DLM register and finally reset the DLAB bit, so other registers
 #define SER_IIR_INT_ID_POSITION 1
 #define SER_IIR_INT_ID_LS (BIT(0) | BIT(1))
 #define SER_IIR_INT_ID_RDA BIT(1)
-#define SER_IIR_INT_ID_CTI BIT(2)
+#define SER_IIR_INT_ID_CTI BIT(2) | BIT(1)
 #define SER_IIR_INT_ID_THRE BIT(0)
 #define SER_IIR_FIFO_EN (BIT(6) | BIT(7))
 
