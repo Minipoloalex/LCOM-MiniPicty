@@ -21,6 +21,7 @@
     "lab3.h": "c",
     "lab2.h": "c",
     "interrupts.h": "c",
-    "video_card.h": "c"
+    "video_card.h": "c",
+    "keyboard.h": "c"
   },
 }

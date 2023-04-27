@@ -8,6 +8,9 @@
 #include "modules/menu/menu.h"
 #include "modules/game/game.h"
 
+//TODO: remove this hardcoded definition
+#define BIT(n) (1 << (n))
+
 int main(int argc, char *argv[]) {
   lcf_set_language("EN-US");
   lcf_trace_calls("/home/lcom/labs/proj/trace.txt");
@@ -28,7 +31,13 @@ int(proj_main_loop)(int argc, char *argv[]) {
   // Load resources
 
   // Subscribe interrupts
-  if(subscribe_interrupts()) return 1;
+  if(subscribe_interrupts()) return EXIT_FAILURE;
+
+  if (map_phys_mem_to_virtual(GRAPHICS_MODE_0) != OK){
+    printf("map_phys_mem_to_virtual inside %s\n", __func__);
+    return EXIT_FAILURE;
+  }
+  if (vg_enter(GRAPHICS_MODE_0) != OK) return EXIT_FAILURE;
   
   // Draw the current state
   // TODO: Explore the table-based solution later
@@ -43,29 +52,68 @@ int(proj_main_loop)(int argc, char *argv[]) {
   }
 
   // Game Loop
-  int ipc_status;
+  int ipc_status, r;
   message msg;
-  while(true){
-    // Handle the user input with interrupts
-    int r;
-    if((r = driver_receive(ANY, &msg, &ipc_status)) != 0 ) {
-        printf("driver_receive failed with: %d", r);
-        continue;
-    }
   
-    if (is_ipc_notify(ipc_status)) { 
-      switch (_ENDPOINT_P(msg.m_source)) {
-        //TODO: implement receiving interrupts
-        default:
-          break;
+  extern uint8_t scancode;
+  extern int return_value;
+  extern uint8_t keyboard_bit_no;
+  extern uint8_t mouse_bit_no;
+
+  extern uint8_t packet_byte;
+  extern uint8_t return_value_mouse;
+  struct packet packet;
+
+  uint8_t index = 0;
+  int x = 0;
+  int y = 0;
+
+  do {
+      if ((r = driver_receive(ANY, &msg, &ipc_status)) != 0) {
+        printf("driver_receive failed with %d", r);
       }
-    } else {
-        /* 
-          received a standard message, not a notification
-          no standard messages expected: do nothing
-        */
-    }
-  }
+      if (is_ipc_notify(ipc_status)) {
+        switch(_ENDPOINT_P(msg.m_source)) {
+          case HARDWARE:
+            if (msg.m_notify.interrupts & BIT(keyboard_bit_no)) {
+              keyboard_ih();
+              if (return_value) continue;
+            }
+            if (msg.m_notify.interrupts & BIT(mouse_bit_no)) {
+              mouse_ih();
+
+              if (return_value_mouse != 0) {
+                continue;
+              }
+
+              if (mouse_get_packet(&packet, &index, packet_byte) != 0) return EXIT_FAILURE;
+
+              printf("Interrupt \n");
+
+              //TODO: Move this to mouse handler
+              if (index == 3) {
+                index = 0;
+                printf("Left button pressed\n");
+                extern uint8_t bits_per_pixel;
+                uint32_t color = (0 + (2 * 2 + 4) * 2) % (1 << bits_per_pixel);
+                x += packet.delta_x;
+                y -= packet.delta_y;
+                if(packet.lb){
+                  vg_draw_pixel(x, y, color);
+                }
+              }
+              }
+            break;
+          default:
+            break;
+        }
+      }
+    } while (scancode != BREAK_ESC);
+
+  // Unload resources
+
+  // Exit graphics mode
+  if (vg_exit() != OK) return EXIT_FAILURE;
 
   // Unsubscribe interrupts
   if(unsubscribe_interrupts()) return 1;
