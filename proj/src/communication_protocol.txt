@@ -1,0 +1,10 @@
+M - mouse packet (3 bytes after)
+K - keyboard scancode (1 or 2 bytes after)
+G - change state (from drawing to guessing or from guessing to drawing)
+F - finished game state -> change to menu state (could be ommited i both have the information for when it ends and does not come from user input)
+
+Menu options: another possible solution would be sending the packet and have the other do the collision test
+A - menu option 1
+B - menu option 2
+
+
