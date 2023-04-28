@@ -11,6 +11,10 @@ struct position mouse_position = {
   .x = 0,
   .y = 0
 };
+struct position last_mouse_position = {
+  .x = 0,
+  .y = 0
+};
 
 int (mouse_subscribe_interrupts)(uint8_t *bit_no){
   *bit_no = hook_id;
@@ -40,14 +44,13 @@ void (mouse_ih)(){
     extern uint8_t bits_per_pixel;
     uint32_t color = (0 + (2 * 2 + 4) * 2) % (1 << bits_per_pixel);
 
+    last_mouse_position = mouse_position;
     mouse_position.x += packet.delta_x;
     mouse_position.y -= packet.delta_y;
     if(packet.lb){
-      vg_draw_pixel(mouse_position.x, mouse_position.y, color);
+      vg_draw_line(last_mouse_position, mouse_position, 20, color);
+      //vg_draw_circle(mouse_position.x, mouse_position.y, 10, color);
     }
-    //if(packet.lb){
-    //  vg_draw_pixel(mouse_position.x, mouse_position.y, color);
-    //}
   }
 }
 

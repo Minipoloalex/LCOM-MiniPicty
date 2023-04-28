@@ -24,6 +24,7 @@
     "video_card.h": "c",
     "keyboard.h": "c",
     "mouse.h": "c",
-    "stdbool.h": "c"
+    "stdbool.h": "c",
+    "structs.h": "c"
   },
 }
