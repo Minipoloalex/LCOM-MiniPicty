@@ -62,11 +62,6 @@ int(proj_main_loop)(int argc, char *argv[]) {
 
   extern uint8_t packet_byte;
   extern uint8_t return_value_mouse;
-  struct packet packet;
-
-  uint8_t index = 0;
-  int x = 0;
-  int y = 0;
 
   do {
       if ((r = driver_receive(ANY, &msg, &ipc_status)) != 0) {
@@ -81,28 +76,7 @@ int(proj_main_loop)(int argc, char *argv[]) {
             }
             if (msg.m_notify.interrupts & BIT(mouse_bit_no)) {
               mouse_ih();
-
-              if (return_value_mouse != 0) {
-                continue;
-              }
-
-              if (mouse_get_packet(&packet, &index, packet_byte) != 0) return EXIT_FAILURE;
-
-              printf("Interrupt \n");
-
-              //TODO: Move this to mouse handler
-              if (index == 3) {
-                index = 0;
-                printf("Left button pressed\n");
-                extern uint8_t bits_per_pixel;
-                uint32_t color = (0 + (2 * 2 + 4) * 2) % (1 << bits_per_pixel);
-                x += packet.delta_x;
-                y -= packet.delta_y;
-                if(packet.lb){
-                  vg_draw_pixel(x, y, color);
-                }
-              }
-              }
+            }
             break;
           default:
             break;

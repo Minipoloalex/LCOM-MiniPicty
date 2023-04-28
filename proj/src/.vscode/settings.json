@@ -22,6 +22,8 @@
     "lab2.h": "c",
     "interrupts.h": "c",
     "video_card.h": "c",
-    "keyboard.h": "c"
+    "keyboard.h": "c",
+    "mouse.h": "c",
+    "stdbool.h": "c"
   },
 }

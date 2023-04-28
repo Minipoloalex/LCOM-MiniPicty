@@ -53,5 +53,7 @@ int(unsubscribe_interrupts)(){
   // Keyboard
   if(keyboard_unsubscribe_interrupts() != 0) return EXIT_FAILURE;
 
+  if(keyboard_restore() != 0) return EXIT_FAILURE;
+
   return EXIT_SUCCESS;
 }
