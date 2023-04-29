@@ -50,11 +50,11 @@ void (mouse_ih)(){
     extern unsigned v_res;	 
 
     uint16_t new_x = mouse_position.x + packet.delta_x;
-    if(new_x > 0 && new_x < v_res){
+    if(new_x > 0 && new_x < h_res){
       mouse_position.x = new_x;
     }
     uint16_t new_y = mouse_position.y - packet.delta_y;
-    if(new_y > 0 && new_y < h_res){
+    if(new_y > 0 && new_y < v_res){
       mouse_position.y = new_y;
     }
     //TODO: Change this to timer_int_handler

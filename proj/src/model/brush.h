@@ -11,8 +11,4 @@ struct brush{
 TODO:
 - Funções para aumentar/diminuir o tamanho do brush
 - Função para mudar de cor do brush
-
-- Limitir o desenhar às bounds do ecrã
-- Não deixar o rato sair do ecrâ
-
 */

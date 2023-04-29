@@ -33,9 +33,9 @@ int (vg_enter)(uint16_t mode) {
 }
 
 int (vg_draw_pixel)(uint16_t x, uint16_t y, uint32_t color){
-  if (x >= h_res || y >= v_res) {
+  if (x <= 0 || x >= h_res || y <= 0 || y >= v_res) {
     printf("x or y outside limits inside %s\n", __func__);
-    return EXIT_SUCCESS;
+    return EXIT_FAILURE;
   }
   unsigned int index = (y * h_res + x) * bytes_per_pixel;
   memcpy(&video_mem[index], &color, bytes_per_pixel);
