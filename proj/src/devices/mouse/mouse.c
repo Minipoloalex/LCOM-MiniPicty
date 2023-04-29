@@ -2,7 +2,19 @@
 
 static int hook_id = IRQ_MOUSE;
 int return_value_mouse = 0;
+
 uint8_t packet_byte = 0;
+uint8_t packet_index = 0;
+struct packet packet; 
+//TODO: make the default position the center of the screen
+struct position mouse_position = {
+  .x = 0,
+  .y = 0
+};
+struct position last_mouse_position = {
+  .x = 0,
+  .y = 0
+};
 
 int (mouse_subscribe_interrupts)(uint8_t *bit_no){
   *bit_no = hook_id;
@@ -23,6 +35,33 @@ int (mouse_disable_data_report)(){
 
 void (mouse_ih)(){
   return_value_mouse = read_KBC_output(KBC_OUT_REG, &packet_byte, true);
+  if(return_value_mouse != 0) return;
+
+  if (mouse_get_packet() != 0) return;
+
+  if (packet_index == 3) {
+    packet_index = 0;
+    extern uint8_t bits_per_pixel;
+    uint32_t color = (0 + (2 * 2 + 4) * 2) % (1 << bits_per_pixel);
+
+    last_mouse_position = mouse_position;
+
+    extern unsigned h_res;	   
+    extern unsigned v_res;	 
+
+    uint16_t new_x = mouse_position.x + packet.delta_x;
+    if(new_x > 0 && new_x < v_res){
+      mouse_position.x = new_x;
+    }
+    uint16_t new_y = mouse_position.y - packet.delta_y;
+    if(new_y > 0 && new_y < h_res){
+      mouse_position.y = new_y;
+    }
+    //TODO: Change this to timer_int_handler
+    if(packet.lb){
+      vg_draw_line(last_mouse_position, mouse_position, 20, color);
+    }
+  }
 }
 
 int (write_to_mouse)(uint8_t command){
@@ -67,37 +106,34 @@ int (mouse_disable_int)() {
   return EXIT_SUCCESS;
 }
 
-int (mouse_get_packet)(struct packet* packet, uint8_t *index, uint8_t packet_byte) {
-  uint8_t byte_index = *index;
-  
-  if (byte_index > 2) {
+int (mouse_get_packet)() {  
+  if (packet_index > 2) {
     printf("index > 2 inside %s\n", __func__);
     return EXIT_FAILURE;
   }
   
-  packet->bytes[byte_index] = packet_byte;
+  packet.bytes[packet_index] = packet_byte;
   
-  if (byte_index == 0 && (packet_byte & FIRST_BYTE_VALIDATION)) {
-    packet->lb = LB(packet_byte);
-    packet->rb = RB(packet_byte);
-    packet->mb = MB(packet_byte);
+  if (packet_index == 0 && (packet_byte & FIRST_BYTE_VALIDATION)) {
+    packet.lb = LB(packet_byte);
+    packet.rb = RB(packet_byte);
+    packet.mb = MB(packet_byte);
     
-    packet->x_ov = X_OV(packet_byte);
-    packet->y_ov = Y_OV(packet_byte);
+    packet.x_ov = X_OV(packet_byte);
+    packet.y_ov = Y_OV(packet_byte);
 
-    packet->delta_x = DELTA_X(packet_byte) ? 0xFF00 : 0x0000;
-    packet->delta_y = DELTA_Y(packet_byte) ? 0xFF00 : 0x0000;
+    packet.delta_x = DELTA_X(packet_byte) ? 0xFF00 : 0x0000;
+    packet.delta_y = DELTA_Y(packet_byte) ? 0xFF00 : 0x0000;
 
-    byte_index++;
+    packet_index++;
   }
-  else if (*index == 1) {
-    packet->delta_x |= packet_byte;
-    byte_index++;
+  else if (packet_index == 1) {
+    packet.delta_x |= packet_byte;
+    packet_index++;
   }
-  else if (*index == 2) {
-    packet->delta_y |= packet_byte;
-    byte_index++;
+  else if (packet_index == 2) {
+    packet.delta_y |= packet_byte;
+    packet_index++;
   }
-  *index = byte_index;
   return EXIT_SUCCESS;
 }

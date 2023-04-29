@@ -21,6 +21,11 @@
     "lab3.h": "c",
     "lab2.h": "c",
     "interrupts.h": "c",
-    "video_card.h": "c"
+    "video_card.h": "c",
+    "keyboard.h": "c",
+    "mouse.h": "c",
+    "stdbool.h": "c",
+    "structs.h": "c",
+    "position.h": "c"
   },
 }
