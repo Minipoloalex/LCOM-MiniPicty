@@ -9,4 +9,4 @@ void (setup_buttons)();
 int (draw_buttons)();
 void (draw_menu)();
 
-struct button buttons[3];
+struct button menu_buttons[3];

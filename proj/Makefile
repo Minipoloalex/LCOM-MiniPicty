@@ -20,7 +20,7 @@ PROG=proj
 # Model
 .PATH: ${.CURDIR}/src/model/
 
-SRCS = proj.c kbc.c keyboard.c mouse.c timer.c video_card.c utils.c interrupts.c menu.c game.c
+SRCS = proj.c kbc.c keyboard.c mouse.c timer.c video_card.c utils.c interrupts.c menu.c game.c button.c
 
 # additional compilation flags
 CPPFLAGS += -pedantic -D__LCOM_OPTIMIZED__

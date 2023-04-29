@@ -1,6 +1,7 @@
 #pragma once
 
 #include <lcom/lcf.h>
+#include "position.h"
 
 struct button {
     uint16_t x;
@@ -11,3 +12,8 @@ struct button {
     uint8_t text_color;
     char *text;
 };
+
+bool is_button_hovered(struct button* button, struct position* mouse_position);
+void set_button_hover(struct button* button, uint8_t new_background_color, uint8_t new_text_color);
+void set_button_default(struct button* button, uint8_t new_background_color, uint8_t new_text_color);
+void draw_button(struct button* button);

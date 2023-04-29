@@ -7,6 +7,7 @@
 #include "modules/interrupts/interrupts.h"
 #include "modules/menu/menu.h"
 #include "modules/game/game.h"
+#include "model/button.h"
 
 //TODO: remove this hardcoded definition
 #define BIT(n) (1 << (n))
@@ -58,6 +59,7 @@ int(proj_main_loop)(int argc, char *argv[]) {
   extern uint8_t return_value_mouse;
 
   extern struct position mouse_position;
+  extern struct button menu_buttons[3];
 
   do {
       if ((r = driver_receive(ANY, &msg, &ipc_status)) != 0) {
@@ -76,7 +78,15 @@ int(proj_main_loop)(int argc, char *argv[]) {
               if (return_value_mouse) continue;
               switch(app_state){
                 case MENU:
-                  // code to check colisions and change state
+                  for(int i = 0; i < 3; i++){
+                    if(is_button_hovered(&menu_buttons[i], &mouse_position)){
+                      set_button_hover(&menu_buttons[i], 2, 3);
+                    }
+                    else{
+                      set_button_default(&menu_buttons[i], 0, 1);
+                    }
+                  }
+                  
                   break;
                 case GAME:
                   break;

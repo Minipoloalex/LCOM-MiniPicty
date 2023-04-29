@@ -21,16 +21,14 @@ void (setup_buttons)(){
   struct button settings_button = {x, height * 3, width, height, background_color, text_color, "LEADERBOARD"};
   struct button exit_button = {x, height * 5, width, height, background_color, text_color, "EXIT"};
 
-  buttons[0] = play_button;
-  buttons[1] = settings_button;
-  buttons[2] = exit_button;
+  menu_buttons[0] = play_button;
+  menu_buttons[1] = settings_button;
+  menu_buttons[2] = exit_button;
 }
 
 int draw_buttons(){
   for(int i = 0; i < 3; i++){
-    if(vg_draw_rectangle(buttons[i].x, buttons[i].y, buttons[i].width, buttons[i].height, buttons[i].background_color)) return 1;
-
-    // draw text
+    draw_button(&menu_buttons[i]);
   }
   return 0;
 }
