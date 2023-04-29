@@ -5,7 +5,7 @@
 
 #include "../controllers/i8042.h"
 #include "../controllers/kbc/kbc.h"
-#include "../../utils/structs.h"
+#include "../../model/position.h"
 #include "../video_card/video_card.h"
 
 int (mouse_subscribe_interrupts)(uint8_t *bit_no);

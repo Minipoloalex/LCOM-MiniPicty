@@ -47,9 +47,9 @@ void (mouse_ih)(){
     last_mouse_position = mouse_position;
     mouse_position.x += packet.delta_x;
     mouse_position.y -= packet.delta_y;
+    //TODO: Change this to timer_int_handler
     if(packet.lb){
       vg_draw_line(last_mouse_position, mouse_position, 20, color);
-      //vg_draw_circle(mouse_position.x, mouse_position.y, 10, color);
     }
   }
 }

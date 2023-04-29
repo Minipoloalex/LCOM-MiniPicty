@@ -5,6 +5,7 @@
 #include "timer.h"
 
 static int hook_id = TIMER0_IRQ;
+uint8_t timer_bit_no;
 
 int (convert_to_bcd)(uint16_t *ptr_value) {
   uint16_t value = *ptr_value;
@@ -68,9 +69,11 @@ int (timer_unsubscribe_int)() {
   return sys_irqrmpolicy(&hook_id);
 }
 
-int counter = 0;
+int timer_counter = 0;
 void (timer_int_handler)() {
-  counter++;
+  timer_counter++;
+
+  //TODO: Change the draw lines and etc to here!!
 }
 
 int (timer_get_conf)(uint8_t timer, uint8_t *st) {

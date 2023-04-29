@@ -69,22 +69,22 @@ int (vg_draw_circle)(uint16_t xc, uint16_t yc, uint16_t radius, uint32_t color){
   int d = 3 - 2 * radius;
 
   while (x <= y) {
-      vg_draw_pixel(xc + x, yc + y, color);
-      vg_draw_pixel(xc + x, yc - y, color);
-      vg_draw_pixel(xc - x, yc + y, color);
-      vg_draw_pixel(xc - x, yc - y, color);
-      vg_draw_pixel(xc + y, yc + x, color);
-      vg_draw_pixel(xc + y, yc - x, color);
-      vg_draw_pixel(xc - y, yc + x, color);
-      vg_draw_pixel(xc - y, yc - x, color);
+    for (int i = xc - x; i <= xc + x; i++) {
+        vg_draw_pixel(i, yc + y, color);
+        vg_draw_pixel(i, yc - y, color);
+    }
+    for (int i = xc - y; i <= xc + y; i++) {
+        vg_draw_pixel(i, yc + x, color);
+        vg_draw_pixel(i, yc - x, color);
+    }
 
-      if (d < 0) {
-          d = d + 4 * x + 6;
-      } else {
-          d = d + 4 * (x - y) + 10;
-          y--;
-      }
-      x++;
+    if (d < 0) {
+        d = d + 4 * x + 6;
+    } else {
+        d = d + 4 * (x - y) + 10;
+        y--;
+    }
+    x++;
   }
 
   return EXIT_SUCCESS;

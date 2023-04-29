@@ -59,6 +59,7 @@ int(proj_main_loop)(int argc, char *argv[]) {
   extern int return_value;
   extern uint8_t keyboard_bit_no;
   extern uint8_t mouse_bit_no;
+  extern uint8_t timer_bit_no;
 
   extern uint8_t packet_byte;
   extern uint8_t return_value_mouse;
@@ -76,6 +77,9 @@ int(proj_main_loop)(int argc, char *argv[]) {
             }
             if (msg.m_notify.interrupts & BIT(mouse_bit_no)) {
               mouse_ih();
+            }
+            if (msg.m_notify.interrupts & BIT(timer_bit_no)){
+              timer_int_handler();
             }
             break;
           default:

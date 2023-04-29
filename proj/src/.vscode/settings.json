@@ -25,6 +25,7 @@
     "keyboard.h": "c",
     "mouse.h": "c",
     "stdbool.h": "c",
-    "structs.h": "c"
+    "structs.h": "c",
+    "position.h": "c"
   },
 }

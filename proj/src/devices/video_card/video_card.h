@@ -2,7 +2,7 @@
 #include <stdint.h>
 #include "../controllers/vbe.h"
 #include <math.h>
-#include "../../utils/structs.h"
+#include "../../model/position.h"
 
 /* Map physical memory to virtual address space of process */
 int (map_phys_mem_to_virtual)(uint16_t mode);
