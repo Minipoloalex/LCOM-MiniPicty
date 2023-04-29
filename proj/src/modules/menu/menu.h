@@ -13,7 +13,8 @@ struct Button {
     uint16_t y;
     uint16_t width;
     uint16_t height;
-    uint8_t color;
+    uint8_t background_color;
+    uint8_t text_color;
     char *text;
 };
 
