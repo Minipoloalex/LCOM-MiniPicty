@@ -5,7 +5,6 @@
 #include "timer.h"
 
 static int hook_id = TIMER0_IRQ;
-uint8_t timer_bit_no;
 
 int (convert_to_bcd)(uint16_t *ptr_value) {
   uint16_t value = *ptr_value;
