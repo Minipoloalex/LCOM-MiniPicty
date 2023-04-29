@@ -17,9 +17,9 @@ void (setup_buttons)(){
   uint8_t background_color = 10;  
   uint8_t text_color = 5;
 
-  struct Button play_button = {x, height, width, height, background_color, text_color, "Play"};
-  struct Button settings_button = {x, height * 3, width, height, background_color, text_color, "Leaderboard"};
-  struct Button exit_button = {x, height * 5, width, height, background_color, text_color, "Exit"};
+  struct button play_button = {x, height, width, height, background_color, text_color, "PLAY"};
+  struct button settings_button = {x, height * 3, width, height, background_color, text_color, "LEADERBOARD"};
+  struct button exit_button = {x, height * 5, width, height, background_color, text_color, "EXIT"};
 
   buttons[0] = play_button;
   buttons[1] = settings_button;

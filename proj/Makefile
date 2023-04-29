@@ -17,6 +17,9 @@ PROG=proj
 
 .PATH: ${.CURDIR}/src/utils/
 
+# Model
+.PATH: ${.CURDIR}/src/model/
+
 SRCS = proj.c kbc.c keyboard.c mouse.c timer.c video_card.c utils.c interrupts.c menu.c game.c
 
 # additional compilation flags

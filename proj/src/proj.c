@@ -42,14 +42,6 @@ int(proj_main_loop)(int argc, char *argv[]) {
   // Draw the current state
   // TODO: Explore the table-based solution later
   state_t app_state = MENU;
-  switch(app_state){
-    case MENU:
-      draw_menu();
-      break;
-    case GAME:
-      draw_game();
-      break;
-  }
 
   // Game Loop
   int ipc_status, r;
@@ -65,6 +57,8 @@ int(proj_main_loop)(int argc, char *argv[]) {
   extern uint8_t packet_byte;
   extern uint8_t return_value_mouse;
 
+  extern struct position mouse_position;
+
   do {
       if ((r = driver_receive(ANY, &msg, &ipc_status)) != 0) {
         printf("driver_receive failed with %d", r);
@@ -78,9 +72,26 @@ int(proj_main_loop)(int argc, char *argv[]) {
             }
             if (msg.m_notify.interrupts & BIT(mouse_bit_no)) {
               mouse_ih();
+
+              if (return_value_mouse) continue;
+              switch(app_state){
+                case MENU:
+                  // code to check colisions and change state
+                  break;
+                case GAME:
+                  break;
+              }
             }
             if (msg.m_notify.interrupts & BIT(timer_bit_no)){
               timer_int_handler();
+                switch(app_state){
+                  case MENU:
+                    draw_menu();
+                    break;
+                  case GAME:
+                    draw_game();
+                    break;
+                }
             }
             break;
           default:
