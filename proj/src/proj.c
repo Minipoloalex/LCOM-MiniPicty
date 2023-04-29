@@ -1,5 +1,6 @@
 #include <lcom/lcf.h>
 #include <lcom/proj.h>
+#include "test6.h"
 
 #include <stdint.h>
 #include <stdio.h>
@@ -25,50 +26,56 @@ typedef enum {
 
 int(proj_main_loop)(int argc, char *argv[]) {
 
-  // Load resources
+  // // Load resources
 
-  // Subscribe interrupts
-  if(subscribe_interrupts()) return 1;
+  // // Subscribe interrupts
+  // if(subscribe_interrupts()) return 1;
   
-  // Draw the current state
-  // TODO: Explore the table-based solution later
-  state_t app_state = MENU;
-  switch(app_state){
-    case MENU:
-      draw_menu();
-      break;
-    case GAME:
-      draw_game();
-      break;
-  }
+  // // Draw the current state
+  // // TODO: Explore the table-based solution later
+  // state_t app_state = MENU;
+  // switch(app_state){
+  //   case MENU:
+  //     draw_menu();
+  //     break;
+  //   case GAME:
+  //     draw_game();
+  //     break;
+  // }
 
-  // Game Loop
-  int ipc_status;
-  message msg;
-  while(true){
-    // Handle the user input with interrupts
-    int r;
-    if((r = driver_receive(ANY, &msg, &ipc_status)) != 0 ) {
-        printf("driver_receive failed with: %d", r);
-        continue;
-    }
+  // // Game Loop
+  // int ipc_status;
+  // message msg;
+  // while(true){
+  //   // Handle the user input with interrupts
+  //   int r;
+  //   if((r = driver_receive(ANY, &msg, &ipc_status)) != 0 ) {
+  //       printf("driver_receive failed with: %d", r);
+  //       continue;
+  //   }
   
-    if (is_ipc_notify(ipc_status)) { 
-      switch (_ENDPOINT_P(msg.m_source)) {
-        //TODO: implement receiving interrupts
-        default:
-          break;
-      }
-    } else {
-        /* 
-          received a standard message, not a notification
-          no standard messages expected: do nothing
-        */
-    }
-  }
+  //   if (is_ipc_notify(ipc_status)) { 
+  //     switch (_ENDPOINT_P(msg.m_source)) {
+  //       //TODO: implement receiving interrupts
+  //       default:
+  //         break;
+  //     }
+  //   } else {
+  //       /* 
+  //         received a standard message, not a notification
+  //         no standard messages expected: do nothing
+  //       */
+  //   }
+  // }
 
-  // Unsubscribe interrupts
-  if(unsubscribe_interrupts()) return 1;
+  // // Unsubscribe interrupts
+  // if(unsubscribe_interrupts()) return 1;
 
-  return 0;
+  // return 0;
+  
+  
+  rtc_test_conf();
+  rtc_test_date();
+  printf("proj_main_loop() finished\n");
+  return EXIT_SUCCESS;
 }

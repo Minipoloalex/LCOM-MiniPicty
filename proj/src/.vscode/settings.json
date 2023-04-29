@@ -7,6 +7,7 @@
   "editor.wordWrap": "bounded",
   "editor.wordWrapColumn": 100,
   "files.associations": {
+    "*.embeddedhtml": "html",
     "lcf.h": "c",
     "proj.h": "c",
     "i8042.h": "c",
@@ -21,6 +22,7 @@
     "lab3.h": "c",
     "lab2.h": "c",
     "interrupts.h": "c",
-    "video_card.h": "c"
+    "video_card.h": "c",
+    "rtc.h": "c"
   },
 }
