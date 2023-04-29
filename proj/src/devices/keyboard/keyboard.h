@@ -14,8 +14,7 @@ struct Scancode {
     char character;
 };
 
-struct Scancode makecodes[] = {
-    {0x01,  'ESC'},
+static struct Scancode makecodes[] = {
     {0x02, '1'},
     {0x03, '2'},
     {0x04, '3'},
@@ -55,8 +54,7 @@ struct Scancode makecodes[] = {
 };
 
 
-struct Scancode breakcodes[] = {
-    {0x81,  'ESC'},
+static struct Scancode breakcodes[] = {
     {0x82, '1'},
     {0x83, '2'},
     {0x84, '3'},

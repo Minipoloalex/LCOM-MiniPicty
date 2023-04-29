@@ -5,7 +5,7 @@ uint8_t bits_per_pixel;
 unsigned int vram_base;  /* VRAM's physical addresss */
 unsigned int vram_size;  /* VRAM's size, but you can use the frame buffer size instead */
 
-uint8_t *video_mem;		/* Process (virtual) address to which VRAM is mapped */
+uint8_t *video_mem;		  /* Process (virtual) address to which VRAM is mapped */
 
 unsigned h_res;	        /* Horizontal resolution in pixels */
 unsigned v_res;	        /* Vertical resolution in pixels */
