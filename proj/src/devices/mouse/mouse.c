@@ -45,8 +45,18 @@ void (mouse_ih)(){
     uint32_t color = (0 + (2 * 2 + 4) * 2) % (1 << bits_per_pixel);
 
     last_mouse_position = mouse_position;
-    mouse_position.x += packet.delta_x;
-    mouse_position.y -= packet.delta_y;
+
+    extern unsigned h_res;	   
+    extern unsigned v_res;	 
+
+    uint16_t new_x = mouse_position.x + packet.delta_x;
+    if(new_x > 0 && new_x < v_res){
+      mouse_position.x = new_x;
+    }
+    uint16_t new_y = mouse_position.y - packet.delta_y;
+    if(new_y > 0 && new_y < h_res){
+      mouse_position.y = new_y;
+    }
     //TODO: Change this to timer_int_handler
     if(packet.lb){
       vg_draw_line(last_mouse_position, mouse_position, 20, color);

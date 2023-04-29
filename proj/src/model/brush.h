@@ -9,8 +9,6 @@ struct brush{
 
 /*
 TODO:
-- Mudar o draw_circle
-- Meter a struct brush
 - Funções para aumentar/diminuir o tamanho do brush
 - Função para mudar de cor do brush
 
