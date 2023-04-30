@@ -9,10 +9,27 @@ static queue_t *receiver_queue = NULL;
 
 uint8_t c;
 int ser_return_value = 0;
+
 /* ========== Functions only used inside this module (serial port) ========= */
+/**
+ * @brief 
+ * 
+ */
 int (ser_set_base_addr)(uint16_t addr);
+/**
+ * @brief 
+ * 
+ */
 int (ser_read_line_control)(uint8_t *lcr);
+/**
+ * @brief 
+ * 
+ */
 int (ser_write_line_control)(uint8_t lcr);
+/**
+ * @brief 
+ * 
+ */
 int (ser_set_line_config)(uint8_t word_length, uint8_t stop_bit, int8_t parity);
 /**
  * @brief Reads the divisor latch register
@@ -36,13 +53,24 @@ int (ser_read_data)(uint8_t *data);
  * Assumes that the data is ready to be written
  */
 int (ser_write_data)(uint8_t data);
-
+/**
+ * @brief 
+ * 
+ */
 int (ser_write_fifo_control)(uint8_t config);
+/**
+ * @brief 
+ * 
+ */
+int (ser_read_int_id)(uint8_t *id);
+
 
 // TODO: remove reading of lcr each time we read data (checking that DLAB is not set)
 // assure that DLAB is not set normally, only set for setting the divisor
 // we can already do that in the init of the serial port
 
+
+/* =========================================================================================== */
 
 int (ser_init)(uint16_t base_addr, uint32_t baud_rate, uint8_t word_length, uint8_t stop_bit, int8_t parity) {
   if (ser_set_base_addr(base_addr) != EXIT_SUCCESS) {
@@ -333,18 +361,6 @@ int (ser_write_data)(uint8_t data) {
   return EXIT_SUCCESS;
 }
 
-int (ser_read_char_int)(uint8_t *data) {
-  if (data == NULL) {
-    printf("Invalid pointer inside %s\n", __func__);
-    return EXIT_FAILURE;
-  }
-  if (ser_read_data(data) != OK) {
-    printf("ser_read_data() inside %s\n", __func__);
-    return EXIT_FAILURE;
-  }
-  return EXIT_SUCCESS;
-}
-
 int(ser_read_char)(uint8_t *data) {
   if (data == NULL) {
     printf("Invalid pointer inside %s\n", __func__);
@@ -375,14 +391,6 @@ int(ser_read_char)(uint8_t *data) {
     return EXIT_SUCCESS;
   }
   return EXIT_FAILURE;
-}
-
-int (ser_write_char_int)(uint8_t data) {
-  if (ser_write_data(data) != OK) {
-    printf("ser_read_data() inside %s\n", __func__);
-    return EXIT_FAILURE;
-  }
-  return EXIT_SUCCESS;
 }
 
 int (ser_write_char)(uint8_t c) {
