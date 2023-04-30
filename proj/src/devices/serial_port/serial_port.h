@@ -3,7 +3,8 @@
 #include <lcom/lcf.h>
 #include <stdint.h>
 #include "../controllers/uart.h"
-#include "queue.h"
+#include "../../model/queue/queue.h"
+
 /**
  * @brief 
  * 
@@ -50,3 +51,10 @@ int (ser_write_char)(uint8_t c);
  * 
  */
 int (ser_read_char)(uint8_t *c);
+
+
+/**
+ * @brief 
+ * 
+ */
+int (ser_add_packet_to_transmitter_queue)(uint8_t *packet_bytes);

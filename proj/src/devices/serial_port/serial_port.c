@@ -6,6 +6,13 @@ static int hook_id;
 static queue_t *transmitter_queue = NULL;
 static queue_t *receiver_queue = NULL;
 
+typedef enum {
+  SLEEPING,
+  RECEIVING_MOUSE,
+  RECEIVING_KEYBOARD,
+} ser_state_t;
+
+static ser_state_t ser_state = SLEEPING;
 
 uint8_t c;
 int ser_return_value = 0;
@@ -136,19 +143,6 @@ int (ser_add_byte_to_receiver_queue)(uint8_t byte) {
   }
   return EXIT_SUCCESS;
 }
-
-int (ser_read_bytes_from_receiver_queue)() {
-  uint8_t byte;
-  while (!is_empty_queue(receiver_queue)) {
-    if (pop_queue(receiver_queue, &byte) != OK) {
-      printf("pop_queue() inside %s failed\n", __func__);
-      return EXIT_FAILURE;
-    }
-    printf("Byte read from receiver queue: %c\n", byte);
-  }
-  return EXIT_SUCCESS;
-}
-
 
 int (ser_subscribe_int)(uint8_t *bit_no) {
   if (bit_no == NULL) {
@@ -547,6 +541,58 @@ int (ser_write_fifo_control)(uint8_t config) {
   if (sys_outb(base_addr + SER_FCR, config) != OK) {
     printf("sys_outb() inside %s\n", __func__);
     return EXIT_FAILURE;
+  }
+  return EXIT_SUCCESS;
+}
+
+int (ser_add_packet_to_transmitter_queue)(uint8_t *packet_bytes) {
+  ser_add_byte_to_transmitter_queue(SER_PACKET_START);
+  ser_add_byte_to_transmitter_queue(packet_bytes[0]);
+  ser_add_byte_to_transmitter_queue(packet_bytes[1]);
+  ser_add_byte_to_transmitter_queue(packet_bytes[2]);
+  ser_add_byte_to_transmitter_queue(SER_END);
+  return EXIT_SUCCESS;
+}
+
+int (ser_read_bytes_from_receiver_queue)() {
+  uint8_t byte;
+  // uint8_t byte_counter;
+
+  while (!is_empty_queue(receiver_queue)) {
+    if (pop_queue(receiver_queue, &byte) != OK) {
+      printf("pop_queue() inside %s failed\n", __func__);
+      return EXIT_FAILURE;
+    }
+    if (byte == SER_END) {
+      ser_state = SLEEPING;
+      continue;
+    }
+    switch (ser_state) {
+      case SLEEPING:
+        switch (byte) {
+          case SER_PACKET_START:
+            ser_state = RECEIVING_MOUSE;
+            break;
+          case SER_SCANCODE_START:
+            ser_state = RECEIVING_KEYBOARD;
+            break;
+          default:
+            break;
+        }
+        break;
+      case RECEIVING_MOUSE:
+        // mouse_process(byte);
+        
+        break;
+      case RECEIVING_KEYBOARD:
+        break;
+
+      default:
+        break;
+    }
+    
+    
+    printf("Byte read from receiver queue: %c\n", byte);
   }
   return EXIT_SUCCESS;
 }

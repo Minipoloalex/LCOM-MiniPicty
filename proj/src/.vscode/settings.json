@@ -30,6 +30,9 @@
     "position.h": "c",
     "menu.h": "c",
     "test7.h": "c",
-    "serial_port.h": "c"
+    "serial_port.h": "c",
+    "stdio.h": "c",
+    "uart.h": "c",
+    "queue.h": "c"
   },
 }

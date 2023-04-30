@@ -102,3 +102,13 @@ Then, access DLL/DLM register and finally reset the DLAB bit, so other registers
 #define SER_FCR_CLEAR_TRANSMITTER BIT(2)
 #define SER_FCR_TRIGGER_LEVEL_4 (BIT(6))
 #define SER_FCR_DEFAULT (SER_FCR_ENABLE | SER_FCR_CLEAR_RECEIVER | SER_FCR_CLEAR_TRANSMITTER | SER_FCR_TRIGGER_LEVEL_4)
+
+
+
+/**
+ * @brief Communication protocol
+ * 
+ */
+#define SER_PACKET_START    'M'
+#define SER_END             '.'
+#define SER_SCANCODE_START  'K'
