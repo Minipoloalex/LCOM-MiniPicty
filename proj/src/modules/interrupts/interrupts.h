@@ -9,6 +9,7 @@
 #include "../../devices/mouse/mouse.h"
 #include "../../devices/video_card/video_card.h"
 #include "../../devices/timer/timer.h"
+#include "../../devices/serial_port/serial_port.h"
 
 int(subscribe_interrupts)();
 int(unsubscribe_interrupts)();

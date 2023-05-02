@@ -5,7 +5,7 @@ int return_value_mouse = 0;
 
 uint8_t packet_byte = 0;
 uint8_t packet_index = 0;
-struct packet packet; 
+struct packet packet;
 //TODO: make the default position the center of the screen
 struct position mouse_position = {
   .x = 0,
@@ -15,6 +15,14 @@ struct position last_mouse_position = {
   .x = 0,
   .y = 0
 };
+
+static bool packet_ready = false;
+bool (packet_is_ready)() {
+  return packet_ready;
+}
+uint8_t *(mouse_get_packet_bytes)() {
+  return packet.bytes;
+}
 
 int (mouse_subscribe_interrupts)(uint8_t *bit_no){
   *bit_no = hook_id;
@@ -33,11 +41,12 @@ int (mouse_disable_data_report)(){
   return write_to_mouse(MOUSE_DISABLE_DATA_REP);
 }
 
-void (mouse_ih)(){
+void (mouse_ih)() {
   return_value_mouse = read_KBC_output(KBC_OUT_REG, &packet_byte, true);
-  if(return_value_mouse != 0) return;
+}
 
-  if (mouse_get_packet() != 0) return;
+int (mouse_process_packet)(){
+  if (mouse_get_packet() != 0) return EXIT_FAILURE;
 
   if (packet_index == 3) {
     packet_index = 0;
@@ -46,22 +55,25 @@ void (mouse_ih)(){
 
     last_mouse_position = mouse_position;
 
-    extern unsigned h_res;	   
-    extern unsigned v_res;	 
+    extern unsigned h_res;
+    extern unsigned v_res;
 
     uint16_t new_x = mouse_position.x + packet.delta_x;
-    if(new_x > 0 && new_x < v_res){
+    if(new_x > 0 && new_x < h_res){
       mouse_position.x = new_x;
     }
     uint16_t new_y = mouse_position.y - packet.delta_y;
-    if(new_y > 0 && new_y < h_res){
+    if(new_y > 0 && new_y < v_res){
       mouse_position.y = new_y;
     }
-    //TODO: Change this to timer_int_handler
-    if(packet.lb){
+
+    // TODO: Change this to somewhere else
+    if(packet.lb) {
       vg_draw_line(last_mouse_position, mouse_position, 20, color);
     }
   }
+
+  return EXIT_SUCCESS;
 }
 
 int (write_to_mouse)(uint8_t command){
@@ -115,6 +127,8 @@ int (mouse_get_packet)() {
   packet.bytes[packet_index] = packet_byte;
   
   if (packet_index == 0 && (packet_byte & FIRST_BYTE_VALIDATION)) {
+    packet_ready = false;
+
     packet.lb = LB(packet_byte);
     packet.rb = RB(packet_byte);
     packet.mb = MB(packet_byte);
@@ -134,6 +148,8 @@ int (mouse_get_packet)() {
   else if (packet_index == 2) {
     packet.delta_y |= packet_byte;
     packet_index++;
+
+    packet_ready = true;
   }
   return EXIT_SUCCESS;
 }
