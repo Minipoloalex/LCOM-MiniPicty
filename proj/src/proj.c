@@ -14,8 +14,8 @@
 
 int main(int argc, char *argv[]) {
   lcf_set_language("EN-US");
-  lcf_trace_calls("/home/lcom/labs/proj/trace.txt");
-  lcf_log_output("/home/lcom/labs/proj/output.txt");
+  lcf_trace_calls("/home/lcom/labs/proj/src/trace.txt");
+  lcf_log_output("/home/lcom/labs/proj/src/output.txt");
   if (lcf_start(argc, argv))
     return 1;
   lcf_cleanup();
@@ -96,19 +96,27 @@ int(proj_main_loop)(int argc, char *argv[]) {
               if (return_value_mouse) continue;
               
               if(mouse_process_packet()) continue;
-              if (isTransmitter && packet_is_ready()) { // and is painting
-                ser_add_packet_to_transmitter_queue(mouse_get_packet_bytes());
-              }
+              if (isTransmitter) printf("donothing\n");
+              // if (isTransmitter && packet_is_ready()) { // and is painting
+              //   ser_add_packet_to_transmitter_queue(mouse_get_packet_bytes());
+              // }
             }
             if (msg.m_notify.interrupts & BIT(timer_bit_no)){
               timer_int_handler();
+              extern struct position mouse_position;
+              extern struct position last_mouse_position;
+              extern bool drawing;
+              
+              if(drawing){
+                vg_draw_line(last_mouse_position, mouse_position, 20, 3);
+              }
             }
             if (msg.m_notify.interrupts & BIT(ser_bit_no)){
-              ser_ih_fifo();
-              if (ser_return_value) continue;
-              if (!isTransmitter) {
-                ser_read_bytes_from_receiver_queue();
-              }
+              // ser_ih_fifo();
+              // if (ser_return_value) continue;
+              // if (!isTransmitter) {
+              //   ser_read_bytes_from_receiver_queue();
+              // }
             }
             break;
           default:

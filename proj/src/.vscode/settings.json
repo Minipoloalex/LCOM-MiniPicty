@@ -33,6 +33,9 @@
     "serial_port.h": "c",
     "stdio.h": "c",
     "uart.h": "c",
-    "queue.h": "c"
+    "queue.h": "c",
+    "game.h": "c",
+    "brush.h": "c",
+    "player.h": "c"
   },
 }

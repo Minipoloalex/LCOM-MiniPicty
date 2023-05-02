@@ -6,6 +6,7 @@ int return_value_mouse = 0;
 uint8_t packet_byte = 0;
 uint8_t packet_index = 0;
 struct packet packet;
+bool drawing = false;
 //TODO: make the default position the center of the screen
 struct position mouse_position = {
   .x = 0,
@@ -51,7 +52,6 @@ int (mouse_process_packet)(){
   if (packet_index == 3) {
     packet_index = 0;
     extern uint8_t bits_per_pixel;
-    uint32_t color = (0 + (2 * 2 + 4) * 2) % (1 << bits_per_pixel);
 
     last_mouse_position = mouse_position;
 
@@ -69,8 +69,13 @@ int (mouse_process_packet)(){
 
     // TODO: Change this to somewhere else
     if(packet.lb) {
-      vg_draw_line(last_mouse_position, mouse_position, 20, color);
+      drawing = true;
+    }else{
+      drawing = false;
     }
+    // if(packet.lb) {
+    //   vg_draw_line(last_mouse_position, mouse_position, 20, color);
+    // }
   }
 
   return EXIT_SUCCESS;

@@ -545,18 +545,25 @@ int (ser_write_fifo_control)(uint8_t config) {
   return EXIT_SUCCESS;
 }
 
-int (ser_add_packet_to_transmitter_queue)(uint8_t *packet_bytes) {
-  ser_add_byte_to_transmitter_queue(SER_PACKET_START);
-  ser_add_byte_to_transmitter_queue(packet_bytes[0]);
-  ser_add_byte_to_transmitter_queue(packet_bytes[1]);
-  ser_add_byte_to_transmitter_queue(packet_bytes[2]);
+int (ser_add_packet_to_transmitter_queue)(position_t position) {
+  uint8_t mouse_pos_bytes[4];
+  util_get_LSB(position.x, &mouse_pos_bytes[0]);
+  util_get_MSB(position.x, &mouse_pos_bytes[1]);
+  util_get_LSB(position.y, &mouse_pos_bytes[2]);
+  util_get_MSB(position.y, &mouse_pos_bytes[3]);
+  ser_add_byte_to_transmitter_queue(SER_MOUSE_START);
+  ser_add_byte_to_transmitter_queue(mouse_pos_bytes[0]);
+  ser_add_byte_to_transmitter_queue(mouse_pos_bytes[1]);
+  ser_add_byte_to_transmitter_queue(mouse_pos_bytes[2]);
+  ser_add_byte_to_transmitter_queue(mouse_pos_bytes[3]);
   ser_add_byte_to_transmitter_queue(SER_END);
   return EXIT_SUCCESS;
 }
 
-int (ser_read_bytes_from_receiver_queue)() {
+int (ser_read_bytes_from_receiver_queue)(PlayerDrawer_t *drawer) {
   uint8_t byte;
-  // uint8_t byte_counter;
+  static uint8_t bytes[4];
+  static uint8_t byte_index = 0;
 
   while (!is_empty_queue(receiver_queue)) {
     if (pop_queue(receiver_queue, &byte) != OK) {
@@ -564,13 +571,14 @@ int (ser_read_bytes_from_receiver_queue)() {
       return EXIT_FAILURE;
     }
     if (byte == SER_END) {
+      byte_index = 0;
       ser_state = SLEEPING;
       continue;
     }
     switch (ser_state) {
       case SLEEPING:
         switch (byte) {
-          case SER_PACKET_START:
+          case SER_MOUSE_START:
             ser_state = RECEIVING_MOUSE;
             break;
           case SER_SCANCODE_START:
@@ -581,8 +589,12 @@ int (ser_read_bytes_from_receiver_queue)() {
         }
         break;
       case RECEIVING_MOUSE:
-        // mouse_process(byte);
-        
+        if (byte == SER_END) {
+          // mouse_process_position(drawer, bytes);
+          ser_state = SLEEPING;
+          break;
+        }
+        bytes[byte_index++] = byte;
         break;
       case RECEIVING_KEYBOARD:
         break;

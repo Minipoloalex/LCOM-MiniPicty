@@ -4,7 +4,8 @@
 #include <stdint.h>
 #include "../controllers/uart.h"
 #include "../../model/queue/queue.h"
-
+#include "../../model/player.h"
+#include "../../model/position.h"
 /**
  * @brief 
  * 
@@ -40,7 +41,7 @@ int (ser_add_byte_to_transmitter_queue)(uint8_t c);
  * @brief 
  * 
  */
-int (ser_read_bytes_from_receiver_queue)();
+int (ser_read_bytes_from_receiver_queue)(PlayerDrawer_t *player_drawer);
 /**
  * @brief 
  * 
@@ -57,4 +58,4 @@ int (ser_read_char)(uint8_t *c);
  * @brief 
  * 
  */
-int (ser_add_packet_to_transmitter_queue)(uint8_t *packet_bytes);
+int (ser_add_packet_to_transmitter_queue)(position_t position);
