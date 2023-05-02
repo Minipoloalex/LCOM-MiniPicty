@@ -4,8 +4,7 @@
 #include "../../devices/video_card/video_card.h"
 #include "../../model/button.h"
 
-int (setup_menu)();
-void (setup_buttons)();
+void (setup_menu_buttons)();
 int (draw_buttons)();
 void (draw_menu)();
 

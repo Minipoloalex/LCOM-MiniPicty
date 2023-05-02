@@ -39,6 +39,7 @@ int(proj_main_loop)(int argc, char *argv[]) {
     return EXIT_FAILURE;
   }
   if (vg_enter(GRAPHICS_MODE_0) != OK) return EXIT_FAILURE;
+  setup_menu_buttons();
   
   // Draw the current state
   // TODO: Explore the table-based solution later
@@ -74,19 +75,9 @@ int(proj_main_loop)(int argc, char *argv[]) {
             }
             if (msg.m_notify.interrupts & BIT(mouse_bit_no)) {
               mouse_ih();
-
               if (return_value_mouse) continue;
               switch(app_state){
                 case MENU:
-                  for(int i = 0; i < 3; i++){
-                    if(is_button_hovered(&menu_buttons[i], &mouse_position)){
-                      set_button_hover(&menu_buttons[i], 2, 3);
-                    }
-                    else{
-                      set_button_default(&menu_buttons[i], 0, 1);
-                    }
-                  }
-                  
                   break;
                 case GAME:
                   break;

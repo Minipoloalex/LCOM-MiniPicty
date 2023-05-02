@@ -3,13 +3,7 @@
 uint16_t menu_mode = GRAPHICS_MODE_0;
 extern vbe_mode_info_t vmi;
 
-int (setup_menu)(){
-  if(map_phys_mem_to_virtual(menu_mode)) return 1;
-  if(vg_enter(menu_mode)) return 1;
-  return 0;
-}
-
-void (setup_buttons)(){
+void (setup_menu_buttons)(){
   uint16_t x = vmi.XResolution / 3;
   uint16_t width = vmi.XResolution / 3;
   uint16_t height = vmi.YResolution / 7;
@@ -26,7 +20,7 @@ void (setup_buttons)(){
   menu_buttons[2] = exit_button;
 }
 
-int draw_buttons(){
+int (draw_buttons)(){
   for(int i = 0; i < 3; i++){
     draw_button(&menu_buttons[i]);
   }
@@ -34,11 +28,6 @@ int draw_buttons(){
 }
 
 void (draw_menu)(){
-  if(setup_menu()){
-    printf("Error setting up menu\n");
-    return;
-  }
-  setup_buttons();
   if(draw_buttons()){
     printf("Error drawing buttons\n");
     return;
