@@ -36,6 +36,7 @@
     "queue.h": "c",
     "game.h": "c",
     "brush.h": "c",
-    "player.h": "c"
+    "player.h": "c",
+    "drawing_position.h": "c"
   },
 }

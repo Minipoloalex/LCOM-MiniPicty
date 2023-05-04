@@ -2,6 +2,7 @@
 
 #include <lcom/lcf.h>
 #include <stdint.h>
+#include <stdbool.h>
 #include "../controllers/uart.h"
 #include "../../model/queue/queue.h"
 #include "../../model/player/player.h"
@@ -12,6 +13,11 @@
  */
 int (ser_init)(uint16_t base_addr, uint32_t baud_rate, uint8_t word_length, uint8_t stop_bit, 
 int8_t parity);
+/**
+ * @brief 
+ * 
+ */
+void (delete_ser)();
 /**
  * @brief 
  * 
@@ -41,21 +47,19 @@ int (ser_add_byte_to_transmitter_queue)(uint8_t c);
  * @brief 
  * 
  */
-int (ser_read_bytes_from_receiver_queue)(PlayerDrawer_t *player_drawer);
-/**
- * @brief 
- * 
- */
 int (ser_write_char)(uint8_t c);
 /**
  * @brief 
  * 
  */
 int (ser_read_char)(uint8_t *c);
-
-
 /**
  * @brief 
  * 
  */
-int (ser_add_position_to_transmitter_queue)(position_t position);
+int (ser_add_position_to_transmitter_queue)(position_t position, bool is_drawing);
+/**
+ * @brief 
+ * 
+ */
+int (ser_read_bytes_from_receiver_queue)(PlayerDrawer_t *player_drawer);

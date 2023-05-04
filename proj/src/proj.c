@@ -40,7 +40,16 @@ int(proj_main_loop)(int argc, char *argv[]) {
   }
   
   // Load resources
-  
+  PlayerDrawer_t *player_drawer = create_player_drawer(isTransmitter ? SELF_PLAYER : OTHER_PLAYER);
+  if (player_drawer == NULL) {
+    printf("create_player_drawer inside %s\n", __func__);
+    return EXIT_FAILURE;
+  }
+  PlayerGuesser_t *player_guesser = create_player_guesser(isTransmitter ? OTHER_PLAYER : SELF_PLAYER);
+  if (player_guesser == NULL) {
+    printf("create_player_guesser inside %s\n", __func__);
+    return EXIT_FAILURE;
+  }
   // Subscribe interrupts
   if(subscribe_interrupts()) return EXIT_FAILURE;
 
@@ -78,16 +87,6 @@ int(proj_main_loop)(int argc, char *argv[]) {
 
   extern uint8_t packet_byte;
   extern uint8_t return_value_mouse;
-  // PlayerDrawer_t *player_drawer = create_player_drawer(SELF_PLAYER);
-  // if (player_drawer == NULL) {
-  //   printf("create_player_drawer inside %s\n", __func__);
-  //   return EXIT_FAILURE;
-  // }
-  // PlayerGuesser_t *player_guesser = create_player_guesser(OTHER_PLAYER);
-  // if (player_guesser == NULL) {
-  //   printf("create_player_guesser inside %s\n", __func__);
-  //   return EXIT_FAILURE;
-  // }
   do {
       if ((r = driver_receive(ANY, &msg, &ipc_status)) != 0) {
         printf("driver_receive failed with %d", r);
@@ -102,20 +101,23 @@ int(proj_main_loop)(int argc, char *argv[]) {
             if (msg.m_notify.interrupts & BIT(mouse_bit_no)) {
               mouse_ih();
               if (return_value_mouse) continue;
-              
+
               if(mouse_process_packet()) continue;
-              if (isTransmitter) printf("donothing\n");
-              // if (isTransmitter && packet_is_ready()) { // and is painting
-              //   ser_add_packet_to_transmitter_queue(mouse_get_packet_bytes());
+              // if (isTransmitter && packet_is_ready()) {
+              //   ser_add_position_to_transmitter_queue(mouse_get_position_from_packets(), is_drawing);
               // }
+              //   ser_add_packet_to_transmitter_queue(mouse_get_packet_bytes());
             }
             if (msg.m_notify.interrupts & BIT(timer_bit_no)){
               timer_int_handler();
               extern struct position mouse_position;
               extern struct position last_mouse_position;
               extern bool drawing;
-              
+              // drawing comes from player_drawer->brush->is_drawing
               if(drawing){
+                // will receive last_mouse_position and queue of next mouse_positions
+                // last_mouse_position by pointer so it can update it with the last of the next mouse_positions
+                // if queue is empty, does nothing
                 vg_draw_line(last_mouse_position, mouse_position, 20, 3);
               }
             }
@@ -134,7 +136,9 @@ int(proj_main_loop)(int argc, char *argv[]) {
     } while (scancode != BREAK_ESC);
 
   // Unload resources
-
+  destroy_player_drawer(player_drawer);
+  destroy_player_guesser(player_guesser);
+  delete_ser();
   // Exit graphics mode
   if (vg_exit() != OK) return EXIT_FAILURE;
 

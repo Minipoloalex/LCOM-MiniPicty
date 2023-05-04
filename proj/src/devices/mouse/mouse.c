@@ -54,8 +54,6 @@ int (mouse_process_packet)(){
 
   if (packet_index == 3) {
     packet_index = 0;
-    extern uint8_t bits_per_pixel;
-
     last_mouse_position = mouse_position;
 
     extern unsigned h_res;
@@ -70,7 +68,6 @@ int (mouse_process_packet)(){
       mouse_position.y = new_y;
     }
 
-    // TODO: Change this to somewhere else
     if(packet.lb) {
       drawing = true;
     }else{

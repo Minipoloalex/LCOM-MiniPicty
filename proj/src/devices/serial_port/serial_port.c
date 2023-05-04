@@ -8,7 +8,8 @@ static queue_t *receiver_queue = NULL;
 
 typedef enum {
   SLEEPING,
-  RECEIVING_MOUSE,
+  RECEIVING_MOUSE_DRAWING,
+  RECEIVING_MOUSE_NOT_DRAWING,
   RECEIVING_KEYBOARD,
 } ser_state_t;
 
@@ -102,7 +103,10 @@ int (ser_init)(uint16_t base_addr, uint32_t baud_rate, uint8_t word_length, uint
   }
   return EXIT_SUCCESS;
 }
-
+void (delete_ser)() {
+  delete_queue(transmitter_queue);
+  delete_queue(receiver_queue);
+}
 
 int(ser_set_base_addr)(uint16_t addr) {
   transmitter_queue = create_queue(QUEUE_SIZE, sizeof(uint8_t));
@@ -545,13 +549,13 @@ int (ser_write_fifo_control)(uint8_t config) {
   return EXIT_SUCCESS;
 }
 
-int (ser_add_position_to_transmitter_queue)(position_t position) {
+int (ser_add_position_to_transmitter_queue)(position_t position, bool is_drawing) {
   uint8_t mouse_pos_bytes[4];
   util_get_LSB(position.x, &mouse_pos_bytes[0]);
   util_get_MSB(position.x, &mouse_pos_bytes[1]);
   util_get_LSB(position.y, &mouse_pos_bytes[2]);
   util_get_MSB(position.y, &mouse_pos_bytes[3]);
-  ser_add_byte_to_transmitter_queue(SER_MOUSE_START);
+  ser_add_byte_to_transmitter_queue(is_drawing ? SER_MOUSE_DRAWING : SER_MOUSE_NOT_DRAWING);
   ser_add_byte_to_transmitter_queue(mouse_pos_bytes[0]);
   ser_add_byte_to_transmitter_queue(mouse_pos_bytes[1]);
   ser_add_byte_to_transmitter_queue(mouse_pos_bytes[2]);
@@ -578,9 +582,11 @@ int (ser_read_bytes_from_receiver_queue)(PlayerDrawer_t *drawer) {
     switch (ser_state) {
       case SLEEPING:
         switch (byte) {
-          case SER_MOUSE_START:
-            ser_state = RECEIVING_MOUSE;
+          case SER_MOUSE_DRAWING:
+            ser_state = RECEIVING_MOUSE_DRAWING;
             break;
+          case SER_MOUSE_NOT_DRAWING:
+            ser_state = RECEIVING_MOUSE_NOT_DRAWING;
           case SER_SCANCODE_START:
             ser_state = RECEIVING_KEYBOARD;
             break;
@@ -588,12 +594,16 @@ int (ser_read_bytes_from_receiver_queue)(PlayerDrawer_t *drawer) {
             break;
         }
         break;
-      case RECEIVING_MOUSE:
+      case RECEIVING_MOUSE_DRAWING: case RECEIVING_MOUSE_NOT_DRAWING:
         if (byte == SER_END) {
           if (byte_index != 4) return EXIT_FAILURE;
           position_t position;
           if (get_position(bytes, &position)) return EXIT_FAILURE;
-          if (player_process_position(drawer, position)) return EXIT_FAILURE;
+          drawing_position_t drawing_position = {
+            .position = position,
+            .is_drawing = ser_state == RECEIVING_MOUSE_DRAWING
+          };
+          if (player_add_next_position(drawer, &drawing_position)) return EXIT_FAILURE;
           ser_state = SLEEPING;
           byte_index = 0;
           break;
