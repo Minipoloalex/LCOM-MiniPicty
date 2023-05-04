@@ -7,6 +7,9 @@ uint8_t packet_byte = 0;
 uint8_t packet_index = 0;
 struct packet packet;
 bool drawing = false;
+
+// queue_t mouse_positions;
+
 //TODO: make the default position the center of the screen
 struct position mouse_position = {
   .x = 0,

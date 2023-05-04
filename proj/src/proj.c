@@ -8,9 +8,8 @@
 #include "modules/interrupts/interrupts.h"
 #include "modules/menu/menu.h"
 #include "modules/game/game.h"
+#include "model/player/player.h"
 
-//TODO: remove this hardcoded definition
-#define BIT(n) (1 << (n))
 
 int main(int argc, char *argv[]) {
   lcf_set_language("EN-US");
@@ -79,7 +78,16 @@ int(proj_main_loop)(int argc, char *argv[]) {
 
   extern uint8_t packet_byte;
   extern uint8_t return_value_mouse;
-
+  // PlayerDrawer_t *player_drawer = create_player_drawer(SELF_PLAYER);
+  // if (player_drawer == NULL) {
+  //   printf("create_player_drawer inside %s\n", __func__);
+  //   return EXIT_FAILURE;
+  // }
+  // PlayerGuesser_t *player_guesser = create_player_guesser(OTHER_PLAYER);
+  // if (player_guesser == NULL) {
+  //   printf("create_player_guesser inside %s\n", __func__);
+  //   return EXIT_FAILURE;
+  // }
   do {
       if ((r = driver_receive(ANY, &msg, &ipc_status)) != 0) {
         printf("driver_receive failed with %d", r);

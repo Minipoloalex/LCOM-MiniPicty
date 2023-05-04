@@ -1,11 +1,9 @@
 #pragma once
 
 #include <lcom/lcf.h>
+#include <stdbool.h>
+#include <stdint.h>
 
-struct brush{
-  uint16_t color;
-  uint16_t size;
-};
 typedef struct brush brush_t;
 /*
 TODO:
@@ -14,3 +12,6 @@ TODO:
 */
 // int (brush_increase_size)(brush_t *brush);
 // int (brush_decrease_size)(brush_t *brush);
+
+bool (is_drawing)(brush_t *brush);
+int (set_drawing)(brush_t *brush, bool drawing);

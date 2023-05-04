@@ -545,7 +545,7 @@ int (ser_write_fifo_control)(uint8_t config) {
   return EXIT_SUCCESS;
 }
 
-int (ser_add_packet_to_transmitter_queue)(position_t position) {
+int (ser_add_position_to_transmitter_queue)(position_t position) {
   uint8_t mouse_pos_bytes[4];
   util_get_LSB(position.x, &mouse_pos_bytes[0]);
   util_get_MSB(position.x, &mouse_pos_bytes[1]);
@@ -590,8 +590,12 @@ int (ser_read_bytes_from_receiver_queue)(PlayerDrawer_t *drawer) {
         break;
       case RECEIVING_MOUSE:
         if (byte == SER_END) {
-          // mouse_process_position(drawer, bytes);
+          if (byte_index != 4) return EXIT_FAILURE;
+          position_t position;
+          if (get_position(bytes, &position)) return EXIT_FAILURE;
+          if (player_process_position(drawer, position)) return EXIT_FAILURE;
           ser_state = SLEEPING;
+          byte_index = 0;
           break;
         }
         bytes[byte_index++] = byte;

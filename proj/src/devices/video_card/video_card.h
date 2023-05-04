@@ -1,8 +1,8 @@
 #include <lcom/lcf.h>
 #include <stdint.h>
-#include "../controllers/vbe.h"
 #include <math.h>
-#include "../../model/position.h"
+#include "../controllers/vbe.h"
+#include "../../model/position/position.h"
 
 /* Map physical memory to virtual address space of process */
 int (map_phys_mem_to_virtual)(uint16_t mode);

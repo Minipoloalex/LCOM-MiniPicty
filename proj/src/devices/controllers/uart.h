@@ -1,7 +1,5 @@
 #pragma once
 
-#define QUEUE_SIZE 100
-
 #define SER_COM1 0x3F8  // IRQ 4, vector 0x0C
 #define SER_COM1_IRQ 4
 
