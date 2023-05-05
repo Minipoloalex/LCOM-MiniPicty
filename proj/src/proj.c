@@ -53,6 +53,13 @@ int(proj_main_loop)(int argc, char *argv[]) {
   // Subscribe interrupts
   if(subscribe_interrupts()) return EXIT_FAILURE;
 
+  if (isTransmitter) {
+    if (ser_write_char(SER_START) != OK) {
+      printf("ser_write_char inside %s\n", __func__);
+      return EXIT_FAILURE;
+    }
+  }
+
   if (map_phys_mem_to_virtual(GRAPHICS_MODE_0) != OK){
     printf("map_phys_mem_to_virtual inside %s\n", __func__);
     return EXIT_FAILURE;
@@ -103,8 +110,8 @@ int(proj_main_loop)(int argc, char *argv[]) {
 
               if(mouse_process_packet_byte()) continue;
               if (packet_is_ready()) {
-                drawing_position_t next = mouse_get_drawing_position_from_packet(player_drawer_get_current_position(player_drawer));
                 if (player_drawer_get_state(player_drawer) == SELF_PLAYER) {
+                  drawing_position_t next = mouse_get_drawing_position_from_packet(player_drawer_get_current_position(player_drawer));
                   // if I'm the drawer, I must communicate what I'm doing
                   ser_add_position_to_transmitter_queue(next);
                   player_add_next_position(player_drawer, &next);
@@ -120,6 +127,7 @@ int(proj_main_loop)(int argc, char *argv[]) {
               if (vg_draw_player_drawer(player_drawer) != OK) return EXIT_FAILURE;
             }
             if (msg.m_notify.interrupts & BIT(ser_bit_no)){
+              printf("Received interrupt from serial port\n");
               ser_ih_fifo();
               if (ser_return_value) continue;
               if (player_drawer_get_state(player_drawer) == OTHER_PLAYER) {

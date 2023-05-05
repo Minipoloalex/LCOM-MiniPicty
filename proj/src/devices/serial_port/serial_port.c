@@ -100,6 +100,7 @@ int (ser_init)(uint16_t base_addr, uint32_t baud_rate, uint8_t word_length, uint
     printf("ser_write_fifo_control_default() inside %s failed", __func__);
     return EXIT_FAILURE;
   }
+  printf("Finished setting up serial port inside %s\n", __func__);
   return EXIT_SUCCESS;
 }
 void (delete_ser)() {
@@ -152,7 +153,7 @@ int (ser_subscribe_int)(uint8_t *bit_no) {
     return EXIT_FAILURE;
   }
   *bit_no = hook_id;
-  return sys_irqsetpolicy(*bit_no, IRQ_REENABLE | IRQ_EXCLUSIVE, &hook_id);
+  return sys_irqsetpolicy(SER_COM1_IRQ, IRQ_REENABLE | IRQ_EXCLUSIVE, &hook_id);
 }
 
 int (ser_unsubscribe_int)() {
@@ -476,7 +477,7 @@ void (ser_ih_fifo)() {
     ser_return_value = EXIT_FAILURE;
     return;
   }
-  // printf("Interrupt id: %02x\n", iir);
+  printf("Interrupt id: %02x\n", iir);
   uint8_t lsr;
   if (!(iir & SER_IIR_INT_NOT_PEND)) {  /* interrupt pending */
     switch ((iir & SER_IIR_INT_ID) >> SER_IIR_INT_ID_POSITION) {
@@ -573,6 +574,7 @@ int (ser_read_bytes_from_receiver_queue)(PlayerDrawer_t *drawer) {
       printf("pop_queue() inside %s failed\n", __func__);
       return EXIT_FAILURE;
     }
+    printf("Processing byte: %02x value: %d\n", byte, byte);
     switch (ser_state) {
       case SLEEPING:
         switch (byte) {
@@ -610,10 +612,7 @@ int (ser_read_bytes_from_receiver_queue)(PlayerDrawer_t *drawer) {
 
       default:
         break;
-    }
-    
-    
-    printf("Byte read from receiver queue: %c\n", byte);
+    }    
   }
   return EXIT_SUCCESS;
 }
