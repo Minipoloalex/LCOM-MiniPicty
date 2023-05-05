@@ -4,7 +4,10 @@
 #include <stdbool.h>
 #include <stdint.h>
 
-struct brush;
+struct brush {
+  uint16_t color;
+  uint16_t size;
+};
 typedef struct brush brush_t;
 /*
 TODO:
@@ -16,5 +19,3 @@ TODO:
 
 brush_t *(create_brush)(uint16_t color, uint16_t size);
 void (destroy_brush)(brush_t *brush);
-int (brush_set_color)(brush_t *brush, uint16_t color);
-

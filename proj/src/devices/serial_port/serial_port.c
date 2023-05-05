@@ -15,7 +15,6 @@ typedef enum {
 
 static ser_state_t ser_state = SLEEPING;
 
-uint8_t c;
 int ser_return_value = 0;
 
 /* ========== Functions only used inside this module (serial port) ========= */
@@ -143,7 +142,6 @@ int (ser_add_byte_to_transmitter_queue)(uint8_t byte) {
 int (ser_add_byte_to_receiver_queue)(uint8_t byte) {
   if (push_queue(receiver_queue, &byte) != OK) {
     printf("push_queue() (queue is full) inside %s failed\n", __func__);
-    return EXIT_FAILURE;
   }
   return EXIT_SUCCESS;
 }
@@ -435,7 +433,6 @@ int (ser_read_from_fifo)() {
       printf("ser_add_byte_to_receiver_queue() inside %s\n", __func__);
       return EXIT_FAILURE;
     }
-    c = data;
     if (ser_read_line_status(&lsr) != OK) {
       printf("ser_read_line_status() inside %s\n", __func__);
       return EXIT_FAILURE;
@@ -462,8 +459,7 @@ int (ser_write_to_fifo)() {
       printf("ser_write_data() inside %s\n", __func__);
       return EXIT_FAILURE;
     }
-    printf("Character sent: %c\n", data);
-    c = data;
+
     if (ser_read_line_status(&lsr) != OK) {
       printf("ser_read_line_status() inside %s\n", __func__);
       return EXIT_FAILURE;
@@ -480,7 +476,7 @@ void (ser_ih_fifo)() {
     ser_return_value = EXIT_FAILURE;
     return;
   }
-  printf("Interrupt id: %02x\n", iir);
+  // printf("Interrupt id: %02x\n", iir);
   uint8_t lsr;
   if (!(iir & SER_IIR_INT_NOT_PEND)) {  /* interrupt pending */
     switch ((iir & SER_IIR_INT_ID) >> SER_IIR_INT_ID_POSITION) {
@@ -488,6 +484,7 @@ void (ser_ih_fifo)() {
         printf("Received interrupt RDA\n");
         if (ser_read_from_fifo() != OK) {
           printf("ser_read_from_fifo() inside %s\n", __func__);
+          ser_return_value = EXIT_FAILURE;
           return;
         }
         break;
@@ -495,6 +492,7 @@ void (ser_ih_fifo)() {
         printf("Transmit interrupt THRE\n");
         if (ser_write_to_fifo() != OK) {
           printf("ser_write_to_fifo() inside %s\n", __func__);
+          ser_return_value = EXIT_FAILURE;
           return;
         }
         break;
@@ -502,6 +500,7 @@ void (ser_ih_fifo)() {
         printf("Received interrupt CTI\n");
         if (ser_read_from_fifo() != OK) {
           printf("ser_read_from_fifo() inside %s\n", __func__);
+          ser_return_value = EXIT_FAILURE;
           return;
         }
         break;
@@ -549,13 +548,13 @@ int (ser_write_fifo_control)(uint8_t config) {
   return EXIT_SUCCESS;
 }
 
-int (ser_add_position_to_transmitter_queue)(position_t position, bool is_drawing) {
+int (ser_add_position_to_transmitter_queue)(drawing_position_t drawing_position) {
   uint8_t mouse_pos_bytes[4];
-  util_get_LSB(position.x, &mouse_pos_bytes[0]);
-  util_get_MSB(position.x, &mouse_pos_bytes[1]);
-  util_get_LSB(position.y, &mouse_pos_bytes[2]);
-  util_get_MSB(position.y, &mouse_pos_bytes[3]);
-  ser_add_byte_to_transmitter_queue(is_drawing ? SER_MOUSE_DRAWING : SER_MOUSE_NOT_DRAWING);
+  util_get_LSB(drawing_position.position.x, &mouse_pos_bytes[0]);
+  util_get_MSB(drawing_position.position.x, &mouse_pos_bytes[1]);
+  util_get_LSB(drawing_position.position.y, &mouse_pos_bytes[2]);
+  util_get_MSB(drawing_position.position.y, &mouse_pos_bytes[3]);
+  ser_add_byte_to_transmitter_queue(drawing_position.is_drawing ? SER_MOUSE_DRAWING : SER_MOUSE_NOT_DRAWING);
   ser_add_byte_to_transmitter_queue(mouse_pos_bytes[0]);
   ser_add_byte_to_transmitter_queue(mouse_pos_bytes[1]);
   ser_add_byte_to_transmitter_queue(mouse_pos_bytes[2]);
@@ -574,11 +573,6 @@ int (ser_read_bytes_from_receiver_queue)(PlayerDrawer_t *drawer) {
       printf("pop_queue() inside %s failed\n", __func__);
       return EXIT_FAILURE;
     }
-    if (byte == SER_END) {
-      byte_index = 0;
-      ser_state = SLEEPING;
-      continue;
-    }
     switch (ser_state) {
       case SLEEPING:
         switch (byte) {
@@ -587,6 +581,7 @@ int (ser_read_bytes_from_receiver_queue)(PlayerDrawer_t *drawer) {
             break;
           case SER_MOUSE_NOT_DRAWING:
             ser_state = RECEIVING_MOUSE_NOT_DRAWING;
+            break;
           case SER_SCANCODE_START:
             ser_state = RECEIVING_KEYBOARD;
             break;

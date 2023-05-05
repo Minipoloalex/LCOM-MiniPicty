@@ -87,13 +87,30 @@ int (vg_draw_circle)(uint16_t xc, uint16_t yc, uint16_t radius, uint32_t color){
     }
     x++;
   }
+  return EXIT_SUCCESS;
+}
 
+int (vg_draw_player_drawer)(PlayerDrawer_t *player_drawer) {
+  drawing_position_t drawing_position;
+  position_t last_position;
+
+  brush_t *brush = player_get_brush(player_drawer);
+  if (brush == NULL) return EXIT_FAILURE;
+
+  while (player_get_next_position(player_drawer, &drawing_position) == OK) {
+    if (player_get_last_position(player_drawer, &last_position)) return EXIT_FAILURE;
+    if (drawing_position.is_drawing) {
+      vg_draw_line(last_position, drawing_position.position, brush->size, brush->color);
+    }
+    printf("drawing position: %d %d %d\n", drawing_position.position.x, drawing_position.position.y, drawing_position.is_drawing);
+    player_set_last_position(player_drawer, drawing_position.position);
+  }
   return EXIT_SUCCESS;
 }
 
 /* Bresenham's line algorithm */
 //TODO: Explore Xiaolin Wu's algorithm for drawing lines (anti-aliasing)
-int (vg_draw_line)(struct position pos1, struct position pos2, uint16_t thickness, uint32_t color) {
+int (vg_draw_line)(position_t pos1, position_t pos2, uint16_t thickness, uint32_t color) {
     int x0 = pos1.x;
     int y0 = pos1.y;
     int x1 = pos2.x;

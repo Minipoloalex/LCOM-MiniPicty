@@ -27,7 +27,7 @@ queue_t *(create_queue)(unsigned int size, int element_size) {
         return NULL;
     }
     queue->back = queue->front = queue->count = 0;
-    return queue;  
+    return queue;
 }
 
 void (delete_queue)(queue_t *queue) {
@@ -62,3 +62,11 @@ int (pop_queue)(queue_t *q, void *element) {
   return EXIT_SUCCESS;
 }
 
+int (queue_get_back)(queue_t *q, void *back) {
+  if (is_empty_queue(q)) {
+    return EXIT_FAILURE;
+  }
+  printf("q->back: %d, q->count: %d, q->element_size: %d\n", q->back, q->count, q->element_size);
+  memcpy(back, q->elements + ((q->back - 1) % q->size) * q->element_size, q->element_size);
+  return EXIT_SUCCESS;
+}

@@ -57,7 +57,7 @@ int (ser_read_char)(uint8_t *c);
  * @brief 
  * 
  */
-int (ser_add_position_to_transmitter_queue)(position_t position, bool is_drawing);
+int (ser_add_position_to_transmitter_queue)(drawing_position_t position);
 /**
  * @brief 
  * 

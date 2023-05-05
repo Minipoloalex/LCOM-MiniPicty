@@ -85,7 +85,6 @@ int(proj_main_loop)(int argc, char *argv[]) {
   extern uint8_t ser_bit_no;
   extern uint8_t ser_return_value;
 
-  extern uint8_t packet_byte;
   extern uint8_t return_value_mouse;
   do {
       if ((r = driver_receive(ANY, &msg, &ipc_status)) != 0) {
@@ -102,31 +101,30 @@ int(proj_main_loop)(int argc, char *argv[]) {
               mouse_ih();
               if (return_value_mouse) continue;
 
-              if(mouse_process_packet()) continue;
-              // if (isTransmitter && packet_is_ready()) {
-              //   ser_add_position_to_transmitter_queue(mouse_get_position_from_packets(), is_drawing);
-              // }
-              //   ser_add_packet_to_transmitter_queue(mouse_get_packet_bytes());
+              if(mouse_process_packet_byte()) continue;
+              if (packet_is_ready()) {
+                drawing_position_t next = mouse_get_drawing_position_from_packet(player_drawer_get_current_position(player_drawer));
+                if (player_drawer_get_state(player_drawer) == SELF_PLAYER) {
+                  // if I'm the drawer, I must communicate what I'm doing
+                  ser_add_position_to_transmitter_queue(next);
+                  player_add_next_position(player_drawer, &next);
+                }
+                // TODO: maybe also update the player guesser's mouse
+                // might not be needed
+                // this function is not implemented for player_guesser
+                // player_add_next_position(player_guesser, mouse_get_drawing_position_from_packets());
+              }
             }
             if (msg.m_notify.interrupts & BIT(timer_bit_no)){
               timer_int_handler();
-              extern struct position mouse_position;
-              extern struct position last_mouse_position;
-              extern bool drawing;
-              // drawing comes from player_drawer->brush->is_drawing
-              if(drawing){
-                // will receive last_mouse_position and queue of next mouse_positions
-                // last_mouse_position by pointer so it can update it with the last of the next mouse_positions
-                // if queue is empty, does nothing
-                vg_draw_line(last_mouse_position, mouse_position, 20, 3);
-              }
+              if (vg_draw_player_drawer(player_drawer) != OK) return EXIT_FAILURE;
             }
             if (msg.m_notify.interrupts & BIT(ser_bit_no)){
-              // ser_ih_fifo();
-              // if (ser_return_value) continue;
-              // if (!isTransmitter) {
-              //   ser_read_bytes_from_receiver_queue();
-              // }
+              ser_ih_fifo();
+              if (ser_return_value) continue;
+              if (player_drawer_get_state(player_drawer) == OTHER_PLAYER) {
+                ser_read_bytes_from_receiver_queue(player_drawer);
+              }
             }
             break;
           default:
@@ -134,14 +132,13 @@ int(proj_main_loop)(int argc, char *argv[]) {
         }
       }
     } while (scancode != BREAK_ESC);
-
   // Unload resources
   destroy_player_drawer(player_drawer);
   destroy_player_guesser(player_guesser);
   delete_ser();
   // Exit graphics mode
   if (vg_exit() != OK) return EXIT_FAILURE;
-
+  printf("ending\n");
   // Unsubscribe interrupts
   if(unsubscribe_interrupts()) return 1;
 

@@ -41,6 +41,11 @@ int (push_queue)(queue_t *q, void *element);
  * @return int 0 if success, different than 0 if the queue is empty
  */
 int (pop_queue)(queue_t *q, void *element);
+/**
+ * @brief Returns by parameter the last inserted element in the queue
+ * @return int 0 if success, different than 0 if the queue is empty
+ */
+int (queue_get_back)(queue_t *q, void *back);
 
 /**
  * @brief Returns true if the queue is full

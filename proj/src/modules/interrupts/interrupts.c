@@ -7,13 +7,11 @@ uint8_t keyboard_bit_no;
 uint8_t ser_bit_no;
 
 int(subscribe_interrupts)(){  
-  
   // Timer
   if(timer_subscribe_int(&timer_bit_no) != 0){
     printf("timer_subscribe_in inside %s\n", __func__);
     return EXIT_FAILURE;
   }
-
   // Mouse
   if(mouse_subscribe_interrupts(&mouse_bit_no) != 0) {
     printf("mouse_subscribe_interrupts inside %s\n", __func__);
@@ -46,12 +44,19 @@ int(subscribe_interrupts)(){
 }
 
 int(unsubscribe_interrupts)(){
-
   // Timer
   if(timer_unsubscribe_int() != 0){
     printf("timer_unsubscribe_int inside %s\n", __func__);
     return EXIT_FAILURE;
   }
+  if (ser_unsubscribe_int() != 0) {
+    printf("ser_unsubscribe_int inside %s\n", __func__);
+    return EXIT_FAILURE;
+  }
+  // Keyboard
+  if(keyboard_unsubscribe_interrupts() != 0) return EXIT_FAILURE;
+
+  if(keyboard_restore() != 0) return EXIT_FAILURE;
 
   // Mouse
   if(mouse_disable_int() != 0) {
@@ -67,16 +72,6 @@ int(unsubscribe_interrupts)(){
     return EXIT_FAILURE;
   }
   if(mouse_unsubscribe_interrupts() != 0) return EXIT_FAILURE; 
-
-  // Keyboard
-  if(keyboard_unsubscribe_interrupts() != 0) return EXIT_FAILURE;
-
-  if(keyboard_restore() != 0) return EXIT_FAILURE;
-
-  if (ser_unsubscribe_int() != 0) {
-    printf("ser_unsubscribe_int inside %s\n", __func__);
-    return EXIT_FAILURE;
-  }
 
   return EXIT_SUCCESS;
 }
