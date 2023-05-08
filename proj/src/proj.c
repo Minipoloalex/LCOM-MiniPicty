@@ -9,6 +9,7 @@
 #include "modules/menu/menu.h"
 #include "modules/game/game.h"
 #include "model/player/player.h"
+#include "model/button/button.h"
 
 
 int main(int argc, char *argv[]) {
@@ -59,18 +60,11 @@ int(proj_main_loop)(int argc, char *argv[]) {
     return EXIT_FAILURE;
   }
   if (vg_enter(GRAPHICS_MODE_0) != OK) return EXIT_FAILURE;
+  setup_menu_buttons();
   
   // Draw the current state
   // TODO: Explore the table-based solution later
   state_t app_state = MENU;
-  switch(app_state){
-    case MENU:
-      draw_menu();
-      break;
-    case GAME:
-      draw_game();
-      break;
-  }
 
   // Game Loop
   int ipc_status, r;
@@ -87,6 +81,10 @@ int(proj_main_loop)(int argc, char *argv[]) {
   extern uint8_t ser_return_value;
 
   extern uint8_t return_value_mouse;
+
+  extern struct position mouse_position; //TODO: CHANGE THIS!!
+  extern struct button menu_buttons[3];
+
   do {
       if ((r = driver_receive(ANY, &msg, &ipc_status)) != 0) {
         printf("driver_receive failed with %d", r);
@@ -118,7 +116,15 @@ int(proj_main_loop)(int argc, char *argv[]) {
             }
             if (msg.m_notify.interrupts & BIT(timer_bit_no)){
               timer_int_handler();
-              if (vg_draw_player_drawer(player_drawer) != OK) return EXIT_FAILURE;
+              switch(app_state){
+                case MENU:
+                  draw_menu();
+                  break;
+                case GAME:
+                  if (vg_draw_player_drawer(player_drawer) != OK) return EXIT_FAILURE;
+                  draw_game();
+                  break;
+              }
             }
             if (msg.m_notify.interrupts & BIT(ser_bit_no)){
               printf("Received interrupt from serial port\n");

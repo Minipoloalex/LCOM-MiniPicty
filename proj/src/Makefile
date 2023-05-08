@@ -11,10 +11,12 @@ PROG=proj
 .PATH: ${.CURDIR}/devices/video_card
 .PATH: ${.CURDIR}/devices/serial_port
 
+# Models
 .PATH: ${.CURDIR}/model/brush
 .PATH: ${.CURDIR}/model/player
 .PATH: ${.CURDIR}/model/position
 .PATH: ${.CURDIR}/model/queue
+.PATH: ${.CURDIR}/model/button
 .PATH: ${.CURDIR}/model
 
 # Modules
@@ -24,7 +26,7 @@ PROG=proj
 
 .PATH: ${.CURDIR}/utils/
 
-SRCS = proj.c kbc.c keyboard.c mouse.c timer.c video_card.c utils.c interrupts.c menu.c game.c serial_port.c queue.c position.c brush.c player.c
+SRCS = proj.c kbc.c keyboard.c mouse.c timer.c video_card.c utils.c interrupts.c menu.c game.c serial_port.c queue.c position.c brush.c player.c button.c
 
 # additional compilation flags
 CPPFLAGS += -pedantic -D__LCOM_OPTIMIZED__

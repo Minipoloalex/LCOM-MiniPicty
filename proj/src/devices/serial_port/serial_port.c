@@ -79,7 +79,8 @@ int (ser_read_int_id)(uint8_t *id);
 
 /* =========================================================================================== */
 
-int (ser_init)(uint16_t base_addr, uint32_t baud_rate, uint8_t word_length, uint8_t stop_bit, int8_t parity) {
+int (ser_init)(uint16_t base_addr, uint32_t baud_rate, uint8_t word_length, uint8_t stop_bit, 
+int8_t parity){
   if (ser_set_base_addr(base_addr) != EXIT_SUCCESS) {
     printf("ser_set_base_addr() inside %s failed", __func__);
     return EXIT_FAILURE;

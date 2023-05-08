@@ -37,6 +37,7 @@
     "game.h": "c",
     "brush.h": "c",
     "player.h": "c",
-    "drawing_position.h": "c"
+    "drawing_position.h": "c",
+    "button.h": "c"
   },
 }
