@@ -50,9 +50,11 @@ int(proj_main_loop)(int argc, char *argv[]) {
     printf("create_player_guesser inside %s\n", __func__);
     return EXIT_FAILURE;
   }
+
   // Subscribe interrupts
   if(subscribe_interrupts()) return EXIT_FAILURE;
 
+  // Start serial communication
   if (isTransmitter) {
     if (ser_write_char(SER_START) != OK) {
       printf("ser_write_char inside %s\n", __func__);
@@ -60,6 +62,7 @@ int(proj_main_loop)(int argc, char *argv[]) {
     }
   }
 
+  // Start video mode
   if (map_phys_mem_to_virtual(GRAPHICS_MODE_0) != OK){
     printf("map_phys_mem_to_virtual inside %s\n", __func__);
     return EXIT_FAILURE;
@@ -143,7 +146,10 @@ int(proj_main_loop)(int argc, char *argv[]) {
   // Unload resources
   destroy_player_drawer(player_drawer);
   destroy_player_guesser(player_guesser);
+
+  // Stop serial communication
   delete_ser();
+
   // Exit graphics mode
   if (vg_exit() != OK) return EXIT_FAILURE;
   printf("ending\n");
