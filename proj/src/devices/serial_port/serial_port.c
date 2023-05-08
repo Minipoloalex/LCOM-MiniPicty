@@ -491,6 +491,7 @@ void (ser_ih_fifo)() {
         break;
       case SER_IIR_INT_ID_THRE:   // transmitter empty
         printf("Transmit interrupt THRE\n");
+        // ser_write_char(SER_TRASH);
         if (ser_write_to_fifo() != OK) {
           printf("ser_write_to_fifo() inside %s\n", __func__);
           ser_return_value = EXIT_FAILURE;
@@ -561,6 +562,7 @@ int (ser_add_position_to_transmitter_queue)(drawing_position_t drawing_position)
   ser_add_byte_to_transmitter_queue(mouse_pos_bytes[2]);
   ser_add_byte_to_transmitter_queue(mouse_pos_bytes[3]);
   ser_add_byte_to_transmitter_queue(SER_END);
+  ser_write_to_fifo();
   return EXIT_SUCCESS;
 }
 
@@ -574,6 +576,7 @@ int (ser_read_bytes_from_receiver_queue)(PlayerDrawer_t *drawer) {
       printf("pop_queue() inside %s failed\n", __func__);
       return EXIT_FAILURE;
     }
+    // if (byte == SER_TRASH) continue;
     printf("Processing byte: %02x value: %d\n", byte, byte);
     switch (ser_state) {
       case SLEEPING:

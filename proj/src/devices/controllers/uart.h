@@ -112,3 +112,4 @@ Then, access DLL/DLM register and finally reset the DLAB bit, so other registers
 #define SER_MOUSE_NOT_DRAWING     'N'
 #define SER_END                   '.'
 #define SER_SCANCODE_START        'K'
+// #define SER_TRASH                 '_'
