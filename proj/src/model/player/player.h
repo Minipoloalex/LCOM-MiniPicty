@@ -11,69 +11,45 @@ typedef enum player_type {
   OTHER_PLAYER,
 } player_type_t;
 
-struct PlayerDrawer;
-struct PlayerGuesser;
-typedef struct PlayerDrawer PlayerDrawer_t;
-typedef struct PlayerGuesser PlayerGuesser_t;
+struct Player;
+typedef struct Player player_t;
+
+
+player_t *(create_player)();
+void (destroy_player)(player_t *player);
 
 /**
  * @brief 
  * 
  */
-PlayerDrawer_t *(create_player_drawer)(player_type_t player_type);
-/**
- * @brief 
- * 
- */
-PlayerGuesser_t *(create_player_guesser)(player_type_t player_type);
-/**
- * @brief 
- * 
- */
-void (destroy_player_drawer)(PlayerDrawer_t *player_drawer);
-/**
- * @brief 
- * 
- */
-void (destroy_player_guesser)(PlayerGuesser_t *player_guesser);
-/**
- * @brief 
- * 
- */
-int (player_add_next_position)(PlayerDrawer_t *player_drawer, drawing_position_t *position);
+int (player_add_next_position)(player_t *player, drawing_position_t *position);
 /**
  * @brief 
  * @return int 0 if success, different than 0 if the queue is empty
  */
-int (player_get_next_position)(PlayerDrawer_t *player_drawer, drawing_position_t *position);
+int (player_get_next_position)(player_t *player, drawing_position_t *position);
 /**
  * @brief 
  * 
  */
-int (player_get_last_position)(PlayerDrawer_t *player_drawer, position_t *position);
+int (player_get_last_position)(player_t *player, position_t *position);
 /**
  * @brief 
  * 
  */
-int (player_set_last_position)(PlayerDrawer_t *player_drawer, position_t position);
-/**
- * @brief 
- * 
- */
-player_type_t (player_drawer_get_state)(PlayerDrawer_t *player_drawer);
-/**
- * @brief 
- * 
- */
-player_type_t (player_guesser_get_state)(PlayerGuesser_t *player_guesser);
+int (player_set_last_position)(player_t *player, position_t position);
+
 /**
  * @brief returns the current position of the mouse of the player
  * That position is the last in the queue of positions. In case it is empty, returns the last position of the mouse already drawn.
  */
-position_t (player_drawer_get_current_position)(PlayerDrawer_t *player_drawer);
-/**
- * @brief 
- * 
- * @return brush_t* 
- */
-brush_t *player_get_brush(PlayerDrawer_t *player_drawer);
+position_t (player_get_current_position)(player_t *player);
+
+
+
+// PLAYER GUESSER STUFF
+// struct PlayerGuesser;
+// typedef struct PlayerGuesser PlayerGuesser_t;
+// PlayerGuesser_t *(create_player_guesser)(player_type_t player_type);
+// void (destroy_player_guesser)(PlayerGuesser_t *player_guesser);
+// player_type_t (player_guesser_get_state)(PlayerGuesser_t *player_guesser);

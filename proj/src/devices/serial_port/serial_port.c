@@ -571,6 +571,7 @@ int (ser_read_bytes_from_receiver_queue)(PlayerDrawer_t *drawer) {
   uint8_t byte;
   static uint8_t bytes[4];
   static uint8_t byte_index = 0;
+  player_t *player = player_drawer_get_player(drawer);
 
   while (!is_empty_queue(receiver_queue)) {
     if (pop_queue(receiver_queue, &byte) != OK) {
@@ -604,7 +605,7 @@ int (ser_read_bytes_from_receiver_queue)(PlayerDrawer_t *drawer) {
             .position = position,
             .is_drawing = ser_state == RECEIVING_MOUSE_DRAWING
           };
-          if (player_add_next_position(drawer, &drawing_position)) return EXIT_FAILURE;
+          if (player_add_next_position(player, &drawing_position)) return EXIT_FAILURE;
           ser_state = SLEEPING;
           byte_index = 0;
           break;

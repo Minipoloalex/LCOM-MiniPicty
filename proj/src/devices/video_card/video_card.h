@@ -3,7 +3,7 @@
 #include <math.h>
 #include "../controllers/vbe.h"
 #include "../../model/position/position.h"
-#include "../../model/player/player.h"
+#include "../../modules/game/player_drawer/player_drawer.h"
 #include "../../model/brush/brush.h"
 
 /* Map physical memory to virtual address space of process */

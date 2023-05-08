@@ -7,6 +7,8 @@
 
 #include "modules/interrupts/interrupts.h"
 #include "modules/menu/menu.h"
+#include "modules/game/player_drawer/player_drawer.h"
+#include "modules/menu/player_menu/player_menu.h"
 #include "modules/game/game.h"
 #include "model/player/player.h"
 #include "model/button/button.h"
@@ -39,18 +41,17 @@ int(proj_main_loop)(int argc, char *argv[]) {
     printf("ser_init inside %s\n", __func__);
     return EXIT_FAILURE;
   }
+  printf("isTransmitter: %d\n", isTransmitter);
   
   // Load resources
+  /*
+  TODO: pass this to game module, like menu_process_mouse and player_menu
   PlayerDrawer_t *player_drawer = create_player_drawer(isTransmitter ? SELF_PLAYER : OTHER_PLAYER);
   if (player_drawer == NULL) {  
     printf("create_player_drawer inside %s\n", __func__);
     return EXIT_FAILURE;
   }
-  PlayerGuesser_t *player_guesser = create_player_guesser(isTransmitter ? OTHER_PLAYER : SELF_PLAYER);
-  if (player_guesser == NULL) {
-    printf("create_player_guesser inside %s\n", __func__);
-    return EXIT_FAILURE;
-  }
+  */
 
   // Subscribe interrupts
   if(subscribe_interrupts()) return EXIT_FAILURE;
@@ -60,8 +61,8 @@ int(proj_main_loop)(int argc, char *argv[]) {
     return EXIT_FAILURE;
   }
   if (vg_enter(GRAPHICS_MODE_0) != OK) return EXIT_FAILURE;
-  setup_menu_buttons();
-  
+  setup_menu();
+
   // Draw the current state
   // TODO: Explore the table-based solution later
   state_t app_state = MENU;
@@ -101,27 +102,37 @@ int(proj_main_loop)(int argc, char *argv[]) {
 
               if(mouse_process_packet_byte()) continue;
               if (packet_is_ready()) {
-                if (player_drawer_get_state(player_drawer) == SELF_PLAYER) {
-                  drawing_position_t next = mouse_get_drawing_position_from_packet(player_drawer_get_current_position(player_drawer));
-                  // if I'm the drawer, I must communicate what I'm doing
-                  ser_add_position_to_transmitter_queue(next);
-                  player_add_next_position(player_drawer, &next);
+                switch (app_state) {
+                  case GAME:
+                  // TODO: pass this to game module, like menu_process_mouse
+                  /*
+                    if (player_drawer_get_state(player_drawer) == SELF_PLAYER) {  
+                      // if I'm the drawer, I must communicate what I'm doing
+                      ser_add_position_to_transmitter_queue(next);
+                      player_add_next_position(player_drawer_get_player(player_drawer), &next);
+                    }
+                  */
+                    break;
+                  case MENU:
+                    menu_process_mouse();
+                    break;
                 }
-                // TODO: maybe also update the player guesser's mouse
-                // might not be needed
-                // this function is not implemented for player_guesser
-                // player_add_next_position(player_guesser, mouse_get_drawing_position_from_packets());
+                
               }
             }
             if (msg.m_notify.interrupts & BIT(timer_bit_no)){
               timer_int_handler();
               switch(app_state){
                 case MENU:
+                  // TODO: pass this to menu_process_timer() (menu module)
                   draw_menu();
                   break;
                 case GAME:
+                  /*
+                  TODO: pass this to game_process_timer() (game module)
                   if (vg_draw_player_drawer(player_drawer) != OK) return EXIT_FAILURE;
                   draw_game();
+                  */
                   break;
               }
             }
@@ -129,9 +140,12 @@ int(proj_main_loop)(int argc, char *argv[]) {
               printf("Received interrupt from serial port\n");
               ser_ih_fifo();
               if (ser_return_value) continue;
+              /*
+              TODO: pass this to game_process_serial() (game module)
               if (player_drawer_get_state(player_drawer) == OTHER_PLAYER) {
                 ser_read_bytes_from_receiver_queue(player_drawer);
               }
+              */
             }
             break;
           default:
@@ -140,8 +154,13 @@ int(proj_main_loop)(int argc, char *argv[]) {
       }
     } while (scancode != BREAK_ESC);
   // Unload resources
-  destroy_player_drawer(player_drawer);
-  destroy_player_guesser(player_guesser);
+  switch (app_state) {
+    case GAME:
+      break;
+    case MENU:
+      destroy_menu();
+      break;
+  }
 
   // Stop serial communication
   delete_ser();

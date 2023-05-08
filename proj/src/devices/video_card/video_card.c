@@ -94,16 +94,18 @@ int (vg_draw_player_drawer)(PlayerDrawer_t *player_drawer) {
   drawing_position_t drawing_position;
   position_t last_position;
 
-  brush_t *brush = player_get_brush(player_drawer);
+  player_t *player = player_drawer_get_player(player_drawer);
+  if (player == NULL) return EXIT_FAILURE;
+  brush_t *brush = player_drawer_get_brush(player_drawer);
   if (brush == NULL) return EXIT_FAILURE;
 
-  while (player_get_next_position(player_drawer, &drawing_position) == OK) {
-    if (player_get_last_position(player_drawer, &last_position)) return EXIT_FAILURE;
+  while (player_get_next_position(player, &drawing_position) == OK) {
+    if (player_get_last_position(player, &last_position)) return EXIT_FAILURE;
     if (drawing_position.is_drawing) {
       vg_draw_line(last_position, drawing_position.position, brush->size, brush->color);
     }
     printf("drawing position: %d %d %d\n", drawing_position.position.x, drawing_position.position.y, drawing_position.is_drawing);
-    player_set_last_position(player_drawer, drawing_position.position);
+    player_set_last_position(player, drawing_position.position);
   }
   return EXIT_SUCCESS;
 }

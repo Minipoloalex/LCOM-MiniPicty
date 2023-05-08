@@ -13,6 +13,8 @@ struct button {
     char *text;
 };
 
+typedef struct button button_t;
+
 bool (is_button_hovered)(struct button* button, position_t* mouse_position);
 void (change_button_colors)(struct button* button, uint8_t new_background_color, uint8_t new_text_color);
-void (draw_button)(struct button* button);
+void (draw_button)(struct button* button, position_t *mouse_position);

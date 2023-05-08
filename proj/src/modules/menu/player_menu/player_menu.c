@@ -1,8 +1,7 @@
 #include "player_menu.h"
 
 struct PlayerMenu {
-  position_t last_mouse_position;
-  queue_t *mouse_positions;
+  player_t *player;
 };
 
 
@@ -11,16 +10,21 @@ player_menu_t *(create_player_menu)() {
   if (player_menu == NULL) {
     return NULL;
   }
-  player_menu->last_mouse_position = (position_t) {0, 0};
-  player_menu->mouse_positions = create_queue(QUEUE_SIZE, sizeof(drawing_position_t));
+  player_menu->player = create_player();
+  if (player_menu->player == NULL) {
+    free(player_menu);
+    return NULL;
+  }
   return player_menu;
 }
 
 void (destroy_player_menu)(player_menu_t * player_menu) {
-  delete_queue(mouse_positions);
-  free(player_menu);
+  destroy_player(player_menu->player);
 }
 
+player_t *(player_menu_get_player)(player_menu_t * player_menu) {
+  return player_menu->player;
+}
 
 /*
 

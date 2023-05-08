@@ -5,7 +5,7 @@
 #include <stdbool.h>
 #include "../controllers/uart.h"
 #include "../../model/queue/queue.h"
-#include "../../model/player/player.h"
+#include "../../modules/game/player_drawer/player_drawer.h"
 #include "../../model/position/position.h"
 /**
  * @brief 
