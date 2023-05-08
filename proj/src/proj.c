@@ -44,14 +44,6 @@ int(proj_main_loop)(int argc, char *argv[]) {
   printf("isTransmitter: %d\n", isTransmitter);
   
   // Load resources
-  /*
-  TODO: pass this to game module, like menu_process_mouse and player_menu
-  PlayerDrawer_t *player_drawer = create_player_drawer(isTransmitter ? SELF_PLAYER : OTHER_PLAYER);
-  if (player_drawer == NULL) {  
-    printf("create_player_drawer inside %s\n", __func__);
-    return EXIT_FAILURE;
-  }
-  */
 
   // Subscribe interrupts
   if(subscribe_interrupts()) return EXIT_FAILURE;
@@ -61,11 +53,12 @@ int(proj_main_loop)(int argc, char *argv[]) {
     return EXIT_FAILURE;
   }
   if (vg_enter(GRAPHICS_MODE_0) != OK) return EXIT_FAILURE;
-  setup_menu();
-
-  // Draw the current state
+  
   // TODO: Explore the table-based solution later
-  state_t app_state = MENU;
+
+  // MUST CHANGE THESE TO START ON DIFFERENT STATES (all that is needed is changing these)
+  state_t app_state = GAME; // or MENU
+  setup_game(); // or setup_menu();
 
   // Game Loop
   int ipc_status, r;
@@ -82,8 +75,6 @@ int(proj_main_loop)(int argc, char *argv[]) {
   extern uint8_t ser_return_value;
 
   extern uint8_t return_value_mouse;
-
-  extern struct button menu_buttons[3];
 
   do {
       if ((r = driver_receive(ANY, &msg, &ipc_status)) != 0) {
@@ -104,14 +95,7 @@ int(proj_main_loop)(int argc, char *argv[]) {
               if (packet_is_ready()) {
                 switch (app_state) {
                   case GAME:
-                  // TODO: pass this to game module, like menu_process_mouse
-                  /*
-                    if (player_drawer_get_state(player_drawer) == SELF_PLAYER) {  
-                      // if I'm the drawer, I must communicate what I'm doing
-                      ser_add_position_to_transmitter_queue(next);
-                      player_add_next_position(player_drawer_get_player(player_drawer), &next);
-                    }
-                  */
+                  game_process_mouse();
                     break;
                   case MENU:
                     menu_process_mouse();
@@ -124,15 +108,10 @@ int(proj_main_loop)(int argc, char *argv[]) {
               timer_int_handler();
               switch(app_state){
                 case MENU:
-                  // TODO: pass this to menu_process_timer() (menu module)
                   draw_menu();
                   break;
                 case GAME:
-                  /*
-                  TODO: pass this to game_process_timer() (game module)
-                  if (vg_draw_player_drawer(player_drawer) != OK) return EXIT_FAILURE;
                   draw_game();
-                  */
                   break;
               }
             }
@@ -140,12 +119,14 @@ int(proj_main_loop)(int argc, char *argv[]) {
               printf("Received interrupt from serial port\n");
               ser_ih_fifo();
               if (ser_return_value) continue;
-              /*
-              TODO: pass this to game_process_serial() (game module)
-              if (player_drawer_get_state(player_drawer) == OTHER_PLAYER) {
-                ser_read_bytes_from_receiver_queue(player_drawer);
+              switch (app_state) {
+                case GAME:
+                  game_process_serial();
+                  break;
+                case MENU:
+                  //menu_process_serial();
+                  break;
               }
-              */
             }
             break;
           default:
@@ -156,6 +137,7 @@ int(proj_main_loop)(int argc, char *argv[]) {
   // Unload resources
   switch (app_state) {
     case GAME:
+      destroy_game();
       break;
     case MENU:
       destroy_menu();

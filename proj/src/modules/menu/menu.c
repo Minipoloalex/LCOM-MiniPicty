@@ -57,11 +57,12 @@ void (draw_menu)(){
 }
 
 int (menu_process_mouse)() {
-  drawing_position_t next = mouse_get_drawing_position_from_packet(player_get_current_position(player_menu_get_player(player_menu)));
-  return player_add_next_position(player_menu_get_player(player_menu), &next);
+  player_t *player = player_menu_get_player(player_menu);
+  drawing_position_t next = mouse_get_drawing_position_from_packet(player_get_current_position(player));
+  return player_add_next_position(player, &next);
 }
 
 void (destroy_menu)() {
   destroy_player_menu(player_menu);
-  // clear screen?
+  // clear screen? double/triple buffering
 }
