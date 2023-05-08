@@ -1,6 +1,8 @@
 #include "player.h"
 
 struct PlayerDrawer {
+  player_t *player;
+
   position_t last_mouse_position;
   queue_t *mouse_positions; // queue of drawing_position_t
   player_type_t player_state;

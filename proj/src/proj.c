@@ -82,7 +82,6 @@ int(proj_main_loop)(int argc, char *argv[]) {
 
   extern uint8_t return_value_mouse;
 
-  extern struct position mouse_position; //TODO: CHANGE THIS!!
   extern struct button menu_buttons[3];
 
   do {

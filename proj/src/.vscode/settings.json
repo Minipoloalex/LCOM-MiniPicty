@@ -38,6 +38,7 @@
     "brush.h": "c",
     "player.h": "c",
     "drawing_position.h": "c",
-    "button.h": "c"
+    "button.h": "c",
+    "player_menu.h": "c"
   },
 }
