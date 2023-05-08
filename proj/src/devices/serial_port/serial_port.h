@@ -37,6 +37,11 @@ void (ser_ih_fifo)();
  * @brief 
  * 
  */
+int (ser_write_to_fifo)();
+/**
+ * @brief 
+ * 
+ */
 int (ser_write_fifo_control_default)();
 /**
  * @brief 

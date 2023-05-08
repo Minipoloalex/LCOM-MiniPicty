@@ -41,7 +41,7 @@ int(proj_main_loop)(int argc, char *argv[]) {
   
   // Load resources
   PlayerDrawer_t *player_drawer = create_player_drawer(isTransmitter ? SELF_PLAYER : OTHER_PLAYER);
-  if (player_drawer == NULL) {
+  if (player_drawer == NULL) {  
     printf("create_player_drawer inside %s\n", __func__);
     return EXIT_FAILURE;
   }
@@ -54,15 +54,6 @@ int(proj_main_loop)(int argc, char *argv[]) {
   // Subscribe interrupts
   if(subscribe_interrupts()) return EXIT_FAILURE;
 
-  // Start serial communication
-  if (isTransmitter) {
-    if (ser_write_char(SER_START) != OK) {
-      printf("ser_write_char inside %s\n", __func__);
-      return EXIT_FAILURE;
-    }
-  }
-
-  // Start video mode
   if (map_phys_mem_to_virtual(GRAPHICS_MODE_0) != OK){
     printf("map_phys_mem_to_virtual inside %s\n", __func__);
     return EXIT_FAILURE;
