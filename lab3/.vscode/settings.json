@@ -7,12 +7,14 @@
   "editor.wordWrap": "bounded",
   "editor.wordWrapColumn": 100,
   "files.associations": {
+    "*.embeddedhtml": "html",
     "lab3.h": "c",
     "i8042.h": "c",
     "kbc.h": "c",
     "lcf.h": "c",
     "keyboard.h": "c",
     "stdint.h": "c",
-    "i8254.h": "c"
+    "i8254.h": "c",
+    "sysutil.h": "c"
   },
 }

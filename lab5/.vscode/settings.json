@@ -6,5 +6,17 @@
   "editor.tabSize": 2,
   "editor.wordWrap": "bounded",
   "editor.wordWrapColumn": 100,
-  "files.associations": { },
+  "files.associations": {
+    "*.embeddedhtml": "html",
+    "keyboard.h": "c",
+    "vbe.h": "c",
+    "i8042.h": "c",
+    "lcf.h": "c",
+    "stdint.h": "c",
+    "stdio.h": "c",
+    "kbc.h": "c",
+    "xpm.h": "c",
+    "pixmap.h": "c",
+    "stdlib.h": "c"
+  },
 }

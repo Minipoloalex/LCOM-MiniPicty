@@ -1,9 +1,11 @@
 #include <lcom/lcf.h>
+
 #include <lcom/lab3.h>
 
-#include "i8042.h"
+#include <stdbool.h>
+#include <stdint.h>
+
 #include "keyboard.h"
-#include "i8254.h"
 
 int main(int argc, char *argv[]) {
   // sets the language of LCF messages (can be either EN-US or PT-PT)
@@ -29,162 +31,125 @@ int main(int argc, char *argv[]) {
   return 0;
 }
 
-extern int return_value;
-extern uint8_t scancode;
-uint32_t cnt_sysinb = 0;
+uint32_t cnt_sys_inb = 0;
 
 int(kbd_test_scan)() {
-  uint8_t bit_no_keyboard;
-  if(keyboard_subscribe_interrupts(&bit_no_keyboard) != 0) return EXIT_FAILURE;
+  uint8_t keyboard_bit_no;
+  if (keyboard_subscribe_int(&keyboard_bit_no)) return 1;
   
-  int ipc_status;
+  int r;
   message msg;
-  uint8_t array[2];
-  int i = 0;
-  while(scancode != BREAK_ESC){
-
-    int r;
-    if((r = driver_receive(ANY, &msg, &ipc_status)) != 0 ) {
-        printf("driver_receive failed with: %d", r);
-        continue;
+  int ipc_status;
+  
+  int index = 0;
+  uint8_t scancodes_array[2];
+  extern uint8_t scancode;
+  extern int return_value;
+  do {
+    if ((r = driver_receive(ANY, &msg, &ipc_status)) != 0) {
+      printf("driver_receive failed with %d", r);
     }
-
-    if (is_ipc_notify(ipc_status)) { /* received notification */
-      switch (_ENDPOINT_P(msg.m_source)) {
-        case HARDWARE: /* hardware interrupt notification */
-          if (msg.m_notify.interrupts & BIT(bit_no_keyboard)) { // BIT(KEYBOARD_IRQ)
-
+    if (is_ipc_notify(ipc_status)) {
+      switch(_ENDPOINT_P(msg.m_source)) {
+        case HARDWARE:
+          if (msg.m_notify.interrupts & BIT(keyboard_bit_no)) {
             kbc_ih();
-            
-            if(return_value == 0){
-              if(i == 0){
-                array[i] = scancode;
-                if (scancode == TWO_BYTES) {
-                  i = 1;
-                }
-                else kbd_print_scancode(!(scancode & BREAK_CODE), i + 1, array);
-              }
-              else {
-                array[i] = scancode;
-                kbd_print_scancode(!(scancode & BREAK_CODE), i + 1, array);
-                i = 0;
-              }
+            if (return_value) continue;
+
+            scancodes_array[index] = scancode;
+            if (index == 0 && scancode == SCANCODE_TWO_BYTES) {
+              index = 1;
+            }
+            else {
+              if (kbd_print_scancode(!(scancode & BREAK_CODE), index + 1, scancodes_array))
+                return 1;
+              index = 0;
             }
           }
           break;
         default:
-          break; 
-          /* no other notifications expected: do nothi */
+          break;
       }
-    } else { 
-        /* 
-          received a standard message, not a notification
-          no standard messages expected: do nothing 
-        */
     }
-  }
+  } while (scancode != ESC_BREAK_CODE);
 
-  if (keyboard_unsubscribe_interrupts() != 0) return EXIT_FAILURE;
-  if (kbd_print_no_sysinb(cnt_sysinb) != 0) return EXIT_FAILURE;
-  return EXIT_SUCCESS;
+  if (keyboard_unsubscribe_int()) return 1;
+
+  return kbd_print_no_sysinb(cnt_sys_inb);
 }
-
 
 int(kbd_test_poll)() {
-  uint8_t array[2];
-  bool reading2bytes = false;
-  int ret = 0;
-  while (scancode != BREAK_ESC){
-    
-    ret = read_KBC_output(KBC_OUT_REG, &scancode);
+  int index = 0;
+  uint8_t scancodes_array[2];
+  uint8_t scancode;
+  do {
+    if (read_kbc_output(KBC_OUT_REG, &scancode)) continue;
+    scancodes_array[index] = scancode;
+    if (index == 0 && scancode == SCANCODE_TWO_BYTES) {
+      index = 1;
+    }
+    else {
+      if (kbd_print_scancode(!(scancode & BREAK_CODE), index + 1, scancodes_array))
+        return 1;
+      index = 0;
+    }
+
+  } while (scancode != ESC_BREAK_CODE);
   
-    if(ret != 0) continue;
-    
-    int i = reading2bytes ? 1 : 0;
-    array[i] = scancode;
-    
-    if(reading2bytes){
-      kbd_print_scancode(!(scancode & BREAK_CODE), 2, array);
-      reading2bytes = false;
-    }
-    else if(scancode == TWO_BYTES){
-      reading2bytes = true;
-    }
-    else{
-      kbd_print_scancode(!(scancode & BREAK_CODE), 1, array);
-    }
+  if (keyboard_enable_int()) return 1;
 
-  }
-  if(keyboard_restore() != 0) return EXIT_FAILURE;
-
-  if (kbd_print_no_sysinb(cnt_sysinb) != 0) return EXIT_FAILURE;
-
-  return EXIT_SUCCESS;
+  return kbd_print_no_sysinb(cnt_sys_inb);
 }
 
-int(kbd_test_timed_scan)(uint8_t max_seconds) {
-  uint8_t max_counter = max_seconds * (int) sys_hz();
-
-  uint8_t timer0_bit_no;
+int(kbd_test_timed_scan)(uint8_t n) {
   uint8_t keyboard_bit_no;
-  if (timer_subscribe_int(&timer0_bit_no) != 0) return EXIT_FAILURE;
-  if (keyboard_subscribe_interrupts(&keyboard_bit_no) != 0) return EXIT_FAILURE;
+  uint8_t timer_bit_no;
+  if (keyboard_subscribe_int(&keyboard_bit_no)) return 1;
+  if (timer_subscribe_int(&timer_bit_no)) return 1;
   
-  int ipc_status;
+  int r;
   message msg;
+  int ipc_status;
   
-  uint8_t array[2];
-  int i = 0;
+  int index = 0;
+  uint8_t scancodes_array[2];
+  extern uint8_t scancode;
+  extern int return_value;
+  
   extern int counter;
-  while(scancode != BREAK_ESC && counter < max_counter ){  
-
-    int r;
-    if((r = driver_receive(ANY, &msg, &ipc_status)) != 0 ) {
-        printf("driver_receive failed with: %d", r);
-        continue;
+  int max_count = n * (int) sys_hz();
+  do {
+    if ((r = driver_receive(ANY, &msg, &ipc_status)) != 0) {
+      printf("driver_receive failed with %d", r);
     }
-
-    if (is_ipc_notify(ipc_status)) { /* received notification */
-      switch (_ENDPOINT_P(msg.m_source)) {
-        case HARDWARE: /* hardware interrupt notification */
-          if (msg.m_notify.interrupts & BIT(timer0_bit_no)){
+    if (is_ipc_notify(ipc_status)) {
+      switch(_ENDPOINT_P(msg.m_source)) {
+        case HARDWARE:
+          if (msg.m_notify.interrupts & BIT(timer_bit_no)) {
             timer_int_handler();
           }
-          if (msg.m_notify.interrupts & BIT(keyboard_bit_no)) { // BIT(KEYBOARD_IRQ)
-            
-            counter = 0;
-
+          if (msg.m_notify.interrupts & BIT(keyboard_bit_no)) {
             kbc_ih();
-            
-            if(return_value == 0){
-              if(i == 0){
-                array[i] = scancode;
-                if (scancode == TWO_BYTES) {
-                  i = 1;
-                }
-                else kbd_print_scancode(!(scancode & BREAK_CODE), i + 1, array);
-              }
-              else {
-                array[i] = scancode;
-                kbd_print_scancode(!(scancode & BREAK_CODE), i + 1, array);
-                i = 0;
-              }
+            counter = 0;
+            if (return_value) continue;
+
+            scancodes_array[index] = scancode;
+            if (index == 0 && scancode == SCANCODE_TWO_BYTES) {
+              index = 1;
+            }
+            else {
+              if (kbd_print_scancode(!(scancode & BREAK_CODE), index + 1, scancodes_array))
+                return 1;
+              index = 0;
             }
           }
           break;
         default:
           break;
-          /* no other notifications expected: do nothing */
       }
-    } else {
-        /* 
-          received a standard message, not a notification
-          no standard messages expected: do nothing
-        */
     }
-  }
+  } while (scancode != ESC_BREAK_CODE && counter < max_count);
 
-  if (keyboard_unsubscribe_interrupts() != 0) return EXIT_FAILURE;
-  if (timer_unsubscribe_int() != 0) return EXIT_FAILURE;
-  return EXIT_SUCCESS;
+  if (timer_unsubscribe_int()) return 1;
+  return keyboard_unsubscribe_int();
 }

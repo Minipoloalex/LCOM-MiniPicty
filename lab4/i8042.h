@@ -26,7 +26,9 @@
 
 #define MOUSE_ENABLE_DATA_REP   0xF4
 #define MOUSE_DISABLE_DATA_REP  0xF5
+
 #define KEYBOARD_ENABLE_INT     BIT(0)
+#define MOUSE_ENABLE_INT        BIT(1)
 
 #define LB(packet_byte) (packet_byte & BIT(0))
 #define RB(packet_byte) (packet_byte & BIT(1)) >> 1

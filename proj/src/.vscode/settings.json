@@ -6,5 +6,21 @@
   "editor.tabSize": 2,
   "editor.wordWrap": "bounded",
   "editor.wordWrapColumn": 100,
-  "files.associations": { },
+  "files.associations": {
+    "lcf.h": "c",
+    "proj.h": "c",
+    "i8042.h": "c",
+    "stdint.h": "c",
+    "kbc.h": "c",
+    "sysutil.h": "c",
+    "timer.h": "c",
+    "i8254.h": "c",
+    "types.h": "c",
+    "lab5.h": "c",
+    "lab4.h": "c",
+    "lab3.h": "c",
+    "lab2.h": "c",
+    "interrupts.h": "c",
+    "video_card.h": "c"
+  },
 }

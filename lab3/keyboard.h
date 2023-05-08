@@ -1,12 +1,13 @@
 #pragma once
+#include <lcom/lcf.h>
+
 #include <stdint.h>
-#include "i8042.h"
+
 #include "kbc.h"
 
-int (keyboard_subscribe_interrupts)(uint8_t *bit_no);
-
-int (keyboard_unsubscribe_interrupts)();
+#include "i8042.h"
 
 void (kbc_ih)();
-
-int (keyboard_restore)();
+int (keyboard_subscribe_int)(uint8_t *bit_no);
+int (keyboard_unsubscribe_int)();
+int (keyboard_enable_int)();

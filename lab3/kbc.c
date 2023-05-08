@@ -1,82 +1,36 @@
 #include "kbc.h"
 
-void (delay)(uint8_t *attemps){
-    (*attemps)--;
-    tickdelay(micros_to_ticks(WAIT_KBC));
+int (read_kbc_status)(uint8_t *status) {
+  return util_sys_inb(KBC_STATUS_REG, status);
 }
 
-int (read_KBC_status)(uint8_t *status){
-  return(util_sys_inb(KBC_STATUS_REG, status));
-}
-
-int (read_KBC_output)(int8_t port, uint8_t* output){
-  /*
-  1- Verificar se o output buffer está cheio
-  2- Verificar erros de Paridade ou Timeout
-  3- Se sim, lê-se
-  */
-
+int (read_kbc_output)(int port, uint8_t *output) {
   uint8_t status;
+  for (int i = 0; i < MAX_ATTEMPTS; i++) {
+    if (read_kbc_status(&status)) return 1;
 
-  uint8_t attemps = MAX_ATTEMPTS;
-  for (int i = 0; i < 5; i++){
-
-    // error reading status    
-    if(read_KBC_status(&status)){
-      return EXIT_FAILURE;
+    if ((status & KBC_OBF) && ((status & BIT(5)) == 0)) {
+      if (util_sys_inb(port, output)) return 1;
+      if ((status & KBC_PARITY_ERR) || (status & KBC_TIMEOUT_ERR)) return 1;
+      return 0;
     }
-        // 1
-    if((status & FULL_OUT_BUF) && ((status & BIT(5)) == 0)){
-      
-      // 3
-      if(util_sys_inb(port, output)){
-        return EXIT_FAILURE;
-      }
-
-      // 2
-      if((status & PARITY_ERR) | (status & TIMEOUT_ERR)){
-        return EXIT_FAILURE;
-      }
-
-      return EXIT_SUCCESS;
-    }
-
-    attemps--;
-    tickdelay(micros_to_ticks(WAIT_KBC));
+    if (tickdelay(micros_to_ticks(WAIT_KBC))) return 1;
   }
-
-  return EXIT_SUCCESS;
+  return 1;
 }
 
-int (write_KBC_command)(uint8_t port, uint8_t cmd_byte){
+// Write to kbc a command (0x64), or arguments to a command (0x60)
+int (write_kbc_command)(int port, uint8_t command) {
   uint8_t status;
-  uint8_t attemps = MAX_ATTEMPTS;
-
-  while(attemps){
-
-    /*
-    1- Verificar se o input buffer está cheio
-    2- Se não, escreve-se
-    */
-
-    // error reading status
-    if(read_KBC_status(&status)){
-      return EXIT_FAILURE;
+  for (int i = 0; i < MAX_ATTEMPTS; i++) {
+    if (read_kbc_status(&status)) return 1;
+    
+    // IBF = 1 means don't write commands or arguments (0x60 or 0x64)
+    if ((status & KBC_IBF) == 0) {
+      if (sys_outb(port, command)) return 1;
+      return 0;
     }
-
-    // 1
-    if((status & FULL_IN_BUF) == 0){
-      
-      // 2
-      if(sys_outb(port, cmd_byte)){
-        return EXIT_FAILURE;
-      }
-
-      return EXIT_SUCCESS;
-    }
-
-    delay(&attemps);
+    if (tickdelay(micros_to_ticks(WAIT_KBC))) return 1;
   }
-
-  return EXIT_FAILURE;
+  return 1;
 }

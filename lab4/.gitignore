@@ -1,2 +1,4 @@
 *.o
 lab4
+trace.txt
+output.txt

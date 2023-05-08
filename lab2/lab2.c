@@ -3,7 +3,7 @@
 
 #include <stdbool.h>
 #include <stdint.h>
-
+#include "i8254.h"
 
 int main(int argc, char *argv[]) {
   // sets the language of LCF messages (can be either EN-US or PT-PT)
@@ -30,66 +30,48 @@ int main(int argc, char *argv[]) {
 }
 
 int(timer_test_read_config)(uint8_t timer, enum timer_status_field field) {
-  uint8_t config = 0;
-  if(timer > 2) return EXIT_FAILURE;
-  if (timer_get_conf(timer, &config) != 0) return EXIT_FAILURE;
-  if (timer_display_conf(timer, config, field) != 0) return EXIT_FAILURE;
-  return EXIT_SUCCESS;
+  uint8_t status;
+  if (timer_get_conf(timer, &status) != 0) return 1;
+  return timer_display_conf(timer, status, field);
 }
 
 int(timer_test_time_base)(uint8_t timer, uint32_t freq) {
-  if(timer > 2 || freq == 0) return EXIT_FAILURE;
-  if (timer_set_frequency(timer, freq) != 0) return EXIT_FAILURE;
-  return EXIT_SUCCESS;
+  if (timer > 2 || freq == 0) return 1;
+  return timer_set_frequency(timer, freq);
 }
 
-extern int counter;
-
 int(timer_test_int)(uint8_t time) {
-  uint8_t bit_no_timer;
-
-  /* Subscribe */
-  if(timer_subscribe_int(&bit_no_timer) != 0) return EXIT_FAILURE;
-
   int ipc_status;
   message msg;
+  int r;
+  uint8_t timer_bit_no;
+  
+  if (timer_subscribe_int(&timer_bit_no)) return 1;
 
-  while(time > 0){
-
-    int r;
-    if((r = driver_receive(ANY, &msg, &ipc_status)) != 0 ) {
-        printf("driver_receive failed with: %d", r);
-        continue;
-    }
-
-    if (is_ipc_notify(ipc_status)) { /* received notification */
-      switch (_ENDPOINT_P(msg.m_source)) {
-        case HARDWARE: /* hardware interrupt notification */
-          if (msg.m_notify.interrupts & BIT(bit_no_timer)) { 
-            /* Interrupt Handler */
-            timer_int_handler();
-
-            /* counter increses 60 times per second */
-            /* we want to print between intervals of 1 seconds */
-            if((counter % (int) sys_hz()) == 0){
-              timer_print_elapsed_time();
-              time--;
-            }
-          }
-          break;
-        default:
-          break; 
-          /* no other notifications expected: do nothi */
+  extern int counter;
+  while( time ) { /* You may want to use a different condition */
+      /* Get a request message. */
+      if ( (r = driver_receive(ANY, &msg, &ipc_status)) != 0 ) { 
+          printf("driver_receive failed with: %d", r);
+          continue;
       }
-    } else { 
-        /* 
-          received a standard message, not a notification
-          no standard messages expected: do nothing 
-        */
-    }
+      if (is_ipc_notify(ipc_status)) { /* received notification */
+          switch (_ENDPOINT_P(msg.m_source)) {
+              case HARDWARE: /* hardware interrupt notification */				
+                  if (msg.m_notify.interrupts & BIT(timer_bit_no)) { /* subscribed interrupt */
+                      timer_int_handler();
+                      if (counter % (int) sys_hz() == 0) {
+                        timer_print_elapsed_time();
+                        time--;
+                      }
+                  }
+                  break;
+              default:
+                  break; /* no other notifications expected: do nothing */	
+          }
+      } else { /* received a standard message, not a notification */
+          /* no standard messages expected: do nothing */
+      }
   }
-
-  if(timer_unsubscribe_int() != 0) return EXIT_FAILURE;
-
-  return EXIT_SUCCESS;
+  return 0;
 }
