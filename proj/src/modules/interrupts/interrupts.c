@@ -56,8 +56,6 @@ int(unsubscribe_interrupts)(){
   // Keyboard
   if(keyboard_unsubscribe_interrupts() != 0) return EXIT_FAILURE;
 
-  if(keyboard_restore() != 0) return EXIT_FAILURE;
-
   // Mouse
   if(mouse_disable_int() != 0) {
     printf("mouse_disable_int inside %s\n", __func__);
@@ -72,6 +70,8 @@ int(unsubscribe_interrupts)(){
     return EXIT_FAILURE;
   }
   if(mouse_unsubscribe_interrupts() != 0) return EXIT_FAILURE; 
+
+  if(keyboard_restore() != 0) return EXIT_FAILURE;
 
   return EXIT_SUCCESS;
 }

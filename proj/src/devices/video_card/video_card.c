@@ -5,7 +5,10 @@ uint8_t bits_per_pixel;
 unsigned int vram_base;  /* VRAM's physical addresss */
 unsigned int vram_size;  /* VRAM's size, but you can use the frame buffer size instead */
 
-uint8_t *video_mem;		  /* Process (virtual) address to which VRAM is mapped */
+// uint8_t *video_mem;		  /* Process (virtual) address to which VRAM is mapped */
+#define BUFFER_NUMBER 3
+static uint8_t* video_mem[BUFFER_NUMBER]; /* Process (virtual) address to which VRAM is mapped */
+static uint8_t buffer_index = 0;
 
 unsigned h_res;	        /* Horizontal resolution in pixels */
 unsigned v_res;	        /* Vertical resolution in pixels */
@@ -29,17 +32,97 @@ int (vg_enter)(uint16_t mode) {
     printf("\tvg_exit(): sys_int86() failed \n");
     return EXIT_FAILURE;
   }
+
+  if (reg86p.al != INVOKE_VBE_FUNCT || reg86p.ah != VBE_SUCCESS) {
+    printf("r86.al: %02x ,r86.ah: %02x inside %s\n", reg86p.al, reg86p.ah, __func__);
+    return EXIT_FAILURE;
+  }
+
+  return EXIT_SUCCESS;
+}
+
+int (map_phys_mem_to_virtual)(uint16_t mode) {
+  printf("%s\n", __func__);
+  vbe_mode_info_t vmi_p;
+  memset(&vmi_p, 0, sizeof(vmi_p));
+  if (vbe_get_mode_info(mode, &vmi_p) != 0) return EXIT_FAILURE;
+
+  bytes_per_pixel = (vmi_p.BitsPerPixel + 7) / 8; // Rounding by excess
+  bits_per_pixel = vmi_p.BitsPerPixel;
+
+  h_res = vmi_p.XResolution;
+  v_res = vmi_p.YResolution;
+
+  vram_size = h_res * v_res * bytes_per_pixel;
+  vram_base = vmi_p.PhysBasePtr;
+  
+  struct minix_mem_range mr;
+  mr.mr_base = (phys_bytes) vram_base;	
+  mr.mr_limit = mr.mr_base + vram_size;  
+  
+  int r;
+  if((r = sys_privctl(SELF, SYS_PRIV_ADD_MEM, &mr)) != OK) {
+    panic("sys_privctl (ADD_MEM) failed: %d\n", r);
+    return EXIT_FAILURE;
+  }
+
+  /* Map memory into buffers */
+  for(int i = 0; i < BUFFER_NUMBER; i++){
+    video_mem[i] = vm_map_phys(SELF, (void *)mr.mr_base, vram_size);
+    if(video_mem[i] == MAP_FAILED) {
+      printf("couldn't map video memory inside %s\n", __func__);
+      return EXIT_FAILURE;
+    }
+    // if (memset(video_mem[i], 0, vram_size) == NULL) {
+    //   printf("memset inside %s\n", __func__);
+    //   return EXIT_FAILURE;
+    // }
+  }
+  buffer_index = 1;
+  printf("finished %s\n", __func__);
+  return EXIT_SUCCESS;
+}
+
+int (vg_buffer_flip)() {
+  printf("%s\n", __func__);
+  reg86_t reg86p;
+  memset(&reg86p, 0, sizeof(reg86p));
+  reg86p.intno = BIOS_VIDEO_SERVICES;
+  reg86p.ah = INVOKE_VBE_FUNCT;
+  reg86p.al = VERTICAL_RETRACE;
+  reg86p.bx = SET_START_OF_DISPLAY;
+  reg86p.cx = 0;
+  reg86p.dx = buffer_index * v_res;
+  if (sys_int86(&reg86p) != OK) {
+    printf("sys_int86 inside %s\n", __func__);
+    return EXIT_FAILURE;
+  }
+  if (reg86p.al != INVOKE_VBE_FUNCT || reg86p.ah != VBE_SUCCESS) {
+    printf("r86.al: %02x ,r86.ah: %02x inside %s\n", reg86p.al, reg86p.ah, __func__);
+    return EXIT_FAILURE;
+  }
+  buffer_index = (buffer_index + 1) % BUFFER_NUMBER;
+  vg_clear_buffer(buffer_index);
+  printf("finished %s\n", __func__);
+  return EXIT_SUCCESS;
+}
+
+int (vg_clear_buffer)(uint8_t buffer){
+  printf("%s\n", __func__);
+  if (memset(video_mem[buffer], 0, vram_size) == NULL) {
+    printf("memset inside %s\n", __func__);
+    return EXIT_FAILURE;
+  }
   return EXIT_SUCCESS;
 }
 
 int (vg_draw_pixel)(uint16_t x, uint16_t y, uint32_t color){
-  if (x <= 0 || x >= h_res || y <= 0 || y >= v_res) {
-    // this will lag everything
-    // printf("x or y outside limits inside %s\n", __func__);
+  printf("%s\n", __func__);
+  if (x >= h_res || y >= v_res) {
     return EXIT_FAILURE;
   }
   unsigned int index = (y * h_res + x) * bytes_per_pixel;
-  memcpy(&video_mem[index], &color, bytes_per_pixel);
+  memcpy(&(video_mem[buffer_index][index]), &color, bytes_per_pixel);
   return EXIT_SUCCESS;
 }
 
@@ -65,6 +148,7 @@ int (vg_draw_rectangle)(uint16_t x, uint16_t y, uint16_t width, uint16_t height,
 
 /* Drawing a circle with Bresenham's algorithm */
 int (vg_draw_circle)(uint16_t xc, uint16_t yc, uint16_t radius, uint32_t color){
+  printf("%s\n", __func__);
   int x = 0;
   int y = radius;
   int d = 3 - 2 * radius;
@@ -90,29 +174,10 @@ int (vg_draw_circle)(uint16_t xc, uint16_t yc, uint16_t radius, uint32_t color){
   return EXIT_SUCCESS;
 }
 
-int (vg_draw_player_drawer)(PlayerDrawer_t *player_drawer) {
-  drawing_position_t drawing_position;
-  position_t last_position;
-
-  player_t *player = player_drawer_get_player(player_drawer);
-  if (player == NULL) return EXIT_FAILURE;
-  brush_t *brush = player_drawer_get_brush(player_drawer);
-  if (brush == NULL) return EXIT_FAILURE;
-
-  while (player_get_next_position(player, &drawing_position) == OK) {
-    if (player_get_last_position(player, &last_position)) return EXIT_FAILURE;
-    if (drawing_position.is_drawing) {
-      vg_draw_line(last_position, drawing_position.position, brush->size, brush->color);
-    }
-    printf("drawing position: %d %d %d\n", drawing_position.position.x, drawing_position.position.y, drawing_position.is_drawing);
-    player_set_last_position(player, drawing_position.position);
-  }
-  return EXIT_SUCCESS;
-}
-
 /* Bresenham's line algorithm */
 //TODO: Explore Xiaolin Wu's algorithm for drawing lines (anti-aliasing)
 int (vg_draw_line)(position_t pos1, position_t pos2, uint16_t thickness, uint32_t color) {
+    printf("%s\n", __func__);
     int x0 = pos1.x;
     int y0 = pos1.y;
     int x1 = pos2.x;
@@ -146,36 +211,13 @@ int (vg_draw_line)(position_t pos1, position_t pos2, uint16_t thickness, uint32_
     return EXIT_SUCCESS;
 }
 
-int (map_phys_mem_to_virtual)(uint16_t mode) {
-  vbe_mode_info_t vmi_p;
-  memset(&vmi_p, 0, sizeof(vmi_p));
-  if (vbe_get_mode_info(mode, &vmi_p) != 0) return EXIT_FAILURE;
-
-  bytes_per_pixel = (vmi_p.BitsPerPixel + 7) / 8; // Rounding by excess
-  bits_per_pixel = vmi_p.BitsPerPixel;
-
-  h_res = vmi_p.XResolution;
-  v_res = vmi_p.YResolution;
-
-  vram_size = h_res * v_res * bytes_per_pixel;
-  vram_base = vmi_p.PhysBasePtr;
-  
-  struct minix_mem_range mr;
-  mr.mr_base = (phys_bytes) vram_base;	
-  mr.mr_limit = mr.mr_base + vram_size;  
-  
-  int r;
-  if((r = sys_privctl(SELF, SYS_PRIV_ADD_MEM, &mr)) != OK) {
-    panic("sys_privctl (ADD_MEM) failed: %d\n", r);
+int (vg_copy_canvas_buffer)(uint8_t *buffer){
+  printf("%s\n", __func__);
+  if (memcpy(video_mem[buffer_index], buffer, vram_size) == NULL) {
+    printf("memcpy inside %s\n", __func__);
     return EXIT_FAILURE;
   }
-
-  /* Map memory */
-  video_mem = vm_map_phys(SELF, (void *)mr.mr_base, vram_size);
-  if(video_mem == MAP_FAILED) {
-    printf("couldn't map video memory inside %s\n", __func__);
-    return EXIT_FAILURE;
-  }
+  printf("finished %s\n", __func__);
   return EXIT_SUCCESS;
 }
 
@@ -212,4 +254,8 @@ int (vg_erase_xpm)(xpm_image_t *img, uint16_t x, uint16_t y) {
     }
   }
   return EXIT_SUCCESS;
+}
+
+unsigned (get_vram_size)(){
+  return vram_size;
 }

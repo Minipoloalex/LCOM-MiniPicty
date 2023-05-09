@@ -8,6 +8,7 @@
 #include "../../devices/serial_port/serial_port.h"
 #include "../../devices/video_card/video_card.h"
 
+#include "canvas/canvas.h"
 
 int (setup_game)();
 void (destroy_game)();

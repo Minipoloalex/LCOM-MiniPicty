@@ -1,6 +1,7 @@
 #include "game.h"
 
-PlayerDrawer_t *player_drawer;
+static player_drawer_t *player_drawer;
+static canvas_t *canvas;
 
 int (setup_game)() {
   // TODO: change this to depend on isTransmitter: the transmitter always starts the game drawing
@@ -9,11 +10,17 @@ int (setup_game)() {
     printf("create_player_drawer inside %s\n", __func__);
     return EXIT_FAILURE;
   }
+  canvas = canvas_init();
+  if (canvas == NULL) {
+    destroy_player_drawer(player_drawer);
+    return EXIT_FAILURE;
+  }
   return EXIT_SUCCESS;
 }
 
 void (destroy_game)() {
   destroy_player_drawer(player_drawer);
+  canvas_destroy(canvas);
   // clear screen? double/triple buffering
 }
 
@@ -37,6 +44,21 @@ int (game_process_serial)() {
 }
 
 int (draw_game)(){
-  if (vg_draw_player_drawer(player_drawer) != OK) return EXIT_FAILURE;
+  //draw canvas
+  //draw buttons
+  //draw mouse
+  if (draw_to_canvas(canvas, player_drawer) != OK) {
+    printf("draw_to_canvas inside %s\n", __func__);
+    return EXIT_FAILURE;
+  }
+
+  
+  //if (vg_draw_player_drawer(player_drawer) != OK) return EXIT_FAILURE;
+  
+  // Flip Page here
+  if (vg_buffer_flip()) {
+    printf("vg_buffer_flip inside %s\n", __func__);
+    return EXIT_FAILURE;
+  }
   return EXIT_SUCCESS;
 }

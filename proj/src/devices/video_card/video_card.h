@@ -20,4 +20,10 @@ int (vg_draw_line)(position_t pos1, position_t pos2, uint16_t radius, uint32_t c
 int (vg_draw_xpm)(xpm_image_t *img, uint16_t x, uint16_t y);
 int (vg_erase_xpm)(xpm_image_t *img, uint16_t x, uint16_t y);
 
-int (vg_draw_player_drawer)(PlayerDrawer_t *player_drawer);
+int (vg_buffer_flip)();
+int (vg_clear_buffer)(uint8_t buffer);
+
+unsigned (get_vram_size)();
+int (vg_copy_canvas_buffer)(uint8_t * buffer);
+
+

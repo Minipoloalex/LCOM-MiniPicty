@@ -567,7 +567,7 @@ int (ser_add_position_to_transmitter_queue)(drawing_position_t drawing_position)
   return EXIT_SUCCESS;
 }
 
-int (ser_read_bytes_from_receiver_queue)(PlayerDrawer_t *drawer) {
+int (ser_read_bytes_from_receiver_queue)(player_drawer_t *drawer) {
   uint8_t byte;
   static uint8_t bytes[4];
   static uint8_t byte_index = 0;

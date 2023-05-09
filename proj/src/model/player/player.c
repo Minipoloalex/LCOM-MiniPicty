@@ -46,6 +46,7 @@ int (player_add_next_position)(player_t *player, drawing_position_t *position) {
 
 int (player_get_next_position)(player_t *player, drawing_position_t *position) {
   if (pop_queue(player->mouse_positions, position) != OK) {
+    printf("fail in poping");
     return EXIT_FAILURE;
   }
   return EXIT_SUCCESS;
