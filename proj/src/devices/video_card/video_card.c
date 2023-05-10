@@ -5,7 +5,6 @@ uint8_t bits_per_pixel;
 unsigned int vram_base;  /* VRAM's physical addresss */
 unsigned int vram_size;  /* VRAM's size, but you can use the frame buffer size instead */
 
-// uint8_t *video_mem;		  /* Process (virtual) address to which VRAM is mapped */
 #define BUFFER_NUMBER 3
 static uint8_t* video_mem[BUFFER_NUMBER]; /* Process (virtual) address to which VRAM is mapped */
 static uint8_t buffer_index = 0;
@@ -15,7 +14,6 @@ unsigned v_res;	        /* Vertical resolution in pixels */
 vbe_mode_info_t vmi;
 
 int (vg_enter)(uint16_t mode) {
-  
   memset(&vmi, 0, sizeof(vmi));
   if (vbe_get_mode_info(mode, &vmi) != 0) return EXIT_FAILURE;
 
@@ -58,7 +56,7 @@ int (map_phys_mem_to_virtual)(uint16_t mode) {
   
   struct minix_mem_range mr;
   mr.mr_base = (phys_bytes) vram_base;	
-  mr.mr_limit = mr.mr_base + vram_size;  
+  mr.mr_limit = mr.mr_base + 3 * vram_size;  
   
   int r;
   if((r = sys_privctl(SELF, SYS_PRIV_ADD_MEM, &mr)) != OK) {
@@ -68,15 +66,15 @@ int (map_phys_mem_to_virtual)(uint16_t mode) {
 
   /* Map memory into buffers */
   for(int i = 0; i < BUFFER_NUMBER; i++){
-    video_mem[i] = vm_map_phys(SELF, (void *)mr.mr_base, vram_size);
+    video_mem[i] = vm_map_phys(SELF, (void *)(mr.mr_base + i * vram_size), vram_size);
     if(video_mem[i] == MAP_FAILED) {
       printf("couldn't map video memory inside %s\n", __func__);
       return EXIT_FAILURE;
     }
-    // if (memset(video_mem[i], 0, vram_size) == NULL) {
-    //   printf("memset inside %s\n", __func__);
-    //   return EXIT_FAILURE;
-    // }
+    if (vg_clear_buffer(i)) {
+      printf("vg_clear_buffer inside %s\n", __func__);
+      return EXIT_FAILURE;
+    }
   }
   buffer_index = 1;
   printf("finished %s\n", __func__);
@@ -117,7 +115,6 @@ int (vg_clear_buffer)(uint8_t buffer){
 }
 
 int (vg_draw_pixel)(uint16_t x, uint16_t y, uint32_t color){
-  printf("%s\n", __func__);
   if (x >= h_res || y >= v_res) {
     return EXIT_FAILURE;
   }
@@ -148,7 +145,6 @@ int (vg_draw_rectangle)(uint16_t x, uint16_t y, uint16_t width, uint16_t height,
 
 /* Drawing a circle with Bresenham's algorithm */
 int (vg_draw_circle)(uint16_t xc, uint16_t yc, uint16_t radius, uint32_t color){
-  printf("%s\n", __func__);
   int x = 0;
   int y = radius;
   int d = 3 - 2 * radius;
@@ -177,7 +173,6 @@ int (vg_draw_circle)(uint16_t xc, uint16_t yc, uint16_t radius, uint32_t color){
 /* Bresenham's line algorithm */
 //TODO: Explore Xiaolin Wu's algorithm for drawing lines (anti-aliasing)
 int (vg_draw_line)(position_t pos1, position_t pos2, uint16_t thickness, uint32_t color) {
-    printf("%s\n", __func__);
     int x0 = pos1.x;
     int y0 = pos1.y;
     int x1 = pos2.x;

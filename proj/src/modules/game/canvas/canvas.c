@@ -7,7 +7,7 @@ canvas_t *(canvas_init)() {
   canvas->start_point.y = 200;
   canvas->width = 400;
   canvas->height = 400;
-  canvas->buffer = (uint8_t *) malloc(get_vram_size());
+  canvas->buffer = (uint8_t *) malloc(get_vram_size() * sizeof(uint8_t));
   memset(canvas->buffer, 0, get_vram_size());
   return canvas;
 }
