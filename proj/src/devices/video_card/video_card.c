@@ -84,6 +84,7 @@ int (map_phys_mem_to_virtual)(uint16_t mode) {
     }
   }
   buffer_index = 1;
+  set_needs_update(true);
   printf("finished %s\n", __func__);
   return EXIT_SUCCESS;
 }
