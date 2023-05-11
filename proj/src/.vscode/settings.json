@@ -41,6 +41,7 @@
     "button.h": "c",
     "player_menu.h": "c",
     "player_drawer.h": "c",
-    "canvas.h": "c"
+    "canvas.h": "c",
+    "math.h": "c"
   },
 }

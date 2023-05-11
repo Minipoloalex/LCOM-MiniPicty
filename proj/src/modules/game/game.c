@@ -21,7 +21,7 @@ int (setup_game)() {
 void (destroy_game)() {
   destroy_player_drawer(player_drawer);
   canvas_destroy(canvas);
-  // clear screen? double/triple buffering
+  // clear screen?
 }
 
 int (game_process_mouse)() {
@@ -51,14 +51,16 @@ int (draw_game)(){
     printf("draw_to_canvas inside %s\n", __func__);
     return EXIT_FAILURE;
   }
-
-  
-  //if (vg_draw_player_drawer(player_drawer) != OK) return EXIT_FAILURE;
-  
-  // Flip Page here
-  if (vg_buffer_flip()) {
-    printf("vg_buffer_flip inside %s\n", __func__);
-    return EXIT_FAILURE;
+  if (buffers_need_update()) {
+    // copy do canvas para o buffer
+    if (vg_copy_canvas_buffer(get_buffer(canvas))) {
+      printf("vg_copy_canvas_buffer inside %s\n", __func__);
+      return EXIT_FAILURE;
+    }
+    if (vg_buffer_flip()) {
+      printf("vg_buffer_flip inside %s\n", __func__);
+      return EXIT_FAILURE;
+    }
   }
   return EXIT_SUCCESS;
 }
