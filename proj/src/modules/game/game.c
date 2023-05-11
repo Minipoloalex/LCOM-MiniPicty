@@ -21,7 +21,7 @@ int (setup_game)() {
 void (destroy_game)() {
   destroy_player_drawer(player_drawer);
   canvas_destroy(canvas);
-  // clear screen?
+  vg_clear_buffers();
 }
 
 int (game_process_mouse)() {

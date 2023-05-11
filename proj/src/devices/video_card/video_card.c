@@ -111,6 +111,14 @@ int (vg_buffer_flip)() {
   return EXIT_SUCCESS;
 }
 
+int (vg_clear_buffers)() {
+  for (int i = 0; i < BUFFER_NUMBER; i++) {
+    if (vg_clear_buffer(i)) {
+      printf("vg_clear_buffer %d inside %s\n", i, __func__);
+    }
+  }
+  return EXIT_SUCCESS;
+}
 int (vg_clear_buffer)(uint8_t buffer){
   if (memset(video_mem[buffer], 0, vram_size) == NULL) {
     printf("memset inside %s\n", __func__);
@@ -138,9 +146,9 @@ int (vg_draw_hl)(uint8_t *buffer, uint16_t x, uint16_t y, uint16_t len, uint32_t
   return EXIT_SUCCESS;
 }
 
-int (vg_draw_rect)(uint8_t *buffer, uint16_t x, uint16_t y, uint16_t width, uint16_t height, uint32_t color){
+int (vg_draw_rectangle)(uint16_t x, uint16_t y, uint16_t width, uint16_t height, uint32_t color){
   for (unsigned int verticalIndex = y; verticalIndex < y + height; verticalIndex++) {
-    if (vg_draw_hl(buffer, x, verticalIndex, width, color) != OK) {
+    if (vg_draw_hl(video_mem[buffer_index], x, verticalIndex, width, color) != OK) {
       printf("vg_draw_hl inside %s\n", __func__);
       return EXIT_FAILURE;
     }

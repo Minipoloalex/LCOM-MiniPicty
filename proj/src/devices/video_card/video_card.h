@@ -17,7 +17,7 @@ int (vg_enter)(uint16_t mode);
 int (get_rgb_component)(uint32_t color, uint8_t component_size, uint8_t component_position, uint8_t *component);
 int (vg_draw_pixel)(uint8_t *buffer, uint16_t x, uint16_t y, uint32_t color);
 int (vg_draw_hl)(uint8_t *buffer, uint16_t x, uint16_t y, uint16_t len, uint32_t color);
-int (vg_draw_rect)(uint8_t *buffer, uint16_t x, uint16_t y, uint16_t width, uint16_t height, uint32_t color);
+int (vg_draw_rectangle)(uint16_t x, uint16_t y, uint16_t width, uint16_t height, uint32_t color);
 int (vg_draw_circle)(uint8_t *buffer, uint16_t x, uint16_t y, uint16_t radius, uint32_t color);
 int (vg_draw_line)(uint8_t *buffer, position_t pos1, position_t pos2, uint16_t radius, uint32_t color);
 int (vg_draw_xpm)(xpm_image_t *img, uint16_t x, uint16_t y);
@@ -28,5 +28,4 @@ int (vg_clear_buffer)(uint8_t buffer);
 
 unsigned (get_vram_size)();
 int (vg_copy_canvas_buffer)(uint8_t * buffer);
-
-
+int (vg_clear_buffers)();

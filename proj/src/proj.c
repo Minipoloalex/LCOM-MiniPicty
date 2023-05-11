@@ -57,8 +57,8 @@ int(proj_main_loop)(int argc, char *argv[]) {
   // TODO: Explore the table-based solution later
 
   // MUST CHANGE THESE TO START ON DIFFERENT STATES (all that is needed is changing these)
-  state_t app_state = GAME; // or MENU
-  setup_game(); // or setup_menu();
+  state_t app_state = MENU; // GAME or MENU
+  setup_menu(); // setup_game() or setup_menu
   
   printf("Finished setup\n");
   // Game Loop
