@@ -56,9 +56,8 @@ int(proj_main_loop)(int argc, char *argv[]) {
   
   // TODO: Explore the table-based solution later
 
-  // MUST CHANGE THESE TO START ON DIFFERENT STATES (all that is needed is changing these)
   state_t app_state = GAME; // GAME or MENU
-  setup_game(); // setup_game() or setup_menu
+  setup_game(isTransmitter); // setup_game(isTransmitter) or setup_menu()
   
   printf("Finished setup\n");
   // Game Loop
@@ -85,11 +84,11 @@ int(proj_main_loop)(int argc, char *argv[]) {
         switch(_ENDPOINT_P(msg.m_source)) {
           case HARDWARE:
             if (msg.m_notify.interrupts & BIT(keyboard_bit_no)) {
-              printf("Received interrupt from keyboard\n");
+              // printf("Received interrupt from keyboard\n");
               keyboard_ih();
             }
             if (msg.m_notify.interrupts & BIT(mouse_bit_no)) {
-              printf("Received interrupt from mouse\n");
+              // printf("Received interrupt from mouse\n");
               mouse_ih();
               if (return_value_mouse == EXIT_SUCCESS){
                 mouse_process_packet_byte();
@@ -105,10 +104,9 @@ int(proj_main_loop)(int argc, char *argv[]) {
                 }
               }
             }
-            if (msg.m_notify.interrupts & BIT(timer_bit_no)){
-              printf("Received interrupt from timer\n");
+            if (msg.m_notify.interrupts & BIT(timer_bit_no)) {
               timer_int_handler();
-              switch(app_state){
+              switch(app_state) {
                 case MENU:
                   draw_menu();
                   break;
@@ -118,9 +116,7 @@ int(proj_main_loop)(int argc, char *argv[]) {
               }
             }
             if (msg.m_notify.interrupts & BIT(ser_bit_no)){
-              printf("Received interrupt from serial port\n");
-              //ser_ih_fifo();
-              ser_return_value = EXIT_FAILURE;
+              ser_ih_fifo();
               if (ser_return_value == EXIT_SUCCESS){
                 switch (app_state) {
                   case GAME:

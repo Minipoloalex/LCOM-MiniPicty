@@ -10,7 +10,7 @@
 
 #include "canvas/canvas.h"
 
-int (setup_game)();
+int (setup_game)(bool isTransmitter);
 void (destroy_game)();
 
 int (game_process_mouse)();

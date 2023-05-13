@@ -93,12 +93,12 @@ int8_t parity){
     printf("ser_set_line_config() inside %s failed", __func__);
     return EXIT_FAILURE;
   }
-  if (ser_write_int_enable(SER_IER_RDA | SER_IER_RLS | SER_IER_THRE) != EXIT_SUCCESS) {
-    printf("ser_write_int_enable() inside %s failed", __func__);
-    return EXIT_FAILURE;
-  }
   if (ser_write_fifo_control_default()) {
     printf("ser_write_fifo_control_default() inside %s failed", __func__);
+    return EXIT_FAILURE;
+  }
+  if (ser_write_int_enable(SER_IER_RDA | SER_IER_RLS | SER_IER_THRE) != EXIT_SUCCESS) {
+    printf("ser_write_int_enable() inside %s failed", __func__);
     return EXIT_FAILURE;
   }
   printf("Finished setting up serial port inside %s\n", __func__);
@@ -557,13 +557,15 @@ int (ser_add_position_to_transmitter_queue)(drawing_position_t drawing_position)
   util_get_MSB(drawing_position.position.x, &mouse_pos_bytes[1]);
   util_get_LSB(drawing_position.position.y, &mouse_pos_bytes[2]);
   util_get_MSB(drawing_position.position.y, &mouse_pos_bytes[3]);
-  ser_add_byte_to_transmitter_queue(drawing_position.is_drawing ? SER_MOUSE_DRAWING : SER_MOUSE_NOT_DRAWING);
-  ser_add_byte_to_transmitter_queue(mouse_pos_bytes[0]);
-  ser_add_byte_to_transmitter_queue(mouse_pos_bytes[1]);
-  ser_add_byte_to_transmitter_queue(mouse_pos_bytes[2]);
-  ser_add_byte_to_transmitter_queue(mouse_pos_bytes[3]);
-  ser_add_byte_to_transmitter_queue(SER_END);
-  ser_write_to_fifo();
+  
+  // TODO: pop back of queue with bonus elements if some don't fit
+  if (ser_add_byte_to_transmitter_queue(drawing_position.is_drawing ? SER_MOUSE_DRAWING : SER_MOUSE_NOT_DRAWING)) return EXIT_FAILURE;
+  if (ser_add_byte_to_transmitter_queue(mouse_pos_bytes[0])) return EXIT_FAILURE;
+  if (ser_add_byte_to_transmitter_queue(mouse_pos_bytes[1])) return EXIT_FAILURE;
+  if (ser_add_byte_to_transmitter_queue(mouse_pos_bytes[2])) return EXIT_FAILURE;
+  if (ser_add_byte_to_transmitter_queue(mouse_pos_bytes[3])) return EXIT_FAILURE;
+  if (ser_add_byte_to_transmitter_queue(SER_END)) return EXIT_FAILURE;
+  if (ser_write_to_fifo()) return EXIT_FAILURE;
   return EXIT_SUCCESS;
 }
 
@@ -572,14 +574,11 @@ int (ser_read_bytes_from_receiver_queue)(player_drawer_t *drawer) {
   static uint8_t bytes[4];
   static uint8_t byte_index = 0;
   player_t *player = player_drawer_get_player(drawer);
-
   while (!is_empty_queue(receiver_queue)) {
     if (pop_queue(receiver_queue, &byte) != OK) {
       printf("pop_queue() inside %s failed\n", __func__);
       return EXIT_FAILURE;
     }
-    // if (byte == SER_TRASH) continue;
-    printf("Processing byte: %02x value: %d\n", byte, byte);
     switch (ser_state) {
       case SLEEPING:
         switch (byte) {
@@ -598,7 +597,11 @@ int (ser_read_bytes_from_receiver_queue)(player_drawer_t *drawer) {
         break;
       case RECEIVING_MOUSE_DRAWING: case RECEIVING_MOUSE_NOT_DRAWING:
         if (byte == SER_END) {
-          if (byte_index != 4) return EXIT_FAILURE;
+          if (byte_index != 4) {
+            ser_state = SLEEPING;
+            printf("lost some bytes\n");
+            continue;
+          }
           position_t position;
           if (get_position(bytes, &position)) return EXIT_FAILURE;
           drawing_position_t drawing_position = {

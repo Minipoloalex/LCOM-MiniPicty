@@ -3,9 +3,8 @@
 static player_drawer_t *player_drawer;
 static canvas_t *canvas;
 
-int (setup_game)() {
-  // TODO: change this to depend on isTransmitter: the transmitter always starts the game drawing
-  player_drawer = create_player_drawer(SELF_PLAYER);
+int (setup_game)(bool isTransmitter) {
+  player_drawer = create_player_drawer(isTransmitter ? SELF_PLAYER : OTHER_PLAYER);
   if (player_drawer == NULL) {
     printf("create_player_drawer inside %s\n", __func__);
     return EXIT_FAILURE;
