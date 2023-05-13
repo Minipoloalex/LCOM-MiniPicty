@@ -123,7 +123,7 @@ int(proj_main_loop)(int argc, char *argv[]) {
                     game_process_serial();
                     break;
                   case MENU:
-                    //menu_process_serial();
+                    menu_process_serial();
                     break;
                 }
               }

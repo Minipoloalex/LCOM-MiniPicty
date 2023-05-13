@@ -82,3 +82,7 @@ void (destroy_menu)() {
   destroy_player_menu(player_menu);
   vg_clear_buffers();
 }
+
+int (menu_process_serial)() {
+  return EXIT_SUCCESS;
+}

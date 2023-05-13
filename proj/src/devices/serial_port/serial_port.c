@@ -597,8 +597,9 @@ int (ser_read_bytes_from_receiver_queue)(player_drawer_t *drawer) {
         break;
       case RECEIVING_MOUSE_DRAWING: case RECEIVING_MOUSE_NOT_DRAWING:
         if (byte == SER_END) {
-          if (byte_index != 4) {
+          if (byte_index != 4) {  // got the end byte before the 4 bytes of the position
             ser_state = SLEEPING;
+            byte_index = 0;
             printf("lost some bytes\n");
             continue;
           }
@@ -620,7 +621,7 @@ int (ser_read_bytes_from_receiver_queue)(player_drawer_t *drawer) {
 
       default:
         break;
-    }    
+    }
   }
   return EXIT_SUCCESS;
 }
