@@ -74,8 +74,9 @@ int(proj_main_loop)(int argc, char *argv[]) {
   // return 0;
   
   
-  rtc_test_conf();
-  rtc_test_date();
+  // rtc_test_conf();
+  // rtc_test_date();
+  rtc_test_int();
   printf("proj_main_loop() finished\n");
   return EXIT_SUCCESS;
 }

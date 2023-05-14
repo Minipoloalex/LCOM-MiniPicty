@@ -23,6 +23,10 @@
     "lab2.h": "c",
     "interrupts.h": "c",
     "video_card.h": "c",
-    "rtc.h": "c"
+    "rtc.h": "c",
+    "stdio.h": "c",
+    "syslib.h": "c",
+    "mouse.h": "c",
+    "utils.h": "c"
   },
 }
