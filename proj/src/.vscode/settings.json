@@ -7,6 +7,7 @@
   "editor.wordWrap": "bounded",
   "editor.wordWrapColumn": 100,
   "files.associations": {
+    "*.embeddedhtml": "html",
     "lcf.h": "c",
     "proj.h": "c",
     "i8042.h": "c",
@@ -21,6 +22,24 @@
     "lab3.h": "c",
     "lab2.h": "c",
     "interrupts.h": "c",
-    "video_card.h": "c"
+    "video_card.h": "c",
+    "keyboard.h": "c",
+    "mouse.h": "c",
+    "stdbool.h": "c",
+    "structs.h": "c",
+    "position.h": "c",
+    "menu.h": "c",
+    "test7.h": "c",
+    "serial_port.h": "c",
+    "stdio.h": "c",
+    "uart.h": "c",
+    "queue.h": "c",
+    "game.h": "c",
+    "brush.h": "c",
+    "player.h": "c",
+    "drawing_position.h": "c",
+    "button.h": "c",
+    "player_menu.h": "c",
+    "player_drawer.h": "c"
   },
 }

@@ -68,9 +68,12 @@ int (timer_unsubscribe_int)() {
   return sys_irqrmpolicy(&hook_id);
 }
 
-int counter = 0;
+int timer_counter = 0;
 void (timer_int_handler)() {
-  counter++;
+  timer_counter++;
+
+  // TODO: Change the draw lines and etc to here!!
+  // do not put inside timer_int_handler anything else: make another function and call it from somewhere else
 }
 
 int (timer_get_conf)(uint8_t timer, uint8_t *st) {

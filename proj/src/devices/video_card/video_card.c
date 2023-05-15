@@ -5,7 +5,7 @@ uint8_t bits_per_pixel;
 unsigned int vram_base;  /* VRAM's physical addresss */
 unsigned int vram_size;  /* VRAM's size, but you can use the frame buffer size instead */
 
-uint8_t *video_mem;		/* Process (virtual) address to which VRAM is mapped */
+uint8_t *video_mem;		  /* Process (virtual) address to which VRAM is mapped */
 
 unsigned h_res;	        /* Horizontal resolution in pixels */
 unsigned v_res;	        /* Vertical resolution in pixels */
@@ -33,9 +33,10 @@ int (vg_enter)(uint16_t mode) {
 }
 
 int (vg_draw_pixel)(uint16_t x, uint16_t y, uint32_t color){
-  if (x >= h_res || y >= v_res) {
-    printf("x or y outside limits inside %s\n", __func__);
-    return EXIT_SUCCESS;
+  if (x <= 0 || x >= h_res || y <= 0 || y >= v_res) {
+    // this will lag everything
+    // printf("x or y outside limits inside %s\n", __func__);
+    return EXIT_FAILURE;
   }
   unsigned int index = (y * h_res + x) * bytes_per_pixel;
   memcpy(&video_mem[index], &color, bytes_per_pixel);
@@ -60,6 +61,89 @@ int (vg_draw_rectangle)(uint16_t x, uint16_t y, uint16_t width, uint16_t height,
     }
   }
   return EXIT_SUCCESS;
+}
+
+/* Drawing a circle with Bresenham's algorithm */
+int (vg_draw_circle)(uint16_t xc, uint16_t yc, uint16_t radius, uint32_t color){
+  int x = 0;
+  int y = radius;
+  int d = 3 - 2 * radius;
+
+  while (x <= y) {
+    for (int i = xc - x; i <= xc + x; i++) {
+        vg_draw_pixel(i, yc + y, color);
+        vg_draw_pixel(i, yc - y, color);
+    }
+    for (int i = xc - y; i <= xc + y; i++) {
+        vg_draw_pixel(i, yc + x, color);
+        vg_draw_pixel(i, yc - x, color);
+    }
+
+    if (d < 0) {
+        d = d + 4 * x + 6;
+    } else {
+        d = d + 4 * (x - y) + 10;
+        y--;
+    }
+    x++;
+  }
+  return EXIT_SUCCESS;
+}
+
+int (vg_draw_player_drawer)(PlayerDrawer_t *player_drawer) {
+  drawing_position_t drawing_position;
+  position_t last_position;
+
+  player_t *player = player_drawer_get_player(player_drawer);
+  if (player == NULL) return EXIT_FAILURE;
+  brush_t *brush = player_drawer_get_brush(player_drawer);
+  if (brush == NULL) return EXIT_FAILURE;
+
+  while (player_get_next_position(player, &drawing_position) == OK) {
+    if (player_get_last_position(player, &last_position)) return EXIT_FAILURE;
+    if (drawing_position.is_drawing) {
+      vg_draw_line(last_position, drawing_position.position, brush->size, brush->color);
+    }
+    printf("drawing position: %d %d %d\n", drawing_position.position.x, drawing_position.position.y, drawing_position.is_drawing);
+    player_set_last_position(player, drawing_position.position);
+  }
+  return EXIT_SUCCESS;
+}
+
+/* Bresenham's line algorithm */
+//TODO: Explore Xiaolin Wu's algorithm for drawing lines (anti-aliasing)
+int (vg_draw_line)(position_t pos1, position_t pos2, uint16_t thickness, uint32_t color) {
+    int x0 = pos1.x;
+    int y0 = pos1.y;
+    int x1 = pos2.x;
+    int y1 = pos2.y;
+    int dx = abs(x1 - x0);
+    int dy = abs(y1 - y0);
+    int sx = x0 < x1 ? 1 : -1;
+    int sy = y0 < y1 ? 1 : -1;
+    int err = dx - dy;
+    int e2;
+
+    // draw first point of the line with specified color
+    vg_draw_circle(x0, y0, thickness / 2, color);
+
+    while (x0 != x1 || y0 != y1) {
+        e2 = 2 * err;
+        if (e2 > -dy) {
+            err -= dy;
+            x0 += sx;
+        }
+        if (e2 < dx) {
+            err += dx;
+            y0 += sy;
+        }
+
+        vg_draw_circle(x0, y0, thickness / 2, color);
+    }
+
+    vg_draw_circle(x1, y1, thickness / 2, color);
+
+    return EXIT_SUCCESS;
 }
 
 int (map_phys_mem_to_virtual)(uint16_t mode) {
