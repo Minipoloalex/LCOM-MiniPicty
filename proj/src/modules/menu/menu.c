@@ -29,7 +29,7 @@ void (setup_menu)() {
   menu_buttons[2] = exit_button;
 }
 
-int (draw_buttons)(){
+int (draw_menu_buttons)(){
   player_t *player = player_menu_get_player(player_menu);
   drawing_position_t drawing_position;
   position_t last_position;
@@ -43,17 +43,25 @@ int (draw_buttons)(){
     player_set_last_position(player, drawing_position.position);
     player_get_last_position(player, &last_position);
   }
+
+  position_t position = player_get_current_position(player);
   for(int i = 0; i < 3; i++){
-    draw_button(&menu_buttons[i], &last_position);
+    if(is_button_hovered(menu_buttons[i], position)){
+      change_button_colors(&menu_buttons[i], 10, 5);
+    } else {
+      change_button_colors(&menu_buttons[i], 5, 10);
+    }
   }
-  return 0;
+
+  return draw_buttons(menu_buttons, 3);
 }
 
-void (draw_menu)(){
-  if(draw_buttons()){
+int (draw_menu)(){
+  if(draw_menu_buttons()){
     printf("Error drawing buttons\n");
-    return;
+    return 1;
   }
+  return 0;
 }
 
 int (menu_process_mouse)() {
