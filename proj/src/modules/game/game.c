@@ -8,6 +8,7 @@ extern vbe_mode_info_t vmi;
 
 //function that change the color of the brush
 void change_brush_color(button_t* button){
+  printf("Detected click on button %d\n", button->background_color);
   brush_t *brush = player_drawer_get_brush(player_drawer);
   if (brush == NULL) return;
   brush->color = button->background_color;
@@ -24,21 +25,21 @@ int (setup_game)() {
   int min_len = vmi.XResolution / 9;
   int min_height = vmi.YResolution / 11;
 
-  button_t red_button = {0, 0, min_len, min_height, 4, 0, ""};
-  button_t green_button = {min_len, 0, min_len, min_height, 2, 0, ""};
-  button_t blue_button = {2*min_len, 0, min_len, min_height, 9, 0, ""};
-  button_t yellow_button = {3*min_len, 0, min_len, min_height, 62, 0, ""};
-  button_t black_button = {4*min_len, 0, min_len, min_height, 0, 0, ""};
-  button_t gray_button = {5*min_len, 0, min_len, min_height, 56, 0, ""};
-  button_t orange_button = {6*min_len, 0, min_len, min_height, 38, 0, ""};
-  button_t purple_button = {7*min_len, 0, min_len, min_height, 33, 0, ""};
-  button_t pink_button = {8*min_len, 0, min_len, min_height, 53, 0, ""};
+  button_t red_button = {0, 0, min_len, min_height, 4, 0, "", NULL};
+  button_t green_button = {min_len, 0, min_len, min_height, 2, 0, "", NULL};
+  button_t blue_button = {2*min_len, 0, min_len, min_height, 9, 0, "", NULL};
+  button_t yellow_button = {3*min_len, 0, min_len, min_height, 62, 0, "", NULL};
+  button_t black_button = {4*min_len, 0, min_len, min_height, 0, 0, "", NULL};
+  button_t gray_button = {5*min_len, 0, min_len, min_height, 56, 0, "", NULL};
+  button_t orange_button = {6*min_len, 0, min_len, min_height, 38, 0, "", NULL};
+  button_t purple_button = {7*min_len, 0, min_len, min_height, 33, 0, "", NULL};
+  button_t pink_button = {8*min_len, 0, min_len, min_height, 53, 0, "", NULL};
 
-  // red_button.onClick = change_brush_color;
-  // green_button.onClick = change_brush_color;
-  // blue_button.onClick = change_brush_color;
-  // yellow_button.onClick = change_brush_color;
-  // black_button.onClick = change_brush_color;
+  red_button.onClick = change_brush_color;
+  green_button.onClick = change_brush_color;
+  blue_button.onClick = change_brush_color;
+  yellow_button.onClick = change_brush_color;
+  black_button.onClick = change_brush_color;
 
   game_buttons[0] = red_button;
   game_buttons[1] = green_button;
@@ -53,15 +54,15 @@ int (setup_game)() {
 
   int other_buttons_color = 56;
 
-  button_t increase_size_button = {8*min_len, 2*min_height, min_len, min_height, other_buttons_color, 0, "Increase size"};
+  button_t increase_size_button = {8*min_len, 2*min_height, min_len, min_height, other_buttons_color, 0, "Increase size", NULL};
 
-  button_t decrease_size_button = {8*min_len, 4*min_height, min_len, min_height, other_buttons_color, 0, "Decrease size"};
+  button_t decrease_size_button = {8*min_len, 4*min_height, min_len, min_height, other_buttons_color, 0, "Decrease size", NULL};
 
-  button_t rubber_button = {8*min_len, 6*min_height, min_len, min_height, other_buttons_color, 0, "Rubber"};
+  button_t rubber_button = {8*min_len, 6*min_height, min_len, min_height, other_buttons_color, 0, "Rubber", NULL};
 
-  button_t clear_button = {8*min_len, 8*min_height, min_len, min_height, other_buttons_color, 0, "Clear"};
+  button_t clear_button = {8*min_len, 8*min_height, min_len, min_height, other_buttons_color, 0, "Clear", NULL};
 
-  button_t canvas = {0, min_height, 8*min_len, 8*min_height, 63, 0, ""};
+  button_t canvas = {0, min_height, 8*min_len, 8*min_height, 63, 0, "", NULL};
 
   game_buttons[9] = increase_size_button;
   game_buttons[10] = decrease_size_button;
@@ -69,6 +70,7 @@ int (setup_game)() {
   game_buttons[12] = clear_button;
   game_buttons[13] = canvas;
 
+  red_button.onClick(&red_button);
   return EXIT_SUCCESS;
 }
 

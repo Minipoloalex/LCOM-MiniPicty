@@ -21,9 +21,9 @@ void (setup_menu)() {
   uint8_t background_color = 10;  
   uint8_t text_color = 5;
 
-  button_t play_button = {x, height, width, height, background_color, text_color, "PLAY"};
-  button_t settings_button = {x, height * 3, width, height, background_color, text_color, "LEADERBOARD"};
-  button_t exit_button = {x, height * 5, width, height, background_color, text_color, "EXIT"};
+  button_t play_button = {x, height, width, height, background_color, text_color, "PLAY", NULL};
+  button_t settings_button = {x, height * 3, width, height, background_color, text_color, "LEADERBOARD", NULL};
+  button_t exit_button = {x, height * 5, width, height, background_color, text_color, "EXIT", NULL};
 
   menu_buttons[0] = play_button;
   menu_buttons[1] = settings_button;
