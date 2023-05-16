@@ -1,9 +1,10 @@
 #include "game.h"
 
-#define NUMBER_GAME_BUTTONS 14
+#define NUMBER_GAME_BUTTONS 13
 button_t game_buttons[NUMBER_GAME_BUTTONS];
 
-PlayerDrawer_t *player_drawer;
+static player_drawer_t *player_drawer;
+static canvas_t *canvas;
 extern vbe_mode_info_t vmi;
 
 //function that change the color of the brush
@@ -14,9 +15,8 @@ void change_brush_color(button_t* button){
   brush->color = button->background_color;
 }
 
-int (setup_game)() {
-  // TODO: change this to depend on isTransmitter: the transmitter always starts the game drawing
-  player_drawer = create_player_drawer(SELF_PLAYER);
+int (setup_game)(bool isTransmitter) {
+  player_drawer = create_player_drawer(isTransmitter ? SELF_PLAYER : OTHER_PLAYER);
   if (player_drawer == NULL) {
     printf("create_player_drawer inside %s\n", __func__);
     return EXIT_FAILURE;
@@ -40,6 +40,10 @@ int (setup_game)() {
   blue_button.onClick = change_brush_color;
   yellow_button.onClick = change_brush_color;
   black_button.onClick = change_brush_color;
+  gray_button.onClick = change_brush_color;
+  orange_button.onClick = change_brush_color;
+  purple_button.onClick = change_brush_color;
+  pink_button.onClick = change_brush_color;
 
   game_buttons[0] = red_button;
   game_buttons[1] = green_button;
@@ -51,7 +55,6 @@ int (setup_game)() {
   game_buttons[7] = purple_button;
   game_buttons[8] = pink_button;
 
-
   int other_buttons_color = 56;
 
   button_t increase_size_button = {8*min_len, 2*min_height, min_len, min_height, other_buttons_color, 0, "Increase size", NULL};
@@ -62,28 +65,37 @@ int (setup_game)() {
 
   button_t clear_button = {8*min_len, 8*min_height, min_len, min_height, other_buttons_color, 0, "Clear", NULL};
 
-  button_t canvas = {0, min_height, 8*min_len, 8*min_height, 63, 0, "", NULL};
-
   game_buttons[9] = increase_size_button;
   game_buttons[10] = decrease_size_button;
   game_buttons[11] = rubber_button;
   game_buttons[12] = clear_button;
-  game_buttons[13] = canvas;
 
-  red_button.onClick(&red_button);
+  canvas = canvas_init(0, min_height, 8*min_len, 8*min_height);
+  if (canvas == NULL) {
+    destroy_player_drawer(player_drawer);
+    return EXIT_FAILURE;
+  }
   return EXIT_SUCCESS;
 }
 
 void (destroy_game)() {
   destroy_player_drawer(player_drawer);
-  // clear screen? double/triple buffering
+  canvas_destroy(canvas);
+  vg_clear_buffers();
 }
 
 int (game_process_mouse)() {
   player_t *player = player_drawer_get_player(player_drawer);
   drawing_position_t next = mouse_get_drawing_position_from_packet(player_get_current_position(player));
+
+  // for(int i = 0; i < NUMBER_GAME_BUTTONS; i++){
+  //   if(is_cursor_over_button(game_buttons[i], next.position)){
+  //     game_buttons[i].onClick(&game_buttons[i]);
+  //     return EXIT_SUCCESS;
+  //   }
+  // }
+
   if (player_drawer_get_state(player_drawer) == SELF_PLAYER) {  
-    // if I'm the drawer, I must communicate what I'm doing
     ser_add_position_to_transmitter_queue(next);
     return player_add_next_position(player, &next);
   }
@@ -99,8 +111,23 @@ int (game_process_serial)() {
 }
 
 int (draw_game)(){
-  if (draw_buttons(game_buttons, NUMBER_GAME_BUTTONS) != OK) return EXIT_FAILURE;
-  if (vg_draw_player_drawer(player_drawer) != OK) return EXIT_FAILURE;
+  if (draw_to_canvas(canvas, player_drawer) != OK) {
+    printf("draw_to_canvas inside %s\n", __func__);
+    return EXIT_FAILURE;
+  }
+  if (buffers_need_update()) {
+    // copy do canvas para o buffer
+    if (vg_copy_canvas_buffer(get_buffer(canvas))) {
+      printf("vg_copy_canvas_buffer inside %s\n", __func__);
+      return EXIT_FAILURE;
+    }
+    // draw buttons
+    if (draw_buttons(game_buttons, NUMBER_GAME_BUTTONS) != OK) return EXIT_FAILURE;
+    if (vg_buffer_flip()) {
+      printf("vg_buffer_flip inside %s\n", __func__);
+      return EXIT_FAILURE;
+    }
+  }
   return EXIT_SUCCESS;
 }
 

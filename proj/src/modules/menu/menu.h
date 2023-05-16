@@ -8,8 +8,12 @@
 #include "player_menu/player_menu.h"
 
 void (setup_menu)();
-int (draw_menu_buttons)();
-int (draw_menu)();
+
+void (draw_menu)();
+int (draw_player_menu)();
+
 int (menu_process_mouse)();
+int (menu_process_serial)();
 
 void (destroy_menu)();
+

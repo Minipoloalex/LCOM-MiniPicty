@@ -29,10 +29,8 @@ position_t (player_get_current_position)(player_t *player) {
   drawing_position_t drawing_position;
   if (queue_get_back(player->mouse_positions, &drawing_position) != OK) {
     // queue is empty
-    printf("queue is empty and return value is x: %d y: %d\n", player->last_mouse_position.x, player->last_mouse_position.y);
     return player->last_mouse_position;
   }
-  printf("queue not empty and return value is x: %d y: %d, is_drawing: %d\n", drawing_position.position.x, drawing_position.position.y, drawing_position.is_drawing);
   return drawing_position.position;
 }
 
@@ -40,7 +38,6 @@ int (player_add_next_position)(player_t *player, drawing_position_t *position) {
   if (push_queue(player->mouse_positions, position) != OK) {
     printf("push_queue inside %s\n", __func__);
   }
-  printf("Added this position to queue -> x: %d y: %d is_drawing: %d\n", position->position.x, position->position.y, position->is_drawing);
   return EXIT_SUCCESS;
 }
 
