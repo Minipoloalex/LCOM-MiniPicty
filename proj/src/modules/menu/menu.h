@@ -6,6 +6,7 @@
 #include "../../devices/serial_port/serial_port.h"
 #include "../../model/button/button.h"
 #include "player_menu/player_menu.h"
+#include "../../model/cursor/cursor.h"
 
 void (setup_menu)();
 void (destroy_menu)();
