@@ -7,3 +7,8 @@ Menu options: another possible solution would be sending the packet and have the
 A - menu option 1
 B - menu option 2
 
+IMPORTANT BYTES:
+Assure they are not lost (push_queue must be successful and fit on the queue) -> remove some bytes from then end? or have another queue that is only for important bytes. send things from this queue after sending a SER_END symbol
+Same thing when receiving into the receiver queue
+
+Processos com stance ativa e passiva

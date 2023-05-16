@@ -8,8 +8,9 @@
 #include "../../devices/serial_port/serial_port.h"
 #include "../../devices/video_card/video_card.h"
 
+#include "canvas/canvas.h"
 
-int (setup_game)();
+int (setup_game)(bool isTransmitter);
 void (destroy_game)();
 
 int (game_process_mouse)();

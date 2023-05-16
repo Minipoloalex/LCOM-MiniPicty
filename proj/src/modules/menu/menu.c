@@ -29,20 +29,27 @@ void (setup_menu)() {
   menu_buttons[2] = exit_button;
 }
 
-int (draw_buttons)(){
+int (draw_player_menu)() {
   player_t *player = player_menu_get_player(player_menu);
   drawing_position_t drawing_position;
   position_t last_position;
 
-  if (player_get_last_position(player, &last_position)) return EXIT_FAILURE;
   while (player_get_next_position(player, &drawing_position) == OK) {
+    if (player_get_last_position(player, &last_position)) return EXIT_FAILURE;
+    set_needs_update(true);
     if (drawing_position.is_drawing) {
       // TODO: check for collisions with buttons
     }
-    printf("position: x %d y %d pressed %d\n", drawing_position.position.x, drawing_position.position.y, drawing_position.is_drawing);
     player_set_last_position(player, drawing_position.position);
-    player_get_last_position(player, &last_position);
   }
+  return EXIT_SUCCESS;
+}
+
+int (draw_buttons)() {
+  position_t last_position;
+  player_t *player = player_menu_get_player(player_menu);
+  if (player_get_last_position(player, &last_position)) return EXIT_FAILURE;
+
   for(int i = 0; i < 3; i++){
     draw_button(&menu_buttons[i], &last_position);
   }
@@ -50,9 +57,18 @@ int (draw_buttons)(){
 }
 
 void (draw_menu)(){
-  if(draw_buttons()){
-    printf("Error drawing buttons\n");
+  if (draw_player_menu()) {
+    printf("draw_player_menu inside %s\n", __func__);
     return;
+  }
+  if (buffers_need_update()) {  // if no new mouse positions, don't update anything
+    if(draw_buttons()) {
+      printf("Error drawing buttons\n");
+      return;
+    }
+    if (vg_buffer_flip()) {
+      printf("vg_buffer_flip inside %s\n", __func__);
+    }
   }
 }
 
@@ -64,5 +80,9 @@ int (menu_process_mouse)() {
 
 void (destroy_menu)() {
   destroy_player_menu(player_menu);
-  // clear screen? double/triple buffering
+  vg_clear_buffers();
+}
+
+int (menu_process_serial)() {
+  return EXIT_SUCCESS;
 }

@@ -1,12 +1,17 @@
 #include "game.h"
 
-PlayerDrawer_t *player_drawer;
+static player_drawer_t *player_drawer;
+static canvas_t *canvas;
 
-int (setup_game)() {
-  // TODO: change this to depend on isTransmitter: the transmitter always starts the game drawing
-  player_drawer = create_player_drawer(SELF_PLAYER);
+int (setup_game)(bool isTransmitter) {
+  player_drawer = create_player_drawer(isTransmitter ? SELF_PLAYER : OTHER_PLAYER);
   if (player_drawer == NULL) {
     printf("create_player_drawer inside %s\n", __func__);
+    return EXIT_FAILURE;
+  }
+  canvas = canvas_init();
+  if (canvas == NULL) {
+    destroy_player_drawer(player_drawer);
     return EXIT_FAILURE;
   }
   return EXIT_SUCCESS;
@@ -14,7 +19,8 @@ int (setup_game)() {
 
 void (destroy_game)() {
   destroy_player_drawer(player_drawer);
-  // clear screen? double/triple buffering
+  canvas_destroy(canvas);
+  vg_clear_buffers();
 }
 
 int (game_process_mouse)() {
@@ -37,6 +43,23 @@ int (game_process_serial)() {
 }
 
 int (draw_game)(){
-  if (vg_draw_player_drawer(player_drawer) != OK) return EXIT_FAILURE;
+  //draw canvas
+  //draw buttons
+  //draw mouse
+  if (draw_to_canvas(canvas, player_drawer) != OK) {
+    printf("draw_to_canvas inside %s\n", __func__);
+    return EXIT_FAILURE;
+  }
+  if (buffers_need_update()) {
+    // copy do canvas para o buffer
+    if (vg_copy_canvas_buffer(get_buffer(canvas))) {
+      printf("vg_copy_canvas_buffer inside %s\n", __func__);
+      return EXIT_FAILURE;
+    }
+    if (vg_buffer_flip()) {
+      printf("vg_buffer_flip inside %s\n", __func__);
+      return EXIT_FAILURE;
+    }
+  }
   return EXIT_SUCCESS;
 }

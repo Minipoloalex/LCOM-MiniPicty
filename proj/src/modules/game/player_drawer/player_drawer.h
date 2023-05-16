@@ -5,36 +5,36 @@
 #include "../../../model/brush/brush.h"
 
 struct PlayerDrawer;
-typedef struct PlayerDrawer PlayerDrawer_t;
+typedef struct PlayerDrawer player_drawer_t;
 
 
 /**
  * @brief 
  * 
  */
-PlayerDrawer_t *(create_player_drawer)(player_type_t player_type);
+player_drawer_t *(create_player_drawer)(player_type_t player_type);
 
 /**
  * @brief 
  * 
  */
-void (destroy_player_drawer)(PlayerDrawer_t *player_drawer);
+void (destroy_player_drawer)(player_drawer_t *player_drawer);
 
 /**
  * @brief 
  * 
  * @return brush_t* 
  */
-brush_t *player_drawer_get_brush(PlayerDrawer_t *player_drawer);
+brush_t *player_drawer_get_brush(player_drawer_t *player_drawer);
 
 /**
  * @brief 
  * 
  */
-player_type_t (player_drawer_get_state)(PlayerDrawer_t *player_drawer);
+player_type_t (player_drawer_get_state)(player_drawer_t *player_drawer);
 
 /**
  * @brief 
  * 
  */
-player_t *(player_drawer_get_player)(PlayerDrawer_t *player_drawer);
+player_t *(player_drawer_get_player)(player_drawer_t *player_drawer);

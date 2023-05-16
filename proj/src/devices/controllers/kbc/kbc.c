@@ -11,12 +11,12 @@ int (read_KBC_output)(int8_t port, uint8_t* output, uint8_t mouse){
   uint8_t attempts = MAX_ATTEMPTS;
 
   while(attempts){
+    attempts--;
     if(read_KBC_status(&status)){
       printf("read_kbc_status inside %s\n", __func__);
       return EXIT_FAILURE;
     }
-
-    if(mouse && !(status & AUX)) {  // TODO: check here (was reutrn exit_fialure)
+    if(mouse && !(status & AUX)) {
       printf("expected mouse int but got keyboard int inside %s\n", __func__);
       tickdelay(micros_to_ticks(WAIT_KBC));
       continue;
@@ -38,7 +38,6 @@ int (read_KBC_output)(int8_t port, uint8_t* output, uint8_t mouse){
       }
       return EXIT_SUCCESS;
     }
-    attempts--;
     tickdelay(micros_to_ticks(WAIT_KBC));
   }
   return EXIT_FAILURE;

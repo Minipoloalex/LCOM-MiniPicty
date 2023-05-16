@@ -7,22 +7,22 @@ struct PlayerDrawer {
   brush_t *brush;
 };
 
-void (destroy_player_drawer)(PlayerDrawer_t *player_drawer) {
+void (destroy_player_drawer)(player_drawer_t *player_drawer) {
   destroy_brush(player_drawer->brush);
   destroy_player(player_drawer->player);
   free(player_drawer);
 }
 
-brush_t *player_drawer_get_brush(PlayerDrawer_t *player_drawer) {
+brush_t *player_drawer_get_brush(player_drawer_t *player_drawer) {
   return player_drawer->brush;
 }
 
-player_type_t (player_drawer_get_state)(PlayerDrawer_t *player_drawer) {
+player_type_t (player_drawer_get_state)(player_drawer_t *player_drawer) {
   return player_drawer->player_state;
 }
 
-PlayerDrawer_t *(create_player_drawer)(player_type_t player_type) {
-  PlayerDrawer_t *player_drawer = malloc(sizeof(PlayerDrawer_t));
+player_drawer_t *(create_player_drawer)(player_type_t player_type) {
+  player_drawer_t *player_drawer = malloc(sizeof(player_drawer_t));
   if (player_drawer == NULL) return NULL;
 
   player_drawer->player = create_player();
@@ -43,6 +43,6 @@ PlayerDrawer_t *(create_player_drawer)(player_type_t player_type) {
   return player_drawer;
 }
 
-player_t *(player_drawer_get_player)(PlayerDrawer_t *player_drawer) {
+player_t *(player_drawer_get_player)(player_drawer_t *player_drawer) {
   return player_drawer->player;
 }
