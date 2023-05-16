@@ -558,7 +558,7 @@ int (ser_add_position_to_transmitter_queue)(drawing_position_t drawing_position)
   util_get_LSB(drawing_position.position.y, &mouse_pos_bytes[2]);
   util_get_MSB(drawing_position.position.y, &mouse_pos_bytes[3]);
   
-  // TODO: pop back of queue with bonus elements if some don't fit
+  // maybe send a SER_END byte to synchronize the receiver better
   if (ser_add_byte_to_transmitter_queue(drawing_position.is_drawing ? SER_MOUSE_DRAWING : SER_MOUSE_NOT_DRAWING)) return EXIT_FAILURE;
   if (ser_add_byte_to_transmitter_queue(mouse_pos_bytes[0])) return EXIT_FAILURE;
   if (ser_add_byte_to_transmitter_queue(mouse_pos_bytes[1])) return EXIT_FAILURE;
