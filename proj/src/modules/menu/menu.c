@@ -51,7 +51,7 @@ int (draw_buttons)() {
   if (player_get_last_position(player, &last_position)) return EXIT_FAILURE;
 
   for(int i = 0; i < 3; i++){
-    draw_button(&menu_buttons[i], &last_position);
+    vg_draw_button(&menu_buttons[i], &last_position);
   }
   return 0;
 }

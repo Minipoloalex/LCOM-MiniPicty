@@ -56,8 +56,8 @@ int(proj_main_loop)(int argc, char *argv[]) {
   
   // TODO: Explore the table-based solution later
 
-  state_t app_state = GAME; // GAME or MENU
-  setup_game(isTransmitter); // setup_game(isTransmitter) or setup_menu()
+  state_t app_state = MENU; // GAME or MENU
+  setup_menu(); // setup_game(isTransmitter) or setup_menu()
   
   printf("Finished setup\n");
   // Game Loop
