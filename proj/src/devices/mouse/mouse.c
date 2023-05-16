@@ -42,7 +42,6 @@ int (write_to_mouse)(uint8_t command){
   uint8_t mouse_response = 0;
 
   while(attempts > 0 && mouse_response != MOUSE_ACK){
-
     if (write_KBC_command(KBC_IN_REG, KBC_WRITE_MOUSE_CMD) != 0) {
       printf("1st write_kbc_command inside %s\n", __func__);
       return EXIT_FAILURE;
@@ -60,7 +59,7 @@ int (write_to_mouse)(uint8_t command){
     }
     attempts--;
   }
-  return EXIT_SUCCESS;
+  return mouse_response != MOUSE_ACK;
 }
 
 int (mouse_enable_int)() {

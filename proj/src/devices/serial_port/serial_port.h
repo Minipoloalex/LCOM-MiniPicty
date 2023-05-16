@@ -67,4 +67,4 @@ int (ser_add_position_to_transmitter_queue)(drawing_position_t position);
  * @brief 
  * 
  */
-int (ser_read_bytes_from_receiver_queue)(PlayerDrawer_t *player_drawer);
+int (ser_read_bytes_from_receiver_queue)(player_drawer_t *player_drawer);

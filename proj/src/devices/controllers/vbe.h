@@ -5,12 +5,16 @@
 
 #define BIOS_VIDEO_SERVICES 0x10
 
+// BX register
 #define LINEAR_FRAMEBUFFER BIT(14)
+#define SET_START_OF_DISPLAY 0x80
 
 // VBE functions
 #define GET_VBE_CONTROLLER_INFO 0x00
 #define GET_VBE_MODE_INFO 0x01
 #define SET_VBE_MODE 0x02
+#define VERTICAL_RETRACE 0x07
+
 
 // Return values in AH
 #define VBE_SUCCESS 0x00
