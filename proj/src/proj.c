@@ -95,7 +95,7 @@ int(proj_main_loop)(int argc, char *argv[]) {
               if (packet_is_ready()) {
                 switch (app_state) {
                   case GAME:
-                  game_process_mouse();
+                    game_process_mouse();
                     break;
                   case MENU:
                     menu_process_mouse();

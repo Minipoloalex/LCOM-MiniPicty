@@ -1,10 +1,11 @@
 #include "menu.h"
+#define NUMBER_MENU_BUTTONS 3
+button_t menu_buttons[NUMBER_MENU_BUTTONS];
 
 uint16_t menu_mode = GRAPHICS_MODE_0;
 extern vbe_mode_info_t vmi;
 
 player_menu_t *player_menu;
-struct button menu_buttons[3];
 
 
 void (setup_menu)() {
@@ -20,9 +21,9 @@ void (setup_menu)() {
   uint8_t background_color = 10;  
   uint8_t text_color = 5;
 
-  struct button play_button = {x, height, width, height, background_color, text_color, "PLAY"};
-  struct button settings_button = {x, height * 3, width, height, background_color, text_color, "LEADERBOARD"};
-  struct button exit_button = {x, height * 5, width, height, background_color, text_color, "EXIT"};
+  button_t play_button = {x, height, width, height, background_color, text_color, "PLAY"};
+  button_t settings_button = {x, height * 3, width, height, background_color, text_color, "LEADERBOARD"};
+  button_t exit_button = {x, height * 5, width, height, background_color, text_color, "EXIT"};
 
   menu_buttons[0] = play_button;
   menu_buttons[1] = settings_button;
@@ -45,15 +46,15 @@ int (draw_menu_buttons)(){
   }
 
   position_t position = player_get_current_position(player);
-  for(int i = 0; i < 3; i++){
-    if(is_button_hovered(menu_buttons[i], position)){
+  for(int i = 0; i < NUMBER_MENU_BUTTONS; i++){
+    if(is_cursor_over_button(menu_buttons[i], position)){
       change_button_colors(&menu_buttons[i], 10, 5);
     } else {
       change_button_colors(&menu_buttons[i], 5, 10);
     }
   }
 
-  return draw_buttons(menu_buttons, 3);
+  return draw_buttons(menu_buttons, NUMBER_MENU_BUTTONS);
 }
 
 int (draw_menu)(){

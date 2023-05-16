@@ -15,3 +15,5 @@ void (destroy_game)();
 int (game_process_mouse)();
 int (game_process_serial)();
 int (draw_game)();
+
+int (is_cursor_over_game_button)(position_t mouse_position);

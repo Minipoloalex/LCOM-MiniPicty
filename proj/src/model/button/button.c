@@ -1,6 +1,6 @@
 #include "button.h"
 
-bool (is_button_hovered)(button_t button, position_t mouse_position){
+bool (is_cursor_over_button)(button_t button, position_t mouse_position){
   bool is_between_x = mouse_position.x >= button.x && mouse_position.x <= button.x + button.width;
   bool is_between_y = mouse_position.y >= button.y && mouse_position.y <= button.y + button.height;
   return is_between_x && is_between_y;
