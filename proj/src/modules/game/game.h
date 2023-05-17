@@ -15,7 +15,6 @@ int (setup_game)(bool isTransmitter);
 void (destroy_game)();
 
 int (is_cursor_over_game_button)(position_t mouse_position);
-void (game_process_button_click)(int button_index);
 
 int (game_process_mouse)();
 int (game_process_serial)();

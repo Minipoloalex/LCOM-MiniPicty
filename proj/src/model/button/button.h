@@ -11,7 +11,7 @@ struct button {
     uint8_t background_color;
     uint8_t text_color;
     char *text;
-    //void (*onClick)(struct button *);
+    void (*onClick)(struct button *);
 };
 typedef struct button button_t;
 

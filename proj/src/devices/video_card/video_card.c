@@ -139,10 +139,7 @@ int (vg_draw_pixel)(uint8_t *buffer, uint16_t x, uint16_t y, uint32_t color){
 
 int (vg_draw_hl)(uint8_t *buffer, uint16_t x, uint16_t y, uint16_t len, uint32_t color){
   for(unsigned int i = x; i < x + len; i++){
-    if (vg_draw_pixel(buffer, i, y, color) != OK) {
-      printf("vg_draw_pixel inside %s\n", __func__);
-      return EXIT_FAILURE;
-    }
+    vg_draw_pixel(buffer, i, y, color);
   }
   return EXIT_SUCCESS;
 }

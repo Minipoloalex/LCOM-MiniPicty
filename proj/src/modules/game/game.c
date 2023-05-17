@@ -7,54 +7,33 @@ static player_drawer_t *player_drawer;
 static canvas_t *canvas;
 extern vbe_mode_info_t vmi;
 
-void change_brush_color(button_t button, brush_t* brush){
+void change_brush_color(button_t* button){
+  brush_t* brush = player_drawer_get_brush(player_drawer);
   if (brush == NULL) return;
-  brush->color = button.background_color;
+  brush->color = button->background_color;
 }
 
-void brush_increase_size(brush_t* brush){
+void brush_increase_size(button_t* button){
+  brush_t* brush = player_drawer_get_brush(player_drawer);
   if (brush == NULL) return;
   brush->size++;
 }
 
-void brush_decrease_size(brush_t* brush){
+void brush_decrease_size(button_t* button){
+  brush_t* brush = player_drawer_get_brush(player_drawer);
   if (brush == NULL) return;
   if (brush->size > 1) brush->size--;
 }
 
-void brush_set_rubber(brush_t* brush, canvas_t* canvas){
+void brush_set_rubber(button_t* button){
+  brush_t* brush = player_drawer_get_brush(player_drawer);
   if (brush == NULL) return;
   brush->color = canvas->background_color;
 }
 
-void (game_process_button_click)(int button_index){
-  switch(button_index){
-    case 0:
-    case 1:
-    case 2:
-    case 3:
-    case 4:
-    case 5:
-    case 6:
-    case 7:
-    case 8:
-       change_brush_color(game_buttons[button_index], player_drawer_get_brush(player_drawer));
-       break;
-    case 9:
-       brush_increase_size(player_drawer_get_brush(player_drawer));
-       break;
-    case 10:
-       brush_decrease_size(player_drawer_get_brush(player_drawer));
-       break;
-    case 11:
-       brush_set_rubber(player_drawer_get_brush(player_drawer), canvas);
-       break;
-    case 12:
-       canvas_clear(canvas);
-       break;
-    default:
-       break;
-  }
+void clear(button_t* button){
+  if (canvas == NULL) return;
+  canvas_clear(canvas);
 }
 
 int (setup_game)(bool isTransmitter) {
@@ -67,25 +46,15 @@ int (setup_game)(bool isTransmitter) {
   int min_len = vmi.XResolution / 9;
   int min_height = vmi.YResolution / 11;
 
-  button_t red_button = {0, 0, min_len, min_height, 4, 0, ""};
-  button_t green_button = {min_len, 0, min_len, min_height, 2, 0, ""};
-  button_t blue_button = {2*min_len, 0, min_len, min_height, 9, 0, ""};
-  button_t yellow_button = {3*min_len, 0, min_len, min_height, 62, 0, ""};
-  button_t black_button = {4*min_len, 0, min_len, min_height, 0, 0, ""};
-  button_t gray_button = {5*min_len, 0, min_len, min_height, 56, 0, ""};
-  button_t orange_button = {6*min_len, 0, min_len, min_height, 38, 0, ""};
-  button_t purple_button = {7*min_len, 0, min_len, min_height, 33, 0, ""};
-  button_t pink_button = {8*min_len, 0, min_len, min_height, 53, 0, ""};
-
-  // red_button.onClick = change_brush_color;
-  // green_button.onClick = change_brush_color;
-  // blue_button.onClick = change_brush_color;
-  // yellow_button.onClick = change_brush_color;
-  // black_button.onClick = change_brush_color;
-  // gray_button.onClick = change_brush_color;
-  // orange_button.onClick = change_brush_color;
-  // purple_button.onClick = change_brush_color;
-  // pink_button.onClick = change_brush_color;
+  button_t red_button = {0, 0, min_len, min_height, 4, 0, "", change_brush_color};
+  button_t green_button = {min_len, 0, min_len, min_height, 2, 0, "", change_brush_color};
+  button_t blue_button = {2*min_len, 0, min_len, min_height, 9, 0, "", change_brush_color};
+  button_t yellow_button = {3*min_len, 0, min_len, min_height, 62, 0, "", change_brush_color};
+  button_t black_button = {4*min_len, 0, min_len, min_height, 0, 0, "", change_brush_color};
+  button_t gray_button = {5*min_len, 0, min_len, min_height, 56, 0, "", change_brush_color};
+  button_t orange_button = {6*min_len, 0, min_len, min_height, 38, 0, "", change_brush_color};
+  button_t purple_button = {7*min_len, 0, min_len, min_height, 33, 0, "", change_brush_color};
+  button_t pink_button = {8*min_len, 0, min_len, min_height, 53, 0, "", change_brush_color};
 
   game_buttons[0] = red_button;
   game_buttons[1] = green_button;
@@ -99,13 +68,13 @@ int (setup_game)(bool isTransmitter) {
 
   int other_buttons_color = 56;
 
-  button_t increase_size_button = {8*min_len, 2*min_height, min_len, min_height, other_buttons_color, 0, "Increase size"};
+  button_t increase_size_button = {8*min_len, 2*min_height, min_len, min_height, other_buttons_color, 0, "Increase size", brush_increase_size};
 
-  button_t decrease_size_button = {8*min_len, 4*min_height, min_len, min_height, other_buttons_color, 0, "Decrease size"};
+  button_t decrease_size_button = {8*min_len, 4*min_height, min_len, min_height, other_buttons_color, 0, "Decrease size", brush_decrease_size};
 
-  button_t rubber_button = {8*min_len, 6*min_height, min_len, min_height, other_buttons_color, 0, "Rubber"};
+  button_t rubber_button = {8*min_len, 6*min_height, min_len, min_height, other_buttons_color, 0, "Rubber", brush_set_rubber};
 
-  button_t clear_button = {8*min_len, 8*min_height, min_len, min_height, other_buttons_color, 0, "Clear"};
+  button_t clear_button = {8*min_len, 8*min_height, min_len, min_height, other_buttons_color, 0, "Clear", clear};
 
   game_buttons[9] = increase_size_button;
   game_buttons[10] = decrease_size_button;
@@ -130,7 +99,10 @@ int (game_process_mouse)() {
   player_t *player = player_drawer_get_player(player_drawer);
   drawing_position_t next = mouse_get_drawing_position_from_packet(player_get_current_position(player));
 
-  game_process_button_click(is_cursor_over_game_button(next.position));
+  int button_index = is_cursor_over_game_button(next.position);
+  if (button_index != -1) {
+    game_buttons[button_index].onClick(&game_buttons[button_index]);
+  }
 
   if (player_drawer_get_state(player_drawer) == SELF_PLAYER) {  
     ser_add_position_to_transmitter_queue(next);
