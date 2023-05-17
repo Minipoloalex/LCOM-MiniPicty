@@ -92,7 +92,7 @@ int (draw_game)(){
       printf("vg_copy_canvas_buffer inside %s\n", __func__);
       return EXIT_FAILURE;
     }
-    printf("%d\n", guess->pointer);
+    //printf("%d\n", guess->pointer);
     if (vg_draw_guess(guess, GUESS_POS_X, GUESS_POS_Y) != OK){
       return EXIT_FAILURE;
     }
