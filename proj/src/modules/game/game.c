@@ -10,28 +10,28 @@ extern vbe_mode_info_t vmi;
 void change_brush_color(button_t* button){
   brush_t* brush = player_drawer_get_brush(player_drawer);
   if (brush == NULL) return;
-  brush->color = button->background_color;
+  brush_set_color(brush, button->background_color);
 }
 
-void brush_increase_size(button_t* button){
+void increase_brush_size(button_t* button){
   brush_t* brush = player_drawer_get_brush(player_drawer);
   if (brush == NULL) return;
-  brush->size++;
+  brush_increase_size(brush);
 }
 
-void brush_decrease_size(button_t* button){
+void decrease_brush_size(button_t* button){
   brush_t* brush = player_drawer_get_brush(player_drawer);
   if (brush == NULL) return;
-  if (brush->size > 1) brush->size--;
+  brush_decrease_size(brush);
 }
 
-void brush_set_rubber(button_t* button){
+void set_rubber(button_t* button){
   brush_t* brush = player_drawer_get_brush(player_drawer);
   if (brush == NULL) return;
-  brush->color = canvas->background_color;
+  brush_set_color(brush, canvas->background_color);
 }
 
-void clear(button_t* button){
+void clear_canvas(button_t* button){
   if (canvas == NULL) return;
   canvas_clear(canvas);
 }
@@ -68,13 +68,13 @@ int (setup_game)(bool isTransmitter) {
 
   int other_buttons_color = 56;
 
-  button_t increase_size_button = {8*min_len, 2*min_height, min_len, min_height, other_buttons_color, 0, "Increase size", brush_increase_size};
+  button_t increase_size_button = {8*min_len, 2*min_height, min_len, min_height, other_buttons_color, 0, "Increase size", increase_brush_size};
 
-  button_t decrease_size_button = {8*min_len, 4*min_height, min_len, min_height, other_buttons_color, 0, "Decrease size", brush_decrease_size};
+  button_t decrease_size_button = {8*min_len, 4*min_height, min_len, min_height, other_buttons_color, 0, "Decrease size", decrease_brush_size};
 
-  button_t rubber_button = {8*min_len, 6*min_height, min_len, min_height, other_buttons_color, 0, "Rubber", brush_set_rubber};
+  button_t rubber_button = {8*min_len, 6*min_height, min_len, min_height, other_buttons_color, 0, "Rubber", set_rubber};
 
-  button_t clear_button = {8*min_len, 8*min_height, min_len, min_height, other_buttons_color, 0, "Clear", clear};
+  button_t clear_button = {8*min_len, 8*min_height, min_len, min_height, other_buttons_color, 0, "Clear", clear_canvas};
 
   game_buttons[9] = increase_size_button;
   game_buttons[10] = decrease_size_button;
@@ -148,20 +148,3 @@ int (is_cursor_over_game_button)(position_t mouse_position){
   }
   return -1;
 }
-
-// ABOUT GAME_PROCESS_MOUSE():
-// once we receive a mouse release signal, we check if any button is hovered
-// is_cursor_over_game_button returns the index of the button if it is hovered, -1 otherwise
-// button_index = is_cursor_over_game_button(mouse_position)
-// then we execute game_buttons[button_index].onClick(&game_buttons[button_index])
-
-// if it is not possible to define a function pointer for the onClick function, we can use a switch case
-
-// switch(button_index){
-//   case 0:
-//   case 1:
-//   case 2:
-//   ...
-//      change_brush_color(&game_buttons[button_index]);
-//      break;
-//   case 9:
