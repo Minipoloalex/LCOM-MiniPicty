@@ -23,6 +23,7 @@ typedef struct {
   uint16_t width; /**< @brief width of the canvas */
   uint16_t height; /**< @brief height of the canvas */
   uint8_t *buffer; /**< @brief buffer of the canvas */
+  int background_color; /**< @brief background color of the canvas */
 } canvas_t;
 
 canvas_t *(canvas_init)();
@@ -31,5 +32,6 @@ int (draw_to_canvas)(canvas_t *canvas, player_drawer_t *player_drawer);
 int (canvas_draw_player_drawer)(canvas_t *canvas, player_drawer_t *player_drawer);
 uint8_t *(get_buffer)(canvas_t *canvas);
 int (canvas_clear)(canvas_t *canvas);
+int (canvas_get_background_color)(canvas_t *canvas);
 
 /** @} end of canvas */

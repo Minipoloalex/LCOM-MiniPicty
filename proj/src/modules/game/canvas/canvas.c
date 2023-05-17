@@ -9,7 +9,8 @@ canvas_t *(canvas_init)(int x, int y, int width, int height) {
   canvas->width = width;
   canvas->height = height;
   canvas->buffer = (uint8_t *) malloc(get_vram_size() * sizeof(uint8_t));
-  memset(canvas->buffer, CANVAS_BACKGROUND_COLOR, get_vram_size());
+  canvas->background_color = CANVAS_BACKGROUND_COLOR;
+  memset(canvas->buffer, canvas->background_color, get_vram_size());
   return canvas;
 }
 
@@ -68,6 +69,7 @@ uint8_t *(get_buffer)(canvas_t *canvas) {
 }
 
 int (canvas_clear)(canvas_t *canvas) {
-  memset(canvas->buffer, CANVAS_BACKGROUND_COLOR, get_vram_size());
+  memset(canvas->buffer, canvas->background_color, get_vram_size());
   return EXIT_SUCCESS;
 }
+

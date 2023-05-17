@@ -22,9 +22,9 @@ void brush_decrease_size(brush_t* brush){
   if (brush->size > 1) brush->size--;
 }
 
-void brush_set_rubber(brush_t* brush){
+void brush_set_rubber(brush_t* brush, canvas_t* canvas){
   if (brush == NULL) return;
-  brush->color = 0;
+  brush->color = canvas->background_color;
 }
 
 void (game_process_button_click)(int button_index){
@@ -47,7 +47,7 @@ void (game_process_button_click)(int button_index){
        brush_decrease_size(player_drawer_get_brush(player_drawer));
        break;
     case 11:
-       brush_set_rubber(player_drawer_get_brush(player_drawer));
+       brush_set_rubber(player_drawer_get_brush(player_drawer), canvas);
        break;
     case 12:
        canvas_clear(canvas);
