@@ -19,7 +19,7 @@ int draw_button(button_t button) {
 
 int draw_buttons(button_t* buttons, int size) {
   for(int i = 0; i < size; i++){
-    // printf("drawing button %d\n", i);
+    //printf("drawing button %d\n", i);
     if(draw_button(buttons[i])) return EXIT_FAILURE;
   }
   return EXIT_SUCCESS;

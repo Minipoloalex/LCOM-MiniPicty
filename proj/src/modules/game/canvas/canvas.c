@@ -1,5 +1,7 @@
 #include "canvas.h"
 
+#define CANVAS_BACKGROUND_COLOR 63
+
 canvas_t *(canvas_init)(int x, int y, int width, int height) {
   canvas_t *canvas = (canvas_t *) malloc(sizeof(canvas_t));
   canvas->start_point.x = x;
@@ -7,7 +9,7 @@ canvas_t *(canvas_init)(int x, int y, int width, int height) {
   canvas->width = width;
   canvas->height = height;
   canvas->buffer = (uint8_t *) malloc(get_vram_size() * sizeof(uint8_t));
-  memset(canvas->buffer, 0, get_vram_size());
+  memset(canvas->buffer, CANVAS_BACKGROUND_COLOR, get_vram_size());
   return canvas;
 }
 
@@ -63,4 +65,9 @@ int (canvas_draw_player_drawer)(canvas_t *canvas, player_drawer_t *player_drawer
 
 uint8_t *(get_buffer)(canvas_t *canvas) {
   return canvas->buffer;
+}
+
+int (canvas_clear)(canvas_t *canvas) {
+  memset(canvas->buffer, CANVAS_BACKGROUND_COLOR, get_vram_size());
+  return EXIT_SUCCESS;
 }
