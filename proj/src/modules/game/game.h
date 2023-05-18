@@ -4,6 +4,7 @@
 #include "../../model/brush/brush.h"
 #include "../../model/player/player.h"
 #include "../../model/guess/guess.h"
+#include "../../model/prompt/prompt.h"
 
 #include "../../devices/keyboard/keyboard.h"
 #include "../../devices/mouse/mouse.h"

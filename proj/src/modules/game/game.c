@@ -3,6 +3,7 @@
 static player_drawer_t *player_drawer;
 static canvas_t *canvas;
 static guess_word_t *guess;
+char *prompt;
 
 int (setup_game)(bool isTransmitter) {
   player_drawer = create_player_drawer(isTransmitter ? SELF_PLAYER : OTHER_PLAYER);
@@ -12,6 +13,7 @@ int (setup_game)(bool isTransmitter) {
   }
   canvas = canvas_init();
   guess = create_guess_word();
+  //if (prompt_generate(prompt) != OK) return EXIT_FAILURE;
   if (canvas == NULL || guess == NULL) {
     destroy_player_drawer(player_drawer);
     return EXIT_FAILURE;
@@ -23,6 +25,7 @@ void (destroy_game)() {
   destroy_player_drawer(player_drawer);
   canvas_destroy(canvas);
   destroy_guess_word(guess);
+  //prompt_destroy(prompt);
   vg_clear_buffers();
 }
 
@@ -37,8 +40,7 @@ int (game_process_keyboard)(){
   }
   else if (scancode == MAKE_ENTER){
     bool right;
-    char *correct = "door"; //TODO passar palavra certa
-    validate_guess_word(correct, guess, &right);
+    validate_guess_word(prompt, guess, &right);
     printf("%d \n", right);
     reset_guess_word(guess);
 
@@ -93,8 +95,13 @@ int (draw_game)(){
       return EXIT_FAILURE;
     }
     //printf("%d\n", guess->pointer);
-    if (vg_draw_guess(guess, GUESS_POS_X, GUESS_POS_Y) != OK){
-      return EXIT_FAILURE;
+    switch (player_drawer_get_state(player_drawer)){
+      case SELF_PLAYER:
+        if (vg_draw_text(prompt, GUESS_POS_X, GUESS_POS_Y)!= OK) return EXIT_FAILURE;
+        break;
+      case OTHER_PLAYER:
+        if (vg_draw_guess(guess, GUESS_POS_X, GUESS_POS_Y) != OK) return EXIT_FAILURE;
+        break;
     }
     if (vg_buffer_flip()) {
       printf("vg_buffer_flip inside %s\n", __func__);

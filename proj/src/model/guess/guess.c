@@ -19,11 +19,23 @@ int (write_character)(guess_word_t *gwt, uint8_t character){
 }
 
 int (validate_guess_word)(char *correct, guess_word_t *gwt, bool *right){
-  if (strlen(correct) != gwt->pointer) {
+  //! for debug
+  printf("correct size: %d, guess size: %d\n", strlen(correct), gwt->pointer);
+  printf("correct: %s\n", correct);
+  
+  printf("guess: ");
+  for (size_t i = 0; i < gwt->pointer; i++){
+    printf("%c", gwt->string[i]);
+  }
+  printf("\n");
+  
+  //check size
+  if (strlen(correct) != (gwt->pointer)) {
     *right = false;
     return EXIT_SUCCESS;
   }
 
+  //check content
   for (size_t i = 0; i < strlen(correct); i++){
     if (gwt->string[i] != correct[i]) {
       *right = false;
