@@ -8,15 +8,13 @@ int (prompt_generate)(char *prompt){
 
   int index = rand() % PROMPT_NUMBER;
 
-  prompt = malloc(strlen(prompts[index]) + 1);
-  if (prompt == NULL) return EXIT_FAILURE;
-  strcpy(prompt, prompts[index]);
+  int i = 0;
+  while (prompts[index][i] != 0){
+    prompt[i] = prompts[index][i];
+    i++;
+  }
+  prompt[i] = '\0';
 
-  printf("defined prompt: %s\n", prompt);
-  return EXIT_SUCCESS;
-}
-
-int (prompt_destroy)(char *prompt){
-  free(prompt);
+  //printf("defined prompt: %s\n", prompt);
   return EXIT_SUCCESS;
 }
