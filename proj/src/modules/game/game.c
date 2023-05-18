@@ -37,9 +37,9 @@ int (game_process_keyboard)(){
   }
   else if (scancode == MAKE_ENTER){
     bool right;
-    char *correct = "door"; //TODO passar palavra certa
+    char *correct = "DOOR"; //TODO passar palavra certa
     validate_guess_word(correct, guess, &right);
-    printf("%d \n", right);
+    printf("correct guess: %d \n", right);
     reset_guess_word(guess);
 
     //TODO se acertar, avançar
