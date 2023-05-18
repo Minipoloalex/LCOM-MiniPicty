@@ -2,8 +2,10 @@
 
 #include "../../devices/keyboard/keyboard.h"
 
+#define GUESS_LIMIT 25
+
 typedef struct{
-  char string[25];
+  char string[GUESS_LIMIT];
   size_t pointer;
 } guess_word_t;
 

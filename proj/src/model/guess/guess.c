@@ -10,9 +10,10 @@ guess_word_t *(create_guess_word)(){
 }
 
 int (write_character)(guess_word_t *gwt, uint8_t character){
-  if (gwt->pointer >= 25) return EXIT_SUCCESS; //ignora caracter escrito
+  if (gwt->pointer >= GUESS_LIMIT) return EXIT_SUCCESS; //ignora caracter escrito
   
   gwt->string[gwt->pointer] = character;
+  //if (gwt->pointer < GUESS_LIMIT - 1) gwt->string[gwt->pointer+1] = '\0';
   gwt->pointer++;
 
   return EXIT_SUCCESS;

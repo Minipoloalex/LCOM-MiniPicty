@@ -46,9 +46,9 @@ int (game_process_keyboard)(){
   }
   else if (scancode == MAKE_ENTER){
     bool right;
-    printf("validando\n");
+    //printf("validando\n");
     validate_guess_word(prompt, guess, &right);
-    printf("%d \n", right);
+    printf("correct guess: %d \n", right);
     reset_guess_word(guess);
 
     //TODO se acertar, avançar

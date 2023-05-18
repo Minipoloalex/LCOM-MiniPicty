@@ -297,7 +297,7 @@ int (vg_draw_text)(char *string, uint16_t x, uint16_t y){
 
 int (vg_draw_guess)(guess_word_t *guess, uint16_t x, uint16_t y){
   
-  /*printf("string: ");
+  /*printf("string: %s ", guess->string);
   for (size_t i = 0; i < guess->pointer; i++){
     printf("%c", guess->string[i]);
   }

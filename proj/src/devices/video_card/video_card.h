@@ -10,7 +10,7 @@
 #include "../../model/guess/guess.h"
 
 #define GUESS_POS_X 30
-#define GUESS_POS_Y 650
+#define GUESS_POS_Y 700
 
 bool (buffers_need_update)();
 void (set_needs_update)(bool value);
