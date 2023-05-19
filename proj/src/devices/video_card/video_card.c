@@ -85,7 +85,6 @@ int (map_phys_mem_to_virtual)(uint16_t mode) {
   }
   buffer_index = 1;
   set_needs_update(true);
-  printf("finished %s\n", __func__);
   return EXIT_SUCCESS;
 }
 
@@ -130,7 +129,7 @@ int (vg_clear_buffer)(uint8_t buffer){
 
 int (vg_draw_pixel)(uint8_t *buffer, uint16_t x, uint16_t y, uint32_t color){
   if (x < 0 || x >= h_res || y < 0 || y >= v_res) {
-    return EXIT_FAILURE;
+    return EXIT_SUCCESS;
   }
   unsigned int index = (y * h_res + x) * bytes_per_pixel;
   memcpy(&buffer[index], &color, bytes_per_pixel);
@@ -236,13 +235,13 @@ int (get_rgb_component)(uint32_t color, uint8_t component_size, uint8_t componen
 int (vg_draw_xpm)(xpm_image_t *img, uint16_t x, uint16_t y) {
   uint8_t *colors = img->bytes;
 
-  for (int row = y; row < y + img->width; row++) {
-    for (int col = x; col < x + img->height; col++) {
+  for (int row = y; row < y + img->height; row++) {
+    for (int col = x; col < x + img->width; col++) {
       if (vg_draw_pixel(video_mem[buffer_index], col, row, *colors)) {
         printf("vg_draw_pixel inside %s\n", __func__);
         return EXIT_FAILURE;
       }
-      colors++;
+      colors += bytes_per_pixel;
     }
   }
   return EXIT_SUCCESS;
@@ -255,6 +254,78 @@ int (vg_erase_xpm)(xpm_image_t *img, uint16_t x, uint16_t y) {
         printf("vg_draw_pixel inside %s\n", __func__);
         return EXIT_FAILURE;
       }
+    }
+  }
+  return EXIT_SUCCESS;
+}
+
+int (vg_draw_char)(const uint8_t character, uint16_t x, uint16_t y){
+  uint8_t index;
+  if (character >= 'a' && character <= 'z') index = character - 'a';
+  else if (character >= 'A' && character <= 'Z') index = character - 'A';
+  else if (character >= '0' && character <= '9') index = character - '0' + 26;
+  else {
+    printf("character: '%c' not supported inside %s\n", character, __func__);
+    return EXIT_FAILURE;
+  }
+
+  xpm_map_t char_xpm = uppercase_alphabet[index];
+
+  xpm_image_t loaded_char;
+  uint8_t *colors = xpm_load(char_xpm, XPM_INDEXED, &loaded_char);
+  
+  if (colors == NULL || loaded_char.type == INVALID_XPM){
+    colors == NULL ? printf("cores nulas") : printf("XPM inválido");
+    return EXIT_FAILURE;
+  }
+
+  loaded_char.bytes = colors;
+  
+  if (vg_draw_xpm(&loaded_char, x, y)) {
+    printf("vg_draw_xpm inside %s\n", __func__);
+    return EXIT_FAILURE;
+  }
+  
+  return EXIT_SUCCESS;
+}
+
+int (vg_draw_text)(char *string, uint16_t x, uint16_t y){
+  for (uint16_t xi = x; *string != 0; string++, xi += FONT_WIDTH){
+    if (vg_draw_char(*string, xi, y)) {
+      printf("vg_draw_char inside %s\n", __func__);
+      return EXIT_FAILURE;
+    }
+  }
+  return EXIT_SUCCESS;
+}
+
+int (vg_draw_guess)(guess_word_t *guess, uint16_t x, uint16_t y){
+  for (uint16_t xi = x, i=0; i<guess->pointer; i++, xi+=FONT_WIDTH){
+    if (vg_draw_char(guess->string[i], xi, y) != OK) {
+      printf("vg_draw_char inside %s\n", __func__);
+      return EXIT_FAILURE;
+    }
+  }
+  return EXIT_SUCCESS;
+}
+
+int (vg_draw_button)(button_t *button) {
+  if (vg_draw_rectangle(button->x, button->y, button->width, button->height, button->background_color)) {
+    printf("vg_draw_rectangle inside %s\n", __func__);
+    return EXIT_FAILURE;
+  }
+  if (strcmp(button->text, "") != 0) { // not empty string
+    vg_draw_text(button->text, 
+              button->x+(button->width/2)-(strlen(button->text)*FONT_WIDTH)/2, 
+              button->y+(button->height/2)-(FONT_HEIGHT)/2);
+  }
+  return EXIT_SUCCESS;
+}
+int (vg_draw_buttons)(button_t *buttons, uint8_t number_buttons) {
+  for (int i = 0; i < number_buttons; i++) {
+    if (vg_draw_button(&buttons[i])) {
+      printf("vg_draw_button inside %s\n", __func__);
+      return EXIT_FAILURE;
     }
   }
   return EXIT_SUCCESS;

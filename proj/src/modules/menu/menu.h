@@ -6,8 +6,9 @@
 #include "../../devices/serial_port/serial_port.h"
 #include "../../model/button/button.h"
 #include "player_menu/player_menu.h"
+#include "../../model/cursor/cursor.h"
 
-void (setup_menu)();
+int (setup_menu)();
 
 void (draw_menu)();
 int (draw_player_menu)();

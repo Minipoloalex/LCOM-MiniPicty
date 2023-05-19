@@ -35,7 +35,7 @@ int(proj_main_loop)(int argc, char *argv[]) {
     return EXIT_FAILURE;
   }
 
-  // Setuping Serial Port
+  // Setting up Serial Port
   bool isTransmitter = strcmp(argv[0], "host") == 0;
   if (ser_init(0x3F8, 115200, 8, 1, 1)) {
     printf("ser_init inside %s\n", __func__);
@@ -56,8 +56,16 @@ int(proj_main_loop)(int argc, char *argv[]) {
   
   // TODO: Explore the table-based solution later
 
-  state_t app_state = GAME; // GAME or MENU
-  setup_game(isTransmitter); // setup_game(isTransmitter) or setup_menu()
+  state_t app_state = GAME;
+  if (setup_game(isTransmitter) != OK) {
+    printf("setup inside %s\n", __func__);
+    return EXIT_FAILURE;
+  }
+  // state_t app_state = GAME; // GAME or MENU
+  // if (setup_game(isTransmitter) != OK) {   // setup_game(isTransmitter) or setup_menu()
+  //   printf("setup inside %s\n", __func__);
+  //   return EXIT_FAILURE;
+  // }
   
   printf("Finished setup\n");
   // Game Loop
@@ -86,6 +94,14 @@ int(proj_main_loop)(int argc, char *argv[]) {
             if (msg.m_notify.interrupts & BIT(keyboard_bit_no)) {
               // printf("Received interrupt from keyboard\n");
               keyboard_ih();
+              switch(app_state){
+                case MENU:
+                  //do nothing in menu?
+                  break;
+                case GAME:
+                  game_process_keyboard();
+                  break;
+              }
             }
             if (msg.m_notify.interrupts & BIT(mouse_bit_no)) {
               // printf("Received interrupt from mouse\n");
@@ -155,44 +171,3 @@ int(proj_main_loop)(int argc, char *argv[]) {
 
   return 0;
 }
-
-/*
- * TODOs:
- * call ser_init() somewhere, that calls
- * ser_read_bytes_from_receiver_queue
- * ser_write_bytes_to_transmitter_queue
- * ser_write_char at beggining to start communication and interrupts
- */
-
-
-
-
-
-
-
-/*
-int (proj_main_loop)(int argc, char *argv[]) {
-  if (argc != 1 || (strcmp(argv[0], "host") != 0 && strcmp(argv[0], "remote") != 0)) {
-    printf("Usage: lcom_run proj <host|remote>\n");
-    return EXIT_FAILURE;
-  }
-  unsigned short base_addr = SER_COM1;
-  uint8_t bits_per_char = 8;
-  uint8_t stop_bits = 1;
-  int8_t parity = 1;
-  uint32_t rate = SER_MAX_BITRATE;
-
-  char *strings[] = {"Hello", "World", "Hello", "Again", "qwertyuiopasdfghjklzxcvbnm", "abcdefghij"};   // must not have dots (dot is the termination symbol)
-  int stringc = 6;
-  uint8_t is_transmitter = strcmp(argv[0], "host") ? 0 : 1; // 1 if host, 0 if remote
-  printf("is_transmitter: %02x\n", is_transmitter);
-
-  if (ser_test_fifo(base_addr, is_transmitter, bits_per_char, stop_bits, parity, rate, stringc, strings) != OK) {
-    printf("Error in ser_test_fifo()\n");
-    return EXIT_FAILURE;
-  }
-
-  printf("proj_main_loop() ended successfully\n");
-  return EXIT_SUCCESS;
-}
-*/

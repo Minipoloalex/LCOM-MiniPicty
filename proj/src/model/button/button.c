@@ -10,18 +10,3 @@ void (change_button_colors)(button_t* button, uint8_t new_background_color, uint
   button->background_color = new_background_color;
   button->text_color = new_text_color;
 }
-
-int draw_button(button_t button) {
-  if(vg_draw_rectangle(button.x, button.y, button.width, button.height, button.background_color)) return EXIT_FAILURE;
-  // draw text inside button
-  return EXIT_SUCCESS;
-}
-
-int draw_buttons(button_t* buttons, int size) {
-  for(int i = 0; i < size; i++){
-    // printf("drawing button %d\n", i);
-    if(draw_button(buttons[i])) return EXIT_FAILURE;
-  }
-  return EXIT_SUCCESS;
-}
-

@@ -66,7 +66,6 @@ int (queue_get_back)(queue_t *q, void *back) {
   if (is_empty_queue(q)) {
     return EXIT_FAILURE;
   }
-  printf("q->back: %d, q->count: %d, q->element_size: %d\n", q->back, q->count, q->element_size);
   memcpy(back, q->elements + ((q->back - 1) % q->size) * q->element_size, q->element_size);
   return EXIT_SUCCESS;
 }

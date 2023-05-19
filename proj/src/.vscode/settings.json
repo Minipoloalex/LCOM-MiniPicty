@@ -41,7 +41,13 @@
     "button.h": "c",
     "player_menu.h": "c",
     "player_drawer.h": "c",
+    "*.xpm": "c",
+    "curses.h": "c",
+    "cursor.h": "c",
     "canvas.h": "c",
-    "math.h": "c"
+    "math.h": "c",
+    "type.h": "c",
+    "timespec.h": "c",
+    "xpm.h": "c"
   },
 }

@@ -5,12 +5,15 @@ button_t game_buttons[NUMBER_GAME_BUTTONS];
 
 static player_drawer_t *player_drawer;
 static canvas_t *canvas;
+static guess_word_t *guess;
 extern vbe_mode_info_t vmi;
 
+/*==================================================================*/
+/* SHOULD THESE BE BUTTON FUNCTIONS ? */
 void change_brush_color(button_t* button){
   brush_t* brush = player_drawer_get_brush(player_drawer);
   if (brush == NULL) return;
-  brush_set_color(brush, button->background_color);
+  set_brush_color(brush, button->background_color);
 }
 
 void increase_brush_size(button_t* button){
@@ -28,14 +31,14 @@ void decrease_brush_size(button_t* button){
 void set_rubber(button_t* button){
   brush_t* brush = player_drawer_get_brush(player_drawer);
   if (brush == NULL) return;
-  brush_set_color(brush, canvas->background_color);
+  set_brush_color(brush, canvas->background_color);
 }
 
 void clear_canvas(button_t* button){
   if (canvas == NULL) return;
   canvas_clear(canvas);
 }
-
+/*==================================================================*/
 int (setup_game)(bool isTransmitter) {
   player_drawer = create_player_drawer(isTransmitter ? SELF_PLAYER : OTHER_PLAYER);
   if (player_drawer == NULL) {
@@ -68,9 +71,9 @@ int (setup_game)(bool isTransmitter) {
 
   int other_buttons_color = 56;
 
-  button_t increase_size_button = {8*min_len, 2*min_height, min_len, min_height, other_buttons_color, 0, "Increase size", increase_brush_size};
+  button_t increase_size_button = {8*min_len, 2*min_height, min_len, min_height, other_buttons_color, 0, "IncreaseSize", increase_brush_size};
 
-  button_t decrease_size_button = {8*min_len, 4*min_height, min_len, min_height, other_buttons_color, 0, "Decrease size", decrease_brush_size};
+  button_t decrease_size_button = {8*min_len, 4*min_height, min_len, min_height, other_buttons_color, 0, "DecreaseSize", decrease_brush_size};
 
   button_t rubber_button = {8*min_len, 6*min_height, min_len, min_height, other_buttons_color, 0, "Rubber", set_rubber};
 
@@ -86,13 +89,56 @@ int (setup_game)(bool isTransmitter) {
     destroy_player_drawer(player_drawer);
     return EXIT_FAILURE;
   }
+  guess = create_guess_word();
+  if (guess == NULL) {
+    destroy_player_drawer(player_drawer);
+    canvas_destroy(canvas);
+    return EXIT_FAILURE;
+  }
   return EXIT_SUCCESS;
 }
 
 void (destroy_game)() {
   destroy_player_drawer(player_drawer);
   canvas_destroy(canvas);
+  destroy_guess_word(guess);
   vg_clear_buffers();
+}
+
+extern int keyboard_return_value;
+extern uint8_t scancode;
+int (game_process_keyboard)(){
+  if (player_drawer_get_state(player_drawer) == SELF_PLAYER) return EXIT_SUCCESS;
+  if (keyboard_return_value) {
+    printf("keyboard_return_value inside %s\n", __func__);
+    return EXIT_SUCCESS;
+  }
+
+  if (scancode == MAKE_BACKSPACE){
+    delete_character(guess);
+  }
+  else if (scancode == MAKE_ENTER){
+    bool right;
+    char *correct = "door"; //TODO passar palavra certa
+    validate_guess_word(correct, guess, &right);
+    printf("correct guess: %d \n", right);
+    reset_guess_word(guess);
+
+    //TODO se acertar, avançar
+  }
+  else {
+    bool is_break = false;
+    if (is_breakcode(scancode, &is_break)) return EXIT_FAILURE;
+
+    if (!is_break){
+      uint8_t caracter = 0;
+      if (translate_scancode(scancode, &caracter)) return EXIT_FAILURE;
+      if (caracter != 0){
+        if (write_character(guess, caracter)) return EXIT_FAILURE;
+      }
+    }
+  }
+  return EXIT_SUCCESS;
 }
 
 int (game_process_mouse)() {
@@ -124,14 +170,20 @@ int (draw_game)(){
     printf("draw_to_canvas inside %s\n", __func__);
     return EXIT_FAILURE;
   }
-  if (buffers_need_update()) {
+  if (/*buffers_need_update()*/ true) {
     // copy do canvas para o buffer
     if (vg_copy_canvas_buffer(get_buffer(canvas))) {
       printf("vg_copy_canvas_buffer inside %s\n", __func__);
       return EXIT_FAILURE;
     }
-    // draw buttons
-    if (draw_buttons(game_buttons, NUMBER_GAME_BUTTONS) != OK) return EXIT_FAILURE;
+    if (vg_draw_buttons(game_buttons, NUMBER_GAME_BUTTONS) != OK) {
+      printf("draw_buttons inside %s\n", __func__);
+      return EXIT_FAILURE;
+    }
+    if (vg_draw_guess(guess, GUESS_POS_X, GUESS_POS_Y) != OK){
+      printf("vg_draw_guess inside %s\n", __func__);
+      return EXIT_FAILURE;
+    }
     if (vg_buffer_flip()) {
       printf("vg_buffer_flip inside %s\n", __func__);
       return EXIT_FAILURE;

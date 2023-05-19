@@ -1,18 +1,23 @@
 #include "menu.h"
 #define NUMBER_MENU_BUTTONS 3
-button_t menu_buttons[NUMBER_MENU_BUTTONS];
 
-uint16_t menu_mode = GRAPHICS_MODE_0;
+#define HOVERED_BG_COLOR 10
+#define HOVERED_TEXT_COLOR 5
+
+#define NOT_HOVERED_BG_COLOR 5
+#define NOT_HOVERED_TEXT_COLOR 10
+
+static button_t menu_buttons[NUMBER_MENU_BUTTONS];
+static player_menu_t *player_menu;
+
 extern vbe_mode_info_t vmi;
 
-player_menu_t *player_menu;
 
-
-void (setup_menu)() {
+int (setup_menu)() {
   player_menu = create_player_menu();
   if (player_menu == NULL) {
     printf("create_player_menu inside %s\n", __func__);
-    return;
+    return EXIT_FAILURE;
   }
   uint16_t x = vmi.XResolution / 3;
   uint16_t width = vmi.XResolution / 3;
@@ -28,6 +33,7 @@ void (setup_menu)() {
   menu_buttons[0] = play_button;
   menu_buttons[1] = settings_button;
   menu_buttons[2] = exit_button;
+  return EXIT_SUCCESS;
 }
 
 int (draw_player_menu)() {
@@ -43,31 +49,47 @@ int (draw_player_menu)() {
     }
     player_set_last_position(player, drawing_position.position);
   }
-
   position_t position = player_get_current_position(player);
   for(int i = 0; i < NUMBER_MENU_BUTTONS; i++){
     if(is_cursor_over_button(menu_buttons[i], position)){
+      change_button_colors(&menu_buttons[i], HOVERED_BG_COLOR, HOVERED_TEXT_COLOR);
+    } else {
+      change_button_colors(&menu_buttons[i], NOT_HOVERED_BG_COLOR, NOT_HOVERED_TEXT_COLOR);
+    }
+  }
+  return EXIT_SUCCESS;
+}
+int (draw_buttons)() {
+  position_t last_position;
+  player_t *player = player_menu_get_player(player_menu);
+  if (player_get_last_position(player, &last_position)) return EXIT_FAILURE;
+
+  for(int i = 0; i < 3; i++){
+    if(is_cursor_over_button(menu_buttons[i], last_position)){
       change_button_colors(&menu_buttons[i], 10, 5);
     } else {
       change_button_colors(&menu_buttons[i], 5, 10);
     }
   }
-
-  return draw_buttons(menu_buttons, NUMBER_MENU_BUTTONS);
+  if (vg_draw_buttons(menu_buttons, NUMBER_MENU_BUTTONS) != OK) {
+    printf("vg_draw_buttons inside %s\n", __func__);
+    return EXIT_FAILURE;
+  }
+  return EXIT_SUCCESS;
 }
-
 void (draw_menu)(){
   if (draw_player_menu()) {
     printf("draw_player_menu inside %s\n", __func__);
     return;
   }
   if (buffers_need_update()) {  // if no new mouse positions, don't update anything
-    if(draw_buttons(menu_buttons, NUMBER_MENU_BUTTONS)) {
+    if(draw_buttons()) {
       printf("Error drawing buttons\n");
       return;
     }
     if (vg_buffer_flip()) {
       printf("vg_buffer_flip inside %s\n", __func__);
+      return;
     }
   }
 }
