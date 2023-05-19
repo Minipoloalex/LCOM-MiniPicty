@@ -1,8 +1,15 @@
 #include "guess.h"
 
 guess_word_t *(create_guess_word)(){
-  guess_word_t *gwt = malloc(sizeof(gwt));
+  guess_word_t *gwt = (guess_word_t *) malloc(sizeof(guess_word_t));
     if (gwt == NULL) {
+      printf("malloc inside %s\n", __func__);
+      return NULL;
+    }
+    gwt->string = (char *) malloc(GUESS_LIMIT * sizeof(char));
+    if (gwt->string == NULL) {
+      printf("malloc inside %s\n", __func__);
+      free(gwt);
       return NULL;
     }
     gwt->pointer = 0;
@@ -10,12 +17,11 @@ guess_word_t *(create_guess_word)(){
 }
 
 int (write_character)(guess_word_t *gwt, uint8_t character){
-  if (gwt->pointer >= GUESS_LIMIT) return EXIT_SUCCESS; //ignora caracter escrito
-  
+  if (gwt->pointer >= GUESS_LIMIT) {
+    return EXIT_SUCCESS;
+  }
   gwt->string[gwt->pointer] = character;
-  //if (gwt->pointer < GUESS_LIMIT - 1) gwt->string[gwt->pointer+1] = '\0';
   gwt->pointer++;
-
   return EXIT_SUCCESS;
 }
 
@@ -48,5 +54,6 @@ int (delete_character)(guess_word_t *gwt){
 }
 
 void (destroy_guess_word)(guess_word_t *gwt){
+  free(gwt->string);
   free(gwt);
 }

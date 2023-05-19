@@ -29,18 +29,17 @@ int (keyboard_restore)(){
 }
 
 int (is_breakcode)(uint8_t scancode, bool *is_breakcode){
-  *is_breakcode = ((BIT(7) & scancode)) >> 7; //0x80 || 0x00 // 0x7F || 0xFF
+  *is_breakcode = ((BIT(7) & scancode)) >> 7;
   return EXIT_SUCCESS;
 }
 
 int (translate_scancode)(uint8_t scancode, uint8_t *character){
-  bool match = false;
   for (int i = 0; i < 36; i++){
     if (scancode == makecodes[i].scancode || scancode == breakcodes[i].scancode){
       *character = makecodes[i].character;
-      match = true;
       break;
     }
   }
+  // printf("No match for scancode: 0x%x\n", scancode);
   return EXIT_SUCCESS;
 }

@@ -265,11 +265,13 @@ int (vg_erase_xpm)(xpm_image_t *img, uint16_t x, uint16_t y) {
 
 int (vg_draw_char)(const uint8_t character, uint16_t x, uint16_t y){
   uint8_t index;
-  //printf("%c", character);
   if (character >= 'a' && character <= 'z') index = character - 'a';
   else if (character >= 'A' && character <= 'Z') index = character - 'A';
   else if (character >= '0' && character <= '9') index = character - '0' + 26;
-  else return EXIT_FAILURE;
+  else {
+    printf("character: '%c' not supported inside %s\n", character, __func__);
+    return EXIT_FAILURE;
+  }
 
   xpm_map_t char_xpm = uppercase_alphabet[index];
 
@@ -283,7 +285,10 @@ int (vg_draw_char)(const uint8_t character, uint16_t x, uint16_t y){
 
   loaded_char.bytes = colors;
   
-  if (vg_draw_xpm(&loaded_char, x, y)) return EXIT_FAILURE;
+  if (vg_draw_xpm(&loaded_char, x, y)) {
+    printf("vg_draw_xpm inside %s\n", __func__);
+    return EXIT_FAILURE;
+  }
   
   return EXIT_SUCCESS;
 }
@@ -296,17 +301,12 @@ int (vg_draw_text)(char *string, uint16_t x, uint16_t y){
 }
 
 int (vg_draw_guess)(guess_word_t *guess, uint16_t x, uint16_t y){
-  
-  /*printf("string: %s ", guess->string);
-  for (size_t i = 0; i < guess->pointer; i++){
-    printf("%c", guess->string[i]);
-  }
-  printf(" - pointer: %d \n", guess->pointer);*/
-  //printf("drawing: ");
   for (uint16_t xi = x, i=0; i<guess->pointer; i++, xi+=FONT_WIDTH){
-    if (vg_draw_char(guess->string[i], xi, y) != OK) return EXIT_FAILURE;
+    if (vg_draw_char(guess->string[i], xi, y) != OK) {
+      printf("vg_draw_char inside %s\n", __func__);
+      return EXIT_FAILURE;
+    }
   }
-  //printf("\n");
   return EXIT_SUCCESS;
 }
 

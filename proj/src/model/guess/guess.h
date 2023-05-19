@@ -5,7 +5,7 @@
 #define GUESS_LIMIT 25
 
 typedef struct{
-  char string[GUESS_LIMIT];
+  char *string;
   size_t pointer;
 } guess_word_t;
 

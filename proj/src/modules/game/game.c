@@ -11,9 +11,14 @@ int (setup_game)(bool isTransmitter) {
     return EXIT_FAILURE;
   }
   canvas = canvas_init();
-  guess = create_guess_word();
-  if (canvas == NULL || guess == NULL) {
+  if (canvas == NULL) {
     destroy_player_drawer(player_drawer);
+    return EXIT_FAILURE;
+  }
+  guess = create_guess_word();
+  if (guess == NULL) {
+    destroy_player_drawer(player_drawer);
+    canvas_destroy(canvas);
     return EXIT_FAILURE;
   }
   return EXIT_SUCCESS;
@@ -30,14 +35,17 @@ extern int keyboard_return_value;
 extern uint8_t scancode;
 int (game_process_keyboard)(){
   if (player_drawer_get_state(player_drawer) == SELF_PLAYER) return EXIT_SUCCESS;
-  if (keyboard_return_value) return EXIT_SUCCESS;
+  if (keyboard_return_value) {
+    printf("keyboard_return_value inside %s\n", __func__);
+    return EXIT_SUCCESS;
+  }
 
   if (scancode == MAKE_BACKSPACE){
     delete_character(guess);
   }
   else if (scancode == MAKE_ENTER){
     bool right;
-    char *correct = "DOOR"; //TODO passar palavra certa
+    char *correct = "door"; //TODO passar palavra certa
     validate_guess_word(correct, guess, &right);
     printf("correct guess: %d \n", right);
     reset_guess_word(guess);
@@ -92,8 +100,8 @@ int (draw_game)(){
       printf("vg_copy_canvas_buffer inside %s\n", __func__);
       return EXIT_FAILURE;
     }
-    //printf("%d\n", guess->pointer);
     if (vg_draw_guess(guess, GUESS_POS_X, GUESS_POS_Y) != OK){
+      printf("vg_draw_guess inside %s\n", __func__);
       return EXIT_FAILURE;
     }
     if (vg_buffer_flip()) {
