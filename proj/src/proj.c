@@ -56,8 +56,8 @@ int(proj_main_loop)(int argc, char *argv[]) {
   
   // TODO: Explore the table-based solution later
 
-  state_t app_state = MENU; // GAME or MENU
-  setup_menu(); // setup_game(isTransmitter) or setup_menu()
+  state_t app_state = GAME; // GAME or MENU
+  setup_game(isTransmitter); // setup_game(isTransmitter) or setup_menu()
   
   printf("Finished setup\n");
   // Game Loop
@@ -86,6 +86,14 @@ int(proj_main_loop)(int argc, char *argv[]) {
             if (msg.m_notify.interrupts & BIT(keyboard_bit_no)) {
               // printf("Received interrupt from keyboard\n");
               keyboard_ih();
+              switch(app_state){
+                case MENU:
+                  //do nothing in menu?
+                  break;
+                case GAME:
+                  game_process_keyboard();
+                  break;
+              }
             }
             if (msg.m_notify.interrupts & BIT(mouse_bit_no)) {
               // printf("Received interrupt from mouse\n");

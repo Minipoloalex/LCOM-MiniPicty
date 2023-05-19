@@ -8,13 +8,15 @@ int (keyboard_subscribe_interrupts)(uint8_t *bit_no);
 int (keyboard_unsubscribe_interrupts)();
 void (keyboard_ih)();
 int (keyboard_restore)();
+int (is_breakcode)(uint8_t scancode, bool *is_breakcode);
+int (translate_scancode)(uint8_t scancode, uint8_t *character);
 
-struct Scancode {
+typedef struct Scancode {
     int scancode;
     char character;
-};
+} scancode_t;
 
-static struct Scancode makecodes[] = {
+static scancode_t makecodes[36] = {
     {0x02, '1'},
     {0x03, '2'},
     {0x04, '3'},
@@ -54,7 +56,7 @@ static struct Scancode makecodes[] = {
 };
 
 
-static struct Scancode breakcodes[] = {
+static scancode_t breakcodes[36] = {
     {0x82, '1'},
     {0x83, '2'},
     {0x84, '3'},

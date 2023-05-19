@@ -8,6 +8,8 @@
 #define IRQ_KEYBOARD 1
 #define IRQ_MOUSE    12
 
+#define MAKE_ENTER 0x1c
+#define MAKE_BACKSPACE 0x0e
 #define BREAK_ESC   0x81       
 #define BREAK_CODE  BIT(7)
 #define TWO_BYTES   0xE0
