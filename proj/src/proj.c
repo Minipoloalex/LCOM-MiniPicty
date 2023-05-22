@@ -35,7 +35,7 @@ int(proj_main_loop)(int argc, char *argv[]) {
     return EXIT_FAILURE;
   }
 
-  // Setuping Serial Port
+  // Setting up Serial Port
   bool isTransmitter = strcmp(argv[0], "host") == 0;
   if (ser_init(0x3F8, 115200, 8, 1, 1)) {
     printf("ser_init inside %s\n", __func__);
@@ -56,11 +56,16 @@ int(proj_main_loop)(int argc, char *argv[]) {
   
   // TODO: Explore the table-based solution later
 
-  state_t app_state = GAME; // GAME or MENU
-  if (setup_game(isTransmitter) != OK) {   // setup_game(isTransmitter) or setup_menu()
+  state_t app_state = GAME;
+  if (setup_game(isTransmitter) != OK) {
     printf("setup inside %s\n", __func__);
     return EXIT_FAILURE;
   }
+  // state_t app_state = GAME; // GAME or MENU
+  // if (setup_game(isTransmitter) != OK) {   // setup_game(isTransmitter) or setup_menu()
+  //   printf("setup inside %s\n", __func__);
+  //   return EXIT_FAILURE;
+  // }
   
   printf("Finished setup\n");
   // Game Loop
