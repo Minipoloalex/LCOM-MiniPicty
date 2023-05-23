@@ -232,14 +232,16 @@ int (get_rgb_component)(uint32_t color, uint8_t component_size, uint8_t componen
   return EXIT_SUCCESS;
 }
 
-int (vg_draw_xpm)(xpm_image_t *img, uint16_t x, uint16_t y) {
+int (vg_draw_xpm)(xpm_image_t *img, uint16_t x, uint16_t y, bool drawBlack) {
   uint8_t *colors = img->bytes;
 
   for (int row = y; row < y + img->height; row++) {
     for (int col = x; col < x + img->width; col++) {
-      if (vg_draw_pixel(video_mem[buffer_index], col, row, *colors)) {
-        printf("vg_draw_pixel inside %s\n", __func__);
-        return EXIT_FAILURE;
+      if (*colors != TRANSPARENT || drawBlack){
+        if (vg_draw_pixel(video_mem[buffer_index], col, row, *colors)) {
+          printf("vg_draw_pixel inside %s\n", __func__);
+          return EXIT_FAILURE;
+        }
       }
       colors += bytes_per_pixel;
     }
@@ -282,7 +284,7 @@ int (vg_draw_char)(const uint8_t character, uint16_t x, uint16_t y){
 
   loaded_char.bytes = colors;
   
-  if (vg_draw_xpm(&loaded_char, x, y)) {
+  if (vg_draw_xpm(&loaded_char, x, y, false)) {
     printf("vg_draw_xpm inside %s\n", __func__);
     return EXIT_FAILURE;
   }
@@ -315,16 +317,7 @@ int (vg_draw_guess)(guess_word_t *guess, uint16_t x, uint16_t y){
   return EXIT_SUCCESS;
 }
 
-void vg_draw_button(struct button* button, position_t *mouse_position) {
-  if(is_button_hovered(button, mouse_position)){
-    change_button_colors(button, 10, 5);
-  } else {
-    change_button_colors(button, 5, 10);
-  }
-  return EXIT_SUCCESS;
-}
-
-int (vg_draw_button)(button_t *button) {
+int (vg_draw_button)(struct button* button) {
   if (vg_draw_rectangle(button->x, button->y, button->width, button->height, button->background_color)) {
     printf("vg_draw_rectangle inside %s\n", __func__);
     return EXIT_FAILURE;

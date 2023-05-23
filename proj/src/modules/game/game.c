@@ -3,12 +3,12 @@
 #define NUMBER_GAME_BUTTONS 13
 button_t game_buttons[NUMBER_GAME_BUTTONS];
 
+extern vbe_mode_info_t vmi;
+
 static player_drawer_t *player_drawer;
 static canvas_t *canvas;
 static guess_word_t *guess;
 static char prompt[15];
-static guess_word_t *guess;
-extern vbe_mode_info_t vmi;
 
 /*==================================================================*/
 /* SHOULD THESE BE BUTTON FUNCTIONS ? */
@@ -89,7 +89,6 @@ int (setup_game)(bool isTransmitter) {
   canvas = canvas_init(0, min_height, 8*min_len, 8*min_height);
   if (canvas == NULL) {
     destroy_player_drawer(player_drawer);
-    destroy_guess_word(guess);
     return EXIT_FAILURE;
   }
   guess = create_guess_word();
@@ -97,6 +96,11 @@ int (setup_game)(bool isTransmitter) {
     destroy_player_drawer(player_drawer);
     canvas_destroy(canvas);
     return EXIT_FAILURE;
+  }
+  if (prompt_generate(prompt) != 0){
+    destroy_player_drawer(player_drawer);
+    canvas_destroy(canvas);
+    destroy_guess_word(guess);
   }
   return EXIT_SUCCESS;
 }
@@ -117,10 +121,10 @@ int (game_process_keyboard)(){
 
   //printf("trying to process kbd\n");
   if (scancode == MAKE_BACKSPACE){
-    printf("apagando\n");
-    printf("old size: %d", guess->pointer);
+    //printf("apagando\n");
+    //printf("old size: %d", guess->pointer);
     delete_character(guess);
-    printf("new size: %d\n", guess->pointer);
+    //printf("new size: %d\n", guess->pointer);
   }
   else if (scancode == MAKE_ENTER){
     bool right;
@@ -139,10 +143,10 @@ int (game_process_keyboard)(){
       uint8_t caracter = 0;
       if (translate_scancode(scancode, &caracter)) return EXIT_FAILURE;
       if (caracter != 0){
-        printf("writing\n");
-        printf("old size: %d ", guess->pointer);
+        //printf("writing\n");
+        //printf("old size: %d ", guess->pointer);
         if (write_character(guess, caracter)) return EXIT_FAILURE;
-        printf("new size: %d\n", guess->pointer);
+        //printf("new size: %d\n", guess->pointer);
       }
     }
   }
@@ -186,9 +190,10 @@ int (draw_game)(){
       return EXIT_FAILURE;
     }
     //printf("%d\n", guess->pointer);
+    if (vg_draw_rectangle(GUESS_BOX_X,GUESS_BOX_Y, GUESS_BOX_WIDTH, GUESS_BOX_HEIGHT, BLACK)) return EXIT_FAILURE;
     switch (player_drawer_get_state(player_drawer)){
       case SELF_PLAYER:
-        if (vg_draw_text(prompt, GUESS_POS_X, GUESS_POS_Y)!= OK) return EXIT_FAILURE;
+        if (vg_draw_text(prompt, GUESS_POS_X, GUESS_POS_Y) != OK) return EXIT_FAILURE;
         break;
       case OTHER_PLAYER:
         if (vg_draw_guess(guess, GUESS_POS_X, GUESS_POS_Y) != OK) return EXIT_FAILURE;
