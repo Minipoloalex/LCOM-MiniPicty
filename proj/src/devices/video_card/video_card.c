@@ -85,7 +85,6 @@ int (map_phys_mem_to_virtual)(uint16_t mode) {
   }
   buffer_index = 1;
   set_needs_update(true);
-  printf("finished %s\n", __func__);
   return EXIT_SUCCESS;
 }
 
@@ -129,8 +128,8 @@ int (vg_clear_buffer)(uint8_t buffer){
 }
 
 int (vg_draw_pixel)(uint8_t *buffer, uint16_t x, uint16_t y, uint32_t color){
-  if (x >= h_res || y >= v_res) {
-    return EXIT_FAILURE;
+  if (x < 0 || x >= h_res || y < 0 || y >= v_res) {
+    return EXIT_SUCCESS;
   }
   unsigned int index = (y * h_res + x) * bytes_per_pixel;
   memcpy(&buffer[index], &color, bytes_per_pixel);
@@ -139,10 +138,7 @@ int (vg_draw_pixel)(uint8_t *buffer, uint16_t x, uint16_t y, uint32_t color){
 
 int (vg_draw_hl)(uint8_t *buffer, uint16_t x, uint16_t y, uint16_t len, uint32_t color){
   for(unsigned int i = x; i < x + len; i++){
-    if (vg_draw_pixel(buffer, i, y, color) != OK) {
-      printf("vg_draw_pixel inside %s\n", __func__);
-      return EXIT_FAILURE;
-    }
+    vg_draw_pixel(buffer, i, y, color);
   }
   return EXIT_SUCCESS;
 }
@@ -265,11 +261,13 @@ int (vg_erase_xpm)(xpm_image_t *img, uint16_t x, uint16_t y) {
 
 int (vg_draw_char)(const uint8_t character, uint16_t x, uint16_t y){
   uint8_t index;
-
   if (character >= 'a' && character <= 'z') index = character - 'a';
   else if (character >= 'A' && character <= 'Z') index = character - 'A';
   else if (character >= '0' && character <= '9') index = character - '0' + 26;
-  else return EXIT_FAILURE;
+  else {
+    printf("character: '%c' not supported inside %s\n", character, __func__);
+    return EXIT_FAILURE;
+  }
 
   xpm_map_t char_xpm = uppercase_alphabet[index];
 
@@ -283,29 +281,54 @@ int (vg_draw_char)(const uint8_t character, uint16_t x, uint16_t y){
 
   loaded_char.bytes = colors;
   
-  if (vg_draw_xpm(&loaded_char, x, y)) return EXIT_FAILURE;
+  if (vg_draw_xpm(&loaded_char, x, y)) {
+    printf("vg_draw_xpm inside %s\n", __func__);
+    return EXIT_FAILURE;
+  }
   
   return EXIT_SUCCESS;
 }
 
 int (vg_draw_text)(char *string, uint16_t x, uint16_t y){
   for (uint16_t xi = x; *string != 0; string++, xi += FONT_WIDTH){
-    if (vg_draw_char(*string, xi, y)) return EXIT_FAILURE;
+    if (vg_draw_char(*string, xi, y)) {
+      printf("vg_draw_char inside %s\n", __func__);
+      return EXIT_FAILURE;
+    }
   }
   return EXIT_SUCCESS;
 }
 
-void vg_draw_button(struct button* button, position_t *mouse_position) {
-  if(is_button_hovered(button, mouse_position)){
-    change_button_colors(button, 10, 5);
-  } else {
-    change_button_colors(button, 5, 10);
+int (vg_draw_guess)(guess_word_t *guess, uint16_t x, uint16_t y){
+  for (uint16_t xi = x, i=0; i<guess->pointer; i++, xi+=FONT_WIDTH){
+    if (vg_draw_char(guess->string[i], xi, y) != OK) {
+      printf("vg_draw_char inside %s\n", __func__);
+      return EXIT_FAILURE;
+    }
   }
-  vg_draw_rectangle(button->x, button->y, button->width, button->height, button->background_color);
-  
-  vg_draw_text(button->text, 
+  return EXIT_SUCCESS;
+}
+
+int (vg_draw_button)(button_t *button) {
+  if (vg_draw_rectangle(button->x, button->y, button->width, button->height, button->background_color)) {
+    printf("vg_draw_rectangle inside %s\n", __func__);
+    return EXIT_FAILURE;
+  }
+  if (strcmp(button->text, "") != 0) { // not empty string
+    vg_draw_text(button->text, 
               button->x+(button->width/2)-(strlen(button->text)*FONT_WIDTH)/2, 
               button->y+(button->height/2)-(FONT_HEIGHT)/2);
+  }
+  return EXIT_SUCCESS;
+}
+int (vg_draw_buttons)(button_t *buttons, uint8_t number_buttons) {
+  for (int i = 0; i < number_buttons; i++) {
+    if (vg_draw_button(&buttons[i])) {
+      printf("vg_draw_button inside %s\n", __func__);
+      return EXIT_FAILURE;
+    }
+  }
+  return EXIT_SUCCESS;
 }
 
 unsigned (get_vram_size)(){
