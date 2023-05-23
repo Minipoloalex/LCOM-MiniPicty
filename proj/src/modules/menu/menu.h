@@ -8,11 +8,13 @@
 #include "player_menu/player_menu.h"
 #include "../../model/cursor/cursor.h"
 
-void (setup_menu)();
-void (destroy_menu)();
+int (setup_menu)();
 
-int (draw_buttons)();
 void (draw_menu)();
+int (draw_player_menu)();
 
 int (menu_process_mouse)();
 int (menu_process_serial)();
+
+void (destroy_menu)();
+

@@ -45,6 +45,9 @@
     "curses.h": "c",
     "cursor.h": "c",
     "canvas.h": "c",
-    "math.h": "c"
+    "math.h": "c",
+    "type.h": "c",
+    "timespec.h": "c",
+    "xpm.h": "c"
   },
 }

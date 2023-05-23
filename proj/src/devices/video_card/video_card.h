@@ -32,10 +32,13 @@ int (vg_draw_char)(const uint8_t character, uint16_t x, uint16_t y);
 int (vg_draw_text)(char *string, uint16_t x, uint16_t y);
 int (vg_draw_guess)(guess_word_t *gwt, uint16_t x, uint16_t y);
 
-void (vg_draw_button)(struct button* button, position_t *mouse_position);
+int (vg_draw_button)(struct button* button);
+int (vg_draw_buttons)(button_t *buttons, uint8_t number_buttons);
+
 int (vg_buffer_flip)();
 int (vg_clear_buffer)(uint8_t buffer);
 
 unsigned (get_vram_size)();
 int (vg_copy_canvas_buffer)(uint8_t * buffer);
 int (vg_clear_buffers)();
+
