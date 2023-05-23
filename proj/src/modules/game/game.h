@@ -7,6 +7,7 @@
 #include "../../model/player/player.h"
 #include "../../model/button/button.h"
 #include "../../model/guess/guess.h"
+#include "../../model/cursor/cursor.h"
 
 #include "../../devices/keyboard/keyboard.h"
 #include "../../devices/mouse/mouse.h"

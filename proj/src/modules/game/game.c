@@ -171,8 +171,7 @@ int (draw_game)(){
     return EXIT_FAILURE;
   }
   if (/*buffers_need_update()*/ true) {
-    // copy do canvas para o buffer
-    if (vg_copy_canvas_buffer(get_buffer(canvas))) {
+    if (vg_copy_canvas_buffer(get_buffer(canvas)) != OK) {
       printf("vg_copy_canvas_buffer inside %s\n", __func__);
       return EXIT_FAILURE;
     }
@@ -182,6 +181,15 @@ int (draw_game)(){
     }
     if (vg_draw_guess(guess, GUESS_POS_X, GUESS_POS_Y) != OK){
       printf("vg_draw_guess inside %s\n", __func__);
+      return EXIT_FAILURE;
+    }
+    
+    cursor_image_t cursor = POINTER;
+    player_t *player = player_drawer_get_player(player_drawer);
+    position_t position = player_get_current_position(player);
+
+    if (draw_cursor(cursor, position) != OK){
+      printf("draw_cursor inside %s\n", __func__);
       return EXIT_FAILURE;
     }
     if (vg_buffer_flip()) {
