@@ -133,38 +133,5 @@ drawing_position_t (mouse_get_drawing_position_from_packet)(position_t before_po
     .position = next_position,
     .is_drawing = packet.lb
   };
-  printf("drawing_position.x: %d, drawing_position.y: %d, drawing_position.is_drawing: %d\n", drawing_position.position.x, drawing_position.position.y, drawing_position.is_drawing);
   return drawing_position;
 }
-
-// int (mouse_process_packet)(){
-//   if (mouse_get_packet() != 0) return EXIT_FAILURE;
-
-//   if (packet_index == 3) {
-//     packet_index = 0;
-//     last_mouse_position = mouse_position;
-
-//     extern unsigned h_res;
-//     extern unsigned v_res;
-
-//     uint16_t new_x = mouse_position.x + packet.delta_x;
-//     if(new_x > 0 && new_x < h_res){
-//       mouse_position.x = new_x;
-//     }
-//     uint16_t new_y = mouse_position.y - packet.delta_y;
-//     if(new_y > 0 && new_y < v_res){
-//       mouse_position.y = new_y;
-//     }
-
-//     if(packet.lb) {
-//       drawing = true;
-//     }else{
-//       drawing = false;
-//     }
-//     // if(packet.lb) {
-//     //   vg_draw_line(last_mouse_position, mouse_position, 20, color);
-//     // }
-//   }
-
-//   return EXIT_SUCCESS;
-// }
