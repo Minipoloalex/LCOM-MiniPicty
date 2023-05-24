@@ -1,3 +1,5 @@
+#pragma once
+
 #include "../../resources/cursors.h"
 #include "../../devices/mouse/mouse.h"
 

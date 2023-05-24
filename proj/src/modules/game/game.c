@@ -192,6 +192,7 @@ int (draw_game)(){
       printf("draw_cursor inside %s\n", __func__);
       return EXIT_FAILURE;
     }
+    
     if (vg_buffer_flip()) {
       printf("vg_buffer_flip inside %s\n", __func__);
       return EXIT_FAILURE;
