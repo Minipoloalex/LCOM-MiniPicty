@@ -3,10 +3,12 @@
 #define NUMBER_GAME_BUTTONS 13
 button_t game_buttons[NUMBER_GAME_BUTTONS];
 
+extern vbe_mode_info_t vmi;
+
 static player_drawer_t *player_drawer;
 static canvas_t *canvas;
 static guess_word_t *guess;
-extern vbe_mode_info_t vmi;
+static char prompt[15];
 
 /*==================================================================*/
 /* SHOULD THESE BE BUTTON FUNCTIONS ? */
@@ -95,6 +97,11 @@ int (setup_game)(bool isTransmitter) {
     canvas_destroy(canvas);
     return EXIT_FAILURE;
   }
+  if (prompt_generate(prompt) != 0){
+    destroy_player_drawer(player_drawer);
+    canvas_destroy(canvas);
+    destroy_guess_word(guess);
+  }
   return EXIT_SUCCESS;
 }
 
@@ -109,18 +116,20 @@ extern int keyboard_return_value;
 extern uint8_t scancode;
 int (game_process_keyboard)(){
   if (player_drawer_get_state(player_drawer) == SELF_PLAYER) return EXIT_SUCCESS;
-  if (keyboard_return_value) {
-    printf("keyboard_return_value inside %s\n", __func__);
-    return EXIT_SUCCESS;
-  }
+  if (keyboard_return_value) return EXIT_SUCCESS;
+  if (scancode == 0) return EXIT_SUCCESS;
 
+  //printf("trying to process kbd\n");
   if (scancode == MAKE_BACKSPACE){
+    //printf("apagando\n");
+    //printf("old size: %d", guess->pointer);
     delete_character(guess);
+    //printf("new size: %d\n", guess->pointer);
   }
   else if (scancode == MAKE_ENTER){
     bool right;
-    char *correct = "door"; //TODO passar palavra certa
-    validate_guess_word(correct, guess, &right);
+    //printf("validando\n");
+    validate_guess_word(prompt, guess, &right);
     printf("correct guess: %d \n", right);
     reset_guess_word(guess);
 
@@ -134,10 +143,14 @@ int (game_process_keyboard)(){
       uint8_t caracter = 0;
       if (translate_scancode(scancode, &caracter)) return EXIT_FAILURE;
       if (caracter != 0){
+        //printf("writing\n");
+        //printf("old size: %d ", guess->pointer);
         if (write_character(guess, caracter)) return EXIT_FAILURE;
+        //printf("new size: %d\n", guess->pointer);
       }
     }
   }
+  //printf("processed kbd\n");
   return EXIT_SUCCESS;
 }
 
@@ -176,13 +189,15 @@ int (draw_game)(){
       printf("vg_copy_canvas_buffer inside %s\n", __func__);
       return EXIT_FAILURE;
     }
-    if (vg_draw_buttons(game_buttons, NUMBER_GAME_BUTTONS) != OK) {
-      printf("draw_buttons inside %s\n", __func__);
-      return EXIT_FAILURE;
-    }
-    if (vg_draw_guess(guess, GUESS_POS_X, GUESS_POS_Y) != OK){
-      printf("vg_draw_guess inside %s\n", __func__);
-      return EXIT_FAILURE;
+    //printf("%d\n", guess->pointer);
+    if (vg_draw_rectangle(GUESS_BOX_X,GUESS_BOX_Y, GUESS_BOX_WIDTH, GUESS_BOX_HEIGHT, BLACK)) return EXIT_FAILURE;
+    switch (player_drawer_get_state(player_drawer)){
+      case SELF_PLAYER:
+        if (vg_draw_text(prompt, GUESS_POS_X, GUESS_POS_Y) != OK) return EXIT_FAILURE;
+        break;
+      case OTHER_PLAYER:
+        if (vg_draw_guess(guess, GUESS_POS_X, GUESS_POS_Y) != OK) return EXIT_FAILURE;
+        break;
     }
     if (vg_buffer_flip()) {
       printf("vg_buffer_flip inside %s\n", __func__);
