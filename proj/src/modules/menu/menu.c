@@ -43,7 +43,7 @@ int (setup_menu)() {
 int (draw_player_menu)() {
   player_t *player = player_menu_get_player(player_menu);
   drawing_position_t drawing_position;
-  position_t last_position;
+  drawing_position_t last_position;
 
   while (player_get_next_position(player, &drawing_position) == OK) {
     if (player_get_last_position(player, &last_position)) return EXIT_FAILURE;
@@ -51,9 +51,9 @@ int (draw_player_menu)() {
     if (drawing_position.is_drawing) {
       // TODO: check for collisions with buttons
     }
-    player_set_last_position(player, drawing_position.position);
+    player_set_last_position(player, drawing_position);
   }
-  position_t position = player_get_current_position(player);
+  position_t position = player_get_current_position(player).position;
   for(int i = 0; i < NUMBER_MENU_BUTTONS; i++){
     if(is_cursor_over_button(menu_buttons[i], position)){
       change_button_colors(&menu_buttons[i], HOVERED_BG_COLOR, HOVERED_TEXT_COLOR);
@@ -64,12 +64,12 @@ int (draw_player_menu)() {
   return EXIT_SUCCESS;
 }
 int (draw_buttons)() {
-  position_t last_position;
+  drawing_position_t last_position;
   player_t *player = player_menu_get_player(player_menu);
   if (player_get_last_position(player, &last_position)) return EXIT_FAILURE;
 
   for(int i = 0; i < 3; i++){
-    if(is_cursor_over_button(menu_buttons[i], last_position)){
+    if(is_cursor_over_button(menu_buttons[i], last_position.position)){
       change_button_colors(&menu_buttons[i], 10, 5);
     } else {
       change_button_colors(&menu_buttons[i], 5, 10);
@@ -100,15 +100,20 @@ void (draw_menu)(){
 
 int (menu_process_mouse)() {
   player_t *player = player_menu_get_player(player_menu);
-  drawing_position_t next = mouse_get_drawing_position_from_packet(player_get_current_position(player));
+  drawing_position_t before = player_get_current_position(player);
+  drawing_position_t next = mouse_get_drawing_position_from_packet(before.position);
 
-  if(next.is_drawing){
-    int button_index = is_cursor_over_menu_button(next.position);
-    if (button_index != -1) {
-      menu_buttons[button_index].onClick(&menu_buttons[button_index]);
-    }
+  int button_to_click = -1;
+  if (process_buttons_clicks(menu_buttons, NUMBER_MENU_BUTTONS, before, next, &button_to_click)) {
+    printf("process_buttons_clicks inside %s\n", __func__);
+    return EXIT_FAILURE;
   }
 
+  if (button_to_click != -1) {
+    button_t pressed_button = menu_buttons[button_to_click];
+    ser_add_button_click_to_transmitter_queue(button_to_click);
+    pressed_button.onClick(&pressed_button);
+  }
 
   return player_add_next_position(player, &next);
 }

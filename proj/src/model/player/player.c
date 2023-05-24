@@ -1,7 +1,7 @@
 #include "player.h"
 
 struct Player {
-  position_t last_mouse_position;
+  drawing_position_t last_mouse_position;
   queue_t *mouse_positions; // queue of drawing_position_t  
 };
 
@@ -16,7 +16,7 @@ player_t *(create_player)() {
     printf("create_queue inside %s\n", __func__);
     return NULL;
   }
-  player->last_mouse_position = (position_t) {300, 300};
+  player->last_mouse_position = (drawing_position_t) {{300, 300}, false};
   return player;
 }
 
@@ -24,14 +24,13 @@ void (destroy_player)(player_t *player) {
   delete_queue(player->mouse_positions);
 }
 
-
-position_t (player_get_current_position)(player_t *player) {
+drawing_position_t (player_get_current_position)(player_t *player) {
   drawing_position_t drawing_position;
   if (queue_get_back(player->mouse_positions, &drawing_position) != OK) {
     // queue is empty
     return player->last_mouse_position;
   }
-  return drawing_position.position;
+  return drawing_position;
 }
 
 int (player_add_next_position)(player_t *player, drawing_position_t *position) {
@@ -47,11 +46,11 @@ int (player_get_next_position)(player_t *player, drawing_position_t *position) {
   }
   return EXIT_SUCCESS;
 }
-int (player_get_last_position)(player_t *player, position_t *position) {
+int (player_get_last_position)(player_t *player, drawing_position_t *position) {
   *position = player->last_mouse_position;
   return EXIT_SUCCESS;
 }
-int (player_set_last_position)(player_t *player, position_t position) {
+int (player_set_last_position)(player_t *player, drawing_position_t position) {
   player->last_mouse_position = position;
   return EXIT_SUCCESS;
 }
