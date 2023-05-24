@@ -478,12 +478,12 @@ void (ser_ih_fifo)() {
     ser_return_value = EXIT_FAILURE;
     return;
   }
-  printf("Interrupt id: %02x\n", iir);
+  // printf("Interrupt id: %02x\n", iir);
   uint8_t lsr;
   if (!(iir & SER_IIR_INT_NOT_PEND)) {  /* interrupt pending */
     switch ((iir & SER_IIR_INT_ID) >> SER_IIR_INT_ID_POSITION) {
       case SER_IIR_INT_ID_RDA:      // data ready
-        printf("Received interrupt RDA\n");
+        // printf("Received interrupt RDA\n");
         if (ser_read_from_fifo() != OK) {
           printf("ser_read_from_fifo() inside %s\n", __func__);
           ser_return_value = EXIT_FAILURE;
@@ -491,7 +491,7 @@ void (ser_ih_fifo)() {
         }
         break;
       case SER_IIR_INT_ID_THRE:   // transmitter empty
-        printf("Transmit interrupt THRE\n");
+        // printf("Transmit interrupt THRE\n");
         // ser_write_char(SER_TRASH);
         if (ser_write_to_fifo() != OK) {
           printf("ser_write_to_fifo() inside %s\n", __func__);
@@ -500,7 +500,7 @@ void (ser_ih_fifo)() {
         }
         break;
       case SER_IIR_INT_ID_CTI:
-        printf("Received interrupt CTI\n");
+        // printf("Received interrupt CTI\n");
         if (ser_read_from_fifo() != OK) {
           printf("ser_read_from_fifo() inside %s\n", __func__);
           ser_return_value = EXIT_FAILURE;
@@ -568,8 +568,14 @@ int (ser_add_position_to_transmitter_queue)(drawing_position_t drawing_position)
   if (ser_write_to_fifo()) return EXIT_FAILURE;
   return EXIT_SUCCESS;
 }
+int (ser_add_button_click_to_transmitter_queue)(uint8_t index) {
+  if (ser_add_byte_to_transmitter_queue(SER_END)) return EXIT_FAILURE;
+  if (ser_add_byte_to_transmitter_queue('A' + index)) return EXIT_FAILURE;
+  if (ser_write_to_fifo()) return EXIT_FAILURE;
+  return EXIT_SUCCESS;
+}
 
-int (ser_read_bytes_from_receiver_queue)(player_drawer_t *drawer) {
+int (ser_read_bytes_from_receiver_queue)(player_drawer_t *drawer, button_t *buttons, uint8_t num_buttons) {
   uint8_t byte;
   static uint8_t bytes[4];
   static uint8_t byte_index = 0;
@@ -592,6 +598,11 @@ int (ser_read_bytes_from_receiver_queue)(player_drawer_t *drawer) {
             ser_state = RECEIVING_KEYBOARD;
             break;
           default:
+            if (byte >= SER_BUTTON_INDEX_FIRST_BYTE && byte < SER_BUTTON_INDEX_FIRST_BYTE + num_buttons){
+              // case SER_BUTTON_INDEX
+              button_t clickedButton = buttons[byte - SER_BUTTON_INDEX_FIRST_BYTE];
+              clickedButton.onClick(&clickedButton);
+            }
             break;
         }
         break;

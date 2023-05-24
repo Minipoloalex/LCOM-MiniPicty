@@ -107,9 +107,10 @@ Then, access DLL/DLM register and finally reset the DLAB bit, so other registers
  * @brief Communication protocol
  * 
  */
-#define SER_START                 'S'
-#define SER_MOUSE_DRAWING         'M'
-#define SER_MOUSE_NOT_DRAWING     'N'
-#define SER_END                   '.'
-#define SER_SCANCODE_START        'K'
+#define SER_START                   'S'
+#define SER_MOUSE_DRAWING           'M'
+#define SER_MOUSE_NOT_DRAWING       'N'
+#define SER_END                     '.'
+#define SER_SCANCODE_START          'K'
+#define SER_BUTTON_INDEX_FIRST_BYTE 'A'
 // #define SER_TRASH                 '_'

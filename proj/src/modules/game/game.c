@@ -143,16 +143,44 @@ int (game_process_keyboard)(){
 
 int (game_process_mouse)() {
   player_t *player = player_drawer_get_player(player_drawer);
-  drawing_position_t next = mouse_get_drawing_position_from_packet(player_get_current_position(player));
-
-  int button_index = is_cursor_over_game_button(next.position);
-  if (button_index != -1) {
-    game_buttons[button_index].onClick(&game_buttons[button_index]);
-  }
-
+  drawing_position_t before = player_get_current_position(player);
+  drawing_position_t next = mouse_get_drawing_position_from_packet(before.position);
   if (player_drawer_get_state(player_drawer) == SELF_PLAYER) {  
     ser_add_position_to_transmitter_queue(next);
-    return player_add_next_position(player, &next);
+    if (player_add_next_position(player, &next) != 0) {
+      printf("player_add_next_position inside %s\n", __func__);
+      return EXIT_FAILURE;
+    }
+  }
+  // printf("processing mouse\n");
+  // static int pressed_button = -1;
+  // static int button_hovered = -1;
+  // printf("values of - pressed_button: %d, button_hovered: %d\n", pressed_button, button_hovered);
+  // button_hovered = is_cursor_over_game_button(next.position);
+  // if (pressed_button != -1 && pressed_button == button_hovered 
+  // && !next.is_drawing && before.is_drawing) {
+  //   printf("clicking on button %d\n", pressed_button);
+  //   game_buttons[button_hovered].onClick(&game_buttons[button_hovered]);
+  //   ser_add_button_click_to_transmitter_queue(button_hovered);
+  //   pressed_button = -1;
+  // }
+  // else if (button_hovered != -1 && next.is_drawing && !before.is_drawing) {
+  //   printf("pressed button %d\n", button_hovered);
+  //   pressed_button = button_hovered;
+  // }
+  // else if (before.is_drawing && !next.is_drawing && pressed_button != -1 
+  // && button_hovered != pressed_button) {
+  //   printf("releasing button %d\n", pressed_button);
+  //   pressed_button = -1;
+  // }
+  int button_to_click = -1;
+  if (process_buttons_clicks(game_buttons, NUMBER_GAME_BUTTONS, before, next, &button_to_click)) {
+    printf("process_buttons_clicks inside %s\n", __func__);
+    return EXIT_FAILURE;
+  }
+  if (button_to_click != -1) {
+    game_buttons[button_to_click].onClick(&game_buttons[button_to_click]);
+    ser_add_button_click_to_transmitter_queue(button_to_click);
   }
   return EXIT_SUCCESS;
 }
@@ -160,7 +188,7 @@ int (game_process_mouse)() {
 
 int (game_process_serial)() {
   if (player_drawer_get_state(player_drawer) == OTHER_PLAYER) {
-    ser_read_bytes_from_receiver_queue(player_drawer);
+    ser_read_bytes_from_receiver_queue(player_drawer, game_buttons, NUMBER_GAME_BUTTONS);
   }
   return EXIT_SUCCESS;
 }
