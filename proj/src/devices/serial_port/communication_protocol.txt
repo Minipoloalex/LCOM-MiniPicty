@@ -10,5 +10,9 @@ B - menu option 2
 IMPORTANT BYTES:
 Assure they are not lost (push_queue must be successful and fit on the queue) -> remove some bytes from then end? or have another queue that is only for important bytes. send things from this queue after sending a SER_END symbol
 Same thing when receiving into the receiver queue
+SOLUTION: have a bigger queue that limits the normal bytes to 100 and have 20 more that can only be pushed if they are important bytes (and they are not lost). Normal bytes will be lost if important bytes are in that part of the queue
 
 Processos com stance ativa e passiva
+BLOCK 0xFF so it is our reserved serial port symbol
+When sending a 0xFF byte, just send 0xFE.
+This is not done with 0x00 and 0x01 because these could be the most significant bytes of a position which would cause a big difference. This way it's only a single pixel
