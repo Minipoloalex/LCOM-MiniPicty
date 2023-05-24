@@ -9,7 +9,6 @@
 #include "../../model/player/player.h"
 #include "../../model/button/button.h"
 #include "../../model/guess/guess.h"
-#include "../../model/cursor/cursor.h"
 #include "../../model/prompt/prompt.h"
 
 #include "../../devices/keyboard/keyboard.h"
@@ -25,3 +24,5 @@ int (game_process_keyboard)();
 int (game_process_mouse)();
 int (game_process_serial)();
 int (draw_game)();
+
+void (update_cursor_state)(position_t position);
