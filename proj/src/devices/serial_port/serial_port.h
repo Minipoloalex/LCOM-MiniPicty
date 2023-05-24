@@ -74,4 +74,4 @@ int (ser_add_button_click_to_transmitter_queue)(uint8_t index);
  * @brief 
  * 
  */
-int (ser_read_bytes_from_receiver_queue)(player_drawer_t *drawer, button_t *buttons, uint8_t num_buttons);
+int (ser_read_bytes_from_receiver_queue)(player_drawer_t *drawer, button_t *buttons, int num_buttons);
