@@ -6,6 +6,7 @@
   "editor.tabSize": 2,
   "editor.wordWrap": "bounded",
   "editor.wordWrapColumn": 100,
+  //estou cansado...
   "files.associations": {
     "*.embeddedhtml": "html",
     "mouse.h": "c",
