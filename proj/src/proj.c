@@ -12,6 +12,7 @@
 #include "modules/game/game.h"
 #include "model/player/player.h"
 #include "model/button/button.h"
+#include "model/state/state.h"
 
 
 int main(int argc, char *argv[]) {
@@ -24,10 +25,7 @@ int main(int argc, char *argv[]) {
   return 0;
 }
 
-typedef enum {
-  MENU,
-  GAME,
-} state_t;
+state_t app_state = MENU;
 
 int(proj_main_loop)(int argc, char *argv[]) {
   if (argc != 1 || (strcmp(argv[0], "host") != 0 && strcmp(argv[0], "remote") != 0)) {
@@ -55,18 +53,15 @@ int(proj_main_loop)(int argc, char *argv[]) {
   if (vg_enter(GRAPHICS_MODE_0) != OK) return EXIT_FAILURE;
   
   // TODO: Explore the table-based solution later
-
-  state_t app_state = GAME;
+  if (setup_menu() != OK) {
+    printf("setup inside %s\n", __func__);
+    return EXIT_FAILURE;
+  }
   if (setup_game(isTransmitter) != OK) {
     printf("setup inside %s\n", __func__);
     return EXIT_FAILURE;
   }
-  // state_t app_state = GAME; // GAME or MENU
-  // if (setup_game(isTransmitter) != OK) {   // setup_game(isTransmitter) or setup_menu()
-  //   printf("setup inside %s\n", __func__);
-  //   return EXIT_FAILURE;
-  // }
-  
+
   printf("Finished setup\n");
   // Game Loop
   int ipc_status, r;

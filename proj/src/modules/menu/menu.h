@@ -7,6 +7,7 @@
 #include "../../model/button/button.h"
 #include "player_menu/player_menu.h"
 #include "../../model/cursor/cursor.h"
+#include "../../model/state/state.h"
 
 int (setup_menu)();
 
@@ -18,3 +19,5 @@ int (menu_process_serial)();
 
 void (destroy_menu)();
 
+//TODO: move thiss
+int (is_cursor_over_menu_button)(position_t mouse_position);
