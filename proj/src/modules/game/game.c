@@ -201,6 +201,10 @@ int (draw_game)(){
       return EXIT_FAILURE;
     }
     //printf("%d\n", guess->pointer);
+    if (vg_draw_buttons(game_buttons, NUMBER_GAME_BUTTONS)) {
+      printf("vg_draw_buttons inside %s\n", __func__);
+      return EXIT_FAILURE;
+    }
     if (vg_draw_rectangle(GUESS_BOX_X,GUESS_BOX_Y, GUESS_BOX_WIDTH, GUESS_BOX_HEIGHT, BLACK)) return EXIT_FAILURE;
     switch (player_drawer_get_state(player_drawer)){
       case SELF_PLAYER:
