@@ -40,6 +40,10 @@ int(proj_main_loop)(int argc, char *argv[]) {
     return EXIT_FAILURE;
   }
   printf("isTransmitter: %d\n", isTransmitter);
+  if (rtc_init() != OK) {
+    printf("rtc_init inside %s\n", __func__);
+    return EXIT_FAILURE;
+  }
   
   // Load resources
 
@@ -69,16 +73,18 @@ int(proj_main_loop)(int argc, char *argv[]) {
   
   extern uint8_t scancode;
   extern int return_value;
-  
   extern uint8_t keyboard_bit_no;
+  
   extern uint8_t mouse_bit_no;
+  extern uint8_t return_value_mouse;
+  
   extern uint8_t timer_bit_no;
 
   extern uint8_t ser_bit_no;
   extern uint8_t ser_return_value;
 
-  extern uint8_t return_value_mouse;
-
+  extern uint8_t rtc_bit_no;
+  extern int rtc_return_value;
   do {
       if ((r = driver_receive(ANY, &msg, &ipc_status)) != 0) {
         printf("driver_receive failed with %d", r);
@@ -137,6 +143,17 @@ int(proj_main_loop)(int argc, char *argv[]) {
                     menu_process_serial();
                     break;
                 }
+              }
+            }
+            if (msg.m_notify.interrupts & BIT(rtc_bit_no)) {
+              rtc_ih();
+              switch(app_state) {
+                case MENU:
+                  menu_process_rtc();
+                  break;
+                case GAME:
+                  game_process_rtc();
+                  break;
               }
             }
             break;

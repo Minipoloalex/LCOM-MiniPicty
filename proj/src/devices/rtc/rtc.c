@@ -56,7 +56,9 @@
 static char *currentTime = {"hh:mm:ss"};
 
 static int hook_id = RTC_IRQ;
-static int rtc_return_value = EXIT_SUCCESS;
+
+int rtc_return_value = EXIT_SUCCESS;
+
 static uint8_t hours = INITIAL_HOUR_VALUE, minutes = 0, seconds = 0;
 static bool stable = false;
 static bool isBCD = false;

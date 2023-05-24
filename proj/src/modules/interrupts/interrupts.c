@@ -5,11 +5,17 @@ uint8_t timer_bit_no;
 uint8_t mouse_bit_no;
 uint8_t keyboard_bit_no;
 uint8_t ser_bit_no;
+uint8_t rtc_bit_no;
 
 int(subscribe_interrupts)(){  
   // Timer
   if(timer_subscribe_int(&timer_bit_no) != 0){
     printf("timer_subscribe_in inside %s\n", __func__);
+    return EXIT_FAILURE;
+  }
+  // RTC
+  if (rtc_subscribe_int(&rtc_bit_no) != 0) {
+    printf("rtc_subscribe_int inside %s\n", __func__);
     return EXIT_FAILURE;
   }
   // Mouse
@@ -47,6 +53,11 @@ int(unsubscribe_interrupts)(){
   // Timer
   if(timer_unsubscribe_int() != 0){
     printf("timer_unsubscribe_int inside %s\n", __func__);
+    return EXIT_FAILURE;
+  }
+  // RTC
+  if (rtc_unsubscribe_int() != 0) {
+    printf("rtc_subscribe_int inside %s\n", __func__);
     return EXIT_FAILURE;
   }
   if (ser_unsubscribe_int() != 0) {

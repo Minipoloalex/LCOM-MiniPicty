@@ -13,6 +13,7 @@
 #include "../../devices/mouse/mouse.h"
 #include "../../devices/serial_port/serial_port.h"
 #include "../../devices/video_card/video_card.h"
+#include "../../devices/rtc/rtc.h"
 
 int (setup_game)(bool isTransmitter);
 void (destroy_game)();
@@ -21,4 +22,5 @@ int (is_cursor_over_game_button)(position_t mouse_position);
 int (game_process_keyboard)();
 int (game_process_mouse)();
 int (game_process_serial)();
+int (game_process_rtc)();
 int (draw_game)();

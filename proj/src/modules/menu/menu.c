@@ -135,3 +135,13 @@ int (is_cursor_over_menu_button)(position_t mouse_position){
   }
   return -1;
 }
+
+int (menu_process_rtc)() {
+  char* current_time = rtc_get_current_time();
+  if (current_time == NULL) {
+    printf("rtc_get_current_time inside %s\n", __func__);
+    return EXIT_FAILURE;
+  }
+  printf("Current time: %s\n", current_time);
+  return EXIT_SUCCESS;
+}
