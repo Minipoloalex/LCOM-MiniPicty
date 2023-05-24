@@ -7,6 +7,8 @@
 #include "../../model/queue/queue.h"
 #include "../../modules/game/player_drawer/player_drawer.h"
 #include "../../model/position/position.h"
+#include "../../model/button/button.h"
+
 /**
  * @brief 
  * 
@@ -67,4 +69,9 @@ int (ser_add_position_to_transmitter_queue)(drawing_position_t position);
  * @brief 
  * 
  */
-int (ser_read_bytes_from_receiver_queue)(player_drawer_t *player_drawer);
+int (ser_add_button_click_to_transmitter_queue)(uint8_t index);
+/**
+ * @brief 
+ * 
+ */
+int (ser_read_bytes_from_receiver_queue)(player_drawer_t *drawer, button_t *buttons, uint8_t num_buttons);

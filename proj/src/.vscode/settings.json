@@ -48,6 +48,9 @@
     "math.h": "c",
     "type.h": "c",
     "timespec.h": "c",
-    "xpm.h": "c"
+    "xpm.h": "c",
+    "video_gr.h": "c",
+    "stdlib.h": "c",
+    "unistd.h": "c"
   },
 }

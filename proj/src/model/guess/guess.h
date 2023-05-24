@@ -2,7 +2,7 @@
 
 #include "../../devices/keyboard/keyboard.h"
 
-#define GUESS_LIMIT 25
+#define GUESS_LIMIT 15
 
 typedef struct{
   char *string;

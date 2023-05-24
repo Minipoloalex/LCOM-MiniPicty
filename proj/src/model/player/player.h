@@ -7,8 +7,8 @@
 #include "../drawing_position.h"
 
 typedef enum player_type {
-  SELF_PLAYER,
-  OTHER_PLAYER,
+  SELF_PLAYER, //desenha
+  OTHER_PLAYER,//adivinha
 } player_type_t;
 
 struct Player;
@@ -32,18 +32,18 @@ int (player_get_next_position)(player_t *player, drawing_position_t *position);
  * @brief 
  * 
  */
-int (player_get_last_position)(player_t *player, position_t *position);
+int (player_get_last_position)(player_t *player, drawing_position_t *position);
 /**
  * @brief 
  * 
  */
-int (player_set_last_position)(player_t *player, position_t position);
+int (player_set_last_position)(player_t *player, drawing_position_t position);
 
 /**
  * @brief returns the current position of the mouse of the player
  * That position is the last in the queue of positions. In case it is empty, returns the last position of the mouse already drawn.
  */
-position_t (player_get_current_position)(player_t *player);
+drawing_position_t (player_get_current_position)(player_t *player);
 
 
 

@@ -10,6 +10,7 @@
 #include "../../model/button/button.h"
 #include "../../model/guess/guess.h"
 #include "../../model/cursor/cursor.h"
+#include "../../model/prompt/prompt.h"
 
 #include "../../devices/keyboard/keyboard.h"
 #include "../../devices/mouse/mouse.h"
