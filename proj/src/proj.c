@@ -1,6 +1,5 @@
 #include <lcom/lcf.h>
 #include <lcom/proj.h>
-#include "test6.h"
 
 #include <stdint.h>
 #include <stdio.h>
