@@ -587,7 +587,7 @@ int (ser_add_button_click_to_transmitter_queue)(uint8_t index) {
   return EXIT_SUCCESS;
 }
 
-int (ser_read_bytes_from_receiver_queue)(player_drawer_t *drawer, button_t *buttons, uint8_t num_buttons) {
+int (ser_read_bytes_from_receiver_queue)(player_drawer_t *drawer, button_t *buttons, int num_buttons) {
   uint8_t byte;
   static uint8_t bytes[4];
   static uint8_t byte_index = 0;
@@ -598,12 +598,14 @@ int (ser_read_bytes_from_receiver_queue)(player_drawer_t *drawer, button_t *butt
       return EXIT_FAILURE;
     }
     switch (ser_state) {
-      // print me the serial port state according to the enum
       printf("byte: %02x", byte);
       
       case SLEEPING:
         // printf("state: sleeping\n");
         switch (byte) {
+          case SER_END:
+            ser_state = SLEEPING;
+            break;
           case SER_MOUSE_DRAWING:
             ser_state = RECEIVING_MOUSE_DRAWING;
             break;

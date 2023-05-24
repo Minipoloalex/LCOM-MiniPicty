@@ -35,7 +35,10 @@ void set_rubber(button_t* button){
 }
 
 void clear_canvas(button_t* button){
-  if (canvas == NULL) return;
+  if (canvas == NULL) {
+    printf("canvas is null inside %s\n", __func__);
+    return;
+  }
   canvas_clear(canvas);
 }
 /*==================================================================*/
@@ -158,8 +161,9 @@ int (game_process_mouse)() {
     return EXIT_FAILURE;
   }
   if (button_to_click != -1) {
-    game_buttons[button_to_click].onClick(&game_buttons[button_to_click]);
+    button_t pressed_button = game_buttons[button_to_click];
     ser_add_button_click_to_transmitter_queue(button_to_click);
+    pressed_button.onClick(&pressed_button);
   }
   return EXIT_SUCCESS;
 }
