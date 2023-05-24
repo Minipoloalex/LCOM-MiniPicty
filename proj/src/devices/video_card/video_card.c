@@ -153,8 +153,12 @@ int (vg_draw_rectangle)(uint16_t x, uint16_t y, uint16_t width, uint16_t height,
   return EXIT_SUCCESS;
 }
 
+int (vg_draw_circle)(uint16_t xc, uint16_t yc, uint16_t radius, uint32_t color){
+  return vg_draw_circle_to_buffer(video_mem[buffer_index], xc, yc, radius, color);
+}
+
 /* Drawing a circle with Bresenham's algorithm */
-int (vg_draw_circle)(uint8_t *buffer, uint16_t xc, uint16_t yc, uint16_t radius, uint32_t color){
+int (vg_draw_circle_to_buffer)(uint8_t *buffer, uint16_t xc, uint16_t yc, uint16_t radius, uint32_t color){
   int x = 0;
   int y = radius;
   int d = 3 - 2 * radius;
@@ -195,7 +199,7 @@ int (vg_draw_line)(uint8_t *buffer, position_t pos1, position_t pos2, uint16_t t
     int e2;
 
     // draw first point of the line with specified color
-    vg_draw_circle(buffer, x0, y0, thickness / 2, color);
+    vg_draw_circle_to_buffer(buffer, x0, y0, thickness / 2, color);
 
     while (x0 != x1 || y0 != y1) {
         e2 = 2 * err;
@@ -208,10 +212,10 @@ int (vg_draw_line)(uint8_t *buffer, position_t pos1, position_t pos2, uint16_t t
             y0 += sy;
         }
 
-        vg_draw_circle(buffer, x0, y0, thickness / 2, color);
+        vg_draw_circle_to_buffer(buffer, x0, y0, thickness / 2, color);
     }
 
-    vg_draw_circle(buffer, x1, y1, thickness / 2, color);
+    vg_draw_circle_to_buffer(buffer, x1, y1, thickness / 2, color);
 
     return EXIT_SUCCESS;
 }

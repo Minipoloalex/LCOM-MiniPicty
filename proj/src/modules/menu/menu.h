@@ -18,6 +18,7 @@ int (menu_process_mouse)();
 int (menu_process_serial)();
 
 void (destroy_menu)();
+int (calculate_sun_height)(int hour);
 
 //TODO: move thiss
 int (is_cursor_over_menu_button)(position_t mouse_position);
