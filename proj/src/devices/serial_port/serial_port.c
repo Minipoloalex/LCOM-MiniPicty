@@ -70,7 +70,11 @@ int (ser_write_fifo_control)(uint8_t config);
  * 
  */
 int (ser_read_int_id)(uint8_t *id);
-
+/**
+ * @brief This functions assures that no byte sent to the serial port is equal to the end of transmission byte
+ * The solution used is that if the byte is equal to the end of transmission byte, it is replaced by a replacement byte (0xFF to 0xFE)
+ */
+int (replace_ser_end(uint8_t *data));
 
 // TODO: remove reading of lcr each time we read data (checking that DLAB is not set)
 // assure that DLAB is not set normally, only set for setting the divisor
@@ -478,12 +482,12 @@ void (ser_ih_fifo)() {
     ser_return_value = EXIT_FAILURE;
     return;
   }
-  printf("Interrupt id: %02x\n", iir);
+  // printf("Interrupt id: %02x\n", iir);
   uint8_t lsr;
   if (!(iir & SER_IIR_INT_NOT_PEND)) {  /* interrupt pending */
     switch ((iir & SER_IIR_INT_ID) >> SER_IIR_INT_ID_POSITION) {
       case SER_IIR_INT_ID_RDA:      // data ready
-        printf("Received interrupt RDA\n");
+        // printf("Received interrupt RDA\n");
         if (ser_read_from_fifo() != OK) {
           printf("ser_read_from_fifo() inside %s\n", __func__);
           ser_return_value = EXIT_FAILURE;
@@ -491,8 +495,7 @@ void (ser_ih_fifo)() {
         }
         break;
       case SER_IIR_INT_ID_THRE:   // transmitter empty
-        printf("Transmit interrupt THRE\n");
-        // ser_write_char(SER_TRASH);
+        // printf("Transmit interrupt THRE\n");
         if (ser_write_to_fifo() != OK) {
           printf("ser_write_to_fifo() inside %s\n", __func__);
           ser_return_value = EXIT_FAILURE;
@@ -500,7 +503,7 @@ void (ser_ih_fifo)() {
         }
         break;
       case SER_IIR_INT_ID_CTI:
-        printf("Received interrupt CTI\n");
+        // printf("Received interrupt CTI\n");
         if (ser_read_from_fifo() != OK) {
           printf("ser_read_from_fifo() inside %s\n", __func__);
           ser_return_value = EXIT_FAILURE;
@@ -551,13 +554,22 @@ int (ser_write_fifo_control)(uint8_t config) {
   return EXIT_SUCCESS;
 }
 
+int (replace_ser_end(uint8_t *data)) {
+  if (*data == SER_END) {
+    *data = SER_END_REPLACEMENT;
+    printf("replaced byte");
+  }
+  return EXIT_SUCCESS;
+}
 int (ser_add_position_to_transmitter_queue)(drawing_position_t drawing_position) {
   uint8_t mouse_pos_bytes[4];
   util_get_LSB(drawing_position.position.x, &mouse_pos_bytes[0]);
   util_get_MSB(drawing_position.position.x, &mouse_pos_bytes[1]);
   util_get_LSB(drawing_position.position.y, &mouse_pos_bytes[2]);
   util_get_MSB(drawing_position.position.y, &mouse_pos_bytes[3]);
-  
+  for (int i = 0; i < 4; i++) {
+    if (replace_ser_end(&mouse_pos_bytes[i])) return EXIT_FAILURE;
+  }
   // maybe send a SER_END byte to synchronize the receiver better
   if (ser_add_byte_to_transmitter_queue(drawing_position.is_drawing ? SER_MOUSE_DRAWING : SER_MOUSE_NOT_DRAWING)) return EXIT_FAILURE;
   if (ser_add_byte_to_transmitter_queue(mouse_pos_bytes[0])) return EXIT_FAILURE;
@@ -568,8 +580,14 @@ int (ser_add_position_to_transmitter_queue)(drawing_position_t drawing_position)
   if (ser_write_to_fifo()) return EXIT_FAILURE;
   return EXIT_SUCCESS;
 }
+int (ser_add_button_click_to_transmitter_queue)(uint8_t index) {
+  if (ser_add_byte_to_transmitter_queue(SER_END)) return EXIT_FAILURE;
+  if (ser_add_byte_to_transmitter_queue('A' + index)) return EXIT_FAILURE;
+  if (ser_write_to_fifo()) return EXIT_FAILURE;
+  return EXIT_SUCCESS;
+}
 
-int (ser_read_bytes_from_receiver_queue)(player_drawer_t *drawer) {
+int (ser_read_bytes_from_receiver_queue)(player_drawer_t *drawer, button_t *buttons, int num_buttons) {
   uint8_t byte;
   static uint8_t bytes[4];
   static uint8_t byte_index = 0;
@@ -580,8 +598,14 @@ int (ser_read_bytes_from_receiver_queue)(player_drawer_t *drawer) {
       return EXIT_FAILURE;
     }
     switch (ser_state) {
+      printf("byte: %02x", byte);
+      
       case SLEEPING:
+        // printf("state: sleeping\n");
         switch (byte) {
+          case SER_END:
+            ser_state = SLEEPING;
+            break;
           case SER_MOUSE_DRAWING:
             ser_state = RECEIVING_MOUSE_DRAWING;
             break;
@@ -592,10 +616,16 @@ int (ser_read_bytes_from_receiver_queue)(player_drawer_t *drawer) {
             ser_state = RECEIVING_KEYBOARD;
             break;
           default:
+            if (byte >= SER_BUTTON_INDEX_FIRST_BYTE && byte < SER_BUTTON_INDEX_FIRST_BYTE + num_buttons){
+              // case SER_BUTTON_INDEX
+              button_t clickedButton = buttons[byte - SER_BUTTON_INDEX_FIRST_BYTE];
+              clickedButton.onClick(&clickedButton);
+            }
             break;
         }
         break;
       case RECEIVING_MOUSE_DRAWING: case RECEIVING_MOUSE_NOT_DRAWING:
+        // printf("state: receiving mouse\n");
         if (byte == SER_END) {
           if (byte_index != 4) {  // got the end byte before the 4 bytes of the position
             ser_state = SLEEPING;
@@ -609,7 +639,10 @@ int (ser_read_bytes_from_receiver_queue)(player_drawer_t *drawer) {
             .position = position,
             .is_drawing = ser_state == RECEIVING_MOUSE_DRAWING
           };
-          if (player_add_next_position(player, &drawing_position)) return EXIT_FAILURE;
+          if (player_add_next_position(player, &drawing_position)) {
+            printf("player_add_next_position() inside %s failed\n", __func__);
+            return EXIT_FAILURE;
+          }
           ser_state = SLEEPING;
           byte_index = 0;
           break;
@@ -617,6 +650,7 @@ int (ser_read_bytes_from_receiver_queue)(player_drawer_t *drawer) {
         bytes[byte_index++] = byte;
         break;
       case RECEIVING_KEYBOARD:
+        printf("state: receiving keyboard\n");
         break;
 
       default:

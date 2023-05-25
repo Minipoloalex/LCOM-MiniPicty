@@ -38,7 +38,7 @@ int (canvas_draw_player_drawer)(canvas_t *canvas, player_drawer_t *player_drawer
     return EXIT_FAILURE;
   }
   drawing_position_t drawing_position;
-  position_t last_position;
+  drawing_position_t last_position;
   
   player_t *player = player_drawer_get_player(player_drawer);
   if (player == NULL) {
@@ -56,10 +56,9 @@ int (canvas_draw_player_drawer)(canvas_t *canvas, player_drawer_t *player_drawer
     if (player_get_last_position(player, &last_position)) return EXIT_FAILURE;
     bool position_is_inside_canvas = drawing_position.position.x >= canvas->start_point.x && drawing_position.position.x < canvas->start_point.x + canvas->width && drawing_position.position.y >= canvas->start_point.y && drawing_position.position.y < canvas->start_point.y + canvas->height;
     if (drawing_position.is_drawing && position_is_inside_canvas) {
-      vg_draw_line(canvas->buffer, last_position, drawing_position.position, brush->size, brush->color);
+      vg_draw_line(canvas->buffer, last_position.position, drawing_position.position, brush->size, brush->color);
     }
-    // printf("drawing position: %d %d %d\n", drawing_position.position.x, drawing_position.position.y, drawing_position.is_drawing);
-    player_set_last_position(player, drawing_position.position);
+    player_set_last_position(player, drawing_position);
   }
   return EXIT_SUCCESS;
 }
@@ -73,3 +72,9 @@ int (canvas_clear)(canvas_t *canvas) {
   return EXIT_SUCCESS;
 }
 
+bool (canvas_contains_position)(canvas_t *canvas, position_t position){
+  return (
+    (canvas->start_point.x <= position.x) && (position.x < (canvas->start_point.x+canvas->width))&&
+    (canvas->start_point.y <= position.y) && (position.y < (canvas->start_point.y+canvas->height))
+  );
+}
