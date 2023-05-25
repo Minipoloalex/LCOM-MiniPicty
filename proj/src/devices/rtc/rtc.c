@@ -119,7 +119,6 @@ int (rtc_init)() {
   return EXIT_SUCCESS;  
 }
 
-
 int (rtc_subscribe_int)(uint8_t *bit_no) {
   uint8_t regC;
   rtc_read(RTC_C, &regC);
@@ -150,7 +149,13 @@ void (rtc_ih)() {
     rtc_return_value = EXIT_FAILURE;
     return;
   }
+  if (!(regC & RTC_C_IRQF)) {
+    printf("no interrupt pending inside rtc_ih\n");
+    rtc_return_value = EXIT_FAILURE;
+    return;
+  }
   if (regC & RTC_C_UF) {
+    printf("here\n");
     if (stable) {
       increment_one_second();
     }
@@ -172,7 +177,11 @@ void (rtc_ih)() {
       minutes = new_minutes;
       seconds = new_seconds;
     }
+    rtc_return_value = EXIT_SUCCESS;
+    return;
   }
+  printf("Error: RTC_C_UF not set - we are only using this interrupt for RTC\n");
+  rtc_return_value = EXIT_FAILURE;
 }
 
 int (rtc_read)(uint8_t reg, uint8_t *data) {

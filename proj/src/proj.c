@@ -147,13 +147,15 @@ int(proj_main_loop)(int argc, char *argv[]) {
             }
             if (msg.m_notify.interrupts & BIT(rtc_bit_no)) {
               rtc_ih();
-              switch(app_state) {
+              if (rtc_return_value == EXIT_SUCCESS) {
+                switch(app_state) {
                 case MENU:
                   menu_process_rtc();
                   break;
                 case GAME:
                   game_process_rtc();
                   break;
+                }
               }
             }
             break;
