@@ -4,6 +4,20 @@
 #include <lcom/lcf.h>
 #include <stdint.h>
 
+char *(byte_to_str)(uint8_t byte){
+  static char str[3];
+  int index = 0;
+  while (byte != 0){
+    int digit = byte % 10;
+    str[index] = digit + '0';
+    
+    byte /= 10;
+    index++;
+  }
+  if (index != 3) str[index] = '\0';
+  return str;
+}
+
 int(util_get_LSB)(uint16_t val, uint8_t *lsb) {
   (*lsb) = (uint8_t) val;
   return 0;

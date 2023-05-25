@@ -7,11 +7,11 @@
 
 #include "modules/interrupts/interrupts.h"
 #include "modules/menu/menu.h"
-#include "modules/game/player_drawer/player_drawer.h"
+// #include "modules/game/player_drawer/player_drawer.h" included in game.h
 #include "modules/menu/player_menu/player_menu.h"
 #include "modules/game/game.h"
-#include "model/player/player.h"
-#include "model/button/button.h"
+// #include "model/player/player.h" included in game.h
+// #include "model/button/button.h" included in game.h
 
 
 int main(int argc, char *argv[]) {
@@ -127,6 +127,7 @@ int(proj_main_loop)(int argc, char *argv[]) {
                   draw_menu();
                   break;
                 case GAME:
+                  game_process_timer();
                   draw_game();
                   break;
               }

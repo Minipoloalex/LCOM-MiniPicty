@@ -12,6 +12,9 @@
 #define GUESS_POS_X 30
 #define GUESS_POS_Y 700
 
+#define ROUND_TIMER_X 600
+#define ROUND_TIMER_Y 700
+
 bool (buffers_need_update)();
 void (set_needs_update)(bool value);
 /* Map physical memory to virtual address space of process */
