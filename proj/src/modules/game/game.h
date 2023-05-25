@@ -3,6 +3,7 @@
 #include <lcom/lcf.h>
 #include "player_drawer/player_drawer.h"
 #include "canvas/canvas.h"
+#include "../menu/menu.h"
 
 #include "../../model/state/state.h"
 #include "../../model/position/position.h"
@@ -17,13 +18,14 @@
 #include "../../devices/serial_port/serial_port.h"
 #include "../../devices/video_card/video_card.h"
 
-int (setup_game)(bool isTransmitter);
+int (setup_game)(bool isTransmitter, state_t *state);
 void (destroy_game)();
 
 int (game_process_keyboard)();
 int (game_process_mouse)();
 int (game_process_serial)();
 int (game_draw)();
-void (transitionToGame)(state_t* state);
+void (transition_to_game)(state_t* state);
 
 void (update_cursor_state)(position_t position);
+buttons_array_t *(get_game_buttons)(state_t* state);

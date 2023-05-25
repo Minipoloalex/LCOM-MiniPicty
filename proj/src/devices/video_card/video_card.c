@@ -21,6 +21,15 @@ unsigned h_res;	        /* Horizontal resolution in pixels */
 unsigned v_res;	        /* Vertical resolution in pixels */
 vbe_mode_info_t vmi;
 
+int (setup_video_mode)(uint16_t mode){
+  if (map_phys_mem_to_virtual(GRAPHICS_MODE_0) != OK){
+    printf("map_phys_mem_to_virtual inside %s\n", __func__);
+    return EXIT_FAILURE;
+  }
+  if (vg_enter(GRAPHICS_MODE_0) != OK) return EXIT_FAILURE;
+  return EXIT_SUCCESS;
+}
+
 int (vg_enter)(uint16_t mode) {
   memset(&vmi, 0, sizeof(vmi));
   if (vbe_get_mode_info(mode, &vmi) != 0) return EXIT_FAILURE;
@@ -335,7 +344,7 @@ int (vg_draw_cursor)(cursor_image_t image, position_t pos){
   return EXIT_SUCCESS;
 }
 
-int (vg_draw_button)(struct button* button) {
+int (vg_draw_button)(button_t *button) {
   if (vg_draw_rectangle(button->x, button->y, button->width, button->height, button->background_color)) {
     printf("vg_draw_rectangle inside %s\n", __func__);
     return EXIT_FAILURE;
@@ -347,9 +356,11 @@ int (vg_draw_button)(struct button* button) {
   }
   return EXIT_SUCCESS;
 }
-int (vg_draw_buttons)(button_t *buttons, uint8_t number_buttons) {
-  for (int i = 0; i < number_buttons; i++) {
-    if (vg_draw_button(&buttons[i])) {
+int (vg_draw_buttons)(buttons_array_t *buttons) {
+  for (int i = 0; i < buttons->num_buttons; i++) {
+    printf("button %d\n", i);
+    button_t button = buttons->buttons[i];
+    if (vg_draw_button(&button)) {
       printf("vg_draw_button inside %s\n", __func__);
       return EXIT_FAILURE;
     }
