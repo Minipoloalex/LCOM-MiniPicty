@@ -14,6 +14,7 @@ struct State {
   Event process_mouse;
   Event process_keyboard;
   Event process_serial;
+  Event process_timer;
   ButtonsGetter get_buttons;
 };
 
@@ -22,7 +23,7 @@ struct State {
  * 
  * @param state 
  */
-void defaultImplementation(state_t* state);
+void default_implementation(state_t* state);
 /**
  * @brief 
  * 

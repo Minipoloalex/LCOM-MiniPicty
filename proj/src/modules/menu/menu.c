@@ -20,10 +20,12 @@ void (enter_game)(button_t* button){
 }
 
 void (transition_to_menu)(state_t* state){
-  defaultImplementation(state);
+  default_implementation(state);
   state->draw = menu_draw;
   state->process_mouse = menu_process_mouse;
   state->process_serial = menu_process_serial;
+  /*state->process_timer = defaultDraw;
+  state->process_keyboard = defaultDraw;*/
 }
 
 int (setup_menu)(state_t *state) {
@@ -86,14 +88,11 @@ int (draw_buttons)() {
   if (player_get_last_position(player, &last_position)) return EXIT_FAILURE;
 
   int num_buttons = buttons_array->num_buttons;
-  printf("Number of buttons: %d \n", num_buttons);
   for(int i = 0; i < num_buttons; i++){
     button_t *button = &buttons_array->buttons[i];
     if(is_cursor_over_button(*button, last_position.position)){
-      printf("on if\n");
       change_button_colors(button, 10, 5);
     } else {
-      printf("on else\n");
       change_button_colors(button, 5, 10);
     }
   }

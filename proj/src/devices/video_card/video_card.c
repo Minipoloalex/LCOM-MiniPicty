@@ -358,7 +358,6 @@ int (vg_draw_button)(button_t *button) {
 }
 int (vg_draw_buttons)(buttons_array_t *buttons) {
   for (int i = 0; i < buttons->num_buttons; i++) {
-    printf("button %d\n", i);
     button_t button = buttons->buttons[i];
     if (vg_draw_button(&button)) {
       printf("vg_draw_button inside %s\n", __func__);

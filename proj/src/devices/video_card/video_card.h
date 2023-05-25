@@ -20,6 +20,10 @@
 #define GUESS_BOX_WIDTH 1024-30 //hres-30
 #define GUESS_BOX_HEIGHT 40+FONT_HEIGHT
 
+//round timer
+#define ROUND_TIMER_X 900
+#define ROUND_TIMER_Y 700
+
 //colors
 #define TRANSPARENT 0
 #define BLACK 0

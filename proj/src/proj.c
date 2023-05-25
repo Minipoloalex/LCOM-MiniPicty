@@ -7,11 +7,11 @@
 
 #include "modules/interrupts/interrupts.h"
 #include "modules/menu/menu.h"
-#include "modules/game/player_drawer/player_drawer.h"
+// #include "modules/game/player_drawer/player_drawer.h" included in game.h
 #include "modules/menu/player_menu/player_menu.h"
 #include "modules/game/game.h"
-#include "model/player/player.h"
-#include "model/button/button.h"
+// #include "model/player/player.h" included in game.h
+// #include "model/button/button.h" included in game.h
 #include "model/state/state.h"
 
 
@@ -111,6 +111,7 @@ int(proj_main_loop)(int argc, char *argv[]) {
             }
             if (msg.m_notify.interrupts & BIT(timer_bit_no)) {
               timer_int_handler();
+              app_state->process_timer(app_state);
               app_state->draw(app_state);
             }
             if (msg.m_notify.interrupts & BIT(ser_bit_no)){

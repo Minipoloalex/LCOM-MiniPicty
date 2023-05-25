@@ -52,7 +52,6 @@ buttons_array_t *(create_buttons_array)(int num_buttons) {
         return NULL;
     }
     buttons_array->num_buttons = num_buttons;
-    printf("num_buttons: %d\n", num_buttons);
     return buttons_array;
 }
 void (destroy_buttons_array)(buttons_array_t *buttons_array) {
