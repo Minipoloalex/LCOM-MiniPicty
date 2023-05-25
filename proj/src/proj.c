@@ -47,11 +47,11 @@ int(proj_main_loop)(int argc, char *argv[]) {
   // Subscribe interrupts
   if(subscribe_interrupts()) return EXIT_FAILURE;
 
-  if (map_phys_mem_to_virtual(GRAPHICS_MODE_0) != OK){
+  if (map_phys_mem_to_virtual(GRAPHICS_MODE_4) != OK){
     printf("map_phys_mem_to_virtual inside %s\n", __func__);
     return EXIT_FAILURE;
   }
-  if (vg_enter(GRAPHICS_MODE_0) != OK) return EXIT_FAILURE;
+  if (vg_enter(GRAPHICS_MODE_4) != OK) return EXIT_FAILURE;
   
 
   app_state = malloc(sizeof(state_t));
