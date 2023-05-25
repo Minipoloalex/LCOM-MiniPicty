@@ -203,8 +203,7 @@ int (game_draw)(){
     return EXIT_FAILURE;
   }
   if (/*buffers_need_update()*/ true) {
-    // copy do canvas para o buffer
-    if (vg_copy_canvas_buffer(get_buffer(canvas))) {
+    if (vg_copy_canvas_buffer(get_buffer(canvas)) != OK) {
       printf("vg_copy_canvas_buffer inside %s\n", __func__);
       return EXIT_FAILURE;
     }
@@ -222,6 +221,17 @@ int (game_draw)(){
         if (vg_draw_guess(guess, GUESS_POS_X, GUESS_POS_Y) != OK) return EXIT_FAILURE;
         break;
     }
+    
+    player_t *player = player_drawer_get_player(player_drawer);
+    drawing_position_t drawing_position = player_get_current_position(player);
+    update_cursor_state(drawing_position.position);
+    cursor_image_t cursor = player_drawer_get_cursor(player_drawer);
+
+    if (vg_draw_cursor(cursor, drawing_position.position) != OK){
+      printf("vg_draw_cursor inside %s\n", __func__);
+      return EXIT_FAILURE;
+    }
+    
     if (vg_buffer_flip()) {
       printf("vg_buffer_flip inside %s\n", __func__);
       return EXIT_FAILURE;
@@ -230,11 +240,27 @@ int (game_draw)(){
   return EXIT_SUCCESS;
 }
 
-int (is_cursor_over_game_button)(position_t mouse_position){
-  for(int i = 0; i < NUMBER_GAME_BUTTONS; i++){
-    if(is_cursor_over_button(game_buttons[i], mouse_position)){
-      return i;
-    }
+// int (is_cursor_over_game_button)(position_t mouse_position){
+//   for(int i = 0; i < NUMBER_GAME_BUTTONS; i++){
+//     if(is_cursor_over_button(game_buttons[i], mouse_position)){
+//       player_drawer_set_cursor(player_drawer, POINTER);
+//       return i;
+//     }
+//   }
+//   player_drawer_set_cursor(player_drawer, PEN);
+//   return -1;
+// }
+
+void (update_cursor_state)(position_t position){
+  brush_t* brush = player_drawer_get_brush(player_drawer);
+  if (!canvas_contains_position(canvas, position)){
+    player_drawer_set_cursor(player_drawer, POINTER);
   }
-  return -1;
-}
+  else if(brush->color == canvas->background_color){
+    player_drawer_set_cursor(player_drawer, RUBBER);
+  }
+  else {
+    player_drawer_set_cursor(player_drawer, PEN);
+  }
+} 
+

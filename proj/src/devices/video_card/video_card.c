@@ -321,6 +321,20 @@ int (vg_draw_guess)(guess_word_t *guess, uint16_t x, uint16_t y){
   return EXIT_SUCCESS;
 }
 
+int (vg_draw_cursor)(cursor_image_t image, position_t pos){
+  xpm_map_t cursor = cursors[image];
+  //if (get_cursor_xpm(image, &cursor)) return EXIT_FAILURE;
+  
+  xpm_image_t cursor_image;
+  uint8_t *colors = xpm_load(cursor, XPM_INDEXED, &cursor_image);
+  if (colors == NULL || cursor_image.type == INVALID_XPM) return EXIT_FAILURE;
+  cursor_image.bytes = colors;
+
+  if (vg_draw_xpm(&cursor_image, pos.x, pos.y, true)) return EXIT_FAILURE;
+
+  return EXIT_SUCCESS;
+}
+
 int (vg_draw_button)(struct button* button) {
   if (vg_draw_rectangle(button->x, button->y, button->width, button->height, button->background_color)) {
     printf("vg_draw_rectangle inside %s\n", __func__);

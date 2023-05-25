@@ -8,6 +8,7 @@
 #include "../../modules/game/player_drawer/player_drawer.h"
 #include "../../model/brush/brush.h"
 #include "../../model/guess/guess.h"
+#include "../../model/cursor/cursor.h"
 
 //guess word
 #define GUESS_POS_X 30
@@ -47,7 +48,9 @@ int (vg_draw_char)(const uint8_t character, uint16_t x, uint16_t y);
 int (vg_draw_text)(char *string, uint16_t x, uint16_t y);
 int (vg_draw_guess)(guess_word_t *gwt, uint16_t x, uint16_t y);
 
-int (vg_draw_button)(struct button* button);
+int (vg_draw_cursor)(cursor_image_t image, position_t pos);
+
+int (vg_draw_button)(button_t* button);
 int (vg_draw_buttons)(button_t *buttons, uint8_t number_buttons);
 
 int (vg_buffer_flip)();
