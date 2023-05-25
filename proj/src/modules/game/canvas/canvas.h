@@ -41,5 +41,6 @@ int (draw_to_canvas)(canvas_t *canvas, player_drawer_t *player_drawer);
 int (canvas_draw_player_drawer)(canvas_t *canvas, player_drawer_t *player_drawer);
 uint8_t *(get_buffer)(canvas_t *canvas);
 int (canvas_clear)(canvas_t *canvas);
+bool (canvas_contains_position)(canvas_t *canvas, position_t position);
 
 /** @} end of canvas */
