@@ -132,6 +132,7 @@ int (vg_draw_pixel)(uint8_t *buffer, uint16_t x, uint16_t y, uint32_t color){
     return EXIT_SUCCESS;
   }
   unsigned int index = (y * h_res + x) * bytes_per_pixel;
+  if (color == xpm_transparency_color(XPM_8_8_8_8)) return EXIT_SUCCESS;
   memcpy(&buffer[index], &color, bytes_per_pixel);
   return EXIT_SUCCESS;
 }
@@ -240,12 +241,12 @@ int (vg_draw_xpm)(xpm_image_t *img, uint16_t x, uint16_t y) {
   uint8_t *colors = img->bytes;
 
   for (int row = y; row < y + img->height; row++) {
-    for (int col = x; col < x + img->width; col++) {
+    for (int col = x; col < x + img->width; col++, colors += bytes_per_pixel) {
+        if (*colors == xpm_transparency_color(XPM_8_8_8_8)) continue;
         if (vg_draw_pixel(video_mem[buffer_index], col, row, *colors)) {
           printf("vg_draw_pixel inside %s\n", __func__);
           return EXIT_FAILURE;
         }
-      colors += bytes_per_pixel;
     }
   }
   return EXIT_SUCCESS;
@@ -271,13 +272,13 @@ int (vg_draw_char)(const uint8_t character, uint16_t x, uint16_t y){
   else if (character >= '0' && character <= '9') index = character - '0' + 26;
   else {
     printf("character: '%c' not supported inside %s\n", character, __func__);
-    return EXIT_FAILURE;
+    return EXIT_SUCCESS;
   }
 
   xpm_map_t char_xpm = uppercase_alphabet[index];
 
   xpm_image_t loaded_char;
-  uint8_t *colors = xpm_load(char_xpm, XPM_INDEXED, &loaded_char);
+  uint8_t *colors = xpm_load(char_xpm, XPM_8_8_8_8, &loaded_char);
   
   if (colors == NULL || loaded_char.type == INVALID_XPM){
     colors == NULL ? printf("cores nulas") : printf("XPM inválido");
@@ -324,7 +325,7 @@ int (vg_draw_cursor)(cursor_image_t image, position_t pos){
   //if (get_cursor_xpm(image, &cursor)) return EXIT_FAILURE;
   
   xpm_image_t cursor_image;
-  uint8_t *colors = xpm_load(cursor, XPM_INDEXED, &cursor_image);
+  uint8_t *colors = xpm_load(cursor, XPM_8_8_8_8, &cursor_image);
   if (colors == NULL || cursor_image.type == INVALID_XPM) return EXIT_FAILURE;
   cursor_image.bytes = colors;
 

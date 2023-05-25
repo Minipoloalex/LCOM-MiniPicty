@@ -6,6 +6,8 @@
 
 #include "../player_drawer/player_drawer.h"
 
+#define CANVAS_BACKGROUND_COLOR 0XFFFFFF
+
 
 /** @defgroup canvas Canvas
  * @{

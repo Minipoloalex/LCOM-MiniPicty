@@ -54,15 +54,15 @@ int (setup_game)(bool isTransmitter) {
   int min_len = vmi.XResolution / 9;
   int min_height = vmi.YResolution / 11;
 
-  button_t red_button = {0, 0, min_len, min_height, 4, 0, "", change_brush_color};
-  button_t green_button = {min_len, 0, min_len, min_height, 2, 0, "", change_brush_color};
-  button_t blue_button = {2*min_len, 0, min_len, min_height, 9, 0, "", change_brush_color};
-  button_t yellow_button = {3*min_len, 0, min_len, min_height, 62, 0, "", change_brush_color};
-  button_t black_button = {4*min_len, 0, min_len, min_height, 0, 0, "", change_brush_color};
-  button_t gray_button = {5*min_len, 0, min_len, min_height, 56, 0, "", change_brush_color};
-  button_t orange_button = {6*min_len, 0, min_len, min_height, 38, 0, "", change_brush_color};
-  button_t purple_button = {7*min_len, 0, min_len, min_height, 33, 0, "", change_brush_color};
-  button_t pink_button = {8*min_len, 0, min_len, min_height, 53, 0, "", change_brush_color};
+  button_t red_button = {0, 0, min_len, min_height, 0XFF0000, "", change_brush_color};
+  button_t green_button = {min_len, 0, min_len, min_height, 0X00FF00, "", change_brush_color};
+  button_t blue_button = {2*min_len, 0, min_len, min_height, 0X0066CC, "", change_brush_color};
+  button_t yellow_button = {3*min_len, 0, min_len, min_height, 0XFFFF00, "", change_brush_color};
+  button_t black_button = {4*min_len, 0, min_len, min_height, 0X000000, "", change_brush_color};
+  button_t gray_button = {5*min_len, 0, min_len, min_height, 0XA0A0A0, "", change_brush_color};
+  button_t orange_button = {6*min_len, 0, min_len, min_height, 0XFF9933, "", change_brush_color};
+  button_t purple_button = {7*min_len, 0, min_len, min_height, 0X660066, "", change_brush_color};
+  button_t pink_button = {8*min_len, 0, min_len, min_height, 0XFF99FF, "", change_brush_color};
 
   game_buttons[0] = red_button;
   game_buttons[1] = green_button;
@@ -74,15 +74,15 @@ int (setup_game)(bool isTransmitter) {
   game_buttons[7] = purple_button;
   game_buttons[8] = pink_button;
 
-  int other_buttons_color = 56;
+  int other_buttons_color = 0XA0A0A0;
 
-  button_t increase_size_button = {8*min_len, 2*min_height, min_len, min_height, other_buttons_color, 0, "IncreaseSize", increase_brush_size};
+  button_t increase_size_button = {8*min_len, 2*min_height, min_len, min_height, other_buttons_color, "IncreaseSize", increase_brush_size};
 
-  button_t decrease_size_button = {8*min_len, 4*min_height, min_len, min_height, other_buttons_color, 0, "DecreaseSize", decrease_brush_size};
+  button_t decrease_size_button = {8*min_len, 4*min_height, min_len, min_height, other_buttons_color, "DecreaseSize", decrease_brush_size};
 
-  button_t rubber_button = {8*min_len, 6*min_height, min_len, min_height, other_buttons_color, 0, "Rubber", set_rubber};
+  button_t rubber_button = {8*min_len, 6*min_height, min_len, min_height, other_buttons_color,"Rubber", set_rubber};
 
-  button_t clear_button = {8*min_len, 8*min_height, min_len, min_height, other_buttons_color, 0, "Clear", clear_canvas};
+  button_t clear_button = {8*min_len, 8*min_height, min_len, min_height, other_buttons_color, "Clear", clear_canvas};
 
   game_buttons[9] = increase_size_button;
   game_buttons[10] = decrease_size_button;
@@ -231,7 +231,6 @@ int (game_draw)(){
       printf("vg_draw_cursor inside %s\n", __func__);
       return EXIT_FAILURE;
     }
-    
     if (vg_buffer_flip()) {
       printf("vg_buffer_flip inside %s\n", __func__);
       return EXIT_FAILURE;

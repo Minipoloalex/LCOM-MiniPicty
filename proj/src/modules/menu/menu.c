@@ -3,10 +3,7 @@
 #define NUMBER_MENU_BUTTONS 3
 
 #define HOVERED_BG_COLOR 0x555555
-#define HOVERED_TEXT_COLOR 0x000000
-
 #define NOT_HOVERED_BG_COLOR 0x000000
-#define NOT_HOVERED_TEXT_COLOR 0x000000
 
 static button_t menu_buttons[NUMBER_MENU_BUTTONS];
 static player_menu_t *player_menu;
@@ -36,9 +33,9 @@ int (setup_menu)() {
   uint16_t height = vmi.YResolution / 7;
 
 
-  button_t play_button = {x, height, width, height, NOT_HOVERED_BG_COLOR, NOT_HOVERED_TEXT_COLOR, "PLAY", enter_game};  
-  button_t settings_button = {x, height * 3, width, height, NOT_HOVERED_BG_COLOR, NOT_HOVERED_TEXT_COLOR, "LEADERBOARD", enter_game};
-  button_t exit_button = {x, height * 5, width, height, NOT_HOVERED_BG_COLOR, NOT_HOVERED_TEXT_COLOR, "EXIT", enter_game};
+  button_t play_button = {x, height, width, height, NOT_HOVERED_BG_COLOR, "PLAY", enter_game};  
+  button_t settings_button = {x, height * 3, width, height, NOT_HOVERED_BG_COLOR, "LEADERBOARD", enter_game};
+  button_t exit_button = {x, height * 5, width, height, NOT_HOVERED_BG_COLOR, "EXIT", enter_game};
 
   menu_buttons[0] = play_button;
   menu_buttons[1] = settings_button;
@@ -62,9 +59,9 @@ int (draw_player_menu)() {
   position_t position = player_get_current_position(player).position;
   for(int i = 0; i < NUMBER_MENU_BUTTONS; i++){
     if(is_cursor_over_button(menu_buttons[i], position)){
-      change_button_colors(&menu_buttons[i], HOVERED_BG_COLOR, HOVERED_TEXT_COLOR);
+      change_button_color(&menu_buttons[i], HOVERED_BG_COLOR);
     } else {
-      change_button_colors(&menu_buttons[i], NOT_HOVERED_BG_COLOR, NOT_HOVERED_TEXT_COLOR);
+      change_button_color(&menu_buttons[i], NOT_HOVERED_BG_COLOR);
     }
   }
   return EXIT_SUCCESS;
@@ -74,11 +71,11 @@ int (draw_buttons)() {
   player_t *player = player_menu_get_player(player_menu);
   if (player_get_last_position(player, &last_position)) return EXIT_FAILURE;
 
-  for(int i = 0; i < 3; i++){
+  for(int i = 0; i < NUMBER_MENU_BUTTONS; i++){
     if(is_cursor_over_button(menu_buttons[i], last_position.position)){
-      change_button_colors(&menu_buttons[i], 10, 5);
+      change_button_color(&menu_buttons[i], HOVERED_BG_COLOR);
     } else {
-      change_button_colors(&menu_buttons[i], 5, 10);
+      change_button_color(&menu_buttons[i], NOT_HOVERED_BG_COLOR);
     }
   }
   if (vg_draw_buttons(menu_buttons, NUMBER_MENU_BUTTONS) != OK) {

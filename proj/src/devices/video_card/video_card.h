@@ -22,8 +22,8 @@
 
 //colors
 #define TRANSPARENT 0
-#define BLACK 0
-#define WHITE 63
+#define BLACK 0X000000
+#define WHITE 0XFFFFFF
 
 bool (buffers_need_update)();
 void (set_needs_update)(bool value);
