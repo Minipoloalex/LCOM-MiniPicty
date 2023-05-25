@@ -72,3 +72,9 @@ int (canvas_clear)(canvas_t *canvas) {
   return EXIT_SUCCESS;
 }
 
+bool (canvas_contains_position)(canvas_t *canvas, position_t position){
+  return (
+    (canvas->start_point.x <= position.x) && (position.x < (canvas->start_point.x+canvas->width))&&
+    (canvas->start_point.y <= position.y) && (position.y < (canvas->start_point.y+canvas->height))
+  );
+}

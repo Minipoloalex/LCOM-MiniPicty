@@ -1,3 +1,5 @@
+#pragma once
+
 #include <lcom/lcf.h>
 #include "player_drawer/player_drawer.h"
 #include "canvas/canvas.h"
@@ -22,3 +24,5 @@ int (game_process_keyboard)();
 int (game_process_mouse)();
 int (game_process_serial)();
 int (draw_game)();
+
+void (update_cursor_state)(position_t position);
