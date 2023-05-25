@@ -1,4 +1,5 @@
 #include "menu.h"
+#include "../game/game.h"
 #define NUMBER_MENU_BUTTONS 3
 
 #define HOVERED_BG_COLOR 10
@@ -11,10 +12,17 @@ static button_t menu_buttons[NUMBER_MENU_BUTTONS];
 static player_menu_t *player_menu;
 
 extern vbe_mode_info_t vmi;
-extern state_t app_state;
+extern state_t* app_state;
 
 void (enter_game)(button_t* button){
-  app_state = GAME;
+  transitionToGame(app_state);
+}
+
+void (transitionToMenu)(state_t* state){
+  defaultImplementation(state);
+  state->draw = menu_draw;
+  state->process_mouse = menu_process_mouse;
+  state->process_serial = menu_process_serial;
 }
 
 int (setup_menu)() {
@@ -81,21 +89,78 @@ int (draw_buttons)() {
   }
   return EXIT_SUCCESS;
 }
-void (draw_menu)(){
+
+void (draw_sun)(){
+  int hour = 9;
+  int hour_space = (vmi.XResolution - 180) / 13;
+  hour -= 6;
+  int x = (vmi.XResolution / 2) - 6*hour_space + (hour)*hour_space;
+  int y = calculate_sun_height(x);
+  if(vg_draw_circle(x-30, vmi.YResolution - 300 - (y * 15), 60, 62)){
+    printf("vg_draw_circle inside %s\n", __func__);
+    return;
+  }
+}
+
+void (draw_stars)(){
+  srand(time(0));
+  int x = 0, y = 0;
+  for(int i=0; i<100; i++){
+    x = rand() % vmi.XResolution;
+    y = rand() % vmi.YResolution;
+    if(vg_draw_circle(x, y, 2, 63)){
+      printf("vg_draw_pixel inside %s\n", __func__);
+      return;
+    }
+  }
+}
+
+void (draw_sky)(){
+  //TODO: change color based on hour
+  int blue = 11;
+  //int black = 0;
+  int terrain_height = 300;
+  if(vg_draw_rectangle(0, 0, vmi.XResolution, vmi.YResolution - terrain_height, blue)){
+    printf("vg_draw_rectangle inside %s\n", __func__);
+    return;
+  }
+
+  //TODO: draw stars if night
+  //draw_stars();
+}
+
+void (draw_terrain)(){
+  int terrain_height = 300;
+  if(vg_draw_rectangle(0, vmi.YResolution - terrain_height, vmi.XResolution, vmi.YResolution, 20)){
+    printf("vg_draw_rectangle inside %s\n", __func__);
+    return;
+  }
+}
+
+void (draw_timelapse)(){
+  draw_sky();
+  draw_sun();
+  draw_terrain();
+}
+
+int (menu_draw)(){
+  draw_timelapse();
+
   if (draw_player_menu()) {
     printf("draw_player_menu inside %s\n", __func__);
-    return;
+    return EXIT_FAILURE;
   }
   if (buffers_need_update()) {  // if no new mouse positions, don't update anything
     if(draw_buttons()) {
       printf("Error drawing buttons\n");
-      return;
+      return EXIT_FAILURE;
     }
     if (vg_buffer_flip()) {
       printf("vg_buffer_flip inside %s\n", __func__);
-      return;
+      return EXIT_FAILURE;
     }
   }
+  return EXIT_SUCCESS;
 }
 
 int (menu_process_mouse)() {
@@ -134,4 +199,15 @@ int (is_cursor_over_menu_button)(position_t mouse_position){
     }
   }
   return -1;
+}
+
+
+//FIX this function
+int (calculate_sun_height)(int x){
+  x = x - (vmi.XResolution / 2);
+  int a = 10;
+  int b = 2;
+
+  // Using ellipse formula to calculate y based on x
+  return (int)(sqrt(1 - pow((x), 2) / pow(a, 2)) * pow(b, 2));
 }

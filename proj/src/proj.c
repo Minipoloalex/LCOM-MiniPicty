@@ -25,7 +25,8 @@ int main(int argc, char *argv[]) {
   return 0;
 }
 
-state_t app_state = MENU;
+// Setting up the state
+state_t *app_state = NULL;
 
 int(proj_main_loop)(int argc, char *argv[]) {
   if (argc != 1 || (strcmp(argv[0], "host") != 0 && strcmp(argv[0], "remote") != 0)) {
@@ -52,6 +53,14 @@ int(proj_main_loop)(int argc, char *argv[]) {
   }
   if (vg_enter(GRAPHICS_MODE_0) != OK) return EXIT_FAILURE;
   
+
+  app_state = malloc(sizeof(state_t));
+  if(NULL != app_state){
+    // Setup the initial state: Menu
+    transitionToMenu(app_state);
+  }
+
+
   // TODO: Explore the table-based solution later
   if (setup_menu() != OK) {
     printf("setup inside %s\n", __func__);
@@ -89,14 +98,7 @@ int(proj_main_loop)(int argc, char *argv[]) {
             if (msg.m_notify.interrupts & BIT(keyboard_bit_no)) {
               // printf("Received interrupt from keyboard\n");
               keyboard_ih();
-              switch(app_state){
-                case MENU:
-                  //do nothing in menu?
-                  break;
-                case GAME:
-                  game_process_keyboard();
-                  break;
-              }
+              app_state->process_keyboard(app_state);
             }
             if (msg.m_notify.interrupts & BIT(mouse_bit_no)) {
               // printf("Received interrupt from mouse\n");
@@ -104,39 +106,18 @@ int(proj_main_loop)(int argc, char *argv[]) {
               if (return_value_mouse == EXIT_SUCCESS){
                 mouse_process_packet_byte();
                 if (packet_is_ready()) {
-                  switch (app_state) {
-                    case GAME:
-                      game_process_mouse();
-                      break;
-                    case MENU:
-                      menu_process_mouse();
-                      break;
-                  }
+                  app_state->process_mouse(app_state);
                 }
               }
             }
             if (msg.m_notify.interrupts & BIT(timer_bit_no)) {
               timer_int_handler();
-              switch(app_state) {
-                case MENU:
-                  draw_menu();
-                  break;
-                case GAME:
-                  draw_game();
-                  break;
-              }
+              app_state->draw(app_state);
             }
             if (msg.m_notify.interrupts & BIT(ser_bit_no)){
               ser_ih_fifo();
               if (ser_return_value == EXIT_SUCCESS){
-                switch (app_state) {
-                  case GAME:
-                    game_process_serial();
-                    break;
-                  case MENU:
-                    menu_process_serial();
-                    break;
-                }
+                app_state->process_serial(app_state);
               }
             }
             break;
@@ -145,15 +126,13 @@ int(proj_main_loop)(int argc, char *argv[]) {
         }
       }
     } while (scancode != BREAK_ESC);
+  
   // Unload resources
-  switch (app_state) {
-    case GAME:
-      destroy_game();
-      break;
-    case MENU:
-      destroy_menu();
-      break;
-  }
+  destroy_game();
+  destroy_menu();
+
+  // Free state variable
+  free(app_state);
 
   // Stop serial communication
   delete_ser();

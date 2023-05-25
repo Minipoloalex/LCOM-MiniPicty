@@ -115,6 +115,14 @@ void (destroy_game)() {
   vg_clear_buffers();
 }
 
+void (transitionToGame)(state_t* state){
+  defaultImplementation(state);
+  state->draw = game_draw;
+  state->process_mouse = game_process_mouse;
+  state->process_keyboard = game_process_keyboard;
+  state->process_serial = game_process_serial;
+}
+
 extern int keyboard_return_value;
 extern uint8_t scancode;
 int (game_process_keyboard)(){
@@ -189,7 +197,7 @@ int (game_process_serial)() {
   return EXIT_SUCCESS;
 }
 
-int (draw_game)(){
+int (game_draw)(){
   if (draw_to_canvas(canvas, player_drawer) != OK) {
     printf("draw_to_canvas inside %s\n", __func__);
     return EXIT_FAILURE;
