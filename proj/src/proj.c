@@ -47,31 +47,30 @@ int(proj_main_loop)(int argc, char *argv[]) {
   // Subscribe interrupts
   if(subscribe_interrupts()) return EXIT_FAILURE;
 
-  if (map_phys_mem_to_virtual(GRAPHICS_MODE_0) != OK){
-    printf("map_phys_mem_to_virtual inside %s\n", __func__);
+  // Enter video mode
+  if(setup_video_mode(GRAPHICS_MODE_0)){
+    printf("setup_video_mode inside %s\n", __func__);
     return EXIT_FAILURE;
   }
-  if (vg_enter(GRAPHICS_MODE_0) != OK) return EXIT_FAILURE;
-  
 
-  app_state = malloc(sizeof(state_t));
-  if(NULL != app_state){
-    // Setup the initial state: Menu
-    transitionToMenu(app_state);
+  // Initing state and setting to default one: Menu
+  app_state = create_state();
+  if (app_state == NULL) {
+    printf("create_state inside %s\n", __func__);
+    return EXIT_FAILURE;
   }
+  transition_to_menu(app_state);
 
-
-  // TODO: Explore the table-based solution later
-  if (setup_menu() != OK) {
+  // Setup the app states
+  if (setup_menu(app_state) != OK) {
     printf("setup inside %s\n", __func__);
     return EXIT_FAILURE;
   }
-  if (setup_game(isTransmitter) != OK) {
+  if (setup_game(isTransmitter, app_state) != OK) {
     printf("setup inside %s\n", __func__);
     return EXIT_FAILURE;
   }
 
-  printf("Finished setup\n");
   // Game Loop
   int ipc_status, r;
   message msg;
@@ -131,9 +130,7 @@ int(proj_main_loop)(int argc, char *argv[]) {
   // Unload resources
   destroy_game();
   destroy_menu();
-
-  // Free state variable
-  free(app_state);
+  destroy_state(app_state);
 
   // Stop serial communication
   delete_ser();

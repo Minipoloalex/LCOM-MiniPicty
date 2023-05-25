@@ -16,9 +16,18 @@ struct button {
 };
 typedef struct button button_t;
 
+typedef struct buttons_array {
+    button_t *buttons;
+    int num_buttons;
+} buttons_array_t;
+
+
 bool (is_cursor_over_button)(button_t button, position_t mouse_position);
-int (get_hovered_button)(button_t *buttons, int num_buttons, position_t mouse_position);
+int (get_hovered_button)(buttons_array_t *buttons_array, position_t mouse_position);
 void (change_button_colors)(button_t* button, uint8_t new_background_color, uint8_t new_text_color);
 
-int (process_buttons_clicks)(button_t *button, int num_buttons, drawing_position_t before, drawing_position_t next, int *button_clicked);
+int (process_buttons_clicks)(buttons_array_t *buttons_array, drawing_position_t before, drawing_position_t next, int *button_clicked);
 
+buttons_array_t *(create_buttons_array)(int num_buttons);
+
+void (destroy_buttons_array)(buttons_array_t *buttons_array);
