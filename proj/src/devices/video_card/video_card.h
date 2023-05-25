@@ -12,16 +12,16 @@
 
 //guess word
 #define GUESS_POS_X 30
-#define GUESS_POS_Y 700
+#define GUESS_POS_Y 800
 
 //guess box
 #define GUESS_BOX_X 15
-#define GUESS_BOX_Y 680
+#define GUESS_BOX_Y 780
 #define GUESS_BOX_WIDTH 1024-30 //hres-30
 #define GUESS_BOX_HEIGHT 40+FONT_HEIGHT
 
 //colors
-#define TRANSPARENT 0
+#define TRANSPARENT 0x000001
 #define BLACK 0X000000
 #define WHITE 0XFFFFFF
 

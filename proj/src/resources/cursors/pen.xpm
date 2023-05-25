@@ -2,8 +2,8 @@
 static xpm_row_t const pen_xpm[] = {
 "40 40 3 1",
 " 	c None",
-".	c #00000000",
-"+	c #FFFFFF00",
+".	c #000000",
+"+	c #FFFFFF",
 "                                        ",
 "       ..                               ",
 "       ....                             ",

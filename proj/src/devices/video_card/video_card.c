@@ -238,12 +238,13 @@ int (get_rgb_component)(uint32_t color, uint8_t component_size, uint8_t componen
 }
 
 int (vg_draw_xpm)(xpm_image_t *img, uint16_t x, uint16_t y) {
-  uint8_t *colors = img->bytes;
+  uint8_t *colors = img->bytes; 
 
   for (int row = y; row < y + img->height; row++) {
     for (int col = x; col < x + img->width; col++, colors += bytes_per_pixel) {
-        if (*colors == xpm_transparency_color(XPM_8_8_8_8)) continue;
-        if (vg_draw_pixel(video_mem[buffer_index], col, row, *colors)) {
+        uint32_t final_color = 0x00000000;
+        memcpy(&final_color, colors, bytes_per_pixel);
+        if (vg_draw_pixel(video_mem[buffer_index], col, row, final_color)) {
           printf("vg_draw_pixel inside %s\n", __func__);
           return EXIT_FAILURE;
         }
@@ -281,7 +282,7 @@ int (vg_draw_char)(const uint8_t character, uint16_t x, uint16_t y){
   uint8_t *colors = xpm_load(char_xpm, XPM_8_8_8_8, &loaded_char);
   
   if (colors == NULL || loaded_char.type == INVALID_XPM){
-    colors == NULL ? printf("cores nulas") : printf("XPM inválido");
+    colors == NULL ? printf("Cores nulas") : printf("XPM inválido");
     return EXIT_FAILURE;
   }
 

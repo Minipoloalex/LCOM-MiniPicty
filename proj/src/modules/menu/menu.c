@@ -91,7 +91,7 @@ void (draw_sun)(){
   hour -= 6;
   int x = (vmi.XResolution / 2) - 6*hour_space + (hour)*hour_space;
   int y = calculate_sun_height(x);
-  int color = 0xFFFF00;
+  uint32_t color = 0xFFFF00;
   if(vg_draw_circle(x-30, vmi.YResolution - 300 - (y * 15), 60, color)){
     printf("vg_draw_circle inside %s\n", __func__);
     return;

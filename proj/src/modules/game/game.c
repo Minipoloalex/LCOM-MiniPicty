@@ -76,9 +76,9 @@ int (setup_game)(bool isTransmitter) {
 
   int other_buttons_color = 0XA0A0A0;
 
-  button_t increase_size_button = {8*min_len, 2*min_height, min_len, min_height, other_buttons_color, "IncreaseSize", increase_brush_size};
+  button_t increase_size_button = {8*min_len, 2*min_height, min_len, min_height, other_buttons_color, "Increase", increase_brush_size};
 
-  button_t decrease_size_button = {8*min_len, 4*min_height, min_len, min_height, other_buttons_color, "DecreaseSize", decrease_brush_size};
+  button_t decrease_size_button = {8*min_len, 4*min_height, min_len, min_height, other_buttons_color, "Decrease", decrease_brush_size};
 
   button_t rubber_button = {8*min_len, 6*min_height, min_len, min_height, other_buttons_color,"Rubber", set_rubber};
 
