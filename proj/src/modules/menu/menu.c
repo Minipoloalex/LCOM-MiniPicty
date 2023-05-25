@@ -119,7 +119,8 @@ void (draw_sky)(){
   //TODO: change color based on hour
   int blue = 11;
   //int black = 0;
-  if(vg_draw_rectangle(0, 0, vmi.XResolution, vmi.YResolution, blue)){
+  int terrain_height = 300;
+  if(vg_draw_rectangle(0, 0, vmi.XResolution, vmi.YResolution - terrain_height, blue)){
     printf("vg_draw_rectangle inside %s\n", __func__);
     return;
   }
