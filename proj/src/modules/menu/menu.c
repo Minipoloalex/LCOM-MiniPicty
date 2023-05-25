@@ -11,7 +11,11 @@ static button_t menu_buttons[NUMBER_MENU_BUTTONS];
 static player_menu_t *player_menu;
 
 extern vbe_mode_info_t vmi;
+extern state_t app_state;
 
+void (enter_game)(button_t* button){
+  app_state = GAME;
+}
 
 int (setup_menu)() {
   player_menu = create_player_menu();
@@ -26,9 +30,9 @@ int (setup_menu)() {
   uint8_t background_color = 10;  
   uint8_t text_color = 5;
 
-  button_t play_button = {x, height, width, height, background_color, text_color, "PLAY", NULL};
-  button_t settings_button = {x, height * 3, width, height, background_color, text_color, "LEADERBOARD", NULL};
-  button_t exit_button = {x, height * 5, width, height, background_color, text_color, "EXIT", NULL};
+  button_t play_button = {x, height, width, height, background_color, text_color, "PLAY", enter_game};  
+  button_t settings_button = {x, height * 3, width, height, background_color, text_color, "LEADERBOARD", enter_game};
+  button_t exit_button = {x, height * 5, width, height, background_color, text_color, "EXIT", enter_game};
 
   menu_buttons[0] = play_button;
   menu_buttons[1] = settings_button;
@@ -96,7 +100,21 @@ void (draw_menu)(){
 
 int (menu_process_mouse)() {
   player_t *player = player_menu_get_player(player_menu);
-  drawing_position_t next = mouse_get_drawing_position_from_packet(player_get_current_position(player).position);
+  drawing_position_t before = player_get_current_position(player);
+  drawing_position_t next = mouse_get_drawing_position_from_packet(before.position);
+
+  int button_to_click = -1;
+  if (process_buttons_clicks(menu_buttons, NUMBER_MENU_BUTTONS, before, next, &button_to_click)) {
+    printf("process_buttons_clicks inside %s\n", __func__);
+    return EXIT_FAILURE;
+  }
+
+  if (button_to_click != -1) {
+    button_t pressed_button = menu_buttons[button_to_click];
+    ser_add_button_click_to_transmitter_queue(button_to_click);
+    pressed_button.onClick(&pressed_button);
+  }
+
   return player_add_next_position(player, &next);
 }
 
@@ -107,4 +125,13 @@ void (destroy_menu)() {
 
 int (menu_process_serial)() {
   return EXIT_SUCCESS;
+}
+
+int (is_cursor_over_menu_button)(position_t mouse_position){
+  for(int i = 0; i < NUMBER_MENU_BUTTONS; i++){
+    if(is_cursor_over_button(menu_buttons[i], mouse_position)){
+      return i;
+    }
+  }
+  return -1;
 }
