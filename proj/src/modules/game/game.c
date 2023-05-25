@@ -316,7 +316,7 @@ int (game_process_serial)() {
   // it will have the wrong buttons to click (the ones from the previous state)
   // we passed game_playing_buttons->buttons because the state was PLAYING but then the state change to FINISHED so it should click those other buttons and not the ones from the previous state
   if (role == OTHER_PLAYER) {
-    // ser_read_bytes_from_receiver_queue(player_drawer, game_playing_buttons->buttons, NUMBER_game_playing_buttons->buttons);
+    ser_read_bytes_from_receiver_queue(player_drawer, app_state);
   }
   return EXIT_SUCCESS;
 }

@@ -587,11 +587,15 @@ int (ser_add_button_click_to_transmitter_queue)(uint8_t index) {
   return EXIT_SUCCESS;
 }
 
-int (ser_read_bytes_from_receiver_queue)(player_drawer_t *drawer, button_t *buttons, int num_buttons) {
+int (ser_read_bytes_from_receiver_queue)(player_drawer_t *drawer, state_t *app_state) {
   uint8_t byte;
   static uint8_t bytes[4];
   static uint8_t byte_index = 0;
-  player_t *player = player_drawer_get_player(drawer);
+  player_t *player = NULL;
+  if (drawer != NULL) {
+    player = player_drawer_get_player(drawer);
+  }
+  buttons_array_t *buttons = NULL;
   while (!is_empty_queue(receiver_queue)) {
     if (pop_queue(receiver_queue, &byte) != OK) {
       printf("pop_queue() inside %s failed\n", __func__);
@@ -616,15 +620,22 @@ int (ser_read_bytes_from_receiver_queue)(player_drawer_t *drawer, button_t *butt
             ser_state = RECEIVING_KEYBOARD;
             break;
           default:
-            if (byte >= SER_BUTTON_INDEX_FIRST_BYTE && byte < SER_BUTTON_INDEX_FIRST_BYTE + num_buttons){
+            buttons = app_state->get_buttons(app_state);
+            if (byte >= SER_BUTTON_INDEX_FIRST_BYTE && byte < SER_BUTTON_INDEX_FIRST_BYTE + buttons->num_buttons){
               // case SER_BUTTON_INDEX
-              button_t clickedButton = buttons[byte - SER_BUTTON_INDEX_FIRST_BYTE];
-              clickedButton.onClick(&clickedButton);
+              button_t clicked_button = buttons->buttons[byte - SER_BUTTON_INDEX_FIRST_BYTE];
+              clicked_button.onClick(&clicked_button);
             }
             break;
         }
         break;
       case RECEIVING_MOUSE_DRAWING: case RECEIVING_MOUSE_NOT_DRAWING:
+        if (player == NULL) {
+          printf("player is NULL inside %s\n", __func__);
+          ser_state = SLEEPING;
+          byte_index = 0;
+          continue;
+        }
         // printf("state: receiving mouse\n");
         if (byte == SER_END) {
           if (byte_index != 4) {  // got the end byte before the 4 bytes of the position
