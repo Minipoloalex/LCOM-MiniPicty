@@ -639,7 +639,10 @@ int (ser_read_bytes_from_receiver_queue)(player_drawer_t *drawer, button_t *butt
             .position = position,
             .is_drawing = ser_state == RECEIVING_MOUSE_DRAWING
           };
-          if (player_add_next_position(player, &drawing_position)) return EXIT_FAILURE;
+          if (player_add_next_position(player, &drawing_position)) {
+            printf("player_add_next_position() inside %s failed\n", __func__);
+            return EXIT_FAILURE;
+          }
           ser_state = SLEEPING;
           byte_index = 0;
           break;

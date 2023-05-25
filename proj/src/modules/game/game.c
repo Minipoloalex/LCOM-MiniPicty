@@ -208,10 +208,6 @@ int (draw_game)(){
     switch (player_drawer_get_state(player_drawer)){
       case SELF_PLAYER:
         if (vg_draw_text(prompt, GUESS_POS_X, GUESS_POS_Y) != OK) return EXIT_FAILURE;
-        if (vg_draw_buttons(game_buttons, NUMBER_GAME_BUTTONS) != OK) {
-          printf("draw_buttons inside %s\n", __func__);
-          return EXIT_FAILURE;
-        }
         break;
       case OTHER_PLAYER:
         if (vg_draw_guess(guess, GUESS_POS_X, GUESS_POS_Y) != OK) return EXIT_FAILURE;
