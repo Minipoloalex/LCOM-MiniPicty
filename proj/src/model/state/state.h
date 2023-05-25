@@ -11,6 +11,7 @@ struct State{
   Event process_mouse;
   Event process_keyboard;
   Event process_serial;
+  Event process_timer;
 };
 
 void defaultImplementation(state_t* state);

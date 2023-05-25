@@ -23,6 +23,8 @@ void (transitionToMenu)(state_t* state){
   state->draw = menu_draw;
   state->process_mouse = menu_process_mouse;
   state->process_serial = menu_process_serial;
+  /*state->process_timer = defaultDraw;
+  state->process_keyboard = defaultDraw;*/
 }
 
 int (setup_menu)() {

@@ -8,9 +8,11 @@ extern vbe_mode_info_t vmi;
 static player_drawer_t *player_drawer;
 static canvas_t *canvas;
 static guess_word_t *guess;
+extern vbe_mode_info_t vmi;
 static char prompt[15];
+uint8_t round_timer;
 
-/*==================================================================*/
+/*==================================================================*/ 
 /* SHOULD THESE BE BUTTON FUNCTIONS ? */
 void change_brush_color(button_t* button){
   brush_t* brush = player_drawer_get_brush(player_drawer);
@@ -89,6 +91,8 @@ int (setup_game)(bool isTransmitter) {
   game_buttons[11] = rubber_button;
   game_buttons[12] = clear_button;
 
+  round_timer = ROUND_TIME;
+
   canvas = canvas_init(0, min_height, 8*min_len, 8*min_height);
   if (canvas == NULL) {
     destroy_player_drawer(player_drawer);
@@ -121,6 +125,15 @@ void (transitionToGame)(state_t* state){
   state->process_mouse = game_process_mouse;
   state->process_keyboard = game_process_keyboard;
   state->process_serial = game_process_serial;
+  state->process_timer = game_process_timer;
+}
+
+extern int timer_counter;
+int (game_process_timer)(){
+  if (timer_counter % sys_hz() == 0){
+    round_timer--;
+  }
+  return EXIT_SUCCESS;
 }
 
 extern int keyboard_return_value;
@@ -212,6 +225,7 @@ int (game_draw)(){
       printf("vg_draw_buttons inside %s\n", __func__);
       return EXIT_FAILURE;
     }
+
     if (vg_draw_rectangle(GUESS_BOX_X,GUESS_BOX_Y, GUESS_BOX_WIDTH, GUESS_BOX_HEIGHT, BLACK)) return EXIT_FAILURE;
     switch (player_drawer_get_state(player_drawer)){
       case SELF_PLAYER:
@@ -220,6 +234,10 @@ int (game_draw)(){
       case OTHER_PLAYER:
         if (vg_draw_guess(guess, GUESS_POS_X, GUESS_POS_Y) != OK) return EXIT_FAILURE;
         break;
+    }
+    if (vg_draw_text(byte_to_str(round_timer),ROUND_TIMER_X, ROUND_TIMER_Y) != OK){
+      printf("vg_draw_text inside %s\n", __func__);
+      return EXIT_FAILURE;
     }
     
     player_t *player = player_drawer_get_player(player_drawer);
