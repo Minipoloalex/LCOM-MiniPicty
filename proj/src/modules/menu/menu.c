@@ -94,7 +94,8 @@ void (draw_sun)(){
   hour -= 6;
   int x = (vmi.XResolution / 2) - 6*hour_space + (hour)*hour_space;
   int y = calculate_sun_height(x);
-  if(vg_draw_circle(x-30, vmi.YResolution - 300 - (y * 15), 60, 62)){
+  int color = 0xFFFF00;
+  if(vg_draw_circle(x-30, vmi.YResolution - 300 - (y * 15), 60, color)){
     printf("vg_draw_circle inside %s\n", __func__);
     return;
   }
@@ -106,7 +107,7 @@ void (draw_stars)(){
   for(int i=0; i<100; i++){
     x = rand() % vmi.XResolution;
     y = rand() % vmi.YResolution;
-    if(vg_draw_circle(x, y, 2, 63)){
+    if(vg_draw_circle(x, y, 2, 0xFFFFFF)){
       printf("vg_draw_pixel inside %s\n", __func__);
       return;
     }

@@ -1,6 +1,6 @@
 /* XPM */
 static xpm_row_t const rubber_xpm[] = {
-"40 40 3",
+"40 40 3 2",
 " 	c #000000",
 ".	c #FFFFFF",
 "+	c None",
