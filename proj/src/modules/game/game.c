@@ -125,6 +125,7 @@ void (transitionToGame)(state_t* state){
   state->process_mouse = game_process_mouse;
   state->process_keyboard = game_process_keyboard;
   state->process_serial = game_process_serial;
+  state->process_timer = game_process_timer;
 }
 
 extern int timer_counter;

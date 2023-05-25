@@ -18,7 +18,7 @@
 #include "../../devices/serial_port/serial_port.h"
 #include "../../devices/video_card/video_card.h"
 
-#include "../../utils/utils.c"
+#include "../../utils/utils.h"
 
 #define ROUND_TIME 120
 

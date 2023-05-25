@@ -1,8 +1,4 @@
-#ifndef UTILS_C
-#define UTILS_C
-
-#include <lcom/lcf.h>
-#include <stdint.h>
+#include "utils.h"
 
 char *(byte_to_str)(uint8_t byte){
   static char str[3];
@@ -40,5 +36,3 @@ int(util_sys_inb)(int port, uint8_t *value) {
   (*value) = (uint8_t) temp;
   return 0;
 }
-
-#endif
