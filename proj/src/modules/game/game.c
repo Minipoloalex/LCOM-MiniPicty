@@ -1,7 +1,10 @@
 #include "game.h"
 
-#define NUMBER_GAME_BUTTONS 13
-button_t game_buttons[NUMBER_GAME_BUTTONS];
+#define NUMBER_GAME_PLAYING_BUTTONS 13
+#define NUMBER_GAME_FINISHED_BUTTONS 3
+
+button_t game_playing_buttons[NUMBER_GAME_PLAYING_BUTTONS];
+button_t game_finished_buttons[NUMBER_GAME_FINISHED_BUTTONS];
 
 extern vbe_mode_info_t vmi;
 
@@ -9,10 +12,52 @@ static player_drawer_t *player_drawer;
 static canvas_t *canvas;
 static guess_word_t *guess;
 static char prompt[15];
+typedef enum game_state {
+  PLAYING,
+  WAITING,
+  FINISHED
+} game_state_t;
+static game_state_t game_state;
+/*==================================================================*/
+/**
+ * @brief 
+ * 
+ */
+int (game_draw_buttons)();
 
 /*==================================================================*/
 /* SHOULD THESE BE BUTTON FUNCTIONS ? */
-void change_brush_color(button_t* button){
+void play_again(button_t *button) {
+  if (game_state != FINISHED) {
+    printf("Wrong game state inside %s\n", __func__);
+    return;
+  }
+  game_state = WAITING;
+  canvas_clear(canvas);
+  if (player_drawer_get_role(player_drawer) == SELF_PLAYER) {
+    if (prompt_generate(prompt) != OK) {  // communication of word index is not implemented yet
+      printf("prompt_generate inside %s\n", __func__);
+      return;
+    }
+  }
+  reset_guess_word(guess);
+}
+void (quit_game)(button_t *button) {
+  if (game_state != FINISHED) {
+    printf("Wrong game state inside %s\n", __func__);
+    return;
+  }
+  canvas_clear(canvas);
+  game_state = WAITING;
+  // change state to menu
+  // transitionToMenu(app_state);
+}
+
+void (play_again_change_roles)(button_t *button) {
+  player_drawer_change_role(player_drawer);
+  play_again(button);
+}
+void change_brush_color(button_t *button){
   brush_t* brush = player_drawer_get_brush(player_drawer);
   if (brush == NULL) return;
   set_brush_color(brush, button->background_color);
@@ -64,15 +109,15 @@ int (setup_game)(bool isTransmitter) {
   button_t purple_button = {7*min_len, 0, min_len, min_height, 33, 0, "", change_brush_color};
   button_t pink_button = {8*min_len, 0, min_len, min_height, 53, 0, "", change_brush_color};
 
-  game_buttons[0] = red_button;
-  game_buttons[1] = green_button;
-  game_buttons[2] = blue_button;
-  game_buttons[3] = yellow_button;
-  game_buttons[4] = black_button;
-  game_buttons[5] = gray_button;
-  game_buttons[6] = orange_button;
-  game_buttons[7] = purple_button;
-  game_buttons[8] = pink_button;
+  game_playing_buttons[0] = red_button;
+  game_playing_buttons[1] = green_button;
+  game_playing_buttons[2] = blue_button;
+  game_playing_buttons[3] = yellow_button;
+  game_playing_buttons[4] = black_button;
+  game_playing_buttons[5] = gray_button;
+  game_playing_buttons[6] = orange_button;
+  game_playing_buttons[7] = purple_button;
+  game_playing_buttons[8] = pink_button;
 
   int other_buttons_color = 56;
 
@@ -84,10 +129,19 @@ int (setup_game)(bool isTransmitter) {
 
   button_t clear_button = {8*min_len, 8*min_height, min_len, min_height, other_buttons_color, 0, "Clear", clear_canvas};
 
-  game_buttons[9] = increase_size_button;
-  game_buttons[10] = decrease_size_button;
-  game_buttons[11] = rubber_button;
-  game_buttons[12] = clear_button;
+  game_playing_buttons[9] = increase_size_button;
+  game_playing_buttons[10] = decrease_size_button;
+  game_playing_buttons[11] = rubber_button;
+  game_playing_buttons[12] = clear_button;
+
+
+  button_t play_again_button = {8*min_len, 10*min_height, min_len, min_height, other_buttons_color, 0, "Send", play_again};
+  button_t play_again_change_state = {8*min_len, 10*min_height, min_len, min_height, other_buttons_color, 0, "PlayAgain", play_again_change_roles};
+  button_t quit_button = {8*min_len, 10*min_height, min_len, min_height, other_buttons_color, 0, "Quit", quit_game};
+  
+  game_finished_buttons[0] = play_again_button;
+  game_finished_buttons[1] = play_again_change_state;
+  game_finished_buttons[2] = quit_button;
 
   canvas = canvas_init(0, min_height, 8*min_len, 8*min_height);
   if (canvas == NULL) {
@@ -105,6 +159,7 @@ int (setup_game)(bool isTransmitter) {
     canvas_destroy(canvas);
     destroy_guess_word(guess);
   }
+  game_state = WAITING;
   return EXIT_SUCCESS;
 }
 
@@ -126,7 +181,9 @@ void (transitionToGame)(state_t* state){
 extern int keyboard_return_value;
 extern uint8_t scancode;
 int (game_process_keyboard)(){
-  if (player_drawer_get_state(player_drawer) == SELF_PLAYER) return EXIT_SUCCESS;
+  if (player_drawer_get_role(player_drawer) == SELF_PLAYER) return EXIT_SUCCESS;
+  if (game_state != PLAYING) return EXIT_SUCCESS;
+
   if (keyboard_return_value) return EXIT_SUCCESS;
   if (scancode == 0) return EXIT_SUCCESS;
 
@@ -169,7 +226,7 @@ int (game_process_mouse)() {
   player_t *player = player_drawer_get_player(player_drawer);
   drawing_position_t before = player_get_current_position(player);
   drawing_position_t next = mouse_get_drawing_position_from_packet(before.position);
-  if (player_drawer_get_state(player_drawer) == SELF_PLAYER) {  
+  if (player_drawer_get_role(player_drawer) == SELF_PLAYER) {  
     ser_add_position_to_transmitter_queue(next);
     if (player_add_next_position(player, &next) != 0) {
       printf("player_add_next_position inside %s\n", __func__);
@@ -177,28 +234,67 @@ int (game_process_mouse)() {
     }
   }
   int button_to_click = -1;
-  if (process_buttons_clicks(game_buttons, NUMBER_GAME_BUTTONS, before, next, &button_to_click)) {
+  if (process_buttons_clicks(game_playing_buttons, NUMBER_GAME_PLAYING_BUTTONS, before, next, &button_to_click)) {
     printf("process_buttons_clicks inside %s\n", __func__);
     return EXIT_FAILURE;
   }
   if (button_to_click != -1) {
-    button_t pressed_button = game_buttons[button_to_click];
+    button_t pressed_button = game_playing_buttons[button_to_click];
     ser_add_button_click_to_transmitter_queue(button_to_click);
     pressed_button.onClick(&pressed_button);
   }
   return EXIT_SUCCESS;
 }
 
+int (game_draw_canvas)(canvas_t *canvas, player_drawer_t *player_drawer){
+  drawing_position_t drawing_position;
+  drawing_position_t last_position;
+  
+  player_t *player = player_drawer_get_player(player_drawer);
+  if (player == NULL) {
+    printf("player is null\n");
+    return EXIT_FAILURE;
+  }
+  brush_t *brush = player_drawer_get_brush(player_drawer);
+  if (brush == NULL) {
+    printf("brush is null\n");
+    return EXIT_FAILURE;
+  }
+
+  while (player_get_next_position(player, &drawing_position) == OK) {
+    set_needs_update(true);
+    if (player_get_last_position(player, &last_position)) return EXIT_FAILURE;
+
+    draw_in_canvas(canvas, brush, last_position.position, drawing_position);
+
+    player_set_last_position(player, drawing_position);
+  }
+  return EXIT_SUCCESS;
+}
 
 int (game_process_serial)() {
-  if (player_drawer_get_state(player_drawer) == OTHER_PLAYER) {
-    ser_read_bytes_from_receiver_queue(player_drawer, game_buttons, NUMBER_GAME_BUTTONS);
+  if (player_drawer_get_role(player_drawer) == OTHER_PLAYER) {
+    ser_read_bytes_from_receiver_queue(player_drawer, game_playing_buttons, NUMBER_GAME_PLAYING_BUTTONS);
+  }
+  return EXIT_SUCCESS;
+}
+
+int (game_draw_buttons)() {
+  if (game_state == FINISHED) {
+    if (vg_draw_buttons(game_finished_buttons, NUMBER_GAME_FINISHED_BUTTONS)) {
+      printf("vg_draw_buttons inside %s\n", __func__);
+      return EXIT_FAILURE;
+    }
+  }
+  if (vg_draw_buttons(game_playing_buttons, NUMBER_GAME_PLAYING_BUTTONS)) {
+    printf("vg_draw_buttons inside %s\n", __func__);
+    return EXIT_FAILURE;
   }
   return EXIT_SUCCESS;
 }
 
 int (game_draw)(){
-  if (draw_to_canvas(canvas, player_drawer) != OK) {
+  if (game_draw_canvas(canvas, player_drawer) != OK) {
     printf("draw_to_canvas inside %s\n", __func__);
     return EXIT_FAILURE;
   }
@@ -208,12 +304,16 @@ int (game_draw)(){
       return EXIT_FAILURE;
     }
     //printf("%d\n", guess->pointer);
-    if (vg_draw_buttons(game_buttons, NUMBER_GAME_BUTTONS)) {
-      printf("vg_draw_buttons inside %s\n", __func__);
+    // if (vg_draw_buttons(game_playing_buttons, NUMBER_GAME_PLAYING_BUTTONS)) {
+    //   printf("vg_draw_buttons inside %s\n", __func__);
+    //   return EXIT_FAILURE;
+    // }
+    if (game_draw_buttons() != OK) {
+      printf("game_draw_buttons inside %s\n", __func__);
       return EXIT_FAILURE;
     }
     if (vg_draw_rectangle(GUESS_BOX_X,GUESS_BOX_Y, GUESS_BOX_WIDTH, GUESS_BOX_HEIGHT, BLACK)) return EXIT_FAILURE;
-    switch (player_drawer_get_state(player_drawer)){
+    switch (player_drawer_get_role(player_drawer)){
       case SELF_PLAYER:
         if (vg_draw_text(prompt, GUESS_POS_X, GUESS_POS_Y) != OK) return EXIT_FAILURE;
         break;
@@ -239,17 +339,6 @@ int (game_draw)(){
   }
   return EXIT_SUCCESS;
 }
-
-// int (is_cursor_over_game_button)(position_t mouse_position){
-//   for(int i = 0; i < NUMBER_GAME_BUTTONS; i++){
-//     if(is_cursor_over_button(game_buttons[i], mouse_position)){
-//       player_drawer_set_cursor(player_drawer, POINTER);
-//       return i;
-//     }
-//   }
-//   player_drawer_set_cursor(player_drawer, PEN);
-//   return -1;
-// }
 
 void (update_cursor_state)(position_t position){
   brush_t* brush = player_drawer_get_brush(player_drawer);

@@ -10,3 +10,7 @@ void defaultImplementation(state_t* state){
   state->process_keyboard = defaultDraw;
   state->process_serial = defaultDraw;
 }
+
+state_t *(create_state)() {
+  return malloc(sizeof(state_t));
+}

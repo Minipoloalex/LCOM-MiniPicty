@@ -52,16 +52,15 @@ int(proj_main_loop)(int argc, char *argv[]) {
     return EXIT_FAILURE;
   }
   if (vg_enter(GRAPHICS_MODE_0) != OK) return EXIT_FAILURE;
-  
 
-  app_state = malloc(sizeof(state_t));
-  if(NULL != app_state){
-    // Setup the initial state: Menu
-    transitionToMenu(app_state);
+  app_state = create_state();
+  if (app_state == NULL) {
+    printf("create_state inside %s\n", __func__);
+    return EXIT_FAILURE;
   }
+  // Setup the initial state: Menu
+  transitionToMenu(app_state);
 
-
-  // TODO: Explore the table-based solution later
   if (setup_menu() != OK) {
     printf("setup inside %s\n", __func__);
     return EXIT_FAILURE;

@@ -18,8 +18,13 @@ brush_t *player_drawer_get_brush(player_drawer_t *player_drawer) {
   return player_drawer->brush;
 }
 
-player_type_t (player_drawer_get_state)(player_drawer_t *player_drawer) {
+player_type_t (player_drawer_get_role)(player_drawer_t *player_drawer) {
   return player_drawer->player_state;
+}
+
+int (player_drawer_change_role)(player_drawer_t *player_drawer) {
+  player_drawer->player_state = (player_drawer->player_state == SELF_PLAYER) ? OTHER_PLAYER : SELF_PLAYER;
+  return EXIT_SUCCESS;
 }
 
 player_drawer_t *(create_player_drawer)(player_type_t player_type) {

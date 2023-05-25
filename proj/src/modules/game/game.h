@@ -19,7 +19,6 @@
 
 int (setup_game)(bool isTransmitter);
 void (destroy_game)();
-int (is_cursor_over_game_button)(position_t mouse_position);
 
 int (game_process_keyboard)();
 int (game_process_mouse)();
