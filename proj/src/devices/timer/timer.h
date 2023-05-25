@@ -3,6 +3,9 @@
 
 #include <stdbool.h>
 #include <stdint.h>
+#include <lcom/lcf.h>
+
+#include "../controllers/i8254.h"
 
 /** @defgroup timer timer
  * @{

@@ -7,11 +7,11 @@
 
 #include "modules/interrupts/interrupts.h"
 #include "modules/menu/menu.h"
-#include "modules/game/player_drawer/player_drawer.h"
+// #include "modules/game/player_drawer/player_drawer.h" included in game.h
 #include "modules/menu/player_menu/player_menu.h"
 #include "modules/game/game.h"
-#include "model/player/player.h"
-#include "model/button/button.h"
+// #include "model/player/player.h" included in game.h
+// #include "model/button/button.h" included in game.h
 #include "model/state/state.h"
 
 
@@ -47,31 +47,28 @@ int(proj_main_loop)(int argc, char *argv[]) {
   // Subscribe interrupts
   if(subscribe_interrupts()) return EXIT_FAILURE;
 
-  if (map_phys_mem_to_virtual(GRAPHICS_MODE_4) != OK){
-    printf("map_phys_mem_to_virtual inside %s\n", __func__);
+  // Enter video mode
+  if(setup_video_mode(GRAPHICS_MODE_4)){
+    printf("setup_video_mode inside %s\n", __func__);
     return EXIT_FAILURE;
-  }
-  if (vg_enter(GRAPHICS_MODE_4) != OK) return EXIT_FAILURE;
-  
+  }  
 
   app_state = malloc(sizeof(state_t));
   if(NULL != app_state){
     // Setup the initial state: Menu
-    transitionToGame(app_state);
+    transition_to_menu(app_state);
   }
 
-
-  // TODO: Explore the table-based solution later
-  if (setup_menu() != OK) {
+  // Setup the app states
+  if (setup_menu(app_state) != OK) {
     printf("setup inside %s\n", __func__);
     return EXIT_FAILURE;
   }
-  if (setup_game(isTransmitter) != OK) {
+  if (setup_game(isTransmitter, app_state) != OK) {
     printf("setup inside %s\n", __func__);
     return EXIT_FAILURE;
   }
 
-  printf("Finished setup\n");
   // Game Loop
   int ipc_status, r;
   message msg;
@@ -112,6 +109,7 @@ int(proj_main_loop)(int argc, char *argv[]) {
             }
             if (msg.m_notify.interrupts & BIT(timer_bit_no)) {
               timer_int_handler();
+              app_state->process_timer(app_state);
               app_state->draw(app_state);
             }
             if (msg.m_notify.interrupts & BIT(ser_bit_no)){
@@ -130,9 +128,7 @@ int(proj_main_loop)(int argc, char *argv[]) {
   // Unload resources
   destroy_game();
   destroy_menu();
-
-  // Free state variable
-  free(app_state);
+  destroy_state(app_state);
 
   // Stop serial communication
   delete_ser();

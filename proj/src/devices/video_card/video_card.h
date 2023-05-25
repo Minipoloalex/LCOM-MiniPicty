@@ -20,13 +20,20 @@
 #define GUESS_BOX_WIDTH 1024-30 //hres-30
 #define GUESS_BOX_HEIGHT 40+FONT_HEIGHT
 
+//round timer
+#define ROUND_TIMER_X 900
+#define ROUND_TIMER_Y 700
+
 //colors
 #define TRANSPARENT 0x000001
 #define BLACK 0X000000
 #define WHITE 0XFFFFFF
 
+// Buffer related functions
 bool (buffers_need_update)();
 void (set_needs_update)(bool value);
+
+int (setup_video_mode)(uint16_t mode);
 /* Map physical memory to virtual address space of process */
 int (map_phys_mem_to_virtual)(uint16_t mode);
 /* Enter in Graphics or Text mode */
@@ -50,8 +57,8 @@ int (vg_draw_guess)(guess_word_t *gwt, uint16_t x, uint16_t y);
 
 int (vg_draw_cursor)(cursor_image_t image, position_t pos);
 
-int (vg_draw_button)(button_t* button);
-int (vg_draw_buttons)(button_t *buttons, uint8_t number_buttons);
+int (vg_draw_button)(button_t *button);
+int (vg_draw_buttons)(buttons_array_t *buttons);
 
 int (vg_buffer_flip)();
 int (vg_clear_buffer)(uint8_t buffer);
