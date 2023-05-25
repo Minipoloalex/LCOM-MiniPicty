@@ -1,7 +1,7 @@
 /* XPM */
 static xpm_row_t const uppercase_p_xpm[] = {
 "26 35 2",
-"  c none",
+"  c None",
 ". c #FFFFFF",
 "                          ",
 "                          ",

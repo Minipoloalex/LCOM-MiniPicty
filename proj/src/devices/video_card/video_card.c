@@ -236,17 +236,15 @@ int (get_rgb_component)(uint32_t color, uint8_t component_size, uint8_t componen
   return EXIT_SUCCESS;
 }
 
-int (vg_draw_xpm)(xpm_image_t *img, uint16_t x, uint16_t y, bool drawBlack) {
+int (vg_draw_xpm)(xpm_image_t *img, uint16_t x, uint16_t y) {
   uint8_t *colors = img->bytes;
 
   for (int row = y; row < y + img->height; row++) {
     for (int col = x; col < x + img->width; col++) {
-      if (*colors != TRANSPARENT || drawBlack){
         if (vg_draw_pixel(video_mem[buffer_index], col, row, *colors)) {
           printf("vg_draw_pixel inside %s\n", __func__);
           return EXIT_FAILURE;
         }
-      }
       colors += bytes_per_pixel;
     }
   }
@@ -288,7 +286,7 @@ int (vg_draw_char)(const uint8_t character, uint16_t x, uint16_t y){
 
   loaded_char.bytes = colors;
   
-  if (vg_draw_xpm(&loaded_char, x, y, false)) {
+  if (vg_draw_xpm(&loaded_char, x, y)) {
     printf("vg_draw_xpm inside %s\n", __func__);
     return EXIT_FAILURE;
   }
@@ -330,7 +328,7 @@ int (vg_draw_cursor)(cursor_image_t image, position_t pos){
   if (colors == NULL || cursor_image.type == INVALID_XPM) return EXIT_FAILURE;
   cursor_image.bytes = colors;
 
-  if (vg_draw_xpm(&cursor_image, pos.x, pos.y, true)) return EXIT_FAILURE;
+  if (vg_draw_xpm(&cursor_image, pos.x, pos.y)) return EXIT_FAILURE;
 
   return EXIT_SUCCESS;
 }

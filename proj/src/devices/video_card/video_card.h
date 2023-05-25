@@ -41,7 +41,7 @@ int (vg_draw_circle)(uint16_t x, uint16_t y, uint16_t radius, uint32_t color);
 int (vg_draw_circle_to_buffer)(uint8_t *buffer, uint16_t x, uint16_t y, uint16_t radius, uint32_t color);
 int (vg_draw_line)(uint8_t *buffer, position_t pos1, position_t pos2, uint16_t radius, uint32_t color);
 
-int (vg_draw_xpm)(xpm_image_t *img, uint16_t x, uint16_t y, bool drawBlack);
+int (vg_draw_xpm)(xpm_image_t *img, uint16_t x, uint16_t y);
 int (vg_erase_xpm)(xpm_image_t *img, uint16_t x, uint16_t y);
 
 int (vg_draw_char)(const uint8_t character, uint16_t x, uint16_t y);

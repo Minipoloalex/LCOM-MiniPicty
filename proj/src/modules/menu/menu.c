@@ -2,11 +2,11 @@
 #include "../game/game.h"
 #define NUMBER_MENU_BUTTONS 3
 
-#define HOVERED_BG_COLOR 10
-#define HOVERED_TEXT_COLOR 5
+#define HOVERED_BG_COLOR 0x555555
+#define HOVERED_TEXT_COLOR 0x000000
 
-#define NOT_HOVERED_BG_COLOR 5
-#define NOT_HOVERED_TEXT_COLOR 10
+#define NOT_HOVERED_BG_COLOR 0x000000
+#define NOT_HOVERED_TEXT_COLOR 0x000000
 
 static button_t menu_buttons[NUMBER_MENU_BUTTONS];
 static player_menu_t *player_menu;
@@ -35,12 +35,10 @@ int (setup_menu)() {
   uint16_t width = vmi.XResolution / 3;
   uint16_t height = vmi.YResolution / 7;
 
-  uint8_t background_color = 10;  
-  uint8_t text_color = 5;
 
-  button_t play_button = {x, height, width, height, background_color, text_color, "PLAY", enter_game};  
-  button_t settings_button = {x, height * 3, width, height, background_color, text_color, "LEADERBOARD", enter_game};
-  button_t exit_button = {x, height * 5, width, height, background_color, text_color, "EXIT", enter_game};
+  button_t play_button = {x, height, width, height, NOT_HOVERED_BG_COLOR, NOT_HOVERED_TEXT_COLOR, "PLAY", enter_game};  
+  button_t settings_button = {x, height * 3, width, height, NOT_HOVERED_BG_COLOR, NOT_HOVERED_TEXT_COLOR, "LEADERBOARD", enter_game};
+  button_t exit_button = {x, height * 5, width, height, NOT_HOVERED_BG_COLOR, NOT_HOVERED_TEXT_COLOR, "EXIT", enter_game};
 
   menu_buttons[0] = play_button;
   menu_buttons[1] = settings_button;
