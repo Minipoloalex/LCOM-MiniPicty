@@ -2,6 +2,7 @@
 #include "player_drawer/player_drawer.h"
 #include "canvas/canvas.h"
 
+#include "../../model/state/state.h"
 #include "../../model/position/position.h"
 #include "../../model/brush/brush.h"
 #include "../../model/player/player.h"
@@ -21,4 +22,5 @@ int (is_cursor_over_game_button)(position_t mouse_position);
 int (game_process_keyboard)();
 int (game_process_mouse)();
 int (game_process_serial)();
-int (draw_game)();
+int (game_draw)();
+void (transitionToGame)(state_t* state);
