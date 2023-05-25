@@ -21,7 +21,7 @@
 #define GUESS_BOX_HEIGHT 40+FONT_HEIGHT
 
 //round timer
-#define ROUND_TIMER_X 600
+#define ROUND_TIMER_X 900
 #define ROUND_TIMER_Y 700
 
 //colors

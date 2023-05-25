@@ -9,4 +9,5 @@ void defaultImplementation(state_t* state){
   state->process_mouse = defaultDraw;
   state->process_keyboard = defaultDraw;
   state->process_serial = defaultDraw;
+  state->process_timer = defaultDraw;
 }
