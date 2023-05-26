@@ -8,7 +8,7 @@
 #include "cursors/rubber.xpm"
 
 static xpm_map_t cursors[3] = {
-  pointer_xpm,
+  cursor_xpm,
   pen_xpm,
   rubber_xpm
 };

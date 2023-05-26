@@ -6,6 +6,8 @@
 
 #include "../player_drawer/player_drawer.h"
 
+#define CANVAS_BACKGROUND_COLOR 0XFFFFFF
+
 
 /** @defgroup canvas Canvas
  * @{
@@ -23,7 +25,7 @@ typedef struct {
   uint16_t width; /**< @brief width of the canvas */
   uint16_t height; /**< @brief height of the canvas */
   uint8_t *buffer; /**< @brief buffer of the canvas */
-  int background_color; /**< @brief background color of the canvas */
+  uint32_t background_color; /**< @brief background color of the canvas */
 } canvas_t;
 
 /**
