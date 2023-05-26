@@ -16,6 +16,7 @@ struct State {
   Event process_serial;
   Event process_timer;
   ButtonsGetter get_buttons;
+  bool running_app;
 };
 
 /**

@@ -17,7 +17,9 @@ void default_implementation(state_t* state){
 }
 
 state_t *(create_state)() {
-  return malloc(sizeof(state_t));
+  state_t *state = malloc(sizeof(state_t));
+  state->running_app = true;
+  return state;
 }
 
 void (destroy_state)(state_t *state) {

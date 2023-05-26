@@ -117,8 +117,8 @@ int (mouse_process_packet_byte)() {
 drawing_position_t (mouse_get_drawing_position_from_packet)(position_t before_position) {
   packet_ready = false;
   packet_index = 0;
-  extern unsigned h_res;
-  extern unsigned v_res;
+  uint16_t h_res = get_h_res();
+  uint16_t v_res = get_v_res();
   position_t next_position = before_position;
 
   uint16_t new_x = before_position.x + packet.delta_x;
