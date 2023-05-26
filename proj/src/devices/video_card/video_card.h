@@ -22,7 +22,7 @@
 
 //round timer
 #define ROUND_TIMER_X 900
-#define ROUND_TIMER_Y 700
+#define ROUND_TIMER_Y 800
 
 //colors
 #define TRANSPARENT 0x000001
@@ -44,6 +44,7 @@ int (get_rgb_component)(uint32_t color, uint8_t component_size, uint8_t componen
 int (vg_draw_pixel)(uint8_t *buffer, uint16_t x, uint16_t y, uint32_t color);
 int (vg_draw_hl)(uint8_t *buffer, uint16_t x, uint16_t y, uint16_t len, uint32_t color);
 int (vg_draw_rectangle)(uint16_t x, uint16_t y, uint16_t width, uint16_t height, uint32_t color);
+int (vg_draw_rectangle_to_buffer)(uint8_t *buffer, uint16_t x, uint16_t y, uint16_t width, uint16_t height, uint32_t color);
 int (vg_draw_circle)(uint16_t x, uint16_t y, uint16_t radius, uint32_t color);
 int (vg_draw_circle_to_buffer)(uint8_t *buffer, uint16_t x, uint16_t y, uint16_t radius, uint32_t color);
 int (vg_draw_line)(uint8_t *buffer, position_t pos1, position_t pos2, uint16_t radius, uint32_t color);
@@ -64,7 +65,7 @@ int (vg_buffer_flip)();
 int (vg_clear_buffer)(uint8_t buffer);
 
 unsigned (get_vram_size)();
-int (vg_copy_canvas_buffer)(uint8_t * buffer);
+int (vg_draw_buffer)(uint8_t * buffer);
 int (vg_clear_buffers)();
 
 uint16_t (get_v_res)();

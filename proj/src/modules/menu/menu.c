@@ -12,6 +12,12 @@ static player_menu_t *player_menu;
 extern vbe_mode_info_t vmi;
 static state_t *app_state;
 
+uint8_t* background_scene;
+
+uint32_t (calculate_sky_color)(int hour);
+void (draw_timelapse)(int hour);
+
+
 void (enter_game)(button_t *button){
   transition_to_game(app_state);
 }
@@ -25,6 +31,7 @@ void (transition_to_menu)(state_t* state){
   state->draw = menu_draw;
   state->process_mouse = menu_process_mouse;
   state->process_serial = menu_process_serial;
+  draw_timelapse(12); //TODO: dynamic change hour here
   state->get_buttons = menu_get_buttons;
 }
 
@@ -47,12 +54,20 @@ int (setup_menu)(state_t *state) {
   uint16_t height = vmi.YResolution / 7;
 
 
-  button_t play_button = {x, height, width, height, NOT_HOVERED_BG_COLOR, "PLAY", enter_game};  
-  button_t settings_button = {x, height * 3, width, height, NOT_HOVERED_BG_COLOR, "PLAY HARD MODE", enter_game};
-  button_t exit_button = {x, height * 5, width, height, NOT_HOVERED_BG_COLOR, "EXIT", quit_app};
+  button_t play_button = {x, height, width, height, NOT_HOVERED_BG_COLOR, "PLAY", NO_ICON, enter_game};  
+  button_t settings_button = {x, height * 3, width, height, NOT_HOVERED_BG_COLOR, "LEADERBOARD", NO_ICON, enter_game};
+  button_t exit_button = {x, height * 5, width, height, NOT_HOVERED_BG_COLOR, "EXIT", NO_ICON, enter_game};
   buttons_array->buttons[0] = play_button;
   buttons_array->buttons[1] = settings_button;
   buttons_array->buttons[2] = exit_button;
+
+  background_scene = (uint8_t *) malloc(get_vram_size() * sizeof(uint8_t));
+  if(background_scene == NULL){
+    printf("background_scene inside %s\n", __func__);
+    destroy_player_menu(player_menu);
+    destroy_buttons_array(buttons_array);
+  }
+
   return EXIT_SUCCESS;
 }
 
@@ -99,14 +114,13 @@ int (draw_buttons)() {
   return EXIT_SUCCESS;
 }
 
-void (draw_sun)(){
-  int hour = 9;
+void (draw_sun)(uint32_t hour){
   int hour_space = (vmi.XResolution - 180) / 13;
   hour -= 6;
   int x = (vmi.XResolution / 2) - 6*hour_space + (hour)*hour_space;
   int y = calculate_sun_height(x);
   uint32_t color = 0xFFFF00;
-  if(vg_draw_circle(x-30, vmi.YResolution - 300 - (y * 15), 60, color)){
+  if(vg_draw_circle_to_buffer(background_scene, x-30, vmi.YResolution - 300 - (y * 15), 60, color)){
     printf("vg_draw_circle inside %s\n", __func__);
     return;
   }
@@ -118,49 +132,58 @@ void (draw_stars)(){
   for(int i=0; i<100; i++){
     x = rand() % vmi.XResolution;
     y = rand() % vmi.YResolution;
-    if(vg_draw_circle(x, y, 2, 0xFFFFFF)){
+    if(vg_draw_circle_to_buffer(background_scene, x, y, 2, 0xFFFFFF)){
       printf("vg_draw_pixel inside %s\n", __func__);
       return;
     }
   }
 }
 
-void (draw_sky)(){
-  //TODO: change color based on hour
-  int blue = 0xADD8E6;
-  //int black = 0;
+void (draw_sky)(uint32_t hour){
+  uint32_t color = calculate_sky_color(hour);
   int terrain_height = 300;
-  if(vg_draw_rectangle(0, 0, vmi.XResolution, vmi.YResolution - terrain_height, blue)){
+  if(vg_draw_rectangle_to_buffer(background_scene, 0, 0, vmi.XResolution, vmi.YResolution - terrain_height, color)){
     printf("vg_draw_rectangle inside %s\n", __func__);
     return;
   }
 
-  //TODO: draw stars if night
-  //draw_stars();
+  if(hour > 19){
+    draw_stars();
+  }
 }
 
 void (draw_terrain)(){
   int terrain_height = 300;
-  int brown = 0xCD853F;
-  if(vg_draw_rectangle(0, vmi.YResolution - terrain_height, vmi.XResolution, vmi.YResolution, brown)){
+  uint32_t brown = 0xCD853F;
+  if(vg_draw_rectangle_to_buffer(background_scene, 0, vmi.YResolution - terrain_height, vmi.XResolution, vmi.YResolution, brown)){
     printf("vg_draw_rectangle inside %s\n", __func__);
     return;
   }
 }
 
-void (draw_timelapse)(){
-  draw_sky();
-  draw_sun();
+void (draw_timelapse)(int hour){
+  draw_sky(hour);
+  draw_sun(hour);
   draw_terrain();
 }
 
+int (draw_background_scene)(){
+  return vg_draw_buffer(background_scene);
+}
+
 int (menu_draw)(){
+
+  if(draw_background_scene()){
+    printf("draw_background inside %s\n", __func__);
+    return EXIT_FAILURE;
+  }
+
   if (draw_player_menu()) {
     printf("draw_player_menu inside %s\n", __func__);
     return EXIT_FAILURE;
   }
   if (/*buffers_need_update()*/ true) {  // if no new mouse positions, don't update anything
-    draw_timelapse();
+    draw_background_scene();
     if(draw_buttons()) {
       printf("Error drawing buttons\n");
       return EXIT_FAILURE;
@@ -200,8 +223,8 @@ int (menu_process_mouse)() {
 
 void (destroy_menu)() {
   destroy_player_menu(player_menu);
+  free(background_scene);
   destroy_buttons_array(buttons_array);
-  vg_clear_buffers();
 }
 
 int (menu_process_serial)() {
@@ -221,6 +244,25 @@ int (calculate_sun_height)(int x){
   // Using ellipse formula to calculate y based on x
   return (int)(sqrt(1 - pow((x), 2) / pow(a, 2)) * pow(b, 2));
 }
+
+uint32_t (calculate_sky_color)(int hour){
+  if(hour >= 19 || hour <= 6) return 0x000000;
+
+  if(hour > 12){
+    hour = 12 - (hour - 12);
+  }
+
+  // default blue: 0x00F0FF
+  uint32_t red = 0x00;
+  uint32_t blue = 0xF0;
+  uint32_t green = 0xFF;
+
+  green = (hour * 255) / 12;
+  blue = (hour * 255) / 12;
+
+  return (red << 16) | (green << 8) | blue;
+}
+
 
 buttons_array_t *(menu_get_buttons)(state_t *state){
   return buttons_array;

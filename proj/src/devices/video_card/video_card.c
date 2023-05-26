@@ -154,8 +154,12 @@ int (vg_draw_hl)(uint8_t *buffer, uint16_t x, uint16_t y, uint16_t len, uint32_t
 }
 
 int (vg_draw_rectangle)(uint16_t x, uint16_t y, uint16_t width, uint16_t height, uint32_t color){
+  return vg_draw_rectangle_to_buffer(video_mem[buffer_index], x, y, width, height, color);
+}
+
+int (vg_draw_rectangle_to_buffer)(uint8_t *buffer, uint16_t x, uint16_t y, uint16_t width, uint16_t height, uint32_t color){
   for (unsigned int verticalIndex = y; verticalIndex < y + height; verticalIndex++) {
-    if (vg_draw_hl(video_mem[buffer_index], x, verticalIndex, width, color) != OK) {
+    if (vg_draw_hl(buffer, x, verticalIndex, width, color) != OK) {
       printf("vg_draw_hl inside %s\n", __func__);
       return EXIT_FAILURE;
     }
@@ -230,7 +234,7 @@ int (vg_draw_line)(uint8_t *buffer, position_t pos1, position_t pos2, uint16_t t
     return EXIT_SUCCESS;
 }
 
-int (vg_copy_canvas_buffer)(uint8_t *buffer){
+int (vg_draw_buffer)(uint8_t *buffer){
   if (memcpy(video_mem[buffer_index], buffer, vram_size) == NULL) {
     printf("memcpy inside %s\n", __func__);
     return EXIT_FAILURE;
@@ -352,13 +356,31 @@ int (vg_draw_button)(button_t *button) {
     printf("vg_draw_rectangle inside %s\n", __func__);
     return EXIT_FAILURE;
   }
-  if (strcmp(button->text, "") != 0) { // not empty string
+
+  if (button->icon != NO_ICON){
+    xpm_map_t icon = icons[button->icon];
+    xpm_image_t icon_image;
+    uint8_t *colors = xpm_load(icon, XPM_8_8_8_8, &icon_image);
+    if (colors == NULL || icon_image.type == INVALID_XPM) return EXIT_FAILURE;
+    icon_image.bytes = colors;
+
+    if (vg_draw_xpm(&icon_image, button->x + (button->width - icon_image.width)/2, button->y + (button->height - icon_image.height)/2)) {
+      printf("vg_draw_xpm inside %s\n", __func__);
+      return EXIT_FAILURE;
+    }
+
+    return EXIT_SUCCESS;
+  }
+
+
+  if (button->text != NULL) {
     vg_draw_text(button->text, 
               button->x+(button->width/2)-(strlen(button->text)*FONT_WIDTH)/2, 
               button->y+(button->height/2)-(FONT_HEIGHT)/2);
   }
   return EXIT_SUCCESS;
 }
+
 int (vg_draw_buttons)(buttons_array_t *buttons) {
   for (int i = 0; i < buttons->num_buttons; i++) {
     button_t button = buttons->buttons[i];
