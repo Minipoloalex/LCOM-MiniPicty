@@ -6,10 +6,10 @@
 #include "../../resources/icons.h"
 
 typedef enum {
-    PLUS,
-    MINUS,
+    PLUS_ICON,
+    MINUS_ICON,
     RUBBER_ICON,
-    TRASH,
+    TRASH_ICON,
     NO_ICON,
 } button_icon_t;
 

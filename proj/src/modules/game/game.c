@@ -153,13 +153,13 @@ int(setup_game)(bool isTransmitter, state_t *state) {
 
   int other_buttons_color = 0XA0A0A0;
 
-  button_t increase_size_button = {8*min_len, 2*min_height, min_len, min_height, other_buttons_color, NULL, PLUS, increase_brush_size};
+  button_t increase_size_button = {8*min_len, 2*min_height, min_len, min_height, other_buttons_color, NULL, PLUS_ICON, increase_brush_size};
 
-  button_t decrease_size_button = {8*min_len, 4*min_height, min_len, min_height, other_buttons_color, NULL, MINUS, decrease_brush_size};
+  button_t decrease_size_button = {8*min_len, 4*min_height, min_len, min_height, other_buttons_color, NULL, MINUS_ICON, decrease_brush_size};
 
   button_t rubber_button = {8*min_len, 6*min_height, min_len, min_height, other_buttons_color, NULL, RUBBER_ICON, set_rubber};
 
-  button_t clear_button = {8*min_len, 8*min_height, min_len, min_height, other_buttons_color, NULL, TRASH, clear_canvas};
+  button_t clear_button = {8*min_len, 8*min_height, min_len, min_height, other_buttons_color, NULL, TRASH_ICON, clear_canvas};
 
   game_playing_buttons->buttons[9] = increase_size_button;
   game_playing_buttons->buttons[10] = decrease_size_button;
