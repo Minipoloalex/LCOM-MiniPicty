@@ -1,8 +1,8 @@
 #include "button.h"
 
-bool (is_cursor_over_button)(button_t button, position_t mouse_position){
-  bool is_between_x = mouse_position.x >= button.x && mouse_position.x <= button.x + button.width;
-  bool is_between_y = mouse_position.y >= button.y && mouse_position.y <= button.y + button.height;
+bool (is_cursor_over_button)(button_t *button, position_t mouse_position){
+  bool is_between_x = mouse_position.x >= button->x && mouse_position.x <= button->x + button->width;
+  bool is_between_y = mouse_position.y >= button->y && mouse_position.y <= button->y + button->height;
   return is_between_x && is_between_y;
 }
 
@@ -45,7 +45,7 @@ buttons_array_t *(create_buttons_array)(int num_buttons) {
     if (buttons_array == NULL) {
         return NULL;
     }
-    buttons_array->buttons = malloc(sizeof(button_t) * num_buttons);
+    buttons_array->buttons = malloc(sizeof(button_t*) * num_buttons);
     if (buttons_array->buttons == NULL) {
         free(buttons_array);
         return NULL;
@@ -54,6 +54,48 @@ buttons_array_t *(create_buttons_array)(int num_buttons) {
     return buttons_array;
 }
 void (destroy_buttons_array)(buttons_array_t *buttons_array) {
+    for (int i = 0; i < buttons_array->num_buttons; i++) {
+        destroy_button(buttons_array->buttons[i]);
+    }
     free(buttons_array->buttons);
     free(buttons_array);
+}
+
+void (destroy_button)(button_t *button) {
+  free(button->text);
+  free(button);
+}
+
+button_t *(create_button)(uint16_t x, uint16_t y, uint16_t width, uint16_t height, uint32_t background_color, char *text, button_icon_t icon, void (*onClick)(struct button *)) {
+  printf("creating button\n");
+  button_t *button = malloc(sizeof(button_t));
+  if (button == NULL) {
+    return NULL;
+  }
+  button->x = x;
+  button->y = y;
+  button->width = width;
+  button->height = height;
+  button->background_color = background_color;
+  if (text != NULL) {
+    button->text = malloc(sizeof(char) * (strlen(text) + 1));
+    if (button->text == NULL) {
+      free(button);
+      return NULL;
+    }
+    if (strcpy(button->text, text) == NULL) {
+      free(button->text);
+      free(button);
+      printf("Error copying text to button inside %s\n", __func__);
+      return NULL;
+    }
+    printf("button text: %s\n", button->text);
+  }else{
+    button->text = NULL;
+  }
+
+  button->icon = icon;
+  button->onClick = onClick;
+  printf("finished creating button\n");
+  return button;
 }

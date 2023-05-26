@@ -289,7 +289,7 @@ int (vg_draw_char)(const uint8_t character, uint16_t x, uint16_t y){
   else if (character >= '0' && character <= '9') index = character - '0' + 26;
   else {
     printf("character: '%c' not supported inside %s\n", character, __func__);
-    return EXIT_SUCCESS;
+    return EXIT_FAILURE;
   }
 
   xpm_map_t char_xpm = uppercase_alphabet[index];
@@ -313,6 +313,10 @@ int (vg_draw_char)(const uint8_t character, uint16_t x, uint16_t y){
 }
 
 int (vg_draw_text)(char *string, uint16_t x, uint16_t y){
+  if (string == NULL) {
+    printf("string is null inside %s\n", __func__);
+    return EXIT_FAILURE;
+  }
   for (uint16_t xi = x; *string != 0; string++, xi += FONT_WIDTH){
     if (vg_draw_char(*string, xi, y)) {
       printf("vg_draw_char inside %s\n", __func__);
@@ -361,30 +365,34 @@ int (vg_draw_button)(button_t *button) {
     xpm_map_t icon = icons[button->icon];
     xpm_image_t icon_image;
     uint8_t *colors = xpm_load(icon, XPM_8_8_8_8, &icon_image);
-    if (colors == NULL || icon_image.type == INVALID_XPM) return EXIT_FAILURE;
+    if (colors == NULL || icon_image.type == INVALID_XPM) {
+      printf("xpm_load inside %s\n", __func__);
+      return EXIT_FAILURE;
+    }
     icon_image.bytes = colors;
-
+    
     if (vg_draw_xpm(&icon_image, button->x + (button->width - icon_image.width)/2, button->y + (button->height - icon_image.height)/2)) {
       printf("vg_draw_xpm inside %s\n", __func__);
       return EXIT_FAILURE;
     }
-
     return EXIT_SUCCESS;
   }
 
-
   if (button->text != NULL) {
-    vg_draw_text(button->text, 
+    if (vg_draw_text(button->text, 
               button->x+(button->width/2)-(strlen(button->text)*FONT_WIDTH)/2, 
-              button->y+(button->height/2)-(FONT_HEIGHT)/2);
+              button->y+(button->height/2)-(FONT_HEIGHT)/2)) {
+                printf("vg_draw_text inside %s\n", __func__);
+                return EXIT_FAILURE;
+              }
   }
   return EXIT_SUCCESS;
 }
 
 int (vg_draw_buttons)(buttons_array_t *buttons) {
   for (int i = 0; i < buttons->num_buttons; i++) {
-    button_t button = buttons->buttons[i];
-    if (vg_draw_button(&button)) {
+    button_t *button = buttons->buttons[i];
+    if (vg_draw_button(button)) {
       printf("vg_draw_button inside %s\n", __func__);
       return EXIT_FAILURE;
     }

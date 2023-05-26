@@ -32,6 +32,7 @@ void (transition_to_menu)(state_t* state){
   state->process_mouse = menu_process_mouse;
   state->process_serial = menu_process_serial;
   draw_timelapse(12); //TODO: dynamic change hour here
+  state->get_buttons = menu_get_buttons;
 }
 
 int (setup_menu)(state_t *state) {
@@ -43,6 +44,7 @@ int (setup_menu)(state_t *state) {
   }
   buttons_array = create_buttons_array(NUMBER_MENU_BUTTONS);
   if (buttons_array == NULL) {
+    destroy_player_menu(player_menu);
     printf("create_buttons_array inside %s\n", __func__);
     return EXIT_FAILURE;
   }
@@ -51,10 +53,10 @@ int (setup_menu)(state_t *state) {
   uint16_t width = vmi.XResolution / 3;
   uint16_t height = vmi.YResolution / 7;
 
+  button_t *play_button = create_button(x, height, width, height, NOT_HOVERED_BG_COLOR, "PLAY", NO_ICON, enter_game);
+  button_t *settings_button = create_button(x, height * 3, width, height, NOT_HOVERED_BG_COLOR, "PLAY HARD MODE", NO_ICON, enter_game);
+  button_t *exit_button = create_button(x, height * 5, width, height, NOT_HOVERED_BG_COLOR, "EXIT", NO_ICON, quit_app);
 
-  button_t play_button = {x, height, width, height, NOT_HOVERED_BG_COLOR, "PLAY", NO_ICON, enter_game};  
-  button_t settings_button = {x, height * 3, width, height, NOT_HOVERED_BG_COLOR, "LEADERBOARD", NO_ICON, enter_game};
-  button_t exit_button = {x, height * 5, width, height, NOT_HOVERED_BG_COLOR, "EXIT", NO_ICON, enter_game};
   buttons_array->buttons[0] = play_button;
   buttons_array->buttons[1] = settings_button;
   buttons_array->buttons[2] = exit_button;
@@ -62,7 +64,8 @@ int (setup_menu)(state_t *state) {
   background_scene = (uint8_t *) malloc(get_vram_size() * sizeof(uint8_t));
   if(background_scene == NULL){
     printf("background_scene inside %s\n", __func__);
-    //TODO: frees
+    destroy_player_menu(player_menu);
+    destroy_buttons_array(buttons_array);
   }
 
   return EXIT_SUCCESS;
@@ -76,19 +79,16 @@ int (draw_player_menu)() {
   while (player_get_next_position(player, &drawing_position) == OK) {
     if (player_get_last_position(player, &last_position)) return EXIT_FAILURE;
     set_needs_update(true);
-    if (drawing_position.is_drawing) {
-      // TODO: check for collisions with buttons
-    }
     player_set_last_position(player, drawing_position);
   }
   position_t position = player_get_current_position(player).position;
 
   for (int i = 0; i < NUMBER_MENU_BUTTONS; i++) {
-    button_t button = buttons_array->buttons[i];
+    button_t *button = buttons_array->buttons[i];
     if(is_cursor_over_button(button, position)){
-      change_button_color(&button, HOVERED_BG_COLOR);
+      change_button_color(button, HOVERED_BG_COLOR);
     } else {
-      change_button_color(&button, NOT_HOVERED_BG_COLOR);
+      change_button_color(button, NOT_HOVERED_BG_COLOR);
     }
   }
   return EXIT_SUCCESS;
@@ -100,8 +100,8 @@ int (draw_buttons)() {
 
   int num_buttons = buttons_array->num_buttons;
   for(int i = 0; i < num_buttons; i++){
-    button_t *button = &buttons_array->buttons[i];
-    if(is_cursor_over_button(*button, last_position.position)){
+    button_t *button = buttons_array->buttons[i];
+    if(is_cursor_over_button(button, last_position.position)){
       change_button_color(button, HOVERED_BG_COLOR);
     } else {
       change_button_color(button, NOT_HOVERED_BG_COLOR);
@@ -182,7 +182,8 @@ int (menu_draw)(){
     printf("draw_player_menu inside %s\n", __func__);
     return EXIT_FAILURE;
   }
-  if (buffers_need_update()) {  // if no new mouse positions, don't update anything
+  if (/*buffers_need_update()*/ true) {  // if no new mouse positions, don't update anything
+    draw_background_scene();
     if(draw_buttons()) {
       printf("Error drawing buttons\n");
       return EXIT_FAILURE;
@@ -212,9 +213,9 @@ int (menu_process_mouse)() {
     return EXIT_FAILURE;
   }
   if (button_to_click != -1) {
-    button_t pressed_button = buttons_array->buttons[button_to_click];
+    button_t *pressed_button = buttons_array->buttons[button_to_click];
     ser_add_button_click_to_transmitter_queue(button_to_click);
-    pressed_button.onClick(&pressed_button);
+    pressed_button->onClick(pressed_button);
   }
 
   return player_add_next_position(player, &next);
@@ -223,23 +224,16 @@ int (menu_process_mouse)() {
 void (destroy_menu)() {
   destroy_player_menu(player_menu);
   free(background_scene);
-  vg_clear_buffers();
+  destroy_buttons_array(buttons_array);
 }
 
 int (menu_process_serial)() {
-  ser_read_bytes_from_receiver_queue(NULL, app_state);
+  if (ser_read_bytes_from_receiver_queue(NULL, app_state) != OK) {
+    printf("ser_read_bytes_from_receiver_queue inside %s\n", __func__);
+    return EXIT_FAILURE;
+  }
   return EXIT_SUCCESS;
 }
-
-int (is_cursor_over_menu_button)(position_t mouse_position){
-  for(int i = 0; i < NUMBER_MENU_BUTTONS; i++){
-    if(is_cursor_over_button(buttons_array->buttons[i], mouse_position)){
-      return i;
-    }
-  }
-  return -1;
-}
-
 
 //FIX this function
 int (calculate_sun_height)(int x){
@@ -269,6 +263,7 @@ uint32_t (calculate_sky_color)(int hour){
   return (red << 16) | (green << 8) | blue;
 }
 
-buttons_array_t *(get_menu_buttons)(){
+
+buttons_array_t *(menu_get_buttons)(state_t *state){
   return buttons_array;
 }
