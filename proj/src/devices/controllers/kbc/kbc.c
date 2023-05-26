@@ -18,11 +18,13 @@ int (read_KBC_output)(int8_t port, uint8_t* output, uint8_t mouse){
     }
     if(mouse && !(status & AUX)) {
       printf("expected mouse int but got keyboard int inside %s\n", __func__);
+      read_KBC_output_to_trash();
       tickdelay(micros_to_ticks(WAIT_KBC));
       continue;
     }
     if(!mouse && (status & AUX)) {
       printf("expected keyboard int but got mouse int inside %s\n", __func__);
+      read_KBC_output_to_trash();
       tickdelay(micros_to_ticks(WAIT_KBC));
       continue;
     }
@@ -40,6 +42,7 @@ int (read_KBC_output)(int8_t port, uint8_t* output, uint8_t mouse){
     }
     tickdelay(micros_to_ticks(WAIT_KBC));
   }
+  printf("excedeed attempts inside %s\n", __func__);
   return EXIT_FAILURE;
 }
 
@@ -62,4 +65,11 @@ int (write_KBC_command)(uint8_t port, uint8_t cmd_byte){
   }
 
   return EXIT_FAILURE;
+}
+
+int (read_KBC_output_to_trash)() {
+  uint8_t trash;
+  util_sys_inb(KBC_OUT_REG, &trash);
+  // printf("Got trash inside kbc: %02x\n", trash);
+  return EXIT_SUCCESS;
 }

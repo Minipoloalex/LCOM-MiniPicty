@@ -12,6 +12,11 @@ int(subscribe_interrupts)(){
     printf("timer_subscribe_in inside %s\n", __func__);
     return EXIT_FAILURE;
   }
+  // Keyboard
+  if(keyboard_subscribe_interrupts(&keyboard_bit_no) != 0) {
+    printf("keyboard_subscribe_interrupts inside %s\n", __func__);
+    return EXIT_FAILURE;
+  }
   // Mouse
   if(mouse_subscribe_interrupts(&mouse_bit_no) != 0) {
     printf("mouse_subscribe_interrupts inside %s\n", __func__);
@@ -29,15 +34,11 @@ int(subscribe_interrupts)(){
     printf("mouse_enable_int inside %s\n", __func__);
     return EXIT_FAILURE;
   }
-  // Keyboard
-  if(keyboard_subscribe_interrupts(&keyboard_bit_no) != 0) {
-    printf("keyboard_subscribe_interrupts inside %s\n", __func__);
-    return EXIT_FAILURE;
-  }
   if (ser_subscribe_int(&ser_bit_no) != 0) {
     printf("ser_subscribe_int inside %s\n", __func__);
     return EXIT_FAILURE;
   }
+  printf("Finished subscribing interrupts\n");
   return EXIT_SUCCESS;
 }
 
@@ -51,11 +52,7 @@ int(unsubscribe_interrupts)(){
     printf("ser_unsubscribe_int inside %s\n", __func__);
     return EXIT_FAILURE;
   }
-  // Keyboard
-  if(keyboard_unsubscribe_interrupts() != 0) return EXIT_FAILURE;
-
-  if(keyboard_restore() != 0) return EXIT_FAILURE;
-
+ 
   // Mouse
   if(mouse_disable_int() != 0) {
     printf("mouse_disable_int inside %s\n", __func__);
@@ -69,8 +66,59 @@ int(unsubscribe_interrupts)(){
     printf("mouse_enable_int inside %s\n", __func__);
     return EXIT_FAILURE;
   }
-  if(mouse_unsubscribe_interrupts() != 0) return EXIT_FAILURE; 
-
-
+  if(mouse_unsubscribe_interrupts() != 0) {
+    printf("mouse_unsubscribe_interrupts inside %s\n", __func__);
+    return EXIT_FAILURE; 
+  }
+ // Keyboard
+  if(keyboard_unsubscribe_interrupts() != 0) {
+    printf("keyboard_unsubscribe_interrupts inside %s\n", __func__);
+    return EXIT_FAILURE;
+  }
+  if(keyboard_restore() != 0) {
+    printf("keyboard_restore inside %s\n", __func__);
+    return EXIT_FAILURE;
+  }
+  printf("Finished unsubscribing interrupts\n");
   return EXIT_SUCCESS;
 }
+
+
+/*
+subscribe:
+timer
+rtc
+kbd
+mouse
+serial port
+
+unsubscribe:
+serial port
+mouse
+kbc reset command byte
+rtc
+timer
+
+se algum der erro:
+timer
+rtc
+keyboard
+mouse
+kbc reset command byte
+serial port
+
+
+
+diogo rodrigues:
+timer
+kbd
+mouse
+rtc
+uart
+
+timer
+kbd
+mouse
+rtc
+uart
+*/
