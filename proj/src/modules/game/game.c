@@ -4,6 +4,8 @@
 #define NUMBER_GAME_FINISHED_BUTTONS 3
 #define GAME_WAITING_TIME 5
 #define GAME_ROUND_TIME 10
+#define WAITING_TEXT_POS_X 500
+#define WAITING_TEXT_POS_Y 500
 
 static buttons_array_t *game_playing_buttons;
 static buttons_array_t *game_finished_buttons;
@@ -147,9 +149,11 @@ int (setup_game)(bool isTransmitter, state_t *state) {
   game_playing_buttons->buttons[12] = clear_button;
 
   // TODO: PLACE THESE BUTTONS IN THE MIDDLE OF THE SCREEN
-  button_t play_again_button = {8*min_len, 10*min_height, min_len, min_height, other_buttons_color, 0, "Send", play_again};
-  button_t play_again_change_state = {8*min_len, 10*min_height, min_len, min_height, other_buttons_color, 0, "PlayAgain", play_again_change_roles};
-  button_t quit_button = {8*min_len, 10*min_height, min_len, min_height, other_buttons_color, 0, "Quit", quit_game};
+  uint16_t x_finished = vmi.XResolution / 3;
+  // uint16_t height_finished = vmi.YResolution / 7;
+  button_t play_again_button = {x_finished, min_height, min_len, min_height, other_buttons_color, 0, "PlayAgain", play_again};
+  button_t play_again_change_state = {x_finished, 10*min_height, min_len, min_height, other_buttons_color, 0, "PlayAgainDifferentRoles", play_again_change_roles};
+  button_t quit_button = {x_finished, 10*min_height, min_len, min_height, other_buttons_color, 0, "Quit", quit_game};
   
   game_finished_buttons->buttons[0] = play_again_button;
   game_finished_buttons->buttons[1] = play_again_change_state;
@@ -365,7 +369,8 @@ int (game_draw)() {
     }
 
     if (vg_draw_rectangle(GUESS_BOX_X,GUESS_BOX_Y, GUESS_BOX_WIDTH, GUESS_BOX_HEIGHT, BLACK)) return EXIT_FAILURE;
-    switch (player_drawer_get_role(player_drawer)){
+    player_type_t role = player_drawer_get_role(player_drawer);
+    switch (role){
       case SELF_PLAYER:
         if (vg_draw_text(prompt, GUESS_POS_X, GUESS_POS_Y) != OK) return EXIT_FAILURE;
         break;
@@ -373,7 +378,15 @@ int (game_draw)() {
         if (vg_draw_guess(guess, GUESS_POS_X, GUESS_POS_Y) != OK) return EXIT_FAILURE;
         break;
     }
-    if (vg_draw_text(byte_to_str(round_timer),ROUND_TIMER_X, ROUND_TIMER_Y) != OK){
+    if (game_state == WAITING) {
+      // TODO: draw with color and with spaces (currently spaces are not allowed and color is white with white background)
+      if (role == SELF_PLAYER) {
+        if (vg_draw_text("Youaredrawing", WAITING_TEXT_POS_X, WAITING_TEXT_POS_Y) != OK) return EXIT_FAILURE;
+      } else {
+        if (vg_draw_text("Youareguessing", WAITING_TEXT_POS_X, WAITING_TEXT_POS_Y) != OK) return EXIT_FAILURE;
+      }
+    }
+    if (vg_draw_text(byte_to_str(round_timer), ROUND_TIMER_X, ROUND_TIMER_Y) != OK){
       printf("vg_draw_text inside %s\n", __func__);
       return EXIT_FAILURE;
     }
@@ -409,7 +422,6 @@ void (update_cursor_state)(position_t position){
   }
 }
 
-// TODO: FIX THIS
 buttons_array_t *(get_game_buttons)(state_t* state) {
   if (game_state == PLAYING) {
     return game_playing_buttons;
