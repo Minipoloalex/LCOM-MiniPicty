@@ -39,7 +39,7 @@ PROG=proj
 SRCS = proj.c kbc.c keyboard.c mouse.c timer.c video_card.c utils.c interrupts.c menu.c game.c serial_port.c queue.c position.c brush.c player.c button.c player_drawer.c player_menu.c canvas.c guess.c prompt.c state.c
 
 # additional compilation flags
-CPPFLAGS += -pedantic -D__LCOM_OPTIMIZED__
+CPPFLAGS += -pedantic -D __LCOM_OPTIMIZED__
 
 # list of library dependencies (for Lab 2, only LCF library)
 DPADD += ${LIBLCF}

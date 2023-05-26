@@ -82,39 +82,3 @@ int (timer_get_conf)(uint8_t timer, uint8_t *st) {
   return EXIT_SUCCESS;
 }
 
-int (timer_display_conf)(uint8_t timer, uint8_t st,
-                        enum timer_status_field field) {
-  union timer_status_field_val timer_status_field;
-  if (timer > 2) return EXIT_FAILURE;
-  switch (field) {
-    case tsf_all:
-      timer_status_field.byte = st;
-      break;
-    case tsf_base:
-      timer_status_field.bcd = st & TIMER_BASE_MASK;
-      break;
-    case tsf_mode:
-      timer_status_field.count_mode = (st & TIMER_MODE_MASK) >> TIMER_COUNT_MODE_POSITION;
-      if ((timer_status_field.count_mode) > TIMER_NUMBER_MODES - 1) {
-        timer_status_field.count_mode &= 3; /* e.g. mode 110 is mode 2 */
-      }
-      break;
-    case tsf_initial:
-      switch((st & TIMER_INITIAL_MASK ) >> TIMER_INITIAL_MODE_POSITION){
-        case(0):
-          timer_status_field.in_mode = INVAL_val;
-          break;
-        case(1):
-          timer_status_field.in_mode = LSB_only;
-          break;
-        case(2):
-          timer_status_field.in_mode = MSB_only;
-          break;
-        case(3):
-          timer_status_field.in_mode = MSB_after_LSB;
-          break;
-      }
-      break;
-  }
-  return timer_print_config(timer, field, timer_status_field);
-}
