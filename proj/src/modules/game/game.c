@@ -397,8 +397,8 @@ int(game_draw)() {
     return EXIT_FAILURE;
   }
   if (/*buffers_need_update()*/ true) {
-    if (vg_copy_canvas_buffer(get_buffer(canvas)) != OK) {
-      printf("vg_copy_canvas_buffer inside %s\n", __func__);
+    if (vg_draw_buffer(get_buffer(canvas)) != OK) {
+      printf("vg_draw_buffer inside %s\n", __func__);
       return EXIT_FAILURE;
     }
     if (game_draw_buttons() != OK) {
