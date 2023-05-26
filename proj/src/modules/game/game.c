@@ -2,6 +2,8 @@
 
 #define NUMBER_GAME_PLAYING_BUTTONS 13
 #define NUMBER_GAME_FINISHED_BUTTONS 3
+#define GAME_WAITING_TIME 5
+#define GAME_ROUND_TIME 10
 
 static buttons_array_t *game_playing_buttons;
 static buttons_array_t *game_finished_buttons;
@@ -35,6 +37,7 @@ void (play_again)(button_t *button) {
     return;
   }
   game_state = WAITING;
+  round_timer = GAME_WAITING_TIME;
   canvas_clear(canvas);
   if (player_drawer_get_role(player_drawer) == SELF_PLAYER) {
     if (prompt_generate(prompt) != OK) {  // communication of word index is not implemented yet
@@ -143,7 +146,7 @@ int (setup_game)(bool isTransmitter, state_t *state) {
   game_playing_buttons->buttons[11] = rubber_button;
   game_playing_buttons->buttons[12] = clear_button;
 
-
+  // TODO: PLACE THESE BUTTONS IN THE MIDDLE OF THE SCREEN
   button_t play_again_button = {8*min_len, 10*min_height, min_len, min_height, other_buttons_color, 0, "Send", play_again};
   button_t play_again_change_state = {8*min_len, 10*min_height, min_len, min_height, other_buttons_color, 0, "PlayAgain", play_again_change_roles};
   button_t quit_button = {8*min_len, 10*min_height, min_len, min_height, other_buttons_color, 0, "Quit", quit_game};
@@ -151,8 +154,6 @@ int (setup_game)(bool isTransmitter, state_t *state) {
   game_finished_buttons->buttons[0] = play_again_button;
   game_finished_buttons->buttons[1] = play_again_change_state;
   game_finished_buttons->buttons[2] = quit_button;
-
-  round_timer = ROUND_TIME;
 
   canvas = canvas_init(0, min_height, 8*min_len, 8*min_height);
   if (canvas == NULL) {
@@ -191,13 +192,30 @@ void (transition_to_game)(state_t* state){
   
   prompt_generate(prompt);
   canvas_clear(canvas);
-  game_state = PLAYING;
+  game_state = WAITING;
+  round_timer = GAME_WAITING_TIME;
 }
 
 extern int timer_counter;
 int (game_process_timer)(){
+  if (game_state == FINISHED) {
+    return EXIT_SUCCESS;
+  }
   if (timer_counter % sys_hz() == 0){
+    printf("game_process_timer with round_timer: %u\n", round_timer);
     round_timer--;
+    if (round_timer == 0) {
+      if (game_state == WAITING) {
+        game_state = PLAYING;
+        round_timer = GAME_ROUND_TIME;
+        return EXIT_SUCCESS;
+      }
+      if (game_state == PLAYING) {
+        game_state = FINISHED;
+        round_timer = 0;
+        return EXIT_SUCCESS;
+      }
+    }
   }
   return EXIT_SUCCESS;
 }
@@ -258,10 +276,6 @@ int (game_process_mouse)() {
     }
   }
   int button_to_click = -1;
-  // TODO: add here conditions such as
-  // if game_state == PLAYING, process game_playing_buttons->buttons
-  // else if game_state == FINISHED, process game_finished_buttons->buttons
-  // else nothign (no processing of clicks)
   buttons_array_t *buttons = get_game_buttons(app_state);
   if (buttons != NULL) {
     if (process_buttons_clicks(buttons, before, next, &button_to_click)) {
@@ -299,10 +313,10 @@ int (game_draw_canvas)(canvas_t *canvas, player_drawer_t *player_drawer){
     set_needs_update(true);
     if (player_get_last_position(player, &last_position)) return EXIT_FAILURE;
     
-    draw_in_canvas(canvas, brush, last_position.position, drawing_position);
-    // if (game_state == PLAYING) {
-    //   draw_in_canvas(canvas, brush, last_position.position, drawing_position);
-    // }
+    // draw_in_canvas(canvas, brush, last_position.position, drawing_position);
+    if (game_state == PLAYING) {
+      draw_in_canvas(canvas, brush, last_position.position, drawing_position);
+    }
 
     player_set_last_position(player, drawing_position);
   }
@@ -322,15 +336,15 @@ int (game_process_serial)() {
 }
 
 int (game_draw_buttons)() {
+  if (vg_draw_buttons(game_playing_buttons)) {
+    printf("vg_draw_buttons inside %s\n", __func__);
+    return EXIT_FAILURE;
+  }
   if (game_state == FINISHED) {
     if (vg_draw_buttons(game_finished_buttons)) {
       printf("vg_draw_buttons inside %s\n", __func__);
       return EXIT_FAILURE;
     }
-  }
-  if (vg_draw_buttons(game_playing_buttons)) {
-    printf("vg_draw_buttons inside %s\n", __func__);
-    return EXIT_FAILURE;
   }
   return EXIT_SUCCESS;
 }
