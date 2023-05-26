@@ -154,8 +154,12 @@ int (vg_draw_hl)(uint8_t *buffer, uint16_t x, uint16_t y, uint16_t len, uint32_t
 }
 
 int (vg_draw_rectangle)(uint16_t x, uint16_t y, uint16_t width, uint16_t height, uint32_t color){
+  return vg_draw_rectangle_to_buffer(video_mem[buffer_index], x, y, width, height, color);
+}
+
+int (vg_draw_rectangle_to_buffer)(uint8_t *buffer, uint16_t x, uint16_t y, uint16_t width, uint16_t height, uint32_t color){
   for (unsigned int verticalIndex = y; verticalIndex < y + height; verticalIndex++) {
-    if (vg_draw_hl(video_mem[buffer_index], x, verticalIndex, width, color) != OK) {
+    if (vg_draw_hl(buffer, x, verticalIndex, width, color) != OK) {
       printf("vg_draw_hl inside %s\n", __func__);
       return EXIT_FAILURE;
     }
@@ -230,7 +234,7 @@ int (vg_draw_line)(uint8_t *buffer, position_t pos1, position_t pos2, uint16_t t
     return EXIT_SUCCESS;
 }
 
-int (vg_copy_canvas_buffer)(uint8_t *buffer){
+int (vg_draw_buffer)(uint8_t *buffer){
   if (memcpy(video_mem[buffer_index], buffer, vram_size) == NULL) {
     printf("memcpy inside %s\n", __func__);
     return EXIT_FAILURE;
