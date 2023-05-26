@@ -57,6 +57,7 @@ void (quit_game)(button_t *button) {
   transition_to_menu(app_state);
 }
 void (play_again_change_roles)(button_t *button) {
+  printf("CHANGING ROLES OF PLAYERS\n");
   player_drawer_change_role(player_drawer);
   play_again(button);
 }
@@ -147,13 +148,14 @@ int (setup_game)(bool isTransmitter, state_t *state) {
   game_playing_buttons->buttons[10] = decrease_size_button;
   game_playing_buttons->buttons[11] = rubber_button;
   game_playing_buttons->buttons[12] = clear_button;
-  // TODO: PLACE THESE BUTTONS IN THE MIDDLE OF THE SCREEN
-  uint16_t x_finished = vmi.XResolution / 3;
-  // uint16_t height_finished = vmi.YResolution / 7;
 
-  button_t play_again_button = {x_finished, 10*min_height, min_len, min_height, other_buttons_color,"Send", play_again};
-  button_t play_again_change_state = {x_finished, 10*min_height, min_len, min_height, other_buttons_color, "PlayAgain", play_again_change_roles};
-  button_t quit_button = {x_finished, 10*min_height, min_len, min_height, other_buttons_color,"Quit", quit_game};
+  uint16_t x_finished = vmi.XResolution / 3;
+  uint16_t width_finished = vmi.XResolution / 3;
+  uint16_t height_finished = vmi.YResolution / 7;
+
+  button_t play_again_button = {x_finished, height_finished, width_finished, height_finished, other_buttons_color, "Play Again", play_again};
+  button_t play_again_change_state = {x_finished, height_finished * 3, width_finished, height_finished, other_buttons_color, "Play Again Different Roles", play_again_change_roles};
+  button_t quit_button = {x_finished, height_finished * 5, width_finished, height_finished, other_buttons_color, "Quit", quit_game};
   
   game_finished_buttons->buttons[0] = play_again_button;
   game_finished_buttons->buttons[1] = play_again_change_state;
@@ -227,44 +229,41 @@ int (game_process_timer)(){
 extern int keyboard_return_value;
 extern uint8_t scancode;
 int (game_process_keyboard)() {
+  printf("STARTED %s\n", __func__);
   if (player_drawer_get_role(player_drawer) == SELF_PLAYER) return EXIT_SUCCESS;
+  printf("After first if inside %s\n", __func__);
   if (game_state != PLAYING) return EXIT_SUCCESS;
 
   if (keyboard_return_value) return EXIT_SUCCESS;
   if (scancode == 0) return EXIT_SUCCESS;
 
-  //printf("trying to process kbd\n");
-  if (scancode == MAKE_BACKSPACE){
-    //printf("apagando\n");
-    //printf("old size: %d", guess->pointer);
-    delete_character(guess);
-    //printf("new size: %d\n", guess->pointer);
-  }
-  else if (scancode == MAKE_ENTER){
-    bool right;
-    //printf("validando\n");
-    validate_guess_word(prompt, guess, &right);
-    printf("correct guess: %d \n", right);
-    reset_guess_word(guess);
-
-    //TODO se acertar, avançar
-  }
-  else {
-    bool is_break = false;
-    if (is_breakcode(scancode, &is_break)) return EXIT_FAILURE;
-
-    if (!is_break){
-      uint8_t caracter = 0;
-      if (translate_scancode(scancode, &caracter)) return EXIT_FAILURE;
-      if (caracter != 0){
-        //printf("writing\n");
-        //printf("old size: %d ", guess->pointer);
-        if (write_character(guess, caracter)) return EXIT_FAILURE;
-        //printf("new size: %d\n", guess->pointer);
+  bool right_guess;
+  bool is_break = false;
+  switch(scancode){
+    case MAKE_BACKSPACE:
+      delete_character(guess);
+      break;
+      
+    case MAKE_ENTER:
+      validate_guess_word(prompt, guess, &right_guess);
+      printf("correct guess: %d \n", right_guess);
+      reset_guess_word(guess);
+      if(right_guess){
+        game_state = FINISHED;
+        //TODO: Chagne text to you WON
       }
-    }
+      break;
+
+    default:
+      if (is_breakcode(scancode, &is_break)) return EXIT_FAILURE;
+
+      if (!is_break){
+        uint8_t caracter;
+        if (translate_scancode(scancode, &caracter)) return EXIT_FAILURE;
+        if (write_character(guess, caracter)) return EXIT_FAILURE;
+      }
   }
-  //printf("processed kbd\n");
+
   return EXIT_SUCCESS;
 }
 
@@ -287,7 +286,7 @@ int (game_process_mouse)() {
       return EXIT_FAILURE;
     }
     if (button_to_click != -1) {
-      button_t pressed_button = game_playing_buttons->buttons[button_to_click];
+      button_t pressed_button = buttons->buttons[button_to_click];
       ser_add_button_click_to_transmitter_queue(button_to_click);
       pressed_button.onClick(&pressed_button);
     }
@@ -345,6 +344,11 @@ int (game_draw_buttons)() {
     return EXIT_FAILURE;
   }
   if (game_state == FINISHED) {
+    uint16_t height = 0.75 * get_v_res();
+    uint16_t width = get_h_res() / 2;
+    
+    vg_draw_rectangle(100, 300, width, height, 0x000000);
+    vg_draw_text("HELLO", 150, 300);
     if (vg_draw_buttons(game_finished_buttons)) {
       printf("vg_draw_buttons inside %s\n", __func__);
       return EXIT_FAILURE;

@@ -67,3 +67,6 @@ unsigned (get_vram_size)();
 int (vg_copy_canvas_buffer)(uint8_t * buffer);
 int (vg_clear_buffers)();
 
+uint16_t (get_v_res)();
+uint16_t (get_h_res)();
+uint8_t (get_bytes_per_pixel)();
