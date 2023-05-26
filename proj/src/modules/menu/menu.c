@@ -12,8 +12,12 @@ static player_menu_t *player_menu;
 extern vbe_mode_info_t vmi;
 static state_t *app_state;
 
-void (enter_game)(button_t* button){
+void (enter_game)(button_t *button){
   transition_to_game(app_state);
+}
+
+void (quit_app)(button_t *button) {
+  app_state->running_app = false;
 }
 
 void (transition_to_menu)(state_t* state){
@@ -43,7 +47,7 @@ int (setup_menu)(state_t *state) {
 
   button_t play_button = {x, height, width, height, NOT_HOVERED_BG_COLOR, "PLAY", enter_game};  
   button_t settings_button = {x, height * 3, width, height, NOT_HOVERED_BG_COLOR, "PLAY HARD MODE", enter_game};
-  button_t exit_button = {x, height * 5, width, height, NOT_HOVERED_BG_COLOR, "EXIT", enter_game};
+  button_t exit_button = {x, height * 5, width, height, NOT_HOVERED_BG_COLOR, "EXIT", quit_app};
   buttons_array->buttons[0] = play_button;
   buttons_array->buttons[1] = settings_button;
   buttons_array->buttons[2] = exit_button;
