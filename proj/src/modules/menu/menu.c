@@ -12,6 +12,8 @@ static player_menu_t *player_menu;
 extern vbe_mode_info_t vmi;
 static state_t *app_state;
 
+uint32_t (calculate_sky_color)(int hour);
+
 void (enter_game)(button_t *button){
   transition_to_game(app_state);
 }
@@ -100,8 +102,7 @@ int (draw_buttons)() {
   return EXIT_SUCCESS;
 }
 
-void (draw_sun)(){
-  int hour = 9;
+void (draw_sun)(uint32_t hour){
   int hour_space = (vmi.XResolution - 180) / 13;
   hour -= 6;
   int x = (vmi.XResolution / 2) - 6*hour_space + (hour)*hour_space;
@@ -126,37 +127,36 @@ void (draw_stars)(){
   }
 }
 
-void (draw_sky)(){
-  //TODO: change color based on hour
-  int blue = 0xADD8E6;
-  //int black = 0;
+void (draw_sky)(uint32_t hour){
+  uint32_t color = calculate_sky_color(hour);
   int terrain_height = 300;
-  if(vg_draw_rectangle(0, 0, vmi.XResolution, vmi.YResolution - terrain_height, blue)){
+  if(vg_draw_rectangle(0, 0, vmi.XResolution, vmi.YResolution - terrain_height, color)){
     printf("vg_draw_rectangle inside %s\n", __func__);
     return;
   }
 
-  //TODO: draw stars if night
-  //draw_stars();
+  if(hour > 19){
+    draw_stars();
+  }
 }
 
 void (draw_terrain)(){
   int terrain_height = 300;
-  int brown = 0xCD853F;
+  uint32_t brown = 0xCD853F;
   if(vg_draw_rectangle(0, vmi.YResolution - terrain_height, vmi.XResolution, vmi.YResolution, brown)){
     printf("vg_draw_rectangle inside %s\n", __func__);
     return;
   }
 }
 
-void (draw_timelapse)(){
-  draw_sky();
-  draw_sun();
+void (draw_timelapse)(uint32_t hour){
+  draw_sky(hour);
+  draw_sun(hour);
   draw_terrain();
 }
 
 int (menu_draw)(){
-  draw_timelapse();
+  draw_timelapse(12);
 
   if (draw_player_menu()) {
     printf("draw_player_menu inside %s\n", __func__);
@@ -228,6 +228,24 @@ int (calculate_sun_height)(int x){
 
   // Using ellipse formula to calculate y based on x
   return (int)(sqrt(1 - pow((x), 2) / pow(a, 2)) * pow(b, 2));
+}
+
+uint32_t (calculate_sky_color)(int hour){
+  if(hour >= 19 || hour <= 6) return 0x000000;
+
+  if(hour > 12){
+    hour = 12 - (hour - 12);
+  }
+
+  // default blue: 0x00F0FF
+  uint32_t red = 0x00;
+  uint32_t blue = 0xF0;
+  uint32_t green = 0xFF;
+
+  green = (hour * 255) / 12;
+  blue = (hour * 255) / 12;
+
+  return (red << 16) | (green << 8) | blue;
 }
 
 buttons_array_t *(get_menu_buttons)(){
