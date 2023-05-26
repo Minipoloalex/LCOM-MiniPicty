@@ -33,4 +33,4 @@ int (game_draw)();
 void (transition_to_game)(state_t* state);
 
 void (update_cursor_state)(position_t position);
-buttons_array_t *(get_game_buttons)(state_t* state);
+buttons_array_t *(game_get_buttons)(state_t* state);

@@ -112,7 +112,6 @@ Then, access DLL/DLM register and finally reset the DLAB bit, so other registers
 #define SER_MOUSE_NOT_DRAWING       '-'
 #define SER_END                     0xFF
 #define SER_END_REPLACEMENT         0xFE
-#define SER_SCANCODE_START          '?'
-#define SER_BUTTON_INDEX_FIRST_BYTE 'A'   // letters are used for buttons
-
+#define SER_WORD_INDEX              '?'
+#define SER_FIRST_BUTTON            'A'   // uppercase letters are used for buttons
 // #define SER_TRASH                 '_'
