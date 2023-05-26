@@ -6,9 +6,8 @@ bool (is_cursor_over_button)(button_t button, position_t mouse_position){
   return is_between_x && is_between_y;
 }
 
-void (change_button_colors)(button_t* button, uint8_t new_background_color, uint8_t new_text_color){
+void (change_button_color)(button_t* button, uint32_t new_background_color){
   button->background_color = new_background_color;
-  button->text_color = new_text_color;
 }
 
 int (get_hovered_button)(buttons_array_t *buttons_array, position_t mouse_position) {

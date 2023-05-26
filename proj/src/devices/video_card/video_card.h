@@ -12,11 +12,11 @@
 
 //guess word
 #define GUESS_POS_X 30
-#define GUESS_POS_Y 700
+#define GUESS_POS_Y 800
 
 //guess box
 #define GUESS_BOX_X 15
-#define GUESS_BOX_Y 680
+#define GUESS_BOX_Y 780
 #define GUESS_BOX_WIDTH 1024-30 //hres-30
 #define GUESS_BOX_HEIGHT 40+FONT_HEIGHT
 
@@ -25,9 +25,9 @@
 #define ROUND_TIMER_Y 700
 
 //colors
-#define TRANSPARENT 0
-#define BLACK 0
-#define WHITE 63
+#define TRANSPARENT 0x000001
+#define BLACK 0X000000
+#define WHITE 0XFFFFFF
 
 // Buffer related functions
 bool (buffers_need_update)();
@@ -48,7 +48,7 @@ int (vg_draw_circle)(uint16_t x, uint16_t y, uint16_t radius, uint32_t color);
 int (vg_draw_circle_to_buffer)(uint8_t *buffer, uint16_t x, uint16_t y, uint16_t radius, uint32_t color);
 int (vg_draw_line)(uint8_t *buffer, position_t pos1, position_t pos2, uint16_t radius, uint32_t color);
 
-int (vg_draw_xpm)(xpm_image_t *img, uint16_t x, uint16_t y, bool drawBlack);
+int (vg_draw_xpm)(xpm_image_t *img, uint16_t x, uint16_t y);
 int (vg_erase_xpm)(xpm_image_t *img, uint16_t x, uint16_t y);
 
 int (vg_draw_char)(const uint8_t character, uint16_t x, uint16_t y);

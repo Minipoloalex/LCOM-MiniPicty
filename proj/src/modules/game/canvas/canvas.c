@@ -1,7 +1,5 @@
 #include "canvas.h"
 
-#define CANVAS_BACKGROUND_COLOR 63
-
 canvas_t *(canvas_init)(int x, int y, int width, int height) {
   canvas_t *canvas = (canvas_t *) malloc(sizeof(canvas_t));
   canvas->start_point.x = x;

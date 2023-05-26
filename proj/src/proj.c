@@ -48,18 +48,16 @@ int(proj_main_loop)(int argc, char *argv[]) {
   if(subscribe_interrupts()) return EXIT_FAILURE;
 
   // Enter video mode
-  if(setup_video_mode(GRAPHICS_MODE_0)){
+  if(setup_video_mode(GRAPHICS_MODE_4)){
     printf("setup_video_mode inside %s\n", __func__);
     return EXIT_FAILURE;
-  }
+  }  
 
-  // Initing state and setting to default one: Menu
-  app_state = create_state();
-  if (app_state == NULL) {
-    printf("create_state inside %s\n", __func__);
-    return EXIT_FAILURE;
+  app_state = malloc(sizeof(state_t));
+  if(NULL != app_state){
+    // Setup the initial state: Menu
+    transition_to_menu(app_state);
   }
-  transition_to_menu(app_state);
 
   // Setup the app states
   if (setup_menu(app_state) != OK) {

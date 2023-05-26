@@ -2,11 +2,8 @@
 
 #define NUMBER_MENU_BUTTONS 3
 
-#define HOVERED_BG_COLOR 10
-#define HOVERED_TEXT_COLOR 5
-
-#define NOT_HOVERED_BG_COLOR 5
-#define NOT_HOVERED_TEXT_COLOR 10
+#define HOVERED_BG_COLOR 0x555555
+#define NOT_HOVERED_BG_COLOR 0x000000
 
 static buttons_array_t *buttons_array;
 
@@ -45,12 +42,10 @@ int (setup_menu)(state_t *state) {
   uint16_t width = vmi.XResolution / 3;
   uint16_t height = vmi.YResolution / 7;
 
-  uint8_t background_color = NOT_HOVERED_BG_COLOR;  
-  uint8_t text_color = NOT_HOVERED_TEXT_COLOR;
 
-  button_t play_button = {x, height, width, height, background_color, text_color, "PLAY", enter_game};  
-  button_t settings_button = {x, height * 3, width, height, background_color, text_color, "LEADERBOARD", enter_game};
-  button_t exit_button = {x, height * 5, width, height, background_color, text_color, "EXIT", enter_game};
+  button_t play_button = {x, height, width, height, NOT_HOVERED_BG_COLOR, "PLAY", enter_game};  
+  button_t settings_button = {x, height * 3, width, height, NOT_HOVERED_BG_COLOR, "LEADERBOARD", enter_game};
+  button_t exit_button = {x, height * 5, width, height, NOT_HOVERED_BG_COLOR, "EXIT", enter_game};
   buttons_array->buttons[0] = play_button;
   buttons_array->buttons[1] = settings_button;
   buttons_array->buttons[2] = exit_button;
@@ -75,9 +70,9 @@ int (draw_player_menu)() {
   for (int i = 0; i < NUMBER_MENU_BUTTONS; i++) {
     button_t button = buttons_array->buttons[i];
     if(is_cursor_over_button(button, position)){
-      change_button_colors(&button, HOVERED_BG_COLOR, HOVERED_TEXT_COLOR);
+      change_button_color(&button, HOVERED_BG_COLOR);
     } else {
-      change_button_colors(&button, NOT_HOVERED_BG_COLOR, NOT_HOVERED_TEXT_COLOR);
+      change_button_color(&button, NOT_HOVERED_BG_COLOR);
     }
   }
   return EXIT_SUCCESS;
@@ -91,9 +86,9 @@ int (draw_buttons)() {
   for(int i = 0; i < num_buttons; i++){
     button_t *button = &buttons_array->buttons[i];
     if(is_cursor_over_button(*button, last_position.position)){
-      change_button_colors(button, 10, 5);
+      change_button_color(button, HOVERED_BG_COLOR);
     } else {
-      change_button_colors(button, 5, 10);
+      change_button_color(button, NOT_HOVERED_BG_COLOR);
     }
   }
   if (vg_draw_buttons(buttons_array) != OK) {
@@ -109,7 +104,8 @@ void (draw_sun)(){
   hour -= 6;
   int x = (vmi.XResolution / 2) - 6*hour_space + (hour)*hour_space;
   int y = calculate_sun_height(x);
-  if(vg_draw_circle(x-30, vmi.YResolution - 300 - (y * 15), 60, 62)){
+  uint32_t color = 0xFFFF00;
+  if(vg_draw_circle(x-30, vmi.YResolution - 300 - (y * 15), 60, color)){
     printf("vg_draw_circle inside %s\n", __func__);
     return;
   }
@@ -121,7 +117,7 @@ void (draw_stars)(){
   for(int i=0; i<100; i++){
     x = rand() % vmi.XResolution;
     y = rand() % vmi.YResolution;
-    if(vg_draw_circle(x, y, 2, 63)){
+    if(vg_draw_circle(x, y, 2, 0xFFFFFF)){
       printf("vg_draw_pixel inside %s\n", __func__);
       return;
     }
@@ -130,7 +126,7 @@ void (draw_stars)(){
 
 void (draw_sky)(){
   //TODO: change color based on hour
-  int blue = 11;
+  int blue = 0xADD8E6;
   //int black = 0;
   int terrain_height = 300;
   if(vg_draw_rectangle(0, 0, vmi.XResolution, vmi.YResolution - terrain_height, blue)){
@@ -144,7 +140,8 @@ void (draw_sky)(){
 
 void (draw_terrain)(){
   int terrain_height = 300;
-  if(vg_draw_rectangle(0, vmi.YResolution - terrain_height, vmi.XResolution, vmi.YResolution, 20)){
+  int brown = 0xCD853F;
+  if(vg_draw_rectangle(0, vmi.YResolution - terrain_height, vmi.XResolution, vmi.YResolution, brown)){
     printf("vg_draw_rectangle inside %s\n", __func__);
     return;
   }
