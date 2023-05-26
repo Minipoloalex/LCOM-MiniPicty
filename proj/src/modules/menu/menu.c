@@ -54,9 +54,9 @@ int (setup_menu)(state_t *state) {
   uint16_t height = vmi.YResolution / 7;
 
 
-  button_t play_button = {x, height, width, height, NOT_HOVERED_BG_COLOR, "PLAY", NO_ICON, enter_game};  
-  button_t settings_button = {x, height * 3, width, height, NOT_HOVERED_BG_COLOR, "LEADERBOARD", NO_ICON, enter_game};
-  button_t exit_button = {x, height * 5, width, height, NOT_HOVERED_BG_COLOR, "EXIT", NO_ICON, enter_game};
+  button_t play_button = {x, height, width, height, NOT_HOVERED_BG_COLOR, "PLAY", NO_ICON, enter_game};
+  button_t settings_button = {x, height * 3, width, height, NOT_HOVERED_BG_COLOR, "PLAY HARD MODE", NO_ICON, enter_game};
+  button_t exit_button = {x, height * 5, width, height, NOT_HOVERED_BG_COLOR, "EXIT", NO_ICON, quit_app};
   buttons_array->buttons[0] = play_button;
   buttons_array->buttons[1] = settings_button;
   buttons_array->buttons[2] = exit_button;

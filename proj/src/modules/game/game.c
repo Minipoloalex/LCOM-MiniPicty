@@ -54,17 +54,17 @@ void(play_again)(button_t *button) {
   }
   reset_guess_word(guess);
 }
+void(play_again_change_roles)(button_t *button) {
+  printf("CHANGING ROLES OF PLAYERS\n");
+  player_drawer_change_role(player_drawer);
+  play_again(button);
+}
 void(quit_game)(button_t *button) {
   if (game_state != FINISHED) {
     printf("Wrong game state inside %s\n", __func__);
     return;
   }
   transition_to_menu(app_state);
-}
-void(play_again_change_roles)(button_t *button) {
-  printf("CHANGING ROLES OF PLAYERS\n");
-  player_drawer_change_role(player_drawer);
-  play_again(button);
 }
 void change_brush_color(button_t *button) {
   brush_t *brush = player_drawer_get_brush(player_drawer);
@@ -120,7 +120,7 @@ int(setup_game)(bool isTransmitter, state_t *state) {
     return EXIT_FAILURE;
   }
   game_finished_buttons = create_buttons_array(NUMBER_GAME_FINISHED_BUTTONS);
-  if (game_finished_buttons->buttons == NULL) {
+  if (game_finished_buttons == NULL) {
     free(finish_text);
     destroy_player_drawer(player_drawer);
     destroy_buttons_array(game_playing_buttons);
@@ -131,7 +131,7 @@ int(setup_game)(bool isTransmitter, state_t *state) {
   int min_len = vmi.XResolution / 9;
   int min_height = vmi.YResolution / 11;
 
-  button_t red_button = {0, 0, min_len, min_height, 0XFF0000, NULL, NO_ICON,change_brush_color};
+  button_t red_button = {0, 0, min_len, min_height, 0XFF0000, NULL, NO_ICON, change_brush_color};
   button_t orange_button = {6*min_len, 0, min_len, min_height, 0XFF9933, NULL, NO_ICON, change_brush_color};
   button_t yellow_button = {3*min_len, 0, min_len, min_height, 0XFFFF00, NULL, NO_ICON,change_brush_color};
   button_t green_button = {min_len, 0, min_len, min_height, 0X00FF00, NULL, NO_ICON,change_brush_color};
@@ -166,13 +166,13 @@ int(setup_game)(bool isTransmitter, state_t *state) {
   game_playing_buttons->buttons[11] = rubber_button;
   game_playing_buttons->buttons[12] = clear_button;
 
-//  uint16_t x_finished = vmi.XResolution / 3;
-//  uint16_t width_finished = vmi.XResolution / 3;
-//  uint16_t height_finished = vmi.YResolution / 7;
+ uint16_t x_finished = vmi.XResolution / 3;
+ uint16_t width_finished = vmi.XResolution / 3;
+ uint16_t height_finished = vmi.YResolution / 7;
 
-  button_t play_again_button = {8*min_len, 10*min_height, min_len, min_height, other_buttons_color,"Send", NO_ICON, play_again};
-  button_t play_again_change_state = {8*min_len, 10*min_height, min_len, min_height, other_buttons_color, "PlayAgain", NO_ICON, play_again_change_roles};
-  button_t quit_button = {8*min_len, 10*min_height, min_len, min_height, other_buttons_color,"Quit", NO_ICON, quit_game};
+  button_t play_again_button = {x_finished, height_finished, width_finished, height_finished, other_buttons_color, "Playagain", NO_ICON, play_again};
+  button_t play_again_change_state = {x_finished, height_finished * 3, width_finished, height_finished, other_buttons_color, "DifferentRole", NO_ICON, play_again_change_roles};
+  button_t quit_button = {x_finished, height_finished * 5, width_finished, height_finished, other_buttons_color, "Quit", NO_ICON, quit_game};
   
   game_finished_buttons->buttons[0] = play_again_button;
   game_finished_buttons->buttons[1] = play_again_change_state;
