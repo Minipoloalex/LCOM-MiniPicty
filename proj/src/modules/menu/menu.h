@@ -22,7 +22,4 @@ void (transition_to_menu)(state_t* state);
 void (destroy_menu)();
 int (calculate_sun_height)(int hour);
 
-//TODO: move thiss
-int (is_cursor_over_menu_button)(position_t mouse_position);
-
-buttons_array_t *menu_get_buttons(state_t *state);
+buttons_array_t *(menu_get_buttons)(state_t *state);

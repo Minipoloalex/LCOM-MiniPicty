@@ -182,6 +182,8 @@ int(setup_game)(bool isTransmitter, state_t *state) {
   if (canvas == NULL) {
     destroy_player_drawer(player_drawer);
     free(finish_text);
+    destroy_buttons_array(game_playing_buttons);
+    destroy_buttons_array(game_finished_buttons);
     return EXIT_FAILURE;
   }
   guess = create_guess_word();
@@ -189,12 +191,16 @@ int(setup_game)(bool isTransmitter, state_t *state) {
     free(finish_text);
     destroy_player_drawer(player_drawer);
     canvas_destroy(canvas);
+    destroy_buttons_array(game_playing_buttons);
+    destroy_buttons_array(game_finished_buttons);
     return EXIT_FAILURE;
   }
-  if (prompt_generate(prompt) != 0) {
+  if (prompt_generate(prompt) != OK) {
     free(finish_text);
     destroy_player_drawer(player_drawer);
     canvas_destroy(canvas);
+    destroy_buttons_array(game_playing_buttons);
+    destroy_buttons_array(game_finished_buttons);
     destroy_guess_word(guess);
   }
   return EXIT_SUCCESS;
@@ -204,8 +210,9 @@ void(destroy_game)() {
   free(finish_text);
   destroy_player_drawer(player_drawer);
   canvas_destroy(canvas);
+  destroy_buttons_array(game_playing_buttons);
+  destroy_buttons_array(game_finished_buttons);
   destroy_guess_word(guess);
-  vg_clear_buffers();
 }
 
 void(transition_to_game)(state_t *state) {
@@ -215,13 +222,13 @@ void(transition_to_game)(state_t *state) {
   state->process_keyboard = game_process_keyboard;
   state->process_serial = game_process_serial;
   state->process_timer = game_process_timer;
-  state->get_buttons = get_game_buttons;
+  state->get_buttons = game_get_buttons;
 
   prompt_generate(prompt);
   canvas_clear(canvas);
   game_state = WAITING;
   round_timer = GAME_WAITING_TIME;
-  finish_text = LOSE_TEXT;
+  strcpy(finish_text, LOSE_TEXT);
 }
 
 extern int timer_counter;
@@ -275,7 +282,7 @@ int(game_process_keyboard)() {
       reset_guess_word(guess);
       if (right_guess) {
         game_state = FINISHED;
-        finish_text = WON_TEXT;
+        strcpy(finish_text, WON_TEXT);
       }
       break;
 
@@ -291,7 +298,6 @@ int(game_process_keyboard)() {
           return EXIT_FAILURE;
       }
   }
-
   return EXIT_SUCCESS;
 }
 
@@ -307,7 +313,7 @@ int(game_process_mouse)() {
     }
   }
   int button_to_click = -1;
-  buttons_array_t *buttons = get_game_buttons(app_state);
+  buttons_array_t *buttons = game_get_buttons(app_state);
   if (buttons != NULL) {
     if (process_buttons_clicks(buttons, before, next, &button_to_click)) {
       printf("process_buttons_clicks inside %s\n", __func__);
@@ -345,7 +351,6 @@ int(game_draw_canvas)(canvas_t *canvas, player_drawer_t *player_drawer) {
     if (player_get_last_position(player, &last_position))
       return EXIT_FAILURE;
 
-    // draw_in_canvas(canvas, brush, last_position.position, drawing_position);
     if (game_state == PLAYING) {
       draw_in_canvas(canvas, brush, last_position.position, drawing_position);
     }
@@ -357,10 +362,6 @@ int(game_draw_canvas)(canvas_t *canvas, player_drawer_t *player_drawer) {
 
 int(game_process_serial)() {
   player_type_t role = player_drawer_get_role(player_drawer);
-  // the serial port function would have to be dependent on the game state
-  // example problematic sequence: POSITION CHANGE_GAME_STATE BUTTON_CLICK all on the same call to the function
-  // it will have the wrong buttons to click (the ones from the previous state)
-  // we passed game_playing_buttons->buttons because the state was PLAYING but then the state change to FINISHED so it should click those other buttons and not the ones from the previous state
   if (role == OTHER_PLAYER) {
     ser_read_bytes_from_receiver_queue(player_drawer, app_state);
   }
@@ -464,7 +465,7 @@ void(update_cursor_state)(position_t position) {
   }
 }
 
-buttons_array_t *(get_game_buttons) (state_t *state) {
+buttons_array_t *(game_get_buttons) (state_t *state) {
   if (game_state == PLAYING) {
     return game_playing_buttons;
   }
