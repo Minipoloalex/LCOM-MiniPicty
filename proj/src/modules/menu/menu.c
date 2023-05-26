@@ -30,7 +30,7 @@ void (transition_to_menu)(state_t* state){
   state->draw = menu_draw;
   state->process_mouse = menu_process_mouse;
   state->process_serial = menu_process_serial;
-  draw_timelapse(22); //TODO: dynamic change hour here
+  draw_timelapse(7); //TODO: dynamic change hour here 15 - 6 = 9
   state->get_buttons = menu_get_buttons;
 }
 
@@ -114,12 +114,14 @@ int (draw_buttons)() {
 }
 
 void (draw_sun)(uint32_t hour){
+  if(hour > 19 || hour < 6) return;
   int hour_space = (get_h_res() - 180) / 13;
   hour -= 6;
   int x = (get_h_res() / 2) - 6*hour_space + (hour)*hour_space;
-  int y = calculate_sun_height(x);
+  int y = calculate_sun_height(hour);
+  printf("My sun y: %d \n", y);
   uint32_t color = 0xFFFF00;
-  if(vg_draw_circle_to_buffer(background_scene, x-30, get_v_res() - 300 - (y * 15), 60, color)){
+  if(vg_draw_circle_to_buffer(background_scene, x-30, get_v_res() - 300 - y, 60, color)){
     printf("vg_draw_circle inside %s\n", __func__);
     return;
   }
@@ -256,13 +258,15 @@ int (menu_process_serial)() {
 }
 
 //FIX this function
-int (calculate_sun_height)(int x){
-  x = x - (get_h_res() / 2);
-  int a = 10;
-  int b = 2;
+int (calculate_sun_height)(int hour){
+  int x = hour - 6;
+  int a = 6;
+  int b = 20;
 
   // Using ellipse formula to calculate y based on x
-  return (int)(sqrt(1 - pow((x), 2) / pow(a, 2)) * pow(b, 2));
+  double y = pow(b,2) * sqrt(1 - (pow(x, 2) / pow(a, 2)));
+
+  return (int)y;
 }
 
 uint32_t (calculate_sky_color)(int hour){
