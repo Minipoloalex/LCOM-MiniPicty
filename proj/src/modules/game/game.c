@@ -131,16 +131,16 @@ int(setup_game)(bool isTransmitter, state_t *state) {
   int min_len = vmi.XResolution / 9;
   int min_height = vmi.YResolution / 11;
 
-  button_t red_button = {0, 0, min_len, min_height, 0XFF0000, NULL, NO_ICON, change_brush_color};
-  button_t orange_button = {6*min_len, 0, min_len, min_height, 0XFF9933, NULL, NO_ICON, change_brush_color};
-  button_t yellow_button = {3*min_len, 0, min_len, min_height, 0XFFFF00, NULL, NO_ICON,change_brush_color};
-  button_t green_button = {min_len, 0, min_len, min_height, 0X00FF00, NULL, NO_ICON,change_brush_color};
-  button_t light_blue_button = {7*min_len, 0, min_len, min_height, 0XADD8E6, NULL, NO_ICON, change_brush_color};
-  button_t dark_blue_button = {2*min_len, 0, min_len, min_height, 0X0066CC, NULL, NO_ICON,change_brush_color};
-  button_t pink_button = {8*min_len, 0, min_len, min_height, 0XFF99FF, NULL, NO_ICON, change_brush_color};
-  button_t gray_button = {5*min_len, 0, min_len, min_height, 0XA0A0A0, NULL, NO_ICON,change_brush_color};
-  button_t black_button = {4*min_len, 0, min_len, min_height, 0X000000, NULL, NO_ICON,change_brush_color};
-
+  button_t *red_button = create_button(0, 0, min_len, min_height, 0XFF0000, NULL, NO_ICON, change_brush_color);
+  button_t *orange_button = create_button(6*min_len, 0, min_len, min_height, 0XFF9933, NULL, NO_ICON, change_brush_color);
+  button_t *yellow_button = create_button(3*min_len, 0, min_len, min_height, 0XFFFF00, NULL, NO_ICON,change_brush_color);
+  button_t *green_button = create_button(min_len, 0, min_len, min_height, 0X00FF00, NULL, NO_ICON,change_brush_color);
+  button_t *light_blue_button = create_button(7*min_len, 0, min_len, min_height, 0XADD8E6, NULL, NO_ICON, change_brush_color);
+  button_t *dark_blue_button = create_button(2*min_len, 0, min_len, min_height, 0X0066CC, NULL, NO_ICON,change_brush_color);
+  button_t *pink_button = create_button(8*min_len, 0, min_len, min_height, 0XFF99FF, NULL, NO_ICON, change_brush_color);
+  button_t *gray_button = create_button(5*min_len, 0, min_len, min_height, 0XA0A0A0, NULL, NO_ICON,change_brush_color);
+  button_t *black_button = create_button(4*min_len, 0, min_len, min_height, 0X000000, NULL, NO_ICON,change_brush_color);
+  
   game_playing_buttons->buttons[0] = red_button;
   game_playing_buttons->buttons[1] = orange_button;
   game_playing_buttons->buttons[2] = yellow_button;
@@ -153,31 +153,27 @@ int(setup_game)(bool isTransmitter, state_t *state) {
 
   int other_buttons_color = 0XA0A0A0;
 
-  button_t increase_size_button = {8*min_len, 2*min_height, min_len, min_height, other_buttons_color, NULL, PLUS_ICON, increase_brush_size};
-
-  button_t decrease_size_button = {8*min_len, 4*min_height, min_len, min_height, other_buttons_color, NULL, MINUS_ICON, decrease_brush_size};
-
-  button_t rubber_button = {8*min_len, 6*min_height, min_len, min_height, other_buttons_color, NULL, RUBBER_ICON, set_rubber};
-
-  button_t clear_button = {8*min_len, 8*min_height, min_len, min_height, other_buttons_color, NULL, TRASH_ICON, clear_canvas};
+  button_t * increase_size_button = create_button(8*min_len, 2*min_height, min_len, min_height, other_buttons_color, NULL, PLUS_ICON, increase_brush_size);
+  button_t * decrease_size_button = create_button(8*min_len, 4*min_height, min_len, min_height, other_buttons_color, NULL, MINUS_ICON, decrease_brush_size);
+  button_t * rubber_button = create_button(8*min_len, 6*min_height, min_len, min_height, other_buttons_color, NULL, RUBBER_ICON, set_rubber);
+  button_t * clear_button = create_button(8*min_len, 8*min_height, min_len, min_height, other_buttons_color, NULL, TRASH_ICON, clear_canvas);
 
   game_playing_buttons->buttons[9] = increase_size_button;
   game_playing_buttons->buttons[10] = decrease_size_button;
   game_playing_buttons->buttons[11] = rubber_button;
   game_playing_buttons->buttons[12] = clear_button;
 
- uint16_t x_finished = vmi.XResolution / 3;
- uint16_t width_finished = vmi.XResolution / 3;
- uint16_t height_finished = vmi.YResolution / 7;
+  uint16_t x_finished = vmi.XResolution / 3;
+  uint16_t width_finished = vmi.XResolution / 3;
+  uint16_t height_finished = vmi.YResolution / 7;
 
-  button_t play_again_button = {x_finished, height_finished, width_finished, height_finished, other_buttons_color, "Playagain", NO_ICON, play_again};
-  button_t play_again_change_state = {x_finished, height_finished * 3, width_finished, height_finished, other_buttons_color, "DifferentRole", NO_ICON, play_again_change_roles};
-  button_t quit_button = {x_finished, height_finished * 5, width_finished, height_finished, other_buttons_color, "Quit", NO_ICON, quit_game};
-  
+  button_t *play_again_button = create_button(x_finished, height_finished, width_finished, height_finished, other_buttons_color, "Playagain", NO_ICON, play_again);
+  button_t *play_again_change_state = create_button(x_finished, height_finished * 3, width_finished, height_finished, other_buttons_color, "DifferentRole", NO_ICON, play_again_change_roles);
+  button_t *quit_button = create_button(x_finished, height_finished * 5, width_finished, height_finished, other_buttons_color, "Quit", NO_ICON, quit_game);
+
   game_finished_buttons->buttons[0] = play_again_button;
   game_finished_buttons->buttons[1] = play_again_change_state;
   game_finished_buttons->buttons[2] = quit_button;
-
   canvas = canvas_init(0, min_height, 8 * min_len, 8 * min_height);
   if (canvas == NULL) {
     destroy_player_drawer(player_drawer);
@@ -228,11 +224,13 @@ void(transition_to_game)(state_t *state) {
   canvas_clear(canvas);
   game_state = WAITING;
   round_timer = GAME_WAITING_TIME;
-  strcpy(finish_text, LOSE_TEXT);
+  if (strcpy(finish_text, LOSE_TEXT) == NULL) {
+    printf("strcpy failed inside %s\n", __func__);
+  }
 }
 
 extern int timer_counter;
-int(game_process_timer)() {
+int (game_process_timer)() {
   if (game_state == FINISHED) {
     return EXIT_SUCCESS;
   }
@@ -282,7 +280,10 @@ int(game_process_keyboard)() {
       reset_guess_word(guess);
       if (right_guess) {
         game_state = FINISHED;
-        strcpy(finish_text, WON_TEXT);
+        if (strcpy(finish_text, WON_TEXT) != OK) {
+          printf("strcpy failed inside %s\n", __func__);
+          return EXIT_FAILURE;
+        }
       }
       break;
 
@@ -320,14 +321,11 @@ int(game_process_mouse)() {
       return EXIT_FAILURE;
     }
     if (button_to_click != -1) {
-      button_t pressed_button = buttons->buttons[button_to_click];
+      button_t *pressed_button = buttons->buttons[button_to_click];
       ser_add_button_click_to_transmitter_queue(button_to_click);
-      pressed_button.onClick(&pressed_button);
+      pressed_button->onClick(pressed_button);
     }
   }
-  // else {
-  //   printf("BUTTONS ARE NULL - might be in waiting\n");
-  // }
   return EXIT_SUCCESS;
 }
 

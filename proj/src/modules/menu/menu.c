@@ -53,10 +53,10 @@ int (setup_menu)(state_t *state) {
   uint16_t width = vmi.XResolution / 3;
   uint16_t height = vmi.YResolution / 7;
 
+  button_t *play_button = create_button(x, height, width, height, NOT_HOVERED_BG_COLOR, "PLAY", NO_ICON, enter_game);
+  button_t *settings_button = create_button(x, height * 3, width, height, NOT_HOVERED_BG_COLOR, "PLAY HARD MODE", NO_ICON, enter_game);
+  button_t *exit_button = create_button(x, height * 5, width, height, NOT_HOVERED_BG_COLOR, "EXIT", NO_ICON, quit_app);
 
-  button_t play_button = {x, height, width, height, NOT_HOVERED_BG_COLOR, "PLAY", NO_ICON, enter_game};
-  button_t settings_button = {x, height * 3, width, height, NOT_HOVERED_BG_COLOR, "PLAY HARD MODE", NO_ICON, enter_game};
-  button_t exit_button = {x, height * 5, width, height, NOT_HOVERED_BG_COLOR, "EXIT", NO_ICON, quit_app};
   buttons_array->buttons[0] = play_button;
   buttons_array->buttons[1] = settings_button;
   buttons_array->buttons[2] = exit_button;
@@ -84,11 +84,11 @@ int (draw_player_menu)() {
   position_t position = player_get_current_position(player).position;
 
   for (int i = 0; i < NUMBER_MENU_BUTTONS; i++) {
-    button_t button = buttons_array->buttons[i];
+    button_t *button = buttons_array->buttons[i];
     if(is_cursor_over_button(button, position)){
-      change_button_color(&button, HOVERED_BG_COLOR);
+      change_button_color(button, HOVERED_BG_COLOR);
     } else {
-      change_button_color(&button, NOT_HOVERED_BG_COLOR);
+      change_button_color(button, NOT_HOVERED_BG_COLOR);
     }
   }
   return EXIT_SUCCESS;
@@ -100,8 +100,8 @@ int (draw_buttons)() {
 
   int num_buttons = buttons_array->num_buttons;
   for(int i = 0; i < num_buttons; i++){
-    button_t *button = &buttons_array->buttons[i];
-    if(is_cursor_over_button(*button, last_position.position)){
+    button_t *button = buttons_array->buttons[i];
+    if(is_cursor_over_button(button, last_position.position)){
       change_button_color(button, HOVERED_BG_COLOR);
     } else {
       change_button_color(button, NOT_HOVERED_BG_COLOR);
@@ -213,9 +213,9 @@ int (menu_process_mouse)() {
     return EXIT_FAILURE;
   }
   if (button_to_click != -1) {
-    button_t pressed_button = buttons_array->buttons[button_to_click];
+    button_t *pressed_button = buttons_array->buttons[button_to_click];
     ser_add_button_click_to_transmitter_queue(button_to_click);
-    pressed_button.onClick(&pressed_button);
+    pressed_button->onClick(pressed_button);
   }
 
   return player_add_next_position(player, &next);

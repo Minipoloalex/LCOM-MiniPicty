@@ -628,9 +628,9 @@ int (ser_read_bytes_from_receiver_queue)(player_drawer_t *drawer, state_t *app_s
               // case SER_BUTTON_INDEX
               printf("button_clicked: %d,", byte - SER_FIRST_BUTTON);
 
-              button_t clicked_button = buttons->buttons[byte - SER_FIRST_BUTTON];
-              printf("text: %s\n", clicked_button.text);
-              clicked_button.onClick(&clicked_button);
+              button_t *clicked_button = buttons->buttons[byte - SER_FIRST_BUTTON];
+              printf("text: %s\n", clicked_button->text);
+              clicked_button->onClick(clicked_button);
               printf("After clicking on button\n");
             }
             break;
