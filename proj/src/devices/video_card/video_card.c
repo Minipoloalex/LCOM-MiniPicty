@@ -350,7 +350,7 @@ int (vg_draw_button)(button_t *button) {
     return EXIT_FAILURE;
   }
 
-  if (button->icon != NOTHING){
+  if (button->icon != NO_ICON){
     xpm_map_t icon = icons[button->icon];
     xpm_image_t icon_image;
     uint8_t *colors = xpm_load(icon, XPM_8_8_8_8, &icon_image);
@@ -364,6 +364,7 @@ int (vg_draw_button)(button_t *button) {
 
     return EXIT_SUCCESS;
   }
+
 
   if (button->text != NULL) {
     vg_draw_text(button->text, 

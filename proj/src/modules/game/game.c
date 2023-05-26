@@ -108,15 +108,15 @@ int (setup_game)(bool isTransmitter, state_t *state) {
   int min_len = vmi.XResolution / 9;
   int min_height = vmi.YResolution / 11;
 
-  button_t red_button = {0, 0, min_len, min_height, 0XFF0000, NULL, NOTHING,change_brush_color};
-  button_t orange_button = {6*min_len, 0, min_len, min_height, 0XFF9933, NULL, NOTHING, change_brush_color};
-  button_t yellow_button = {3*min_len, 0, min_len, min_height, 0XFFFF00, NULL, NOTHING,change_brush_color};
-  button_t green_button = {min_len, 0, min_len, min_height, 0X00FF00, NULL, NOTHING,change_brush_color};
-  button_t light_blue_button = {7*min_len, 0, min_len, min_height, 0XADD8E6, NULL, NOTHING, change_brush_color};
-  button_t dark_blue_button = {2*min_len, 0, min_len, min_height, 0X0066CC, NULL, NOTHING,change_brush_color};
-  button_t pink_button = {8*min_len, 0, min_len, min_height, 0XFF99FF, NULL, NOTHING, change_brush_color};
-  button_t gray_button = {5*min_len, 0, min_len, min_height, 0XA0A0A0, NULL, NOTHING,change_brush_color};
-  button_t black_button = {4*min_len, 0, min_len, min_height, 0X000000, NULL, NOTHING,change_brush_color};
+  button_t red_button = {0, 0, min_len, min_height, 0XFF0000, NULL, NO_ICON,change_brush_color};
+  button_t orange_button = {6*min_len, 0, min_len, min_height, 0XFF9933, NULL, NO_ICON, change_brush_color};
+  button_t yellow_button = {3*min_len, 0, min_len, min_height, 0XFFFF00, NULL, NO_ICON,change_brush_color};
+  button_t green_button = {min_len, 0, min_len, min_height, 0X00FF00, NULL, NO_ICON,change_brush_color};
+  button_t light_blue_button = {7*min_len, 0, min_len, min_height, 0XADD8E6, NULL, NO_ICON, change_brush_color};
+  button_t dark_blue_button = {2*min_len, 0, min_len, min_height, 0X0066CC, NULL, NO_ICON,change_brush_color};
+  button_t pink_button = {8*min_len, 0, min_len, min_height, 0XFF99FF, NULL, NO_ICON, change_brush_color};
+  button_t gray_button = {5*min_len, 0, min_len, min_height, 0XA0A0A0, NULL, NO_ICON,change_brush_color};
+  button_t black_button = {4*min_len, 0, min_len, min_height, 0X000000, NULL, NO_ICON,change_brush_color};
 
   game_playing_buttons->buttons[0] = red_button;
   game_playing_buttons->buttons[1] = orange_button;
@@ -144,9 +144,9 @@ int (setup_game)(bool isTransmitter, state_t *state) {
   game_playing_buttons->buttons[12] = clear_button;
 
 
-  button_t play_again_button = {8*min_len, 10*min_height, min_len, min_height, other_buttons_color,"Send", NOTHING, play_again};
-  button_t play_again_change_state = {8*min_len, 10*min_height, min_len, min_height, other_buttons_color, "PlayAgain", NOTHING, play_again_change_roles};
-  button_t quit_button = {8*min_len, 10*min_height, min_len, min_height, other_buttons_color,"Quit", NOTHING, quit_game};
+  button_t play_again_button = {8*min_len, 10*min_height, min_len, min_height, other_buttons_color,"Send", NO_ICON, play_again};
+  button_t play_again_change_state = {8*min_len, 10*min_height, min_len, min_height, other_buttons_color, "PlayAgain", NO_ICON, play_again_change_roles};
+  button_t quit_button = {8*min_len, 10*min_height, min_len, min_height, other_buttons_color,"Quit", NO_ICON, quit_game};
   
   game_finished_buttons->buttons[0] = play_again_button;
   game_finished_buttons->buttons[1] = play_again_change_state;

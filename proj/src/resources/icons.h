@@ -8,8 +8,8 @@
 #include "icons/trash.xpm"
 
 static xpm_map_t icons[4] = {
+  plus_xpm,
+  minus_xpm,
   rubber_xpm,
-  rubber_xpm,
-  rubber_xpm,
-  rubber_xpm,
+  trash_xpm,
 };

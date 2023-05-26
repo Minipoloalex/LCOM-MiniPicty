@@ -56,7 +56,7 @@ int(proj_main_loop)(int argc, char *argv[]) {
   app_state = malloc(sizeof(state_t));
   if(NULL != app_state){
     // Setup the initial state: Menu
-    transition_to_game(app_state);
+    transition_to_menu(app_state);
   }
 
   // Setup the app states

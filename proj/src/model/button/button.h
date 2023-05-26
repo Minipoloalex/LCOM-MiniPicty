@@ -10,7 +10,7 @@ typedef enum {
     MINUS,
     RUBBER_ICON,
     TRASH,
-    NOTHING,
+    NO_ICON,
 } button_icon_t;
 
 struct button {
