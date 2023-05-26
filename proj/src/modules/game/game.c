@@ -4,8 +4,6 @@
 #define NUMBER_GAME_FINISHED_BUTTONS 3
 #define GAME_WAITING_TIME 5
 #define GAME_ROUND_TIME 10
-#define WAITING_TEXT_POS_X 500
-#define WAITING_TEXT_POS_Y 500
 #define WON_TEXT "You won"
 #define LOSE_TEXT "You lost"
 #define YOU_ARE_DRAWING_TEXT "You are drawing"
@@ -31,6 +29,9 @@ typedef enum game_state {
 static game_state_t game_state;
 static char *finish_text;
 static state_t *app_state;
+
+static int cell_width = 0;
+static int cell_height = 0;
 /*==================================================================*/
 /**
  * @brief
@@ -130,7 +131,8 @@ int(setup_game)(bool isTransmitter, state_t *state) {
 
   int min_len = vmi.XResolution / 9;
   int min_height = vmi.YResolution / 11;
-
+  cell_width = min_len;
+  cell_height = min_height;
   button_t *red_button = create_button(0, 0, min_len, min_height, 0XFF0000, NULL, NO_ICON, change_brush_color);
   button_t *orange_button = create_button(6*min_len, 0, min_len, min_height, 0XFF9933, NULL, NO_ICON, change_brush_color);
   button_t *yellow_button = create_button(3*min_len, 0, min_len, min_height, 0XFFFF00, NULL, NO_ICON,change_brush_color);
@@ -372,11 +374,12 @@ int(game_draw_buttons)() {
     return EXIT_FAILURE;
   }
   if (game_state == FINISHED) {
-    uint16_t height = 0.75 * get_v_res();
-    uint16_t width = get_h_res() / 2;
-
-    vg_draw_rectangle(100, 300, width, height, 0x000000);
-    vg_draw_text(finish_text, 150, 300);
+    if (vg_draw_rectangle(0, cell_height, cell_width*4, cell_height, 0XA0A0A0) != OK)
+      return EXIT_FAILURE;
+    if (vg_draw_text(finish_text, 0, cell_height+cell_height/4) != OK)
+      return EXIT_FAILURE;
+    if (vg_draw_rectangle(2*cell_width, cell_height, 5*cell_width, 9*cell_height, BLACK) != OK)
+      return EXIT_FAILURE;
     if (vg_draw_buttons(game_finished_buttons)) {
       printf("vg_draw_buttons inside %s\n", __func__);
       return EXIT_FAILURE;
@@ -416,15 +419,15 @@ int(game_draw)() {
     if (game_state == WAITING) {
       // TODO: draw with color and with spaces (currently spaces are not allowed and color is white with white background)
       if (role == SELF_PLAYER) {
-        if (vg_draw_rectangle(WAITING_TEXT_POS_X, WAITING_TEXT_POS_Y, 400, 50, BLACK) != OK)
+        if (vg_draw_rectangle(0, cell_height, cell_width*4, cell_height, 0XA0A0A0) != OK)
           return EXIT_FAILURE;
-        if (vg_draw_text(YOU_ARE_DRAWING_TEXT, WAITING_TEXT_POS_X, WAITING_TEXT_POS_Y) != OK)
+        if (vg_draw_text(YOU_ARE_DRAWING_TEXT, 0, cell_height+cell_height/4) != OK)
           return EXIT_FAILURE;
       }
       else {
-        if (vg_draw_rectangle(WAITING_TEXT_POS_X, WAITING_TEXT_POS_Y, 400, 50, BLACK) != OK)
+        if (vg_draw_rectangle(0, cell_height, cell_width*4, cell_height, 0XA0A0A0) != OK)
           return EXIT_FAILURE;
-        if (vg_draw_text(YOU_ARE_GUESSING_TEXT, WAITING_TEXT_POS_X, WAITING_TEXT_POS_Y) != OK)
+        if (vg_draw_text(YOU_ARE_GUESSING_TEXT, 0, cell_height+cell_height/4) != OK)
           return EXIT_FAILURE;
       }
     }
