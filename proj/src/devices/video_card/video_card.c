@@ -252,14 +252,6 @@ int (vg_draw_buffer)(uint8_t *buffer){
   return EXIT_SUCCESS;
 }
 
-int (get_rgb_component)(uint32_t color, uint8_t component_size, uint8_t component_position, uint8_t *component) {
-  uint8_t mask = BIT(component_size) - 1;
-  uint8_t final = (uint8_t) (color >> component_position & (mask));
-  *component = final;
-
-  return EXIT_SUCCESS;
-}
-
 int (vg_draw_xpm)(xpm_image_t *img, uint16_t x, uint16_t y) {
   uint8_t *colors = img->bytes; 
 

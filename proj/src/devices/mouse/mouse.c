@@ -3,12 +3,17 @@
 static int hook_id = IRQ_MOUSE;
 int return_value_mouse = 0;
 
-uint8_t packet_byte = 0;
-uint8_t packet_index = 0;
+static uint8_t packet_byte = 0;
+static uint8_t packet_index = 0;
 struct packet packet;
-
-
 static bool packet_ready = false;
+
+/**
+ * @brief 
+ * 
+ */
+int (write_to_mouse)(uint8_t command);
+
 bool (packet_is_ready)() {
   return packet_ready;
 }
