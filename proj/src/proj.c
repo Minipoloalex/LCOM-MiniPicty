@@ -53,11 +53,13 @@ int(proj_main_loop)(int argc, char *argv[]) {
     return EXIT_FAILURE;
   }  
 
-  app_state = malloc(sizeof(state_t));
-  if(NULL != app_state){
-    // Setup the initial state: Menu
-    transition_to_menu(app_state);
+  app_state = create_state();
+  if (app_state == NULL) {
+    printf("create_state inside %s\n", __func__);
+    return EXIT_FAILURE;
   }
+  // Setup the initial state: Menu
+  transition_to_menu(app_state);
 
   // Setup the app states
   if (setup_menu(app_state) != OK) {
@@ -84,7 +86,6 @@ int(proj_main_loop)(int argc, char *argv[]) {
   extern uint8_t ser_return_value;
 
   extern uint8_t return_value_mouse;
-
   do {
       if ((r = driver_receive(ANY, &msg, &ipc_status)) != 0) {
         printf("driver_receive failed with %d", r);
@@ -123,7 +124,7 @@ int(proj_main_loop)(int argc, char *argv[]) {
             break;
         }
       }
-    } while (scancode != BREAK_ESC);
+    } while (app_state->running_app && scancode != BREAK_ESC);
   
   // Unload resources
   destroy_game();

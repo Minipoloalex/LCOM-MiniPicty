@@ -12,8 +12,12 @@ static player_menu_t *player_menu;
 extern vbe_mode_info_t vmi;
 static state_t *app_state;
 
-void (enter_game)(button_t* button){
+void (enter_game)(button_t *button){
   transition_to_game(app_state);
+}
+
+void (quit_app)(button_t *button) {
+  app_state->running_app = false;
 }
 
 void (transition_to_menu)(state_t* state){
@@ -21,8 +25,6 @@ void (transition_to_menu)(state_t* state){
   state->draw = menu_draw;
   state->process_mouse = menu_process_mouse;
   state->process_serial = menu_process_serial;
-  /*state->process_timer = defaultDraw;
-  state->process_keyboard = defaultDraw;*/
 }
 
 int (setup_menu)(state_t *state) {
@@ -189,7 +191,6 @@ int (menu_process_mouse)() {
     printf("process_buttons_clicks inside %s\n", __func__);
     return EXIT_FAILURE;
   }
-
   if (button_to_click != -1) {
     button_t pressed_button = buttons_array->buttons[button_to_click];
     ser_add_button_click_to_transmitter_queue(button_to_click);
@@ -205,6 +206,7 @@ void (destroy_menu)() {
 }
 
 int (menu_process_serial)() {
+  ser_read_bytes_from_receiver_queue(NULL, app_state);
   return EXIT_SUCCESS;
 }
 

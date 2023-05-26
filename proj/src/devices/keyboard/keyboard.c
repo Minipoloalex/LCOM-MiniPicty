@@ -34,12 +34,17 @@ int (is_breakcode)(uint8_t scancode, bool *is_breakcode){
 }
 
 int (translate_scancode)(uint8_t scancode, uint8_t *character){
+  if(scancode == MAKE_SPACE){
+    *character = ' ';
+    return EXIT_SUCCESS;
+  }
+
   for (int i = 0; i < 36; i++){
     if (scancode == makecodes[i].scancode || scancode == breakcodes[i].scancode){
       *character = makecodes[i].character;
-      break;
+      return EXIT_SUCCESS;
     }
   }
   // printf("No match for scancode: 0x%x\n", scancode);
-  return EXIT_SUCCESS;
+  return EXIT_FAILURE;
 }

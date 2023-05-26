@@ -20,7 +20,6 @@
 #include "../../devices/video_card/video_card.h"
 #include "../../utils/utils.h"
 
-#define ROUND_TIME 120
 
 int (setup_game)(bool isTransmitter, state_t *state);
 

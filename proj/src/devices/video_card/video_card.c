@@ -17,8 +17,8 @@ void (set_needs_update)(bool value) {
   needs_update = value;
 }
 
-unsigned h_res;	        /* Horizontal resolution in pixels */
-unsigned v_res;	        /* Vertical resolution in pixels */
+static unsigned h_res;	        /* Horizontal resolution in pixels */
+static unsigned v_res;	        /* Vertical resolution in pixels */
 vbe_mode_info_t vmi;
 
 int (setup_video_mode)(uint16_t mode){
@@ -276,7 +276,10 @@ int (vg_erase_xpm)(xpm_image_t *img, uint16_t x, uint16_t y) {
 
 int (vg_draw_char)(const uint8_t character, uint16_t x, uint16_t y){
   uint8_t index;
-  //printf("%c", character);
+  if(character == ' '){
+    return EXIT_SUCCESS;
+  }
+
   if (character >= 'a' && character <= 'z') index = character - 'a';
   else if (character >= 'A' && character <= 'Z') index = character - 'A';
   else if (character >= '0' && character <= '9') index = character - '0' + 26;
@@ -387,4 +390,13 @@ int (vg_draw_buttons)(buttons_array_t *buttons) {
 
 unsigned (get_vram_size)(){
   return vram_size;
+}
+uint16_t (get_v_res)() {
+  return vmi.YResolution;
+}
+uint16_t (get_h_res)() {
+  return vmi.XResolution;
+}
+uint8_t (get_bytes_per_pixel)() {
+  return bytes_per_pixel;
 }
