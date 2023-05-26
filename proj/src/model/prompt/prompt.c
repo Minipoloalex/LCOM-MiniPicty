@@ -15,6 +15,5 @@ int (prompt_generate)(char *prompt){
   }
   prompt[i] = '\0';
 
-  //printf("defined prompt: %s\n", prompt);
   return EXIT_SUCCESS;
 }

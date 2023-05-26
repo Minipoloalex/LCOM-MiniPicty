@@ -7,8 +7,8 @@
 #include "../drawing_position.h"
 
 typedef enum player_type {
-  SELF_PLAYER, //desenha
-  OTHER_PLAYER,//adivinha
+  SELF_PLAYER,  // Drawer
+  OTHER_PLAYER, // Guesser
 } player_type_t;
 
 struct Player;

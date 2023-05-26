@@ -9,26 +9,25 @@
 #define YOU_ARE_DRAWING_TEXT "You are drawing"
 #define YOU_ARE_GUESSING_TEXT "You are guessing"
 #define FINISH_TEXT_SIZE (MAX(sizeof(WON_TEXT), sizeof(LOSE_TEXT)) + 1)
-
-static buttons_array_t *game_playing_buttons;
-static buttons_array_t *game_finished_buttons;
-
-extern vbe_mode_info_t vmi;
-
-static player_drawer_t *player_drawer;
-static canvas_t *canvas;
-static guess_word_t *guess;
-extern vbe_mode_info_t vmi;
-static char prompt[15];
-uint8_t round_timer;
 typedef enum game_state {
   PLAYING,
   WAITING,
   FINISHED
 } game_state_t;
+
+static buttons_array_t *game_playing_buttons;
+static buttons_array_t *game_finished_buttons;
+
+static player_drawer_t *player_drawer;
+static canvas_t *canvas;
+static guess_word_t *guess;
+static char prompt[15];
+static uint8_t round_timer;
 static game_state_t game_state;
 static char *finish_text;
 static state_t *app_state;
+static bool is_hard_mode;
+static asteroid_t *asteroid;
 
 static int cell_width = 0;
 static int cell_height = 0;
@@ -67,7 +66,7 @@ void(quit_game)(button_t *button) {
   }
   transition_to_menu(app_state);
 }
-void change_brush_color(button_t *button) {
+void (change_brush_color)(button_t *button) {
   brush_t *brush = player_drawer_get_brush(player_drawer);
   if (brush == NULL)
     return;
@@ -129,8 +128,8 @@ int(setup_game)(bool isTransmitter, state_t *state) {
     return EXIT_FAILURE;
   }
 
-  int min_len = vmi.XResolution / 9;
-  int min_height = vmi.YResolution / 11;
+  int min_len = get_h_res() / 9;
+  int min_height = get_v_res() / 11;
   cell_width = min_len;
   cell_height = min_height;
   button_t *red_button = create_button(0, 0, min_len, min_height, 0XFF0000, NULL, NO_ICON, change_brush_color);
@@ -165,17 +164,18 @@ int(setup_game)(bool isTransmitter, state_t *state) {
   game_playing_buttons->buttons[11] = rubber_button;
   game_playing_buttons->buttons[12] = clear_button;
 
-  uint16_t x_finished = vmi.XResolution / 3;
-  uint16_t width_finished = vmi.XResolution / 3;
-  uint16_t height_finished = vmi.YResolution / 7;
+  uint16_t x_finished = get_h_res() / 3;
+  uint16_t width_finished = get_h_res() / 3;
+  uint16_t height_finished = get_v_res() / 7;
 
-  button_t *play_again_button = create_button(x_finished, height_finished, width_finished, height_finished, other_buttons_color, "Playagain", NO_ICON, play_again);
-  button_t *play_again_change_state = create_button(x_finished, height_finished * 3, width_finished, height_finished, other_buttons_color, "DifferentRole", NO_ICON, play_again_change_roles);
-  button_t *quit_button = create_button(x_finished, height_finished * 5, width_finished, height_finished, other_buttons_color, "Quit", NO_ICON, quit_game);
+  button_t *play_again_button = create_button(x_finished, height_finished, width_finished, height_finished, other_buttons_color, "Play Again", NO_ICON, play_again);
+  button_t *play_again_change_state = create_button(x_finished, height_finished * 3, width_finished, height_finished, other_buttons_color, "Change Roles", NO_ICON, play_again_change_roles);
+  button_t *quit_button = create_button(x_finished, height_finished * 5, width_finished, height_finished, other_buttons_color, "Back Menu", NO_ICON, quit_game);
 
   game_finished_buttons->buttons[0] = play_again_button;
   game_finished_buttons->buttons[1] = play_again_change_state;
   game_finished_buttons->buttons[2] = quit_button;
+
   canvas = canvas_init(0, min_height, 8 * min_len, 8 * min_height);
   if (canvas == NULL) {
     destroy_player_drawer(player_drawer);
@@ -184,6 +184,7 @@ int(setup_game)(bool isTransmitter, state_t *state) {
     destroy_buttons_array(game_finished_buttons);
     return EXIT_FAILURE;
   }
+
   guess = create_guess_word();
   if (guess == NULL) {
     free(finish_text);
@@ -193,6 +194,7 @@ int(setup_game)(bool isTransmitter, state_t *state) {
     destroy_buttons_array(game_finished_buttons);
     return EXIT_FAILURE;
   }
+  
   if (prompt_generate(prompt) != OK) {
     free(finish_text);
     destroy_player_drawer(player_drawer);
@@ -200,6 +202,19 @@ int(setup_game)(bool isTransmitter, state_t *state) {
     destroy_buttons_array(game_playing_buttons);
     destroy_buttons_array(game_finished_buttons);
     destroy_guess_word(guess);
+  }
+
+
+  // asteroid = create_asteroid(4, {});
+  asteroid = NULL;
+  if (asteroid == NULL) {
+    free(finish_text);
+    destroy_player_drawer(player_drawer);
+    canvas_destroy(canvas);
+    destroy_buttons_array(game_playing_buttons);
+    destroy_buttons_array(game_finished_buttons);
+    destroy_guess_word(guess);
+    return EXIT_FAILURE;
   }
   return EXIT_SUCCESS;
 }
@@ -211,9 +226,10 @@ void(destroy_game)() {
   destroy_buttons_array(game_playing_buttons);
   destroy_buttons_array(game_finished_buttons);
   destroy_guess_word(guess);
+  destroy_asteroid(asteroid);
 }
 
-void(transition_to_game)(state_t *state) {
+void(transition_to_game)(state_t *state, bool hard_mode) {
   default_implementation(state);
   state->draw = game_draw;
   state->process_mouse = game_process_mouse;
@@ -221,7 +237,7 @@ void(transition_to_game)(state_t *state) {
   state->process_serial = game_process_serial;
   state->process_timer = game_process_timer;
   state->get_buttons = game_get_buttons;
-
+  is_hard_mode = hard_mode;
   prompt_generate(prompt);
   canvas_clear(canvas);
   game_state = WAITING;
@@ -237,6 +253,12 @@ int (game_process_timer)() {
     return EXIT_SUCCESS;
   }
   if (timer_counter % sys_hz() == 0) {
+    if (is_hard_mode) {
+      if (game_move_asteroid(asteroid) != OK) {
+        printf("game_move_asteroid failed inside %s\n", __func__);
+        return EXIT_FAILURE;
+      }
+    }
     printf("game_process_timer with round_timer: %u\n", round_timer);
     round_timer--;
     if (round_timer == 0) {
@@ -417,7 +439,6 @@ int(game_draw)() {
         break;
     }
     if (game_state == WAITING) {
-      // TODO: draw with color and with spaces (currently spaces are not allowed and color is white with white background)
       if (role == SELF_PLAYER) {
         if (vg_draw_rectangle(0, cell_height, cell_width*4, cell_height, 0XA0A0A0) != OK)
           return EXIT_FAILURE;
@@ -455,7 +476,7 @@ int(game_draw)() {
 
 void(update_cursor_state)(position_t position) {
   brush_t *brush = player_drawer_get_brush(player_drawer);
-  if (!canvas_contains_position(canvas, position)) {
+  if(!is_inside_rectangle(position, canvas->start_point, canvas->width, canvas->height)){
     player_drawer_set_cursor(player_drawer, POINTER);
   }
   else if (brush->color == canvas->background_color) {
@@ -466,7 +487,7 @@ void(update_cursor_state)(position_t position) {
   }
 }
 
-buttons_array_t *(game_get_buttons) (state_t *state) {
+buttons_array_t *(game_get_buttons)(state_t *state) {
   if (game_state == PLAYING) {
     return game_playing_buttons;
   }
@@ -475,3 +496,50 @@ buttons_array_t *(game_get_buttons) (state_t *state) {
   }
   return NULL;
 }
+
+
+int (game_move_asteroid)(asteroid_t *asteroid) {
+  if (game_state != PLAYING) {
+    printf("game_state != PLAYING inside %s\n", __func__);
+    return EXIT_FAILURE;
+  }
+  asteroid->position.x += asteroid->x_speed;
+  asteroid->position.y += asteroid->y_speed;
+  xpm_image_t xpm = asteroid->xpms[asteroid->current_xpm];
+  uint16_t right_side = asteroid->position.x + xpm.width;
+  if (right_side >= canvas->width || asteroid->position.x < canvas->start_point.x) {
+    asteroid->x_speed *= -1;
+    if (right_side >= canvas->width) {
+      asteroid->position.x = canvas->width - 1;
+    }
+    else {
+      asteroid->position.x = canvas->start_point.x;
+    }
+    //FIX THIS
+    asteroid->current_xpm = (asteroid->current_xpm + 1) % asteroid->number_xpms;
+  }
+
+  uint16_t bottom_side = asteroid->position.y + xpm.width;
+  if (bottom_side >= canvas->height || asteroid->position.y < canvas->start_point.y) {
+    asteroid->y_speed *= -1;
+    if (bottom_side >= canvas->height) {
+      asteroid->position.y = canvas->height - 1;
+    }
+    else {
+      asteroid->position.y = canvas->start_point.y;
+    }
+    //FIX THIS
+    asteroid->current_xpm = (asteroid->current_xpm + 1) % asteroid->number_xpms;
+  }
+
+
+
+  // if (asteroid->position.x > canvas->width || asteroid->position.x < canvas->start_point.x) {
+  //   asteroid->speed.x *= -1;
+  // }
+  // if (asteroid->position.y > canvas->height || asteroid->position.y < canvas->start_point.y) {
+  //   asteroid->speed.y *= -1;
+  // }
+  return EXIT_SUCCESS;
+}
+

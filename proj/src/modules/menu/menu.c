@@ -19,7 +19,11 @@ void (draw_timelapse)(int hour);
 
 
 void (enter_game)(button_t *button){
-  transition_to_game(app_state);
+  transition_to_game(app_state, false);
+}
+
+void (enter_hard_mode)(button_t *button){
+  transition_to_game(app_state, true);
 }
 
 void (quit_app)(button_t *button) {
@@ -54,7 +58,7 @@ int (setup_menu)(state_t *state) {
   uint16_t height = vmi.YResolution / 7;
 
   button_t *play_button = create_button(x, height, width, height, NOT_HOVERED_BG_COLOR, "PLAY", NO_ICON, enter_game);
-  button_t *settings_button = create_button(x, height * 3, width, height, NOT_HOVERED_BG_COLOR, "PLAY HARD MODE", NO_ICON, enter_game);
+  button_t *settings_button = create_button(x, height * 3, width, height, NOT_HOVERED_BG_COLOR, "PLAY HARD MODE", NO_ICON, enter_hard_mode);
   button_t *exit_button = create_button(x, height * 5, width, height, NOT_HOVERED_BG_COLOR, "EXIT", NO_ICON, quit_app);
 
   buttons_array->buttons[0] = play_button;

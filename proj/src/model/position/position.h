@@ -17,3 +17,8 @@ typedef struct position position_t;
  * @param position return parameter position
  */
 int (get_position)(uint8_t bytes[4], position_t *position);
+/**
+ * @brief 
+ * 
+ */
+bool (is_inside_rectangle)(position_t position, position_t start_point, uint16_t width, uint16_t height);
