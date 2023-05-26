@@ -58,8 +58,6 @@ int(proj_main_loop)(int argc, char *argv[]) {
     printf("create_state inside %s\n", __func__);
     return EXIT_FAILURE;
   }
-  // Setup the initial state: Menu
-  transition_to_menu(app_state);
 
   // Setup the app states
   if (setup_menu(app_state) != OK) {
@@ -70,6 +68,9 @@ int(proj_main_loop)(int argc, char *argv[]) {
     printf("setup inside %s\n", __func__);
     return EXIT_FAILURE;
   }
+
+  // Setup the initial state: Menu
+  transition_to_menu(app_state);
 
   // Game Loop
   int ipc_status, r;
