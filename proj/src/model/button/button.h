@@ -3,6 +3,15 @@
 #include <lcom/lcf.h>
 #include "../position/position.h"
 #include "../drawing_position.h"
+#include "../../resources/icons.h"
+
+typedef enum {
+    PLUS_ICON,
+    MINUS_ICON,
+    RUBBER_ICON,
+    TRASH_ICON,
+    NO_ICON,
+} button_icon_t;
 
 struct button {
     uint16_t x;
@@ -11,6 +20,7 @@ struct button {
     uint16_t height;
     uint32_t background_color;
     char *text;
+    button_icon_t icon;
     void (*onClick)(struct button *);
 };
 typedef struct button button_t;

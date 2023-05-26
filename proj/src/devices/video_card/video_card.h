@@ -22,7 +22,7 @@
 
 //round timer
 #define ROUND_TIMER_X 900
-#define ROUND_TIMER_Y 700
+#define ROUND_TIMER_Y 800
 
 //colors
 #define TRANSPARENT 0x000001
