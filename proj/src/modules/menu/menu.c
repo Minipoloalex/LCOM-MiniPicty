@@ -9,7 +9,6 @@ static buttons_array_t *buttons_array;
 
 static player_menu_t *player_menu;
 
-extern vbe_mode_info_t vmi;
 static state_t *app_state;
 
 uint8_t* background_scene;
@@ -31,7 +30,7 @@ void (transition_to_menu)(state_t* state){
   state->draw = menu_draw;
   state->process_mouse = menu_process_mouse;
   state->process_serial = menu_process_serial;
-  draw_timelapse(12); //TODO: dynamic change hour here
+  draw_timelapse(22); //TODO: dynamic change hour here
   state->get_buttons = menu_get_buttons;
 }
 
@@ -49,9 +48,9 @@ int (setup_menu)(state_t *state) {
     return EXIT_FAILURE;
   }
 
-  uint16_t x = vmi.XResolution / 3;
-  uint16_t width = vmi.XResolution / 3;
-  uint16_t height = vmi.YResolution / 7;
+  uint16_t x = get_h_res() / 3;
+  uint16_t width = get_h_res() / 3;
+  uint16_t height = get_v_res() / 7;
 
   button_t *play_button = create_button(x, height, width, height, NOT_HOVERED_BG_COLOR, "PLAY", NO_ICON, enter_game);
   button_t *settings_button = create_button(x, height * 3, width, height, NOT_HOVERED_BG_COLOR, "PLAY HARD MODE", NO_ICON, enter_game);
@@ -115,12 +114,12 @@ int (draw_buttons)() {
 }
 
 void (draw_sun)(uint32_t hour){
-  int hour_space = (vmi.XResolution - 180) / 13;
+  int hour_space = (get_h_res() - 180) / 13;
   hour -= 6;
-  int x = (vmi.XResolution / 2) - 6*hour_space + (hour)*hour_space;
+  int x = (get_h_res() / 2) - 6*hour_space + (hour)*hour_space;
   int y = calculate_sun_height(x);
   uint32_t color = 0xFFFF00;
-  if(vg_draw_circle_to_buffer(background_scene, x-30, vmi.YResolution - 300 - (y * 15), 60, color)){
+  if(vg_draw_circle_to_buffer(background_scene, x-30, get_v_res() - 300 - (y * 15), 60, color)){
     printf("vg_draw_circle inside %s\n", __func__);
     return;
   }
@@ -130,8 +129,8 @@ void (draw_stars)(){
   srand(time(0));
   int x = 0, y = 0;
   for(int i=0; i<100; i++){
-    x = rand() % vmi.XResolution;
-    y = rand() % vmi.YResolution;
+    x = rand() % get_h_res();
+    y = rand() % get_v_res();
     if(vg_draw_circle_to_buffer(background_scene, x, y, 2, 0xFFFFFF)){
       printf("vg_draw_pixel inside %s\n", __func__);
       return;
@@ -142,7 +141,7 @@ void (draw_stars)(){
 void (draw_sky)(uint32_t hour){
   uint32_t color = calculate_sky_color(hour);
   int terrain_height = 300;
-  if(vg_draw_rectangle_to_buffer(background_scene, 0, 0, vmi.XResolution, vmi.YResolution - terrain_height, color)){
+  if(vg_draw_rectangle_to_buffer(background_scene, 0, 0, get_h_res(), get_v_res() - terrain_height, color)){
     printf("vg_draw_rectangle inside %s\n", __func__);
     return;
   }
@@ -155,10 +154,29 @@ void (draw_sky)(uint32_t hour){
 void (draw_terrain)(){
   int terrain_height = 300;
   uint32_t brown = 0xCD853F;
-  if(vg_draw_rectangle_to_buffer(background_scene, 0, vmi.YResolution - terrain_height, vmi.XResolution, vmi.YResolution, brown)){
+  if(vg_draw_rectangle_to_buffer(background_scene, 0, get_v_res() - terrain_height, get_h_res(), get_v_res(), brown)){
     printf("vg_draw_rectangle inside %s\n", __func__);
     return;
   }
+}
+
+int (draw_time)(){
+  int space = 10;
+  int width = 155;
+  int x = get_h_res() - width - space;
+  uint32_t brown = 0xCD853F;
+  
+  //int (vg_draw_rectangle)(uint16_t x, uint16_t y, uint16_t width, uint16_t height, uint32_t color)
+  if(vg_draw_rectangle(x, space, width, 55, brown)){
+    printf("vg_draw_rectangle inside %s\n", __func__);
+    return EXIT_FAILURE;
+  }
+  //int (vg_draw_text)(char *string, uint16_t x, uint16_t y){
+  if(vg_draw_text("12 00", x+space, 2*space)){
+    printf("vg_draw_text inside %s\n", __func__);
+    return EXIT_FAILURE;
+  }
+  return EXIT_SUCCESS;
 }
 
 void (draw_timelapse)(int hour){
@@ -173,17 +191,19 @@ int (draw_background_scene)(){
 
 int (menu_draw)(){
 
-  if(draw_background_scene()){
-    printf("draw_background inside %s\n", __func__);
-    return EXIT_FAILURE;
-  }
-
   if (draw_player_menu()) {
     printf("draw_player_menu inside %s\n", __func__);
     return EXIT_FAILURE;
   }
   if (/*buffers_need_update()*/ true) {  // if no new mouse positions, don't update anything
-    draw_background_scene();
+    if(draw_background_scene()){
+      printf("draw_background inside %s\n", __func__);
+      return EXIT_FAILURE;
+    }
+    if(draw_time()){
+      printf("draw_time inside %s\n", __func__);
+      return EXIT_FAILURE;
+    }
     if(draw_buttons()) {
       printf("Error drawing buttons\n");
       return EXIT_FAILURE;
@@ -237,7 +257,7 @@ int (menu_process_serial)() {
 
 //FIX this function
 int (calculate_sun_height)(int x){
-  x = x - (vmi.XResolution / 2);
+  x = x - (get_h_res() / 2);
   int a = 10;
   int b = 2;
 
@@ -246,7 +266,7 @@ int (calculate_sun_height)(int x){
 }
 
 uint32_t (calculate_sky_color)(int hour){
-  if(hour >= 19 || hour <= 6) return 0x000000;
+  if(hour >= 19 || hour <= 6) return 0x242424;
 
   if(hour > 12){
     hour = 12 - (hour - 12);
