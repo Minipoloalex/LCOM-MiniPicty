@@ -220,7 +220,6 @@ void(transition_to_game)(state_t *state) {
   state->process_keyboard = game_process_keyboard;
   state->process_serial = game_process_serial;
   state->process_timer = game_process_timer;
-  state->process_rtc = game_process_rtc;
   state->get_buttons = game_get_buttons;
 
   prompt_generate(prompt);
@@ -238,7 +237,6 @@ int (game_process_timer)() {
     return EXIT_SUCCESS;
   }
   if (timer_counter % sys_hz() == 0) {
-    printf("game_process_timer with round_timer: %u\n", round_timer);
     round_timer--;
     set_needs_update(true);
     if (round_timer == 0) {
@@ -470,15 +468,6 @@ void(update_cursor_state)(position_t position) {
   }
 }
 
-int (game_process_rtc)() {
-  char* current_time = rtc_get_current_time();
-  if (current_time == NULL) {
-    printf("rtc_get_current_time inside %s\n", __func__);
-    return EXIT_FAILURE;
-  }
-  printf("Current time: %s\n", current_time);
-  return EXIT_SUCCESS;
-}
 buttons_array_t *(game_get_buttons) (state_t *state) {
   if (game_state == PLAYING) {
     return game_playing_buttons;

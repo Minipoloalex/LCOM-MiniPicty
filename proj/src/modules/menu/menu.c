@@ -12,6 +12,7 @@ static player_menu_t *player_menu;
 static state_t *app_state;
 
 uint8_t* background_scene;
+static char* time_str;
 
 uint32_t (calculate_sky_color)(int hour);
 void (draw_timelapse)(int hour);
@@ -31,7 +32,9 @@ void (transition_to_menu)(state_t* state){
   state->process_mouse = menu_process_mouse;
   state->process_serial = menu_process_serial;
   state->process_rtc = menu_process_rtc;
-  draw_timelapse(7); //TODO: dynamic change hour here 15 - 6 = 9
+  uint8_t tmp_hour;
+  rtc_read_temp_hour(&tmp_hour);
+  draw_timelapse(tmp_hour);
   state->get_buttons = menu_get_buttons;
 }
 
@@ -111,7 +114,6 @@ void (draw_sun)(uint32_t hour){
   hour -= 6;
   int x = (get_h_res() / 2) - 6*hour_space + (hour)*hour_space;
   int y = calculate_sun_height(hour);
-  printf("My sun y: %d \n", y);
   uint32_t color = 0xFFFF00;
   if(vg_draw_circle_to_buffer(background_scene, x-30, get_v_res() - 300 - y, 60, color)){
     printf("vg_draw_circle inside %s\n", __func__);
@@ -156,19 +158,19 @@ void (draw_terrain)(){
 
 int (draw_time)(){
   int space = 10;
-  int width = 155;
+  int width = 230;
   int x = get_h_res() - width - space;
   uint32_t brown = 0xCD853F;
   
-  //int (vg_draw_rectangle)(uint16_t x, uint16_t y, uint16_t width, uint16_t height, uint32_t color)
   if(vg_draw_rectangle(x, space, width, 55, brown)){
     printf("vg_draw_rectangle inside %s\n", __func__);
     return EXIT_FAILURE;
   }
-  //int (vg_draw_text)(char *string, uint16_t x, uint16_t y){
-  if(vg_draw_text("12 00", x+space, 2*space)){
-    printf("vg_draw_text inside %s\n", __func__);
-    return EXIT_FAILURE;
+  if (time_str != NULL) {
+    if(vg_draw_text(time_str, x+space, 2*space)){
+      printf("vg_draw_text inside %s\n", __func__);
+      return EXIT_FAILURE;
+    }
   }
   return EXIT_SUCCESS;
 }
@@ -184,7 +186,6 @@ int (draw_background_scene)(){
 }
 
 int (menu_draw)(){
-
   if (draw_player_menu()) {
     printf("draw_player_menu inside %s\n", __func__);
     return EXIT_FAILURE;
@@ -277,17 +278,23 @@ uint32_t (calculate_sky_color)(int hour){
   return (red << 16) | (green << 8) | blue;
 }
 
-
 buttons_array_t *(menu_get_buttons)(state_t *state){
   return buttons_array;
 }
 
 int (menu_process_rtc)() {
-  char* current_time = rtc_get_current_time();
-  if (current_time == NULL) {
-    printf("rtc_get_current_time inside %s\n", __func__);
-    return EXIT_FAILURE;
+  if (time_str != NULL) {
+    uint8_t h1 = time_str[0] - '0';
+    uint8_t h2 = time_str[1] - '0';
+    uint8_t hour = h1 * 10 + h2;
+    if (rtc_get_hour() != hour) {
+      draw_timelapse(rtc_get_hour());
+    }
   }
-  printf("Current time: %s\n", current_time);
+  else {
+    draw_timelapse(rtc_get_hour());
+  }
+  time_str = rtc_get_current_time();
+  set_needs_update(true);
   return EXIT_SUCCESS;
 }

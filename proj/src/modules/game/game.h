@@ -30,7 +30,6 @@ int (game_process_timer)();
 int (game_process_keyboard)();
 int (game_process_mouse)();
 int (game_process_serial)();
-int (game_process_rtc)();
 int (game_draw)();
 void (transition_to_game)(state_t* state);
 

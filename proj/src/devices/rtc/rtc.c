@@ -53,7 +53,7 @@
 #define MAX_TIME_DIFFERENCE 1
 #define INITIAL_HOUR_VALUE 255
 
-static char *currentTime = {"hh:mm:ss"};
+static char *currentTime = {"hh mm ss"};
 
 static int hook_id = RTC_IRQ;
 
@@ -112,8 +112,6 @@ int (rtc_init)() {
   regB |= RTC_B_UIE;
   regB &= ~(RTC_B_PIE | RTC_B_AIE);
   isBCD = !(regB & RTC_B_DM);
-  printf("isBCD: %d\n", isBCD);
-  printf("regB: %02x\n", regB);
   if (rtc_write(RTC_B, regB)) {
     printf("Error writing RTC_B\n");
     return EXIT_FAILURE;
@@ -147,31 +145,12 @@ void (rtc_ih)() {
     rtc_return_value = EXIT_FAILURE;
     return;
   }
-  uint8_t regB;
-  if (rtc_read(RTC_B, &regB)) {
-    printf("Error reading RTC_B\n");
-    rtc_return_value = EXIT_FAILURE;
-    return;
-  }
-  uint8_t regA;
-  if (rtc_read(RTC_A, &regA)) {
-    rtc_return_value = EXIT_FAILURE;
-    return;
-  }
-  uint8_t regD;
-  if (rtc_read(RTC_D, &regD)) {
-    rtc_return_value = EXIT_FAILURE;
-    return;
-  }
-  printf("regA: %02x, regB: %02x, regC: %02x, regD: %02x\n", regA, regB, regC, regD);
-
   if (!(regC & RTC_C_IRQF)) {
     printf("no interrupt pending inside rtc_ih\n");
     rtc_return_value = EXIT_FAILURE;
     return;
   }
   if (regC & RTC_C_UF) {
-    printf("got my good interrupt\n");
     if (stable) {
       increment_one_second();
     }
@@ -283,6 +262,17 @@ char* (rtc_get_current_time)() {
   currentTime[6] = seconds / 10 + '0';
   currentTime[7] = seconds % 10 + '0';
   return currentTime;
+}
+
+uint8_t (rtc_get_hour)() {
+  return hours;
+}
+int (rtc_read_temp_hour)(uint8_t *hour) {
+  if (rtc_read(RTC_HOUR, hour)) {
+    printf("Error reading RTC_HOUR\n");
+    return EXIT_FAILURE;
+  }
+  return EXIT_SUCCESS;
 }
 
 int (convert_bcd_to_binary)(uint8_t *ptr) {

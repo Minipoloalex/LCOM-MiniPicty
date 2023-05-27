@@ -30,39 +30,13 @@ void (rtc_ih)();
  * @return pointer to the current time string. This string should not be freed. Returns null in case the time has not been initialized yet, so it should be tested if the value is NULL before using it.
  */
 char* (rtc_get_current_time)();
-
-
-/*
-int (rtc_test_int)() { 
-	rtc_init();
-	uint8_t rtc_bit_no;
-	rtc_subscribe_int(&rtc_bit_no);
-	int ipc_status, r;
-	message msg;
-	uint32_t counter = 20;
-	while (counter > 0) {
-		if ((r = driver_receive(ANY, &msg, &ipc_status)) != 0) {
-			printf("driver_receive failed with: %d\n", r);
-			continue;
-		}
-		if (is_ipc_notify(ipc_status)) {
-			switch (_ENDPOINT_P(msg.m_source)) {
-				case HARDWARE:
-					if (msg.m_notify.interrupts & BIT(rtc_bit_no)) {
-						rtc_ih();
-						counter--;
-						char* a = rtc_get_current_time();
-						printf("%s\n", a);
-					}
-					break;
-				default:
-					break;
-			}
-		}
-		else {
-		}
-	}
-	rtc_unsubscribe_int();
-	return EXIT_SUCCESS;
-}
-*/
+/**
+ * @brief 
+ * 
+ */
+uint8_t (rtc_get_hour)();
+/**
+ * @brief 
+ * 
+ */
+int (rtc_read_temp_hour)(uint8_t *hour);
