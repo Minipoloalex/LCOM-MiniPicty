@@ -26,17 +26,17 @@ bool (is_inside)(asteroid_t *asteroid, position_t position){
   if (!is_inside_rectangle(position, asteroid_position, xpm->width, xpm->height)) {
     return false;
   }
-  uint16_t asteroid_x = asteroid->position.x;
-  uint16_t asteroid_y = asteroid->position.x;  
-  for (int row = asteroid_y; row < asteroid_y + xpm->height; row++) {
-    for (int col = asteroid_x; col < asteroid_x + xpm->width; col++, colors += get_bytes_per_pixel()) {
-      if (col != position.x || row != position.y) {
-        continue;
-      }
-      return *colors != xpm_transparency_color(XPM_8_8_8_8);
-    }
+  uint16_t x_index = position.x - asteroid->position.x;
+  uint16_t y_index = position.y - asteroid->position.y;
+  int32_t index = (y_index * xpm->width + x_index) * get_bytes_per_pixel();
+  
+  if (index > xpm->width * xpm->height * get_bytes_per_pixel()) {
+    printf("index > xpm->width * xpm->height * get_bytes_per_pixel() inside %s\n", __func__);
+    return false;
   }
-  return false;
+  uint32_t color;
+  memcpy(&color, colors + index, get_bytes_per_pixel());
+  return color != xpm_transparency_color(XPM_8_8_8_8);
 }
 
 int (draw_asteroid)(asteroid_t *asteroid) {

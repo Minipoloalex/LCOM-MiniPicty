@@ -256,7 +256,7 @@ int (vg_draw_sprite)(Sprite *sprite, uint16_t x, uint16_t y) {
 
   for (int row = y; row < y + sprite->height; row++) {
     for (int col = x; col < x + sprite->width; col++, colors += bytes_per_pixel) {
-        uint32_t final_color = 0x00000000;
+        uint32_t final_color;
         memcpy(&final_color, colors, bytes_per_pixel);
         if (vg_draw_pixel(video_mem[buffer_index], col, row, final_color)) {
           printf("vg_draw_pixel inside %s\n", __func__);
