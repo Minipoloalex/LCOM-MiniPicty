@@ -75,6 +75,21 @@ int (ser_read_int_id)(uint8_t *id);
  * The solution used is that if the byte is equal to the end of transmission byte, it is replaced by a replacement byte (0xFF to 0xFE)
  */
 int (replace_ser_end(uint8_t *data));
+/**
+ * @brief 
+ * 
+ */
+int (ser_read_from_fifo)();
+/**
+ * @brief 
+ * 
+ */
+int (ser_write_fifo_control_default)();
+/**
+ * @brief 
+ * 
+ */
+int (ser_add_byte_to_transmitter_queue)(uint8_t c);
 
 // TODO: remove reading of lcr each time we read data (checking that DLAB is not set)
 // assure that DLAB is not set normally, only set for setting the divisor
@@ -103,6 +118,10 @@ int8_t parity){
   }
   if (ser_write_int_enable(SER_IER_RDA | SER_IER_RLS | SER_IER_THRE) != EXIT_SUCCESS) {
     printf("ser_write_int_enable() inside %s failed", __func__);
+    return EXIT_FAILURE;
+  }
+  if (ser_read_from_fifo() != OK) {
+    printf("ser_read_from_fifo() inside %s failed", __func__);
     return EXIT_FAILURE;
   }
   printf("Finished setting up serial port inside %s\n", __func__);
@@ -465,7 +484,6 @@ int (ser_write_to_fifo)() {
       printf("ser_write_data() inside %s\n", __func__);
       return EXIT_FAILURE;
     }
-
     if (ser_read_line_status(&lsr) != OK) {
       printf("ser_read_line_status() inside %s\n", __func__);
       return EXIT_FAILURE;
@@ -487,7 +505,6 @@ void (ser_ih_fifo)() {
   if (!(iir & SER_IIR_INT_NOT_PEND)) {  /* interrupt pending */
     switch ((iir & SER_IIR_INT_ID) >> SER_IIR_INT_ID_POSITION) {
       case SER_IIR_INT_ID_RDA:      // data ready
-        // printf("Received interrupt RDA\n");
         if (ser_read_from_fifo() != OK) {
           printf("ser_read_from_fifo() inside %s\n", __func__);
           ser_return_value = EXIT_FAILURE;
@@ -495,7 +512,6 @@ void (ser_ih_fifo)() {
         }
         break;
       case SER_IIR_INT_ID_THRE:   // transmitter empty
-        // printf("Transmit interrupt THRE\n");
         if (ser_write_to_fifo() != OK) {
           printf("ser_write_to_fifo() inside %s\n", __func__);
           ser_return_value = EXIT_FAILURE;
@@ -503,7 +519,6 @@ void (ser_ih_fifo)() {
         }
         break;
       case SER_IIR_INT_ID_CTI:
-        // printf("Received interrupt CTI\n");
         if (ser_read_from_fifo() != OK) {
           printf("ser_read_from_fifo() inside %s\n", __func__);
           ser_return_value = EXIT_FAILURE;
@@ -571,6 +586,7 @@ int (ser_add_position_to_transmitter_queue)(drawing_position_t drawing_position)
     if (replace_ser_end(&mouse_pos_bytes[i])) return EXIT_FAILURE;
   }
   // maybe send a SER_END byte to synchronize the receiver better
+  if (ser_add_byte_to_transmitter_queue(SER_END)) return EXIT_FAILURE;
   if (ser_add_byte_to_transmitter_queue(drawing_position.is_drawing ? SER_MOUSE_DRAWING : SER_MOUSE_NOT_DRAWING)) return EXIT_FAILURE;
   if (ser_add_byte_to_transmitter_queue(mouse_pos_bytes[0])) return EXIT_FAILURE;
   if (ser_add_byte_to_transmitter_queue(mouse_pos_bytes[1])) return EXIT_FAILURE;
@@ -586,8 +602,23 @@ int (ser_add_button_click_to_transmitter_queue)(uint8_t index) {
   if (ser_write_to_fifo()) return EXIT_FAILURE;
   return EXIT_SUCCESS;
 }
+int (ser_add_word_index)(uint8_t index) {
+  printf("Communicating word_index: %d\n", index);
+  if (ser_add_byte_to_transmitter_queue(SER_END)) return EXIT_FAILURE;
+  if (ser_add_byte_to_transmitter_queue(SER_WORD_INDEX)) return EXIT_FAILURE;
+  if (ser_add_byte_to_transmitter_queue(index)) return EXIT_FAILURE;
+  if (ser_write_to_fifo()) return EXIT_FAILURE;
+  return EXIT_SUCCESS;
+}
+int (ser_add_won_round)() {
+  printf("communicating won_round inside %s\n", __func__);
+  if (ser_add_byte_to_transmitter_queue(SER_END)) return EXIT_FAILURE;
+  if (ser_add_byte_to_transmitter_queue(SER_WON_ROUND)) return EXIT_FAILURE;
+  if (ser_write_to_fifo()) return EXIT_FAILURE;
+  return EXIT_SUCCESS;
+}
 
-int (ser_read_bytes_from_receiver_queue)(player_drawer_t *drawer, state_t *app_state) {
+int (ser_read_bytes_from_receiver_queue)(player_drawer_t *drawer, state_t *app_state, uint8_t *word_index, bool *won_round) {
   uint8_t byte;
   static uint8_t bytes[4];
   static uint8_t byte_index = 0;
@@ -607,7 +638,6 @@ int (ser_read_bytes_from_receiver_queue)(player_drawer_t *drawer, state_t *app_s
         // printf("state: sleeping\n");
         switch (byte) {
           case SER_END:
-            ser_state = SLEEPING;
             break;
           case SER_MOUSE_DRAWING:
             ser_state = RECEIVING_MOUSE_DRAWING;
@@ -618,6 +648,14 @@ int (ser_read_bytes_from_receiver_queue)(player_drawer_t *drawer, state_t *app_s
           case SER_WORD_INDEX:
             ser_state = RECEIVING_WORD_INDEX;
             break;
+          case SER_WON_ROUND:
+            if (won_round == NULL) {
+              printf("won_round is null inside %s\n", __func__);
+              continue;
+            }
+            *won_round = true;
+            printf("Received won round inside%s\n", __func__);
+            break;
           default:
             buttons = app_state->get_buttons(app_state);
             if (buttons == NULL) {
@@ -626,10 +664,12 @@ int (ser_read_bytes_from_receiver_queue)(player_drawer_t *drawer, state_t *app_s
             }
             if (byte >= SER_FIRST_BUTTON && byte < SER_FIRST_BUTTON + buttons->num_buttons){
               // case SER_BUTTON_INDEX
-              printf("button_clicked: %d,", byte - SER_FIRST_BUTTON);
+              printf("button_clicked: %d, ", byte - SER_FIRST_BUTTON);
 
               button_t *clicked_button = buttons->buttons[byte - SER_FIRST_BUTTON];
-              printf("text: %s\n", clicked_button->text);
+              if (clicked_button->text != NULL) {
+                printf("text: %s\n", clicked_button->text);
+              }
               clicked_button->onClick(clicked_button);
               printf("After clicking on button\n");
             }
@@ -669,11 +709,19 @@ int (ser_read_bytes_from_receiver_queue)(player_drawer_t *drawer, state_t *app_s
         bytes[byte_index++] = byte;
         break;
       case RECEIVING_WORD_INDEX:
-        // word_idnex = byte
-        // if (byte < size of words) {
-        //   // valid byte
-        //   app_state->set_word(app_state, byte);
-        // }
+        if (byte == SER_END) {
+          ser_state = SLEEPING;
+          printf("lost some bytes inside ser_state RECEIVING_WORD_INDEX\n");
+          continue;
+        }
+        if (word_index == NULL){
+          ser_state = SLEEPING;
+          printf("word_index is NULL inside %s\n", __func__);
+          continue;
+        }
+        *word_index = byte;
+        ser_state = SLEEPING;
+        printf("received word_index: %d inside %s\n", byte, __func__);
         break;
 
       default:

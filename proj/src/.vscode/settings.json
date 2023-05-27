@@ -59,6 +59,7 @@
     "asteroids.h": "c",
     "sprite.h": "c",
     "vbe.h": "c",
-    "font.h": "c"
+    "font.h": "c",
+    "prompts.h": "c"
   },
 }

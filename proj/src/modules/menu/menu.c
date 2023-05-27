@@ -197,7 +197,7 @@ void (destroy_menu)() {
 }
 
 int (menu_process_serial)() {
-  if (ser_read_bytes_from_receiver_queue(NULL, app_state) != OK) {
+  if (ser_read_bytes_from_receiver_queue(NULL, app_state, NULL, NULL) != OK) {
     printf("ser_read_bytes_from_receiver_queue inside %s\n", __func__);
     return EXIT_FAILURE;
   }

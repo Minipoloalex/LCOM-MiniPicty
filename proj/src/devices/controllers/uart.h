@@ -114,4 +114,4 @@ Then, access DLL/DLM register and finally reset the DLAB bit, so other registers
 #define SER_END_REPLACEMENT         0xFE
 #define SER_WORD_INDEX              '?'
 #define SER_FIRST_BUTTON            'A'   // uppercase letters are used for buttons
-// #define SER_TRASH                 '_'
+#define SER_WON_ROUND               '_'

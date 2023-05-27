@@ -45,16 +45,6 @@ int (ser_write_to_fifo)();
  * @brief 
  * 
  */
-int (ser_write_fifo_control_default)();
-/**
- * @brief 
- * 
- */
-int (ser_add_byte_to_transmitter_queue)(uint8_t c);
-/**
- * @brief 
- * 
- */
 int (ser_write_char)(uint8_t c);
 /**
  * @brief 
@@ -75,4 +65,14 @@ int (ser_add_button_click_to_transmitter_queue)(uint8_t index);
  * @brief 
  * 
  */
-int (ser_read_bytes_from_receiver_queue)(player_drawer_t *drawer, state_t *app_state);
+int (ser_add_word_index)(uint8_t index);
+/**
+ * @brief 
+ * 
+ */
+int (ser_add_won_round)();
+/**
+ * @brief 
+ * 
+ */
+int (ser_read_bytes_from_receiver_queue)(player_drawer_t *drawer, state_t *app_state, uint8_t *word_index, bool *won_round);
