@@ -8,6 +8,6 @@ typedef struct {
   uint8_t *colors;
 } Sprite;
 
-Sprite * (create_sprite)(xpm_map_t xpm, uint16_t x, uint16_t y);
+Sprite * (create_sprite)(xpm_map_t xpm);
 
 void (destroy_sprite)(Sprite *sprite);

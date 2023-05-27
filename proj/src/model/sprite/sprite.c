@@ -1,6 +1,6 @@
 #include "sprite.h"
 
-Sprite * (create_sprite)(xpm_map_t xpm, uint16_t x, uint16_t y){
+Sprite * (create_sprite)(xpm_map_t xpm){
   Sprite *sprite = (Sprite *) malloc(sizeof(Sprite));
   if(sprite == NULL) return NULL;
   
@@ -12,8 +12,6 @@ Sprite * (create_sprite)(xpm_map_t xpm, uint16_t x, uint16_t y){
     return NULL;
   }
 
-  sprite->x = x;
-  sprite->y = y;
   sprite->width = loaded_xpm.width;
   sprite->height = loaded_xpm.height;
 

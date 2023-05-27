@@ -17,7 +17,6 @@ PROG=proj
 .PATH: ${.CURDIR}/model/position
 .PATH: ${.CURDIR}/model/queue
 .PATH: ${.CURDIR}/model/button
-.PATH: ${.CURDIR}/model/cursor
 .PATH: ${.CURDIR}/model/guess
 .PATH: ${.CURDIR}/model/prompt
 .PATH: ${.CURDIR}/model/state
@@ -30,14 +29,15 @@ PROG=proj
 .PATH: ${.CURDIR}/modules/game
 .PATH: ${.CURDIR}/modules/game/player_drawer
 .PATH: ${.CURDIR}/modules/game/canvas
-
+.PATH: ${.CURDIR}/modules/resources
 # Resources
-.PATH: ${.CURDIR}/resources/cursors
-.PATH: ${.CURDIR}/resources/font
+.PATH: ${.CURDIR}/modules/resources/cursors
+.PATH: ${.CURDIR}/modules/resources/font
+.PATH: ${.CURDIR}/modules/resources/icons
 
 .PATH: ${.CURDIR}/utils/
 
-SRCS = proj.c kbc.c keyboard.c mouse.c timer.c video_card.c utils.c interrupts.c menu.c game.c serial_port.c queue.c position.c brush.c player.c button.c player_drawer.c player_menu.c canvas.c guess.c prompt.c state.c sprite.c
+SRCS = proj.c kbc.c keyboard.c mouse.c timer.c video_card.c utils.c interrupts.c menu.c game.c serial_port.c queue.c position.c brush.c player.c button.c player_drawer.c player_menu.c canvas.c guess.c prompt.c state.c sprite.c resources.c
 
 # additional compilation flags
 CPPFLAGS += -pedantic -D __LCOM_OPTIMIZED__

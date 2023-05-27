@@ -7,6 +7,7 @@
 
 #include "modules/interrupts/interrupts.h"
 #include "modules/menu/menu.h"
+#include "modules/resources/resources.h"
 // #include "modules/game/player_drawer/player_drawer.h" included in game.h
 #include "modules/menu/player_menu/player_menu.h"
 #include "modules/game/game.h"
@@ -43,6 +44,11 @@ int(proj_main_loop)(int argc, char *argv[]) {
   printf("isTransmitter: %d\n", isTransmitter);
   
   // Load resources
+  Resources* resources = load_resources();
+  if(resources == NULL){
+    printf("load_resources inside %s\n", __func__);
+    return EXIT_FAILURE;
+  }
 
   // Subscribe interrupts
   if(subscribe_interrupts()) return EXIT_FAILURE;
@@ -60,11 +66,11 @@ int(proj_main_loop)(int argc, char *argv[]) {
   }
 
   // Setup the app states
-  if (setup_menu(app_state) != OK) {
+  if (setup_menu(app_state, resources) != OK) {
     printf("setup inside %s\n", __func__);
     return EXIT_FAILURE;
   }
-  if (setup_game(isTransmitter, app_state) != OK) {
+  if (setup_game(isTransmitter, app_state, resources) != OK) {
     printf("setup inside %s\n", __func__);
     return EXIT_FAILURE;
   }
@@ -131,6 +137,7 @@ int(proj_main_loop)(int argc, char *argv[]) {
   destroy_game();
   destroy_menu();
   destroy_state(app_state);
+  unload_resources(resources);
 
   // Stop serial communication
   delete_ser();

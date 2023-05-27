@@ -209,7 +209,6 @@ int (vg_draw_circle_to_buffer)(uint8_t *buffer, uint16_t xc, uint16_t yc, uint16
 }
 
 /* Bresenham's line algorithm */
-//TODO: Explore Xiaolin Wu's algorithm for drawing lines (anti-aliasing)
 int (vg_draw_line)(uint8_t *buffer, position_t pos1, position_t pos2, uint16_t thickness, uint32_t color) {
     int x0 = pos1.x;
     int y0 = pos1.y;
@@ -252,11 +251,9 @@ int (vg_draw_buffer)(uint8_t *buffer){
   return EXIT_SUCCESS;
 }
 
-int (vg_draw_sprite)(Sprite *sprite) {
+int (vg_draw_sprite)(Sprite *sprite, uint16_t x, uint16_t y) {
   uint8_t *colors = sprite->colors; 
 
-  uint16_t x = sprite->x;
-  uint16_t y = sprite->y;
   for (int row = y; row < y + sprite->height; row++) {
     for (int col = x; col < x + sprite->width; col++, colors += bytes_per_pixel) {
         uint32_t final_color = 0x00000000;
@@ -270,19 +267,7 @@ int (vg_draw_sprite)(Sprite *sprite) {
   return EXIT_SUCCESS;
 }
 
-int (vg_erase_xpm)(xpm_image_t *img, uint16_t x, uint16_t y) {
-  for (int row = y; row < y + img->height; row++) {
-    for (int col = x; col < x + img->width; col++) {
-      if (vg_draw_pixel(video_mem[buffer_index], col, row, 0)) {
-        printf("vg_draw_pixel inside %s\n", __func__);
-        return EXIT_FAILURE;
-      }
-    }
-  }
-  return EXIT_SUCCESS;
-}
-
-int (vg_draw_char)(const uint8_t character, uint16_t x, uint16_t y){
+int (vg_draw_char)(const uint8_t character, uint16_t x, uint16_t y, Sprite* font[]){
   uint8_t index;
   if(character == ' '){
     return EXIT_SUCCESS;
@@ -296,36 +281,21 @@ int (vg_draw_char)(const uint8_t character, uint16_t x, uint16_t y){
     return EXIT_FAILURE;
   }
 
-  xpm_map_t char_xpm = uppercase_alphabet[index];
-  Sprite * sprite = create_sprite(char_xpm, x, y);
-/*
-  xpm_image_t loaded_char;
-  uint8_t *colors = xpm_load(char_xpm, XPM_8_8_8_8, &loaded_char);
-  
-  if (colors == NULL || loaded_char.type == INVALID_XPM){
-    colors == NULL ? printf("Cores nulas") : printf("XPM inválido");
-    return EXIT_FAILURE;
-  }
-
-  loaded_char.bytes = colors;
-  */
-  if (vg_draw_sprite(sprite)) {
+  if (vg_draw_sprite(font[index], x, y)) {
     printf("vg_draw_sprite inside %s\n", __func__);
     return EXIT_FAILURE;
   }
-
-  destroy_sprite(sprite);
   
   return EXIT_SUCCESS;
 }
 
-int (vg_draw_text)(char *string, uint16_t x, uint16_t y){
+int (vg_draw_text)(char *string, uint16_t x, uint16_t y, Sprite* font[]){
   if (string == NULL) {
     printf("string is null inside %s\n", __func__);
     return EXIT_FAILURE;
   }
   for (uint16_t xi = x; *string != 0; string++, xi += FONT_WIDTH){
-    if (vg_draw_char(*string, xi, y)) {
+    if (vg_draw_char(*string, xi, y, font)) {
       printf("vg_draw_char inside %s\n", __func__);
       return EXIT_FAILURE;
     }
@@ -333,7 +303,7 @@ int (vg_draw_text)(char *string, uint16_t x, uint16_t y){
   return EXIT_SUCCESS;
 }
 
-int (vg_draw_guess)(guess_word_t *guess, uint16_t x, uint16_t y){
+int (vg_draw_guess)(guess_word_t *guess, uint16_t x, uint16_t y, Sprite* font[]){
   
   /*printf("string: %s ", guess->string);
   for (size_t i = 0; i < guess->pointer; i++){
@@ -342,41 +312,26 @@ int (vg_draw_guess)(guess_word_t *guess, uint16_t x, uint16_t y){
   printf(" - pointer: %d \n", guess->pointer);*/
   //printf("drawing: ");
   for (uint16_t xi = x, i=0; i<guess->pointer; i++, xi+=FONT_WIDTH){
-    if (vg_draw_char(guess->string[i], xi, y) != OK) return EXIT_FAILURE;
+    if (vg_draw_char(guess->string[i], xi, y, font) != OK) return EXIT_FAILURE;
   }
   //printf("\n");
   return EXIT_SUCCESS;
 }
 
-int (vg_draw_cursor)(cursor_image_t image, position_t pos){
-  xpm_map_t cursor = cursors[image];
-  //if (get_cursor_xpm(image, &cursor)) return EXIT_FAILURE;
-  Sprite * sprite = create_sprite(cursor, pos.x, pos.y);
-
-  if (vg_draw_sprite(sprite)) return EXIT_FAILURE;
-
-  destroy_sprite(sprite);
-
-  return EXIT_SUCCESS;
-}
-
-int (vg_draw_button)(button_t *button) {
+int (vg_draw_button)(button_t *button, Sprite* font[], Sprite* icons[]) {
   if (vg_draw_rectangle(button->x, button->y, button->width, button->height, button->background_color)) {
     printf("vg_draw_rectangle inside %s\n", __func__);
     return EXIT_FAILURE;
   }
 
   if (button->icon != NO_ICON){
-    xpm_map_t icon = icons[button->icon];
     uint16_t x = button->x + (button->width - 40)/2;
     uint16_t y = button->y + (button->height - 40)/2;
-    Sprite * sprite = create_sprite(icon, x, y);
 
-    if (vg_draw_sprite(sprite)) {
+    if (vg_draw_sprite(icons[button->icon], x, y)) {
       printf("vg_draw_sprite inside %s\n", __func__);
       return EXIT_FAILURE;
     }
-    destroy_sprite(sprite);
 
     return EXIT_SUCCESS;
   }
@@ -384,7 +339,7 @@ int (vg_draw_button)(button_t *button) {
   if (button->text != NULL) {
     if (vg_draw_text(button->text, 
               button->x+(button->width/2)-(strlen(button->text)*FONT_WIDTH)/2, 
-              button->y+(button->height/2)-(FONT_HEIGHT)/2)) {
+              button->y+(button->height/2)-(FONT_HEIGHT)/2, font)) {
                 printf("vg_draw_text inside %s\n", __func__);
                 return EXIT_FAILURE;
               }
@@ -392,10 +347,10 @@ int (vg_draw_button)(button_t *button) {
   return EXIT_SUCCESS;
 }
 
-int (vg_draw_buttons)(buttons_array_t *buttons) {
+int (vg_draw_buttons)(buttons_array_t *buttons, Sprite* font[], Sprite* icons[]) {
   for (int i = 0; i < buttons->num_buttons; i++) {
     button_t *button = buttons->buttons[i];
-    if (vg_draw_button(button)) {
+    if (vg_draw_button(button, font, icons)) {
       printf("vg_draw_button inside %s\n", __func__);
       return EXIT_FAILURE;
     }
