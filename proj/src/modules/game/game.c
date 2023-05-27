@@ -183,7 +183,7 @@ int(setup_game)(bool isTransmitter, state_t *state, Resources* resources) {
   game_finished_buttons->buttons[1] = play_again_change_state;
   game_finished_buttons->buttons[2] = quit_button;
 
-  canvas = canvas_init(0, min_height, 8 * min_len, 8 * min_height);
+  canvas = canvas_init(0, min_height, 8 * min_len, 9 * min_height);
   if (canvas == NULL) {
     destroy_player_drawer(player_drawer);
     free(finish_text);
