@@ -15,6 +15,7 @@ static buttons_array_t *game_finished_buttons;
 
 extern vbe_mode_info_t vmi;
 
+static Resources* app_resources;
 static player_drawer_t *player_drawer;
 static canvas_t *canvas;
 static guess_word_t *guess;
@@ -100,8 +101,9 @@ void(clear_canvas)(button_t *button) {
   canvas_clear(canvas);
 }
 /*==================================================================*/
-int(setup_game)(bool isTransmitter, state_t *state) {
+int(setup_game)(bool isTransmitter, state_t *state, Resources* resources) {
   app_state = state;
+  app_resources = resources;
   finish_text = malloc(FINISH_TEXT_SIZE * sizeof(char));
   if (finish_text == NULL) {
     printf("malloc inside %s\n", __func__);
@@ -372,18 +374,18 @@ int(game_process_serial)() {
 }
 
 int(game_draw_buttons)() {
-  if (vg_draw_buttons(game_playing_buttons)) {
+  if (vg_draw_buttons(game_playing_buttons, app_resources->font, app_resources->icons)) {
     printf("vg_draw_buttons inside %s\n", __func__);
     return EXIT_FAILURE;
   }
   if (game_state == FINISHED) {
     if (vg_draw_rectangle(0, cell_height, cell_width*4, cell_height, 0XA0A0A0) != OK)
       return EXIT_FAILURE;
-    if (vg_draw_text(finish_text, 0, cell_height+cell_height/4) != OK)
+    if (vg_draw_text(finish_text, 0, cell_height+cell_height/4, app_resources->font) != OK)
       return EXIT_FAILURE;
     if (vg_draw_rectangle(2*cell_width, cell_height, 5*cell_width, 9*cell_height, BLACK) != OK)
       return EXIT_FAILURE;
-    if (vg_draw_buttons(game_finished_buttons)) {
+    if (vg_draw_buttons(game_finished_buttons, app_resources->font, app_resources->icons)) {
       printf("vg_draw_buttons inside %s\n", __func__);
       return EXIT_FAILURE;
     }
@@ -411,11 +413,11 @@ int(game_draw)() {
     player_type_t role = player_drawer_get_role(player_drawer);
     switch (role) {
       case SELF_PLAYER:
-        if (vg_draw_text(prompt, GUESS_POS_X, GUESS_POS_Y) != OK)
+        if (vg_draw_text(prompt, GUESS_POS_X, GUESS_POS_Y, app_resources->font) != OK)
           return EXIT_FAILURE;
         break;
       case OTHER_PLAYER:
-        if (vg_draw_guess(guess, GUESS_POS_X, GUESS_POS_Y) != OK)
+        if (vg_draw_guess(guess, GUESS_POS_X, GUESS_POS_Y, app_resources->font) != OK)
           return EXIT_FAILURE;
         break;
     }
@@ -423,17 +425,17 @@ int(game_draw)() {
       if (role == SELF_PLAYER) {
         if (vg_draw_rectangle(0, cell_height, cell_width*4, cell_height, 0XA0A0A0) != OK)
           return EXIT_FAILURE;
-        if (vg_draw_text(YOU_ARE_DRAWING_TEXT, 0, cell_height+cell_height/4) != OK)
+        if (vg_draw_text(YOU_ARE_DRAWING_TEXT, 0, cell_height+cell_height/4, app_resources->font) != OK)
           return EXIT_FAILURE;
       }
       else {
         if (vg_draw_rectangle(0, cell_height, cell_width*4, cell_height, 0XA0A0A0) != OK)
           return EXIT_FAILURE;
-        if (vg_draw_text(YOU_ARE_GUESSING_TEXT, 0, cell_height+cell_height/4) != OK)
+        if (vg_draw_text(YOU_ARE_GUESSING_TEXT, 0, cell_height+cell_height/4, app_resources->font) != OK)
           return EXIT_FAILURE;
       }
     }
-    if (vg_draw_text(byte_to_str(round_timer), ROUND_TIMER_X, ROUND_TIMER_Y) != OK) {
+    if (vg_draw_text(byte_to_str(round_timer), ROUND_TIMER_X, ROUND_TIMER_Y, app_resources->font) != OK) {
       printf("vg_draw_text inside %s\n", __func__);
       return EXIT_FAILURE;
     }
@@ -441,10 +443,10 @@ int(game_draw)() {
     player_t *player = player_drawer_get_player(player_drawer);
     drawing_position_t drawing_position = player_get_current_position(player);
     update_cursor_state(drawing_position.position);
-    cursor_image_t cursor = player_drawer_get_cursor(player_drawer);
+    cursor_type_t cursor = player_drawer_get_cursor(player_drawer);
 
-    if (vg_draw_cursor(cursor, drawing_position.position) != OK) {
-      printf("vg_draw_cursor inside %s\n", __func__);
+    if (vg_draw_sprite(app_resources->cursors[cursor], drawing_position.position.x, drawing_position.position.y)) {
+      printf("vg_draw_sprite inside %s\n", __func__);
       return EXIT_FAILURE;
     }
     if (vg_buffer_flip()) {

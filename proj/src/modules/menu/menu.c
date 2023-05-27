@@ -10,6 +10,7 @@ static buttons_array_t *buttons_array;
 static player_menu_t *player_menu;
 
 static state_t *app_state;
+static Resources* app_resources;
 
 Background* background_scene;
 static char* time_str;
@@ -39,8 +40,9 @@ void (transition_to_menu)(state_t* state){
   state->get_buttons = menu_get_buttons;
 }
 
-int (setup_menu)(state_t *state) {
+int (setup_menu)(state_t *state, Resources* resources) {
   app_state = state;
+  app_resources = resources;
   player_menu = create_player_menu();
   if (player_menu == NULL) {
     printf("create_player_menu inside %s\n", __func__);
@@ -101,7 +103,7 @@ int (draw_buttons)() {
       change_button_color(button, NOT_HOVERED_BG_COLOR);
     }
   }
-  if (vg_draw_buttons(buttons_array) != OK) {
+  if (vg_draw_buttons(buttons_array, app_resources->font, app_resources->icons) != OK) {
     printf("vg_draw_buttons inside %s\n", __func__);
     return EXIT_FAILURE;
   }
@@ -119,7 +121,7 @@ int (draw_time)(){
     return EXIT_FAILURE;
   }
   if (time_str != NULL) {
-    if(vg_draw_text(time_str, x+space, 2*space)){
+    if(vg_draw_text(time_str, x+space, 2*space, app_resources->font)){
       printf("vg_draw_text inside %s\n", __func__);
       return EXIT_FAILURE;
     }
@@ -152,7 +154,8 @@ int (menu_draw)(){
     player_t *player = player_menu_get_player(player_menu);
     drawing_position_t position = player_get_current_position(player);
 
-    if (vg_draw_cursor(0, position.position) != OK) {
+    if(vg_draw_sprite(app_resources->cursors[0], position.position.x, position.position.y)){
+      printf("vg_draw_sprite inside %s\n", __func__);
       return EXIT_FAILURE;
     }
     if (vg_buffer_flip()) {

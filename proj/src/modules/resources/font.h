@@ -41,8 +41,9 @@
 
 #define FONT_HEIGHT 35
 #define FONT_WIDTH 26
+#define ALPHABET_SIZE 36
 
-static xpm_map_t uppercase_alphabet[36] = {
+static xpm_map_t uppercase_alphabet[ALPHABET_SIZE] = {
   uppercase_a_xpm,
   uppercase_b_xpm,
   uppercase_c_xpm,

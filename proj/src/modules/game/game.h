@@ -4,7 +4,7 @@
 #include "player_drawer/player_drawer.h"
 #include "canvas/canvas.h"
 #include "../menu/menu.h"
-
+#include "../resources/resources.h"
 #include "../../model/state/state.h"
 #include "../../model/position/position.h"
 #include "../../model/brush/brush.h"
@@ -22,7 +22,7 @@
 #include "../../utils/utils.h"
 
 
-int (setup_game)(bool isTransmitter, state_t *state);
+int (setup_game)(bool isTransmitter, state_t *state, Resources* resources);
 
 void (destroy_game)();
 
