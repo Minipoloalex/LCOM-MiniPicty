@@ -102,12 +102,10 @@ int(proj_main_loop)(int argc, char *argv[]) {
         switch(_ENDPOINT_P(msg.m_source)) {
           case HARDWARE:
             if (msg.m_notify.interrupts & BIT(keyboard_bit_no)) {
-              // printf("Received interrupt from keyboard\n");
               keyboard_ih();
               app_state->process_keyboard(app_state);
             }
             if (msg.m_notify.interrupts & BIT(mouse_bit_no)) {
-              // printf("Received interrupt from mouse\n");
               mouse_ih();
               if (return_value_mouse == EXIT_SUCCESS){
                 mouse_process_packet_byte();

@@ -11,12 +11,8 @@ static player_menu_t *player_menu;
 
 static state_t *app_state;
 
-uint8_t* background_scene;
+Background* background_scene;
 static char* time_str;
-
-uint32_t (calculate_sky_color)(int hour);
-void (draw_timelapse)(int hour);
-
 
 void (enter_game)(button_t *button){
   transition_to_game(app_state);
@@ -33,8 +29,13 @@ void (transition_to_menu)(state_t* state){
   state->process_serial = menu_process_serial;
   state->process_rtc = menu_process_rtc;
   uint8_t tmp_hour;
-  rtc_read_temp_hour(&tmp_hour);
-  draw_timelapse(tmp_hour);
+  if (time_str == NULL) {
+    rtc_read_temp_hour(&tmp_hour);
+    draw_timelapse(background_scene, tmp_hour);
+  }
+  else {
+    draw_timelapse(background_scene, rtc_get_hour());
+  }
   state->get_buttons = menu_get_buttons;
 }
 
@@ -64,13 +65,12 @@ int (setup_menu)(state_t *state) {
   buttons_array->buttons[1] = settings_button;
   buttons_array->buttons[2] = exit_button;
 
-  background_scene = (uint8_t *) malloc(get_vram_size() * sizeof(uint8_t));
+  background_scene = create_background();
   if(background_scene == NULL){
     printf("background_scene inside %s\n", __func__);
     destroy_player_menu(player_menu);
     destroy_buttons_array(buttons_array);
   }
-
   return EXIT_SUCCESS;
 }
 
@@ -108,54 +108,6 @@ int (draw_buttons)() {
   return EXIT_SUCCESS;
 }
 
-void (draw_sun)(uint32_t hour){
-  if(hour > 19 || hour < 6) return;
-  int hour_space = (get_h_res() - 180) / 13;
-  hour -= 6;
-  int x = (get_h_res() / 2) - 6*hour_space + (hour)*hour_space;
-  int y = calculate_sun_height(hour);
-  uint32_t color = 0xFFFF00;
-  if(vg_draw_circle_to_buffer(background_scene, x-30, get_v_res() - 300 - y, 60, color)){
-    printf("vg_draw_circle inside %s\n", __func__);
-    return;
-  }
-}
-
-void (draw_stars)(){
-  srand(time(0));
-  int x = 0, y = 0;
-  for(int i=0; i<100; i++){
-    x = rand() % get_h_res();
-    y = rand() % get_v_res();
-    if(vg_draw_circle_to_buffer(background_scene, x, y, 2, 0xFFFFFF)){
-      printf("vg_draw_pixel inside %s\n", __func__);
-      return;
-    }
-  }
-}
-
-void (draw_sky)(uint32_t hour){
-  uint32_t color = calculate_sky_color(hour);
-  int terrain_height = 300;
-  if(vg_draw_rectangle_to_buffer(background_scene, 0, 0, get_h_res(), get_v_res() - terrain_height, color)){
-    printf("vg_draw_rectangle inside %s\n", __func__);
-    return;
-  }
-
-  if(hour > 19){
-    draw_stars();
-  }
-}
-
-void (draw_terrain)(){
-  int terrain_height = 300;
-  uint32_t brown = 0xCD853F;
-  if(vg_draw_rectangle_to_buffer(background_scene, 0, get_v_res() - terrain_height, get_h_res(), get_v_res(), brown)){
-    printf("vg_draw_rectangle inside %s\n", __func__);
-    return;
-  }
-}
-
 int (draw_time)(){
   int space = 10;
   int width = 230;
@@ -173,12 +125,6 @@ int (draw_time)(){
     }
   }
   return EXIT_SUCCESS;
-}
-
-void (draw_timelapse)(int hour){
-  draw_sky(hour);
-  draw_sun(hour);
-  draw_terrain();
 }
 
 int (draw_background_scene)(){
@@ -239,8 +185,8 @@ int (menu_process_mouse)() {
 
 void (destroy_menu)() {
   destroy_player_menu(player_menu);
-  free(background_scene);
   destroy_buttons_array(buttons_array);
+  destroy_background(background_scene);
 }
 
 int (menu_process_serial)() {
@@ -250,32 +196,6 @@ int (menu_process_serial)() {
   }
   set_needs_update(true);
   return EXIT_SUCCESS;
-}
-
-int (calculate_sun_height)(int hour){
-  int x = hour - 6;
-  int a = 6;
-  int b = 20;
-
-  return (int) pow(b,2) * sqrt(1 - (pow(x, 2) / pow(a, 2)));
-}
-
-uint32_t (calculate_sky_color)(int hour){
-  if(hour >= 19 || hour <= 6) return 0x242424;
-
-  if(hour > 12){
-    hour = 12 - (hour - 12);
-  }
-
-  // default blue: 0x00F0FF
-  uint32_t red = 0x00;
-  uint32_t blue = 0xF0;
-  uint32_t green = 0xFF;
-
-  green = (hour * 255) / 12;
-  blue = (hour * 255) / 12;
-
-  return (red << 16) | (green << 8) | blue;
 }
 
 buttons_array_t *(menu_get_buttons)(state_t *state){
@@ -288,11 +208,11 @@ int (menu_process_rtc)() {
     uint8_t h2 = time_str[1] - '0';
     uint8_t hour = h1 * 10 + h2;
     if (rtc_get_hour() != hour) {
-      draw_timelapse(rtc_get_hour());
+      draw_timelapse(background_scene, rtc_get_hour());
     }
   }
   else {
-    draw_timelapse(rtc_get_hour());
+    draw_timelapse(background_scene, rtc_get_hour());
   }
   time_str = rtc_get_current_time();
   set_needs_update(true);

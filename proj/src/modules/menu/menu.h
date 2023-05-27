@@ -2,6 +2,7 @@
 #include <lcom/lcf.h>
 
 #include "player_menu/player_menu.h"
+#include "background/background.h"
 
 #include "../game/game.h"
 #include "../../model/state/state.h"
