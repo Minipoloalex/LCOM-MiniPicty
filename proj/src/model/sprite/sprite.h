@@ -3,7 +3,6 @@
 #include <lcom/lcf.h>
 
 typedef struct {
-  int x, y;
   int width, height;
   uint8_t *colors;
 } Sprite;

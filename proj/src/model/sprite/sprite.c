@@ -8,6 +8,7 @@ Sprite * (create_sprite)(xpm_map_t xpm){
   sprite->colors = xpm_load(xpm, XPM_8_8_8_8, &loaded_xpm);
   
   if (sprite->colors == NULL || loaded_xpm.type == INVALID_XPM){
+    printf("Error loading xpm\n");
     free(sprite);
     return NULL;
   }

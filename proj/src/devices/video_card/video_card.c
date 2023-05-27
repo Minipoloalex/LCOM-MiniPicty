@@ -325,10 +325,11 @@ int (vg_draw_button)(button_t *button, Sprite* font[], Sprite* icons[]) {
   }
 
   if (button->icon != NO_ICON){
-    uint16_t x = button->x + (button->width - 40)/2;
-    uint16_t y = button->y + (button->height - 40)/2;
+    Sprite *icon_sprite = icons[button->icon];
+    uint16_t x = button->x + (button->width - icon_sprite->width)/2;
+    uint16_t y = button->y + (button->height - icon_sprite->height)/2;
 
-    if (vg_draw_sprite(icons[button->icon], x, y)) {
+    if (vg_draw_sprite(icon_sprite, x, y)) {
       printf("vg_draw_sprite inside %s\n", __func__);
       return EXIT_FAILURE;
     }

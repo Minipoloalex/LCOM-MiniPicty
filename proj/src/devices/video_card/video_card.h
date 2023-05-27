@@ -8,7 +8,6 @@
 #include "../../modules/game/player_drawer/player_drawer.h"
 #include "../../model/brush/brush.h"
 #include "../../model/guess/guess.h"
-#include "../../model/cursor/cursor.h"
 #include "../../model/sprite/sprite.h"
 
 // guess word

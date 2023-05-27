@@ -3,7 +3,7 @@
 // TODO: incldues
 #include "../../../model/player/player.h"
 #include "../../../model/brush/brush.h"
-#include "../../../model/cursor/cursor.h"
+#include "../../resources/cursors.h"
 
 struct PlayerDrawer;
 typedef struct PlayerDrawer player_drawer_t;

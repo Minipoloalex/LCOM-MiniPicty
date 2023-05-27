@@ -1,4 +1,3 @@
-#include <stdio.h>
 #include <lcom/lcf.h>
 
 #include "../game/game.h"
@@ -9,7 +8,6 @@
 #include "../../devices/serial_port/serial_port.h"
 #include "../../model/button/button.h"
 #include "player_menu/player_menu.h"
-#include "../../model/cursor/cursor.h"
 
 int (setup_menu)(state_t *state, Resources *resources);
 
