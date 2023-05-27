@@ -32,7 +32,13 @@ brush_t *player_drawer_get_brush(player_drawer_t *player_drawer);
  * @brief 
  * 
  */
-player_type_t (player_drawer_get_state)(player_drawer_t *player_drawer);
+player_type_t (player_drawer_get_role)(player_drawer_t *player_drawer);
+
+/**
+ * @brief 
+ * 
+ */
+int (player_drawer_change_role)(player_drawer_t *player_drawer);
 
 /**
  * @brief 

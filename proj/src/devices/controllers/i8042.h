@@ -10,6 +10,7 @@
 
 #define MAKE_ENTER 0x1c
 #define MAKE_BACKSPACE 0x0e
+#define MAKE_SPACE 0x39
 #define BREAK_ESC   0x81       
 #define BREAK_CODE  BIT(7)
 #define TWO_BYTES   0xE0

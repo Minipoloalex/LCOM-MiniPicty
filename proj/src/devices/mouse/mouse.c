@@ -3,12 +3,17 @@
 static int hook_id = IRQ_MOUSE;
 int return_value_mouse = 0;
 
-uint8_t packet_byte = 0;
-uint8_t packet_index = 0;
+static uint8_t packet_byte = 0;
+static uint8_t packet_index = 0;
 struct packet packet;
-
-
 static bool packet_ready = false;
+
+/**
+ * @brief 
+ * 
+ */
+int (write_to_mouse)(uint8_t command);
+
 bool (packet_is_ready)() {
   return packet_ready;
 }
@@ -117,8 +122,8 @@ int (mouse_process_packet_byte)() {
 drawing_position_t (mouse_get_drawing_position_from_packet)(position_t before_position) {
   packet_ready = false;
   packet_index = 0;
-  extern unsigned h_res;
-  extern unsigned v_res;
+  uint16_t h_res = get_h_res();
+  uint16_t v_res = get_v_res();
   position_t next_position = before_position;
 
   uint16_t new_x = before_position.x + packet.delta_x;

@@ -1,8 +1,10 @@
-#ifndef UTILS_C
-#define UTILS_C
+#include "utils.h"
 
-#include <lcom/lcf.h>
-#include <stdint.h>
+char *(byte_to_str)(uint8_t byte){
+  static char str[3];
+  sprintf(str, "%hhu", byte);
+  return str;
+}
 
 int(util_get_LSB)(uint16_t val, uint8_t *lsb) {
   (*lsb) = (uint8_t) val;
@@ -26,5 +28,3 @@ int(util_sys_inb)(int port, uint8_t *value) {
   (*value) = (uint8_t) temp;
   return 0;
 }
-
-#endif

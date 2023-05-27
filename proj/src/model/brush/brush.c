@@ -1,6 +1,6 @@
 #include "brush.h"
 
-brush_t *(create_brush)(uint16_t color, uint16_t size) {
+brush_t *(create_brush)(uint32_t color, uint16_t size) {
   brush_t *brush = malloc(sizeof(brush_t));
   if (brush == NULL) {
     return NULL;
@@ -14,7 +14,7 @@ void (destroy_brush)(brush_t *brush) {
   free(brush);
 }
 
-void (set_brush_color)(brush_t *brush, uint16_t color) {
+void (set_brush_color)(brush_t *brush, uint32_t color) {
   brush->color = color;
 }
 

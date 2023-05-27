@@ -52,7 +52,12 @@
     "video_gr.h": "c",
     "stdlib.h": "c",
     "unistd.h": "c",
+<<<<<<< HEAD
     "prompt.h": "c",
     "state.h": "c"
+=======
+    "state.h": "c",
+    "vbe.h": "c"
+>>>>>>> main
   },
 }
