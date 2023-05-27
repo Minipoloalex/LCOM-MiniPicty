@@ -19,7 +19,7 @@
 
 #define RTC_A 10
 #define RTC_B 11
-#define RTC_C 12  // write here to enable interrupts
+#define RTC_C 12
 #define RTC_D 13
 
 #define RTC_A_UIP BIT(7)
@@ -82,7 +82,7 @@ int (rtc_write)(uint8_t reg, uint8_t data);
  * @param new_seconds new seconds value
  * @return the absolute value of the difference between the current time and the new time (in seconds).
  */
-uint32_t (time_difference)(uint8_t new_hours, uint8_t new_minutes, uint8_t new_seconds);
+int32_t (time_difference)(uint8_t new_hours, uint8_t new_minutes, uint8_t new_seconds);
 /**
  * @brief Increments the time by one second. Increments the variables hours, minutes and seconds.
  * Should be called from `rtc_ih()` in case the RTC is "stable".
@@ -112,11 +112,13 @@ int (rtc_init)() {
   regB |= RTC_B_UIE;
   regB &= ~(RTC_B_PIE | RTC_B_AIE);
   isBCD = !(regB & RTC_B_DM);
+  printf("isBCD: %d\n", isBCD);
+  printf("regB: %02x\n", regB);
   if (rtc_write(RTC_B, regB)) {
     printf("Error writing RTC_B\n");
     return EXIT_FAILURE;
   }
-  return EXIT_SUCCESS;  
+  return EXIT_SUCCESS;
 }
 
 int (rtc_subscribe_int)(uint8_t *bit_no) {
@@ -142,20 +144,37 @@ int (rtc_unsubscribe_int)() {
 }
 
 void (rtc_ih)() {
-  rtc_return_value = EXIT_SUCCESS;
   uint8_t regC;
   if(rtc_read(RTC_C, &regC)) {
     printf("Error reading RTC_C\n");
     rtc_return_value = EXIT_FAILURE;
     return;
   }
+  uint8_t regB;
+  if (rtc_read(RTC_B, &regB)) {
+    printf("Error reading RTC_B\n");
+    rtc_return_value = EXIT_FAILURE;
+    return;
+  }
+  uint8_t regA;
+  if (rtc_read(RTC_A, &regA)) {
+    rtc_return_value = EXIT_FAILURE;
+    return;
+  }
+  uint8_t regD;
+  if (rtc_read(RTC_D, &regD)) {
+    rtc_return_value = EXIT_FAILURE;
+    return;
+  }
+  printf("regA: %02x, regB: %02x, regC: %02x, regD: %02x\n", regA, regB, regC, regD);
+
   if (!(regC & RTC_C_IRQF)) {
     printf("no interrupt pending inside rtc_ih\n");
     rtc_return_value = EXIT_FAILURE;
     return;
   }
   if (regC & RTC_C_UF) {
-    printf("here\n");
+    printf("got my good interrupt\n");
     if (stable) {
       increment_one_second();
     }
@@ -168,7 +187,7 @@ void (rtc_ih)() {
       }
 
       if (hours != INITIAL_HOUR_VALUE) {  // if the hours have been initialized
-        uint32_t time_diff = time_difference(new_hours, new_minutes, new_seconds);
+        int32_t time_diff = time_difference(new_hours, new_minutes, new_seconds);
         if (time_diff == MAX_TIME_DIFFERENCE) {
           stable = true;
         }
@@ -216,22 +235,6 @@ int (rtc_write)(uint8_t reg, uint8_t data) {
   return EXIT_SUCCESS;
 }
 
-// int (rtc_get_date)(uint8_t *day, uint8_t *month, uint8_t *year) {
-//   if(rtc_read(RTC_DAY_MONTH, day)) {
-//     printf("Error reading day\n");
-//     return EXIT_FAILURE;
-//   }
-//   if(rtc_read(RTC_MONTH, month)) {
-//     printf("Error reading month\n");
-//     return EXIT_FAILURE;
-//   }
-//   if(rtc_read(RTC_YEAR, year)) {
-//     printf("Error reading year\n");
-//     return EXIT_FAILURE;
-//   }
-//   return EXIT_SUCCESS;
-// }
-
 void (increment_one_second)() {
   seconds++;
   if (seconds == 60) {
@@ -250,10 +253,10 @@ void (increment_one_second)() {
  * @brief Used to check whether the RTC value read is valid or not
  * @return the absolute value of the difference between the current time and the new time (in seconds).
  */
-uint32_t (time_difference)(uint8_t new_hours, uint8_t new_minutes, uint8_t new_seconds) {
+int32_t (time_difference)(uint8_t new_hours, uint8_t new_minutes, uint8_t new_seconds) {
   uint32_t current = hours * 3600 + minutes * 60 + seconds;
   uint32_t new = new_hours * 3600 + new_minutes * 60 + new_seconds;
-  return abs(new - current);
+  return new - current;
 }
 
 int (rtc_get_time)(uint8_t *_hours, uint8_t *_minutes, uint8_t *_seconds) {
