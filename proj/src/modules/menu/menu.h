@@ -1,16 +1,15 @@
-#include <stdio.h>
 #include <lcom/lcf.h>
 
 #include "../game/game.h"
+#include "../resources/resources.h"
 #include "../../model/state/state.h"
 #include "../../devices/video_card/video_card.h"
 #include "../../devices/mouse/mouse.h"
 #include "../../devices/serial_port/serial_port.h"
 #include "../../model/button/button.h"
 #include "player_menu/player_menu.h"
-#include "../../model/cursor/cursor.h"
 
-int (setup_menu)(state_t *state);
+int (setup_menu)(state_t *state, Resources *resources);
 
 int (draw_player_menu)();
 
