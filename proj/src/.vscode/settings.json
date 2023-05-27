@@ -52,7 +52,9 @@
     "video_gr.h": "c",
     "stdlib.h": "c",
     "unistd.h": "c",
+    "asteroid.h": "c",
+    "prompt.h": "c",
     "state.h": "c",
-    "asteroid.h": "c"
+    "resources.h": "c"
   },
 }

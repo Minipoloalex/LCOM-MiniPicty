@@ -67,7 +67,6 @@ void (destroy_button)(button_t *button) {
 }
 
 button_t *(create_button)(uint16_t x, uint16_t y, uint16_t width, uint16_t height, uint32_t background_color, char *text, button_icon_t icon, void (*onClick)(struct button *)) {
-  printf("creating button\n");
   button_t *button = malloc(sizeof(button_t));
   if (button == NULL) {
     return NULL;
@@ -89,13 +88,11 @@ button_t *(create_button)(uint16_t x, uint16_t y, uint16_t width, uint16_t heigh
       printf("Error copying text to button inside %s\n", __func__);
       return NULL;
     }
-    printf("button text: %s\n", button->text);
-  }else{
+  } else{
     button->text = NULL;
   }
 
   button->icon = icon;
   button->onClick = onClick;
-  printf("finished creating button\n");
   return button;
 }

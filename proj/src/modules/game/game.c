@@ -9,12 +9,14 @@
 #define YOU_ARE_DRAWING_TEXT "You are drawing"
 #define YOU_ARE_GUESSING_TEXT "You are guessing"
 #define FINISH_TEXT_SIZE (MAX(sizeof(WON_TEXT), sizeof(LOSE_TEXT)) + 1)
+
 typedef enum game_state {
   PLAYING,
   WAITING,
   FINISHED
 } game_state_t;
 
+static Resources* app_resources;
 static buttons_array_t *game_playing_buttons;
 static buttons_array_t *game_finished_buttons;
 
@@ -99,8 +101,9 @@ void(clear_canvas)(button_t *button) {
   canvas_clear(canvas);
 }
 /*==================================================================*/
-int(setup_game)(bool isTransmitter, state_t *state) {
+int(setup_game)(bool isTransmitter, state_t *state, Resources* resources) {
   app_state = state;
+  app_resources = resources;
   finish_text = malloc(FINISH_TEXT_SIZE * sizeof(char));
   if (finish_text == NULL) {
     printf("malloc inside %s\n", __func__);
@@ -259,8 +262,8 @@ int (game_process_timer)() {
         return EXIT_FAILURE;
       }
     }
-    printf("game_process_timer with round_timer: %u\n", round_timer);
     round_timer--;
+    set_needs_update(true);
     if (round_timer == 0) {
       if (game_state == WAITING) {
         game_state = PLAYING;
@@ -303,6 +306,7 @@ int(game_process_keyboard)() {
       printf("correct guess: %d \n", right_guess);
       reset_guess_word(guess);
       if (right_guess) {
+        set_needs_update(true);
         game_state = FINISHED;
         if (strcpy(finish_text, WON_TEXT) != OK) {
           printf("strcpy failed inside %s\n", __func__);
@@ -310,7 +314,6 @@ int(game_process_keyboard)() {
         }
       }
       break;
-
     default:
       if (is_breakcode(scancode, &is_break))
         return EXIT_FAILURE;
@@ -323,6 +326,7 @@ int(game_process_keyboard)() {
           return EXIT_FAILURE;
       }
   }
+  set_needs_update(true);
   return EXIT_SUCCESS;
 }
 
@@ -348,6 +352,7 @@ int(game_process_mouse)() {
       button_t *pressed_button = buttons->buttons[button_to_click];
       ser_add_button_click_to_transmitter_queue(button_to_click);
       pressed_button->onClick(pressed_button);
+      set_needs_update(true);
     }
   }
   return EXIT_SUCCESS;
@@ -387,22 +392,23 @@ int(game_process_serial)() {
   if (role == OTHER_PLAYER) {
     ser_read_bytes_from_receiver_queue(player_drawer, app_state);
   }
+  set_needs_update(true);
   return EXIT_SUCCESS;
 }
 
 int(game_draw_buttons)() {
-  if (vg_draw_buttons(game_playing_buttons)) {
+  if (vg_draw_buttons(game_playing_buttons, app_resources->font, app_resources->icons)) {
     printf("vg_draw_buttons inside %s\n", __func__);
     return EXIT_FAILURE;
   }
   if (game_state == FINISHED) {
     if (vg_draw_rectangle(0, cell_height, cell_width*4, cell_height, 0XA0A0A0) != OK)
       return EXIT_FAILURE;
-    if (vg_draw_text(finish_text, 0, cell_height+cell_height/4) != OK)
+    if (vg_draw_text(finish_text, 0, cell_height+cell_height/4, app_resources->font) != OK)
       return EXIT_FAILURE;
     if (vg_draw_rectangle(2*cell_width, cell_height, 5*cell_width, 9*cell_height, BLACK) != OK)
       return EXIT_FAILURE;
-    if (vg_draw_buttons(game_finished_buttons)) {
+    if (vg_draw_buttons(game_finished_buttons, app_resources->font, app_resources->icons)) {
       printf("vg_draw_buttons inside %s\n", __func__);
       return EXIT_FAILURE;
     }
@@ -415,7 +421,7 @@ int(game_draw)() {
     printf("draw_to_canvas inside %s\n", __func__);
     return EXIT_FAILURE;
   }
-  if (/*buffers_need_update()*/ true) {
+  if (buffers_need_update()) {
     if (vg_draw_buffer(get_buffer(canvas)) != OK) {
       printf("vg_draw_buffer inside %s\n", __func__);
       return EXIT_FAILURE;
@@ -430,11 +436,11 @@ int(game_draw)() {
     player_type_t role = player_drawer_get_role(player_drawer);
     switch (role) {
       case SELF_PLAYER:
-        if (vg_draw_text(prompt, GUESS_POS_X, GUESS_POS_Y) != OK)
+        if (vg_draw_text(prompt, GUESS_POS_X, GUESS_POS_Y, app_resources->font) != OK)
           return EXIT_FAILURE;
         break;
       case OTHER_PLAYER:
-        if (vg_draw_guess(guess, GUESS_POS_X, GUESS_POS_Y) != OK)
+        if (vg_draw_guess(guess, GUESS_POS_X, GUESS_POS_Y, app_resources->font) != OK)
           return EXIT_FAILURE;
         break;
     }
@@ -442,17 +448,17 @@ int(game_draw)() {
       if (role == SELF_PLAYER) {
         if (vg_draw_rectangle(0, cell_height, cell_width*4, cell_height, 0XA0A0A0) != OK)
           return EXIT_FAILURE;
-        if (vg_draw_text(YOU_ARE_DRAWING_TEXT, 0, cell_height+cell_height/4) != OK)
+        if (vg_draw_text(YOU_ARE_DRAWING_TEXT, 0, cell_height+cell_height/4, app_resources->font) != OK)
           return EXIT_FAILURE;
       }
       else {
         if (vg_draw_rectangle(0, cell_height, cell_width*4, cell_height, 0XA0A0A0) != OK)
           return EXIT_FAILURE;
-        if (vg_draw_text(YOU_ARE_GUESSING_TEXT, 0, cell_height+cell_height/4) != OK)
+        if (vg_draw_text(YOU_ARE_GUESSING_TEXT, 0, cell_height+cell_height/4, app_resources->font) != OK)
           return EXIT_FAILURE;
       }
     }
-    if (vg_draw_text(byte_to_str(round_timer), ROUND_TIMER_X, ROUND_TIMER_Y) != OK) {
+    if (vg_draw_text(byte_to_str(round_timer), ROUND_TIMER_X, ROUND_TIMER_Y, app_resources->font) != OK) {
       printf("vg_draw_text inside %s\n", __func__);
       return EXIT_FAILURE;
     }
@@ -460,10 +466,10 @@ int(game_draw)() {
     player_t *player = player_drawer_get_player(player_drawer);
     drawing_position_t drawing_position = player_get_current_position(player);
     update_cursor_state(drawing_position.position);
-    cursor_image_t cursor = player_drawer_get_cursor(player_drawer);
+    cursor_type_t cursor = player_drawer_get_cursor(player_drawer);
 
-    if (vg_draw_cursor(cursor, drawing_position.position) != OK) {
-      printf("vg_draw_cursor inside %s\n", __func__);
+    if (vg_draw_sprite(app_resources->cursors[cursor], drawing_position.position.x, drawing_position.position.y)) {
+      printf("vg_draw_sprite inside %s\n", __func__);
       return EXIT_FAILURE;
     }
     if (vg_buffer_flip()) {

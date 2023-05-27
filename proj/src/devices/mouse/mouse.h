@@ -8,10 +8,25 @@
 #include "../video_card/video_card.h"
 #include "../../model/drawing_position.h"
 
+/**
+ * @brief 
+ * 
+ */
 bool (packet_is_ready)();
+/**
+ * @brief 
+ * 
+ */
 uint8_t *(mouse_get_packet_bytes)();
-int (mouse_process_packet)();
+/**
+ * @brief 
+ * 
+ */
 int (mouse_process_packet_byte)();
+/**
+ * @brief 
+ * 
+ */
 void (mouse_ih)();
 /**
  * @brief 
@@ -19,12 +34,33 @@ void (mouse_ih)();
  */
 drawing_position_t (mouse_get_drawing_position_from_packet)(position_t before_position);
 
-// TODO: make some functions private (lower level like write_to_mouse)
-// An idea: make a mouse init/config and a mouse_destroy
+/**
+ * @brief 
+ * 
+ */
 int (mouse_subscribe_interrupts)(uint8_t *bit_no);
+/**
+ * @brief 
+ * 
+ */
 int (mouse_unsubscribe_interrupts)();
+/**
+ * @brief 
+ * 
+ */
 int (mouse_enable_int)();
+/**
+ * @brief 
+ * 
+ */
 int (mouse_disable_int)();
+/**
+ * @brief 
+ * 
+ */
 int (mouse_enable_data_report)();
+/**
+ * @brief 
+ * 
+ */
 int (mouse_disable_data_report)();
-int (write_to_mouse)(uint8_t command);

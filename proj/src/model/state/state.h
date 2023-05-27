@@ -15,6 +15,7 @@ struct State {
   Event process_keyboard;
   Event process_serial;
   Event process_timer;
+  Event process_rtc;
   ButtonsGetter get_buttons;
   bool running_app;
 };

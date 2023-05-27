@@ -18,14 +18,20 @@ void (keyboard_ih)(){
 }
 
 int (keyboard_restore)(){
-  uint8_t commandWord;
-  if(write_KBC_command(KBC_IN_REG, KBC_READ_CMD_BYTE) != 0) return EXIT_FAILURE;
-  if(read_KBC_output(KBC_OUT_REG, &commandWord, 0) != 0) return EXIT_FAILURE;
-
-  commandWord |= KEYBOARD_ENABLE_INT;
-  
-  if(write_KBC_command(KBC_IN_REG, KBC_WRITE_CMD_BYTE) != 0) return EXIT_FAILURE;
-  return write_KBC_command(KBC_OUT_REG, commandWord);
+  uint8_t command_word = minix_get_dflt_kbc_cmd_byte();
+  uint8_t trash;
+  if(read_KBC_output(KBC_OUT_REG, &trash, 0) != 0) {
+    printf("read_kbc_output inside %s\n", __func__);
+  }
+  if(write_KBC_command(KBC_IN_REG, KBC_WRITE_CMD_BYTE) != 0) {
+    printf("1st write_kbc_command inside %s\n", __func__);
+    return EXIT_FAILURE;
+  }
+  if (write_KBC_command(KBC_OUT_REG, command_word) != 0) {
+    printf("2nd write_kbc_command inside %s\n", __func__);
+    return EXIT_FAILURE;
+  }
+  return EXIT_SUCCESS;
 }
 
 int (is_breakcode)(uint8_t scancode, bool *is_breakcode){
@@ -45,6 +51,5 @@ int (translate_scancode)(uint8_t scancode, uint8_t *character){
       return EXIT_SUCCESS;
     }
   }
-  // printf("No match for scancode: 0x%x\n", scancode);
   return EXIT_FAILURE;
 }

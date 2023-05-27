@@ -3,7 +3,7 @@
 #include <lcom/lcf.h>
 #include "../position/position.h"
 #include "../drawing_position.h"
-#include "../../resources/icons.h"
+#include "../../modules/resources/icons.h"
 
 typedef enum {
     PLUS_ICON,

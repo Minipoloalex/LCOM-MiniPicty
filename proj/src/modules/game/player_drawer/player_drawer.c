@@ -5,7 +5,7 @@ struct PlayerDrawer {
 
   player_type_t player_state;
   brush_t *brush;
-  cursor_image_t cursor;
+  cursor_type_t cursor;
 };
 
 void (destroy_player_drawer)(player_drawer_t *player_drawer) {
@@ -55,10 +55,10 @@ player_t *(player_drawer_get_player)(player_drawer_t *player_drawer) {
   return player_drawer->player;
 }
 
-void (player_drawer_set_cursor)(player_drawer_t *player_drawer, cursor_image_t cursor){
+void (player_drawer_set_cursor)(player_drawer_t *player_drawer, cursor_type_t cursor){
   player_drawer->cursor = cursor;
 }
 
-cursor_image_t (player_drawer_get_cursor)(player_drawer_t *player_drawer){
+cursor_type_t (player_drawer_get_cursor)(player_drawer_t *player_drawer){
   return player_drawer->cursor;
 }
