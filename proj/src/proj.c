@@ -42,6 +42,10 @@ int(proj_main_loop)(int argc, char *argv[]) {
     return EXIT_FAILURE;
   }
   printf("isTransmitter: %d\n", isTransmitter);
+  if (rtc_init() != OK) {
+    printf("rtc_init inside %s\n", __func__);
+    return EXIT_FAILURE;
+  }
   
   // Load resources
   Resources* resources = load_resources();
@@ -84,15 +88,18 @@ int(proj_main_loop)(int argc, char *argv[]) {
   
   extern uint8_t scancode;
   extern int return_value;
-  
   extern uint8_t keyboard_bit_no;
+  
   extern uint8_t mouse_bit_no;
+  extern uint8_t return_value_mouse;
+  
   extern uint8_t timer_bit_no;
 
   extern uint8_t ser_bit_no;
   extern uint8_t ser_return_value;
 
-  extern uint8_t return_value_mouse;
+  extern uint8_t rtc_bit_no;
+  extern int rtc_return_value;
   do {
       if ((r = driver_receive(ANY, &msg, &ipc_status)) != 0) {
         printf("driver_receive failed with %d", r);
@@ -101,12 +108,10 @@ int(proj_main_loop)(int argc, char *argv[]) {
         switch(_ENDPOINT_P(msg.m_source)) {
           case HARDWARE:
             if (msg.m_notify.interrupts & BIT(keyboard_bit_no)) {
-              // printf("Received interrupt from keyboard\n");
               keyboard_ih();
               app_state->process_keyboard(app_state);
             }
             if (msg.m_notify.interrupts & BIT(mouse_bit_no)) {
-              // printf("Received interrupt from mouse\n");
               mouse_ih();
               if (return_value_mouse == EXIT_SUCCESS){
                 mouse_process_packet_byte();
@@ -124,6 +129,12 @@ int(proj_main_loop)(int argc, char *argv[]) {
               ser_ih_fifo();
               if (ser_return_value == EXIT_SUCCESS){
                 app_state->process_serial(app_state);
+              }
+            }
+            if (msg.m_notify.interrupts & BIT(rtc_bit_no)) {
+              rtc_ih();
+              if (rtc_return_value == EXIT_SUCCESS) {
+                app_state->process_rtc(app_state);
               }
             }
             break;

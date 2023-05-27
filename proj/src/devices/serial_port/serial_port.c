@@ -456,7 +456,7 @@ int (ser_write_to_fifo)() {
   }
   while (lsr & SER_LSR_THRE) {
     if (is_empty_queue(transmitter_queue)) {
-      printf("transmitter queue empty inside %s\n", __func__);
+      // printf("transmitter queue empty inside %s\n", __func__);
       return EXIT_SUCCESS;
     }
     if (pop_queue(transmitter_queue, &data) != OK) return EXIT_FAILURE;
@@ -557,7 +557,7 @@ int (ser_write_fifo_control)(uint8_t config) {
 int (replace_ser_end(uint8_t *data)) {
   if (*data == SER_END) {
     *data = SER_END_REPLACEMENT;
-    printf("replaced byte");
+    // printf("replaced byte");
   }
   return EXIT_SUCCESS;
 }

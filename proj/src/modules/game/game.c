@@ -239,7 +239,6 @@ int (game_process_timer)() {
     return EXIT_SUCCESS;
   }
   if (timer_counter % sys_hz() == 0) {
-    printf("game_process_timer with round_timer: %u\n", round_timer);
     round_timer--;
     set_needs_update(true);
     if (round_timer == 0) {

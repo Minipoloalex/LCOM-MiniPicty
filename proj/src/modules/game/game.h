@@ -18,6 +18,7 @@
 #include "../../devices/mouse/mouse.h"
 #include "../../devices/serial_port/serial_port.h"
 #include "../../devices/video_card/video_card.h"
+#include "../../devices/rtc/rtc.h"
 #include "../../utils/utils.h"
 
 
