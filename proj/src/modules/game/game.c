@@ -1,13 +1,14 @@
 #include "game.h"
 
+#define GRAY_COLOR 0xA0A0A0
 #define NUMBER_GAME_PLAYING_BUTTONS 13
 #define NUMBER_GAME_FINISHED_BUTTONS 3
 #define GAME_WAITING_TIME 5
-#define GAME_ROUND_TIME 10
+#define GAME_ROUND_TIME 60
 #define WON_TEXT "You won"
 #define LOSE_TEXT "You lost"
-#define YOU_ARE_DRAWING_TEXT "You are drawing"
-#define YOU_ARE_GUESSING_TEXT "You are guessing"
+#define YOU_ARE_DRAWING_TEXT "Get ready you are drawing"
+#define YOU_ARE_GUESSING_TEXT "Get ready you are guessing"
 #define FINISH_TEXT_SIZE (MAX(sizeof(WON_TEXT), sizeof(LOSE_TEXT)) + 1)
 
 typedef enum game_state {
@@ -55,6 +56,9 @@ void(play_again)(button_t *button) {
     }
   }
   reset_guess_word(guess);
+  if (is_hard_mode) {
+    asteroid_reset_position(asteroid);
+  }
 }
 void(play_again_change_roles)(button_t *button) {
   printf("CHANGING ROLES OF PLAYERS\n");
@@ -142,7 +146,7 @@ int(setup_game)(bool isTransmitter, state_t *state, Resources* resources) {
   button_t *light_blue_button = create_button(7*min_len, 0, min_len, min_height, 0XADD8E6, NULL, NO_ICON, change_brush_color);
   button_t *dark_blue_button = create_button(2*min_len, 0, min_len, min_height, 0X0066CC, NULL, NO_ICON,change_brush_color);
   button_t *pink_button = create_button(8*min_len, 0, min_len, min_height, 0XFF99FF, NULL, NO_ICON, change_brush_color);
-  button_t *gray_button = create_button(5*min_len, 0, min_len, min_height, 0XA0A0A0, NULL, NO_ICON,change_brush_color);
+  button_t *gray_button = create_button(5*min_len, 0, min_len, min_height, GRAY_COLOR, NULL, NO_ICON,change_brush_color);
   button_t *black_button = create_button(4*min_len, 0, min_len, min_height, 0X000000, NULL, NO_ICON,change_brush_color);
   
   game_playing_buttons->buttons[0] = red_button;
@@ -155,7 +159,7 @@ int(setup_game)(bool isTransmitter, state_t *state, Resources* resources) {
   game_playing_buttons->buttons[7] = gray_button;
   game_playing_buttons->buttons[8] = black_button;
 
-  int other_buttons_color = 0XA0A0A0;
+  int other_buttons_color = GRAY_COLOR;
 
   button_t * increase_size_button = create_button(8*min_len, 2*min_height, min_len, min_height, other_buttons_color, NULL, PLUS_ICON, increase_brush_size);
   button_t * decrease_size_button = create_button(8*min_len, 4*min_height, min_len, min_height, other_buttons_color, NULL, MINUS_ICON, decrease_brush_size);
@@ -208,8 +212,7 @@ int(setup_game)(bool isTransmitter, state_t *state, Resources* resources) {
   }
 
 
-  // asteroid = create_asteroid(4, {});
-  asteroid = NULL;
+  asteroid = create_asteroid(app_resources->asteroids);
   if (asteroid == NULL) {
     free(finish_text);
     destroy_player_drawer(player_drawer);
@@ -248,6 +251,7 @@ void(transition_to_game)(state_t *state, bool hard_mode) {
   if (strcpy(finish_text, LOSE_TEXT) == NULL) {
     printf("strcpy failed inside %s\n", __func__);
   }
+  asteroid_reset_position(asteroid);
 }
 
 extern int timer_counter;
@@ -255,13 +259,14 @@ int (game_process_timer)() {
   if (game_state == FINISHED) {
     return EXIT_SUCCESS;
   }
-  if (timer_counter % sys_hz() == 0) {
-    if (is_hard_mode) {
-      if (game_move_asteroid(asteroid) != OK) {
-        printf("game_move_asteroid failed inside %s\n", __func__);
-        return EXIT_FAILURE;
-      }
+  if (is_hard_mode && game_state == PLAYING) {
+    if (game_move_asteroid(asteroid) != OK) {
+      printf("game_move_asteroid failed inside %s\n", __func__);
+      return EXIT_FAILURE;
     }
+    set_needs_update(true);
+  }
+  if (timer_counter % sys_hz() == 0) {    
     round_timer--;
     set_needs_update(true);
     if (round_timer == 0) {
@@ -379,7 +384,7 @@ int(game_draw_canvas)(canvas_t *canvas, player_drawer_t *player_drawer) {
       return EXIT_FAILURE;
 
     if (game_state == PLAYING) {
-      draw_in_canvas(canvas, brush, last_position.position, drawing_position);
+      draw_in_canvas(canvas, brush, last_position.position, drawing_position, is_hard_mode ? asteroid : NULL);
     }
 
     player_set_last_position(player, drawing_position);
@@ -402,7 +407,7 @@ int(game_draw_buttons)() {
     return EXIT_FAILURE;
   }
   if (game_state == FINISHED) {
-    if (vg_draw_rectangle(0, cell_height, cell_width*4, cell_height, 0XA0A0A0) != OK)
+    if (vg_draw_rectangle(0, cell_height, cell_width*4, cell_height, GRAY_COLOR) != OK)
       return EXIT_FAILURE;
     if (vg_draw_text(finish_text, 0, cell_height+cell_height/4, app_resources->font) != OK)
       return EXIT_FAILURE;
@@ -446,13 +451,13 @@ int(game_draw)() {
     }
     if (game_state == WAITING) {
       if (role == SELF_PLAYER) {
-        if (vg_draw_rectangle(0, cell_height, cell_width*4, cell_height, 0XA0A0A0) != OK)
+        if (vg_draw_rectangle(0, cell_height, cell_width*4, cell_height, GRAY_COLOR) != OK)
           return EXIT_FAILURE;
         if (vg_draw_text(YOU_ARE_DRAWING_TEXT, 0, cell_height+cell_height/4, app_resources->font) != OK)
           return EXIT_FAILURE;
       }
       else {
-        if (vg_draw_rectangle(0, cell_height, cell_width*4, cell_height, 0XA0A0A0) != OK)
+        if (vg_draw_rectangle(0, cell_height, cell_width*4, cell_height, GRAY_COLOR) != OK)
           return EXIT_FAILURE;
         if (vg_draw_text(YOU_ARE_GUESSING_TEXT, 0, cell_height+cell_height/4, app_resources->font) != OK)
           return EXIT_FAILURE;
@@ -462,7 +467,10 @@ int(game_draw)() {
       printf("vg_draw_text inside %s\n", __func__);
       return EXIT_FAILURE;
     }
-
+    if (game_state == PLAYING && is_hard_mode && draw_asteroid(asteroid) != OK) {
+      printf("draw_asteroid inside %s\n", __func__);
+      return EXIT_FAILURE;
+    }
     player_t *player = player_drawer_get_player(player_drawer);
     drawing_position_t drawing_position = player_get_current_position(player);
     update_cursor_state(drawing_position.position);
@@ -472,6 +480,7 @@ int(game_draw)() {
       printf("vg_draw_sprite inside %s\n", __func__);
       return EXIT_FAILURE;
     }
+
     if (vg_buffer_flip()) {
       printf("vg_buffer_flip inside %s\n", __func__);
       return EXIT_FAILURE;
@@ -511,41 +520,34 @@ int (game_move_asteroid)(asteroid_t *asteroid) {
   }
   asteroid->position.x += asteroid->x_speed;
   asteroid->position.y += asteroid->y_speed;
-  xpm_image_t xpm = asteroid->xpms[asteroid->current_xpm];
-  uint16_t right_side = asteroid->position.x + xpm.width;
-  if (right_side >= canvas->width || asteroid->position.x < canvas->start_point.x) {
+  Sprite *xpm = asteroid->xpms[asteroid->current_xpm];
+  uint16_t asteroid_right_side = asteroid->position.x + xpm->width;
+  uint16_t canvas_right_side = canvas->start_point.x + canvas->width;
+  if (asteroid_right_side >= canvas_right_side || asteroid->position.x < canvas->start_point.x) {
     asteroid->x_speed *= -1;
-    if (right_side >= canvas->width) {
-      asteroid->position.x = canvas->width - 1;
+    if (asteroid_right_side >= canvas_right_side) {  /* hit the right wall */
+      asteroid->position.x = canvas_right_side - xpm->width - 1;
+      asteroid->current_xpm = asteroid->y_speed > 0 ? DOWN_LEFT : UP_LEFT;
     }
-    else {
+    else {  /* hit the left wall */
       asteroid->position.x = canvas->start_point.x;
+      asteroid->current_xpm = asteroid->y_speed > 0 ? DOWN_RIGHT : UP_RIGHT;
     }
-    //FIX THIS
-    asteroid->current_xpm = (asteroid->current_xpm + 1) % asteroid->number_xpms;
   }
 
-  uint16_t bottom_side = asteroid->position.y + xpm.width;
-  if (bottom_side >= canvas->height || asteroid->position.y < canvas->start_point.y) {
+  uint16_t asteroid_bottom_side = asteroid->position.y + xpm->height;
+  uint16_t canvas_bottom_side = canvas->start_point.y + canvas->height;
+  if (asteroid_bottom_side >= canvas_bottom_side || asteroid->position.y < canvas->start_point.y) {
     asteroid->y_speed *= -1;
-    if (bottom_side >= canvas->height) {
-      asteroid->position.y = canvas->height - 1;
+    if (asteroid_bottom_side >= canvas_bottom_side) { /* hit the bottom wall */
+      asteroid->position.y = canvas_bottom_side - xpm->height - 1;
+      asteroid->current_xpm = asteroid->x_speed > 0 ? UP_RIGHT : UP_LEFT;
     }
-    else {
+    else {  /* hit the top wall */
       asteroid->position.y = canvas->start_point.y;
+      asteroid->current_xpm = asteroid->x_speed > 0 ? DOWN_RIGHT : DOWN_LEFT;
     }
-    //FIX THIS
-    asteroid->current_xpm = (asteroid->current_xpm + 1) % asteroid->number_xpms;
   }
-
-
-
-  // if (asteroid->position.x > canvas->width || asteroid->position.x < canvas->start_point.x) {
-  //   asteroid->speed.x *= -1;
-  // }
-  // if (asteroid->position.y > canvas->height || asteroid->position.y < canvas->start_point.y) {
-  //   asteroid->speed.y *= -1;
-  // }
   return EXIT_SUCCESS;
 }
 

@@ -17,9 +17,14 @@ void (canvas_destroy)(canvas_t *canvas) {
   free(canvas);
 }
 
-int (draw_in_canvas)(canvas_t *canvas, brush_t *brush, position_t last, drawing_position_t next) {
+int (draw_in_canvas)(canvas_t *canvas, brush_t *brush, position_t last, drawing_position_t next, asteroid_t *asteroid) {
   if (next.is_drawing && is_inside_rectangle(last, canvas->start_point, canvas->width, canvas->height)) {
-    vg_draw_line(canvas->buffer, last, next.position, brush->size, brush->color);
+    if (asteroid != NULL) {
+      if(!is_inside(asteroid, next.position)){
+        vg_draw_line(canvas->buffer, last, next.position, brush->size, brush->color);
+      }
+    }
+    else vg_draw_line(canvas->buffer, last, next.position, brush->size, brush->color);
   }
   return EXIT_SUCCESS;
 }

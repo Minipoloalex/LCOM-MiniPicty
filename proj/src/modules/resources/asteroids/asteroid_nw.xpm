@@ -1,5 +1,5 @@
 /* XPM */
-static char * asteroid_nw_xpm[] = {
+static xpm_row_t const asteroid_nw_xpm[] = {
 "64 64 505 2",
 "  	c None",
 ". 	c #2C3E50",

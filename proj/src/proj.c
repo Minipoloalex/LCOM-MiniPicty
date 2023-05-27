@@ -47,13 +47,6 @@ int(proj_main_loop)(int argc, char *argv[]) {
     return EXIT_FAILURE;
   }
   
-  // Load resources
-  Resources* resources = load_resources();
-  if(resources == NULL){
-    printf("load_resources inside %s\n", __func__);
-    return EXIT_FAILURE;
-  }
-
   // Subscribe interrupts
   if(subscribe_interrupts()) return EXIT_FAILURE;
 
@@ -62,6 +55,13 @@ int(proj_main_loop)(int argc, char *argv[]) {
     printf("setup_video_mode inside %s\n", __func__);
     return EXIT_FAILURE;
   }  
+
+  // Load resources
+  Resources* resources = load_resources();
+  if(resources == NULL){
+    printf("load_resources inside %s\n", __func__);
+    return EXIT_FAILURE;
+  }
 
   app_state = create_state();
   if (app_state == NULL) {
@@ -147,8 +147,8 @@ int(proj_main_loop)(int argc, char *argv[]) {
   // Unload resources
   destroy_game();
   destroy_menu();
-  destroy_state(app_state);
   unload_resources(resources);
+  destroy_state(app_state);
 
   // Stop serial communication
   delete_ser();

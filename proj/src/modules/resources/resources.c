@@ -3,8 +3,7 @@
 Resources *(load_resources)(){
   Resources *resources = (Resources*) malloc(sizeof(Resources));
   if(resources == NULL) return NULL;
-
-  for(size_t i=0; i<NUMBER_OF_CURSORS; i++){
+  for(size_t i = 0; i < NUMBER_OF_CURSORS; i++){
     resources->cursors[i] = create_sprite(cursors[i]);
   }
 
@@ -16,6 +15,9 @@ Resources *(load_resources)(){
     resources->icons[i] = create_sprite(icons[i]);
   }
 
+  for (size_t i = 0; i < NUMBER_OF_ASTEROIDS; i++) {
+    resources->asteroids[i] = create_sprite(asteroids[i]);
+  }
   return resources;
 }
 
@@ -30,6 +32,10 @@ void (unload_resources)(Resources *resources){
 
   for(size_t i=0; i<NUMBER_OF_ICONS; i++){
     destroy_sprite(resources->icons[i]);
+  }
+
+  for(size_t i=0; i<NUMBER_OF_ASTEROIDS; i++){
+    destroy_sprite(resources->asteroids[i]);
   }
 
   free(resources);

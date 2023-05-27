@@ -1,32 +1,27 @@
 #include "asteroid.h"
 
-asteroid_t *(create_asteroid)(uint8_t number_of_xpms, xpm_map_t *xpms, uint8_t x_speed, uint8_t y_speed, int aspeed) {
+asteroid_t *(create_asteroid)(Sprite *xpms[]) {
   asteroid_t *asteroid = malloc(sizeof(asteroid_t));
   if (asteroid == NULL) {
     return NULL;
   }
-  asteroid->xpms = malloc(sizeof(xpm_image_t) * number_of_xpms);
+  asteroid->xpms = xpms;
   if (asteroid->xpms == NULL) {
     free(asteroid);
     return NULL;
   }
-  asteroid->number_xpms = number_of_xpms;
-  asteroid->current_xpm = 0;
-  asteroid->x_speed = x_speed;
-  asteroid->y_speed = y_speed;
-  asteroid->aspeed = aspeed;
-  // load xpms
+  asteroid->aspeed = ASTEROID_ASPEED;
+  asteroid_reset_position(asteroid);
   return asteroid;
 }
 
 void (destroy_asteroid)(asteroid_t *asteroid) {
-  free(asteroid->xpms);
   free(asteroid);
 }
 
 bool (is_inside)(asteroid_t *asteroid, position_t position){
-  xpm_image_t *xpm = &asteroid->xpms[asteroid->current_xpm];
-  uint8_t *colors = xpm->bytes;
+  Sprite *xpm = asteroid->xpms[asteroid->current_xpm];
+  uint8_t *colors = xpm->colors;
   position_t asteroid_position = asteroid->position;
   if (!is_inside_rectangle(position, asteroid_position, xpm->width, xpm->height)) {
     return false;
@@ -42,4 +37,21 @@ bool (is_inside)(asteroid_t *asteroid, position_t position){
     }
   }
   return false;
+}
+
+int (draw_asteroid)(asteroid_t *asteroid) {
+  if (vg_draw_sprite(asteroid->xpms[asteroid->current_xpm], asteroid->position.x, asteroid->position.y)) {
+    printf("vg_draw_sprite inside %s\n", __func__);
+    return EXIT_FAILURE;
+  }
+  return EXIT_SUCCESS;
+}
+void (asteroid_reset_position)(asteroid_t *asteroid) {
+  asteroid->position = (position_t) {
+    .x = get_h_res()/2,
+    .y = 100
+  };
+  asteroid->current_xpm = ASTEROID_INITIAL_XPM;
+  asteroid->x_speed = ASTEROID_INITIAL_X_SPEED;
+  asteroid->y_speed = ASTEROID_INITIAL_Y_SPEED;
 }

@@ -21,12 +21,12 @@ static unsigned h_res;	        /* Horizontal resolution in pixels */
 static unsigned v_res;	        /* Vertical resolution in pixels */
 vbe_mode_info_t vmi;
 
-int (setup_video_mode)(uint16_t mode){
-  if (map_phys_mem_to_virtual(mode) != OK){
+int (setup_video_mode)(uint16_t _mode){
+  if (map_phys_mem_to_virtual(_mode) != OK){
     printf("map_phys_mem_to_virtual inside %s\n", __func__);
     return EXIT_FAILURE;
   }
-  if (vg_enter(mode) != OK) return EXIT_FAILURE;
+  if (vg_enter(_mode) != OK) return EXIT_FAILURE;
   return EXIT_SUCCESS;
 }
 
