@@ -9,6 +9,7 @@
 #include "../../model/brush/brush.h"
 #include "../../model/guess/guess.h"
 #include "../../model/cursor/cursor.h"
+#include "../../model/sprite/sprite.h"
 
 // guess word
 #define GUESS_POS_X 30
