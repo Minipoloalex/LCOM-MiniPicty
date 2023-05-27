@@ -518,12 +518,18 @@ int (game_move_asteroid)(asteroid_t *asteroid) {
     printf("game_state != PLAYING inside %s\n", __func__);
     return EXIT_FAILURE;
   }
-  asteroid->position.x += asteroid->x_speed;
+  bool hit_left_wall = false;
+  /* This is needed because uint16_t makes -2 be 0xFF... */
+  if (asteroid->x_speed < 0 && asteroid->position.x < abs(asteroid->x_speed)) {
+    hit_left_wall = true;
+  }
+  else asteroid->position.x += asteroid->x_speed;
   asteroid->position.y += asteroid->y_speed;
+  
   Sprite *xpm = asteroid->xpms[asteroid->current_xpm];
   uint16_t asteroid_right_side = asteroid->position.x + xpm->width;
   uint16_t canvas_right_side = canvas->start_point.x + canvas->width;
-  if (asteroid_right_side >= canvas_right_side || asteroid->position.x < canvas->start_point.x) {
+  if (asteroid_right_side >= canvas_right_side || hit_left_wall) {
     asteroid->x_speed *= -1;
     if (asteroid_right_side >= canvas_right_side) {  /* hit the right wall */
       asteroid->position.x = canvas_right_side - xpm->width - 1;
