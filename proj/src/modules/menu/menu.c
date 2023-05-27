@@ -80,18 +80,9 @@ int (draw_player_menu)() {
     set_needs_update(true);
     player_set_last_position(player, drawing_position);
   }
-  position_t position = player_get_current_position(player).position;
-
-  for (int i = 0; i < NUMBER_MENU_BUTTONS; i++) {
-    button_t *button = buttons_array->buttons[i];
-    if(is_cursor_over_button(button, position)){
-      change_button_color(button, HOVERED_BG_COLOR);
-    } else {
-      change_button_color(button, NOT_HOVERED_BG_COLOR);
-    }
-  }
   return EXIT_SUCCESS;
 }
+
 int (draw_buttons)() {
   drawing_position_t last_position;
   player_t *player = player_menu_get_player(player_menu);
@@ -197,7 +188,7 @@ int (menu_draw)(){
     printf("draw_player_menu inside %s\n", __func__);
     return EXIT_FAILURE;
   }
-  if (/*buffers_need_update()*/ true) {  // if no new mouse positions, don't update anything
+  if (buffers_need_update()) {  // if no new mouse positions, don't update anything
     if(draw_background_scene()){
       printf("draw_background inside %s\n", __func__);
       return EXIT_FAILURE;
@@ -238,6 +229,7 @@ int (menu_process_mouse)() {
     button_t *pressed_button = buttons_array->buttons[button_to_click];
     ser_add_button_click_to_transmitter_queue(button_to_click);
     pressed_button->onClick(pressed_button);
+    set_needs_update(true);
   }
 
   return player_add_next_position(player, &next);
@@ -254,19 +246,16 @@ int (menu_process_serial)() {
     printf("ser_read_bytes_from_receiver_queue inside %s\n", __func__);
     return EXIT_FAILURE;
   }
+  set_needs_update(true);
   return EXIT_SUCCESS;
 }
 
-//FIX this function
 int (calculate_sun_height)(int hour){
   int x = hour - 6;
   int a = 6;
   int b = 20;
 
-  // Using ellipse formula to calculate y based on x
-  double y = pow(b,2) * sqrt(1 - (pow(x, 2) / pow(a, 2)));
-
-  return (int)y;
+  return (int) pow(b,2) * sqrt(1 - (pow(x, 2) / pow(a, 2)));
 }
 
 uint32_t (calculate_sky_color)(int hour){

@@ -239,6 +239,7 @@ int (game_process_timer)() {
   if (timer_counter % sys_hz() == 0) {
     printf("game_process_timer with round_timer: %u\n", round_timer);
     round_timer--;
+    set_needs_update(true);
     if (round_timer == 0) {
       if (game_state == WAITING) {
         game_state = PLAYING;
@@ -281,6 +282,7 @@ int(game_process_keyboard)() {
       printf("correct guess: %d \n", right_guess);
       reset_guess_word(guess);
       if (right_guess) {
+        set_needs_update(true);
         game_state = FINISHED;
         if (strcpy(finish_text, WON_TEXT) != OK) {
           printf("strcpy failed inside %s\n", __func__);
@@ -288,7 +290,6 @@ int(game_process_keyboard)() {
         }
       }
       break;
-
     default:
       if (is_breakcode(scancode, &is_break))
         return EXIT_FAILURE;
@@ -301,6 +302,7 @@ int(game_process_keyboard)() {
           return EXIT_FAILURE;
       }
   }
+  set_needs_update(true);
   return EXIT_SUCCESS;
 }
 
@@ -326,6 +328,7 @@ int(game_process_mouse)() {
       button_t *pressed_button = buttons->buttons[button_to_click];
       ser_add_button_click_to_transmitter_queue(button_to_click);
       pressed_button->onClick(pressed_button);
+      set_needs_update(true);
     }
   }
   return EXIT_SUCCESS;
@@ -365,6 +368,7 @@ int(game_process_serial)() {
   if (role == OTHER_PLAYER) {
     ser_read_bytes_from_receiver_queue(player_drawer, app_state);
   }
+  set_needs_update(true);
   return EXIT_SUCCESS;
 }
 
@@ -393,7 +397,7 @@ int(game_draw)() {
     printf("draw_to_canvas inside %s\n", __func__);
     return EXIT_FAILURE;
   }
-  if (/*buffers_need_update()*/ true) {
+  if (buffers_need_update()) {
     if (vg_draw_buffer(get_buffer(canvas)) != OK) {
       printf("vg_draw_buffer inside %s\n", __func__);
       return EXIT_FAILURE;
@@ -417,7 +421,6 @@ int(game_draw)() {
         break;
     }
     if (game_state == WAITING) {
-      // TODO: draw with color and with spaces (currently spaces are not allowed and color is white with white background)
       if (role == SELF_PLAYER) {
         if (vg_draw_rectangle(0, cell_height, cell_width*4, cell_height, 0XA0A0A0) != OK)
           return EXIT_FAILURE;

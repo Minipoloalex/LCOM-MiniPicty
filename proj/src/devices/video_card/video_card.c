@@ -145,10 +145,20 @@ int (vg_draw_pixel)(uint8_t *buffer, uint16_t x, uint16_t y, uint32_t color){
   memcpy(&buffer[index], &color, bytes_per_pixel);
   return EXIT_SUCCESS;
 }
+int (vg_draw_hl)(uint8_t *buffer, uint16_t x, uint16_t y, uint16_t len, uint32_t color) {
+  if (x >= h_res || y >= v_res) return EXIT_SUCCESS;
 
-int (vg_draw_hl)(uint8_t *buffer, uint16_t x, uint16_t y, uint16_t len, uint32_t color){
-  for(unsigned int i = x; i < x + len; i++){
-    vg_draw_pixel(buffer, i, y, color);
+  unsigned int index = (y * h_res + x) * bytes_per_pixel;
+  unsigned int end_index = index + len * bytes_per_pixel;
+
+  if (end_index >= vram_size) return EXIT_SUCCESS;
+
+  uint32_t *buffer_ptr = (uint32_t *)buffer;
+  buffer_ptr += index / bytes_per_pixel;
+
+  while (index < end_index) {
+    *buffer_ptr++ = color;
+    index += bytes_per_pixel;
   }
   return EXIT_SUCCESS;
 }
@@ -239,14 +249,6 @@ int (vg_draw_buffer)(uint8_t *buffer){
     printf("memcpy inside %s\n", __func__);
     return EXIT_FAILURE;
   }
-  return EXIT_SUCCESS;
-}
-
-int (get_rgb_component)(uint32_t color, uint8_t component_size, uint8_t component_position, uint8_t *component) {
-  uint8_t mask = BIT(component_size) - 1;
-  uint8_t final = (uint8_t) (color >> component_position & (mask));
-  *component = final;
-
   return EXIT_SUCCESS;
 }
 

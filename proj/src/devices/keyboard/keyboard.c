@@ -51,6 +51,5 @@ int (translate_scancode)(uint8_t scancode, uint8_t *character){
       return EXIT_SUCCESS;
     }
   }
-  // printf("No match for scancode: 0x%x\n", scancode);
   return EXIT_FAILURE;
 }

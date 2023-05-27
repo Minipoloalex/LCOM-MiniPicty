@@ -52,6 +52,7 @@
     "video_gr.h": "c",
     "stdlib.h": "c",
     "unistd.h": "c",
-    "state.h": "c"
+    "state.h": "c",
+    "vbe.h": "c"
   },
 }
