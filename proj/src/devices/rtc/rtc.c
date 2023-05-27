@@ -124,10 +124,7 @@ int (rtc_init)() {
 int (rtc_subscribe_int)(uint8_t *bit_no) {
   uint8_t regC;
   rtc_read(RTC_C, &regC);
-  if (bit_no == NULL) {
-    printf("Invalid pointer\n");
-    return EXIT_FAILURE;
-  }
+  *bit_no = hook_id;
   if (sys_irqsetpolicy(RTC_IRQ, IRQ_REENABLE | IRQ_EXCLUSIVE, &hook_id)) {
     printf("Error subscribing RTC\n");
     return EXIT_FAILURE;
