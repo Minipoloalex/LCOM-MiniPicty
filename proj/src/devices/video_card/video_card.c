@@ -208,41 +208,6 @@ int (vg_draw_circle_to_buffer)(uint8_t *buffer, uint16_t xc, uint16_t yc, uint16
   return EXIT_SUCCESS;
 }
 
-/* Bresenham's line algorithm */
-int (vg_draw_line)(uint8_t *buffer, position_t pos1, position_t pos2, uint16_t thickness, uint32_t color) {
-    int x0 = pos1.x;
-    int y0 = pos1.y;
-    int x1 = pos2.x;
-    int y1 = pos2.y;
-    int dx = abs(x1 - x0);
-    int dy = abs(y1 - y0);
-    int sx = x0 < x1 ? 1 : -1;
-    int sy = y0 < y1 ? 1 : -1;
-    int err = dx - dy;
-    int e2;
-
-    // draw first point of the line with specified color
-    vg_draw_circle_to_buffer(buffer, x0, y0, thickness / 2, color);
-
-    while (x0 != x1 || y0 != y1) {
-        e2 = 2 * err;
-        if (e2 > -dy) {
-            err -= dy;
-            x0 += sx;
-        }
-        if (e2 < dx) {
-            err += dx;
-            y0 += sy;
-        }
-
-        vg_draw_circle_to_buffer(buffer, x0, y0, thickness / 2, color);
-    }
-
-    vg_draw_circle_to_buffer(buffer, x1, y1, thickness / 2, color);
-
-    return EXIT_SUCCESS;
-}
-
 int (vg_draw_buffer)(uint8_t *buffer){
   if (memcpy(video_mem[buffer_index], buffer, vram_size) == NULL) {
     printf("memcpy inside %s\n", __func__);
@@ -304,17 +269,9 @@ int (vg_draw_text)(char *string, uint16_t x, uint16_t y, Sprite* font[]){
 }
 
 int (vg_draw_guess)(guess_word_t *guess, uint16_t x, uint16_t y, Sprite* font[]){
-  
-  /*printf("string: %s ", guess->string);
-  for (size_t i = 0; i < guess->pointer; i++){
-    printf("%c", guess->string[i]);
-  }
-  printf(" - pointer: %d \n", guess->pointer);*/
-  //printf("drawing: ");
   for (uint16_t xi = x, i=0; i<guess->pointer; i++, xi+=FONT_WIDTH){
     if (vg_draw_char(guess->string[i], xi, y, font) != OK) return EXIT_FAILURE;
   }
-  //printf("\n");
   return EXIT_SUCCESS;
 }
 

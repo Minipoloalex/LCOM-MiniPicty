@@ -451,15 +451,15 @@ int(game_draw)() {
     }
     if (game_state == WAITING) {
       if (role == SELF_PLAYER) {
-        if (vg_draw_rectangle(0, cell_height, cell_width*4, cell_height, GRAY_COLOR) != OK)
+        if (vg_draw_rectangle(0, cell_height, cell_width*5 + 30, cell_height, GRAY_COLOR) != OK)
           return EXIT_FAILURE;
-        if (vg_draw_text(YOU_ARE_DRAWING_TEXT, 0, cell_height+cell_height/4, app_resources->font) != OK)
+        if (vg_draw_text(YOU_ARE_DRAWING_TEXT, 10, cell_height+cell_height/4, app_resources->font) != OK)
           return EXIT_FAILURE;
       }
       else {
-        if (vg_draw_rectangle(0, cell_height, cell_width*4, cell_height, GRAY_COLOR) != OK)
+        if (vg_draw_rectangle(0, cell_height, cell_width*5 + 30, cell_height, GRAY_COLOR) != OK)
           return EXIT_FAILURE;
-        if (vg_draw_text(YOU_ARE_GUESSING_TEXT, 0, cell_height+cell_height/4, app_resources->font) != OK)
+        if (vg_draw_text(YOU_ARE_GUESSING_TEXT, 10, cell_height+cell_height/4, app_resources->font) != OK)
           return EXIT_FAILURE;
       }
     }
