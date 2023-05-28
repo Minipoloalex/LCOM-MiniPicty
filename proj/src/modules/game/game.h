@@ -12,6 +12,7 @@
 #include "../../model/button/button.h"
 #include "../../model/guess/guess.h"
 #include "../../model/prompt/prompt.h"
+#include "../../model/asteroid/asteroid.h"
 
 #include "../../devices/timer/timer.h"
 #include "../../devices/keyboard/keyboard.h"
@@ -31,7 +32,8 @@ int (game_process_keyboard)();
 int (game_process_mouse)();
 int (game_process_serial)();
 int (game_draw)();
-void (transition_to_game)(state_t* state);
+void (transition_to_game)(state_t* state, bool hard_mode);
 
 void (update_cursor_state)(position_t position);
 buttons_array_t *(game_get_buttons)(state_t* state);
+int (game_move_asteroid)(asteroid_t *asteroid);

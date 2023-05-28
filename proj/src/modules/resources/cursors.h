@@ -1,5 +1,4 @@
-#ifndef CURSOR_H
-#define CURSOR_H
+#pragma once
 
 #include <lcom/lcf.h>
 
@@ -16,5 +15,3 @@ static xpm_map_t cursors[NUMBER_OF_CURSORS] = {
 };
 
 typedef enum {POINTER, PEN, RUBBER} cursor_type_t;
-
-#endif

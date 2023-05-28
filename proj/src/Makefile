@@ -22,6 +22,7 @@ PROG=proj
 .PATH: ${.CURDIR}/model/prompt
 .PATH: ${.CURDIR}/model/state
 .PATH: ${.CURDIR}/model/sprite
+.PATH: ${.CURDIR}/model/asteroid
 
 # Modules
 .PATH: ${.CURDIR}/modules/interrupts
@@ -39,7 +40,8 @@ PROG=proj
 
 .PATH: ${.CURDIR}/utils/
 
-SRCS = proj.c kbc.c keyboard.c mouse.c timer.c video_card.c utils.c interrupts.c menu.c game.c serial_port.c queue.c position.c brush.c player.c button.c player_drawer.c player_menu.c canvas.c guess.c prompt.c state.c resources.c sprite.c rtc.c background.c
+
+SRCS = proj.c kbc.c keyboard.c mouse.c timer.c video_card.c utils.c interrupts.c menu.c game.c serial_port.c queue.c position.c brush.c player.c button.c player_drawer.c player_menu.c canvas.c guess.c prompt.c state.c resources.c sprite.c rtc.c background.c asteroid.c
 
 # additional compilation flags
 CPPFLAGS += -pedantic -D __LCOM_OPTIMIZED__

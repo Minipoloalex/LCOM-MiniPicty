@@ -1,5 +1,4 @@
-#ifndef FONT_H
-#define FONT_H
+#pragma once
 
 #include "font/uppercase_a.xpm"
 #include "font/uppercase_b.xpm"
@@ -81,5 +80,3 @@ static xpm_map_t uppercase_alphabet[ALPHABET_SIZE] = {
   number_8_xpm,
   number_9_xpm
 };
-
-#endif
