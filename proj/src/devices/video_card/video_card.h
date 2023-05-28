@@ -85,11 +85,6 @@ int (vg_draw_circle)(uint16_t x, uint16_t y, uint16_t radius, uint32_t color);
  * 
  */
 int (vg_draw_circle_to_buffer)(uint8_t *buffer, uint16_t x, uint16_t y, uint16_t radius, uint32_t color);
-/**
- * @brief 
- * 
- */
-int (vg_draw_line)(uint8_t *buffer, position_t pos1, position_t pos2, uint16_t radius, uint32_t color);
 
 int (vg_draw_sprite)(Sprite *sprite, uint16_t x, uint16_t y);
 
