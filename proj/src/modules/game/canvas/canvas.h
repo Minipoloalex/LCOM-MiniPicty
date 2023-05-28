@@ -18,7 +18,7 @@
 
 
 /**
- * @brief 
+ * @brief canvas struct
  * 
  */
 typedef struct {
@@ -41,7 +41,7 @@ typedef struct {
 canvas_t *(canvas_init)(int x, int y, int width, int height);
 
 /**
- * @brief Destroys a canvas
+ * @brief Destroys a canvas, by freeing its memory
  * 
  * @param canvas canvas to be destroyed
  */

@@ -6,6 +6,8 @@
 /**
  * @brief Converts a byte to a string
  * 
+ * @param byte byte to be converted
+ * @return Pointer to string representation of the byte
  */
 char *(byte_to_str)(uint8_t byte);
 

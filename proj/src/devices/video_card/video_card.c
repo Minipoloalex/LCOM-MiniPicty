@@ -5,10 +5,70 @@ uint8_t bits_per_pixel;
 unsigned int vram_base;  /* VRAM's physical addresss */
 unsigned int vram_size;  /* VRAM's size, but you can use the frame buffer size instead */
 
+static unsigned h_res;	        /* Horizontal resolution in pixels */
+static unsigned v_res;	        /* Vertical resolution in pixels */
+vbe_mode_info_t vmi;
+
 #define BUFFER_NUMBER 3
 static uint8_t* video_mem[BUFFER_NUMBER]; /* Process (virtual) address to which VRAM is mapped */
 static uint8_t buffer_index = 0;
 static bool needs_update = false;
+
+//Private functions
+//==================================================================================================
+/**
+ * @brief Map physical memory to virtual address space of process
+ * Gets the memory for all 3 buffers
+ */
+int (map_phys_mem_to_virtual)(uint16_t mode);
+/**
+ * @brief Enter in Graphics mode
+ * 
+ */
+int (vg_enter)(uint16_t mode);
+
+/**
+ * @brief draws a pixel in the desired buffer
+ * 
+ * @param buffer Desired buffer's reference
+ * @param x Pixel's x coordinate
+ * @param y Pixel's y coordinate
+ * @param color Pixel's color
+ */
+int (vg_draw_pixel)(uint8_t *buffer, uint16_t x, uint16_t y, uint32_t color);
+
+
+/**
+ * @brief draws a horizontal line in the desired buffer
+ * 
+ * @param buffer Desired buffer's reference
+ * @param x line's starting point's x coordinate
+ * @param y line's y coordinate 
+ * @param len line's length
+ * @param color line's color
+ */
+int (vg_draw_hl)(uint8_t *buffer, uint16_t x, uint16_t y, uint16_t len, uint32_t color);
+
+/**
+ * @brief Draws a letter or number to the screen
+ * 
+ * @param character letter/number to be drawn
+ * @param x x position of the letter/number
+ * @param y y position of the letter/number
+ * @param font font to be used
+ */
+int (vg_draw_char)(const uint8_t character, uint16_t x, uint16_t y, Sprite* font[]);
+
+/**
+ * @brief Draws a button to the screen
+ * 
+ * @param button button to be drawn
+ * @param font font to be used, for the button's text
+ * @param icons icons to be used, for the button's icon
+ */
+int (vg_draw_button)(button_t *button, Sprite* font[], Sprite* icons[]);
+
+//==================================================================================================
 
 bool (buffers_need_update)() {
   return needs_update;
@@ -16,10 +76,6 @@ bool (buffers_need_update)() {
 void (set_needs_update)(bool value) {
   needs_update = value;
 }
-
-static unsigned h_res;	        /* Horizontal resolution in pixels */
-static unsigned v_res;	        /* Vertical resolution in pixels */
-vbe_mode_info_t vmi;
 
 int (setup_video_mode)(uint16_t _mode){
   if (map_phys_mem_to_virtual(_mode) != OK){

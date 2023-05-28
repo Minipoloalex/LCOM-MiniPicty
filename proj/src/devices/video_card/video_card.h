@@ -40,60 +40,72 @@ bool (buffers_need_update)();
  */
 void (set_needs_update)(bool value);
 /**
- * @brief 
+ * @brief calls the functions to enter in graphics mode and map the physical memory to the virtual address space of the process
+ * 
+ * @param mode submode to enter in
  * 
  */
 int (setup_video_mode)(uint16_t mode);
 /**
- * @brief Map physical memory to virtual address space of process
- * Gets the memory for all 3 buffers
- */
-int (map_phys_mem_to_virtual)(uint16_t mode);
-/**
- * @brief Enter in Graphics mode
+ * @brief Draws a rectangle on a specified area of the screen with a specified color
  * 
- */
-int (vg_enter)(uint16_t mode);
-
-/**
- * @brief 
- * 
- */
-int (vg_draw_pixel)(uint8_t *buffer, uint16_t x, uint16_t y, uint32_t color);
-/**
- * @brief 
- * 
- */
-int (vg_draw_hl)(uint8_t *buffer, uint16_t x, uint16_t y, uint16_t len, uint32_t color);
-/**
- * @brief 
- * 
+ * @return returns 0 upon success, 1 otherwise
  */
 int (vg_draw_rectangle)(uint16_t x, uint16_t y, uint16_t width, uint16_t height, uint32_t color);
 /**
- * @brief 
+ * @brief Draws a rectangle with a specified color in a specified area of the buffer
  * 
  */
 int (vg_draw_rectangle_to_buffer)(uint8_t *buffer, uint16_t x, uint16_t y, uint16_t width, uint16_t height, uint32_t color);
 /**
- * @brief 
+ * @brief Draws a circle on a specified area of the screen with a specified color
  * 
  */
 int (vg_draw_circle)(uint16_t x, uint16_t y, uint16_t radius, uint32_t color);
 /**
- * @brief 
+ * @brief Draws a circle with a specified color in a specified area of the buffer
  * 
  */
 int (vg_draw_circle_to_buffer)(uint8_t *buffer, uint16_t x, uint16_t y, uint16_t radius, uint32_t color);
 
+/**
+ * @brief Draws a sprite to a specified position
+ * 
+ */
 int (vg_draw_sprite)(Sprite *sprite, uint16_t x, uint16_t y);
 
-int (vg_draw_char)(const uint8_t character, uint16_t x, uint16_t y, Sprite* font[]);
+/**
+ * @brief Draws a string to the screen
+ * 
+ * @param string string to be drawn
+ * @param x x position of the string
+ * @param y y position of the string
+ * @param font font to be used
+ */
 int (vg_draw_text)(char *string, uint16_t x, uint16_t y, Sprite* font[]);
+
+/**
+ * @brief Draws the guess word to the screen
+ * 
+ * @param gwt guess word to be drawn
+ * @param x x position of the guess word
+ * @param y y position of the guess word
+ * @param font font to be used
+ * @return int returns 0 upon success, 1 otherwise
+ */
 int (vg_draw_guess)(guess_word_t *gwt, uint16_t x, uint16_t y, Sprite* font[]);
 
-int (vg_draw_button)(button_t *button, Sprite* font[], Sprite* icons[]);
+/**
+ * @brief Draws a array of buttons to the screen
+ * 
+ * @param buttons array of buttons to be drawn
+ * @param font font to be used, for the button's text
+ * @param icons icons to be used, for the button's icon
+ * 
+ * @return returns 0 upon success, 1 otherwise
+ */
 int (vg_draw_buttons)(buttons_array_t *buttons, Sprite* font[], Sprite* icons[]);
+
 /**
  * @brief 
  * 
@@ -117,22 +129,22 @@ int (vg_draw_buffer)(uint8_t * buffer);
 int (vg_clear_buffers)();
 
 /**
- * @brief 
+ * @brief returns the size of the VRAM
  * 
  */
 unsigned (get_vram_size)();
 /**
- * @brief 
+ * @brief returns the vertical resolution of the video mode used
  * 
  */
 uint16_t (get_v_res)();
 /**
- * @brief 
+ * @brief returns the horizontal resolution of the video mode used
  * 
  */
 uint16_t (get_h_res)();
 /**
- * @brief 
+ * @brief returns the number of bytes per pixel of the video mode used
  * 
  */
 uint8_t (get_bytes_per_pixel)();

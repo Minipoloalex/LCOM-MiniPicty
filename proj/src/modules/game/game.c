@@ -48,6 +48,12 @@ static int cell_height = 0;
 int(game_draw_buttons)();
 
 /**
+ * @brief Draw to the canvas in the game state
+ * @return int 0 if success, 1 otherwise
+*/
+int(game_draw_canvas)(canvas_t *canvas, player_drawer_t *player_drawer);
+
+/**
  * @brief Play again button callback
  * Set the game state to WAITING and reset the game by clearing the canvas and generating a new prompt
  * 

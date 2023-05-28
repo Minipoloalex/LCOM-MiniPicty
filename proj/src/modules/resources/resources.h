@@ -23,13 +23,13 @@ typedef struct{
 /**
  * @brief Load all the resources by allocating memory and loading the xpm files into the sprites
  * 
- * @return Resources* 
+ * @return Resources* - Reference to the resources struct 
  */
 Resources *(load_resources)();
 
 /**
  * @brief Unload all the resources by freeing the memory
  * 
- * @param resources 
+ * @param resources - Reference to the resources struct
  */
 void (unload_resources)(Resources *resources);

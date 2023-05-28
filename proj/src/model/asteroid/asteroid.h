@@ -24,6 +24,9 @@ typedef struct {
 
 /**
  * @brief Creates an asteroid.
+ * 
+ * @param xpms array of XPM's to be used by the asteroid
+ * @return asteroid_t* pointer to the created asteroid
  */
 asteroid_t *(create_asteroid)(Sprite *xpms[]);
 /**
@@ -39,6 +42,8 @@ void (destroy_asteroid)(asteroid_t *asteroid);
 bool (is_inside)(asteroid_t *asteroid, position_t position);
 /**
  * @brief Draws an asteroid with its current xpm at its current position.
+ * 
+ * @return 0 upon success, 1 otherwise
  */
 int (draw_asteroid)(asteroid_t *asteroid);
 /**

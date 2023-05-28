@@ -16,13 +16,13 @@ typedef struct Player player_t;
 /**
  * @brief Create a new Player
  * 
- * @return player_t* 
+ * @return Pointer to created player
  */
 player_t *(create_player)();
 /**
  * @brief Destroy a Player
  * 
- * @param player 
+ * @param player player to be destroyed
  */
 void (destroy_player)(player_t *player);
 
@@ -31,7 +31,7 @@ void (destroy_player)(player_t *player);
  * 
  * @param player player to add the position
  * @param position position to be added
- * @return int 
+ * @return int returs 0 upon success and non-zero otherwise
  */
 int (player_add_next_position)(player_t *player, drawing_position_t *position);
 /**
@@ -39,7 +39,7 @@ int (player_add_next_position)(player_t *player, drawing_position_t *position);
  * 
  * @param player player to get the position
  * @param position position to be returned
- * @return int 
+ * @return int returns 0 upon success and non-zero otherwise
  */
 int (player_get_next_position)(player_t *player, drawing_position_t *position);
 /**
@@ -47,7 +47,7 @@ int (player_get_next_position)(player_t *player, drawing_position_t *position);
  * 
  * @param player player to get the position
  * @param position position to be returned
- * @return int 
+ * @return int returns 0 upon success and non-zero otherwise
  */
 int (player_get_last_position)(player_t *player, drawing_position_t *position);
 /**
@@ -55,7 +55,7 @@ int (player_get_last_position)(player_t *player, drawing_position_t *position);
  * 
  * @param player player to set the position
  * @param position position to be set
- * @return int 
+ * @return int returns 0 upon success and non-zero otherwise
  */
 int (player_set_last_position)(player_t *player, drawing_position_t position);
 
@@ -63,7 +63,7 @@ int (player_set_last_position)(player_t *player, drawing_position_t position);
  * @brief Get the last position of the queue of positions of the player.
  * In case it is empty, returns the last position of the mouse already drawn.
  * 
- * @param player
+ * @param player player to set the position
  * @return returns the current position of the mouse of the player
  */
 drawing_position_t (player_get_current_position)(player_t *player);

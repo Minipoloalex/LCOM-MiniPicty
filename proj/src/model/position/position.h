@@ -28,6 +28,7 @@ typedef struct drawing_position {
  * byte 2 - lsb y\n
  * byte 3 - msb y
  * @param position return parameter position
+ * @return int 0 if success, 1 otherwise
  */
 int (get_position)(uint8_t bytes[4], position_t *position);
 
@@ -38,7 +39,6 @@ int (get_position)(uint8_t bytes[4], position_t *position);
  * @param start_point 
  * @param width 
  * @param height 
- * @return true 
- * @return false 
+ * @return bool - true if the position is inside the area, false otherwise
  */
 bool (is_inside_rectangle)(position_t position, position_t start_point, uint16_t width, uint16_t height);

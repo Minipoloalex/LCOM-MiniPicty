@@ -1,6 +1,7 @@
 #pragma once
 
 #include <lcom/lcf.h>
+
 #include "player_drawer/player_drawer.h"
 #include "canvas/canvas.h"
 #include "../menu/menu.h"

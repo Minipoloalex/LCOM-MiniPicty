@@ -1,4 +1,4 @@
-#include "background.h"
+ #include "background.h"
 
 #define STAR_COLOR 0xFFFFFF /**< @brief Color of the stars */
 #define SUN_COLOR 0xFFFF00 /**< @brief Color of the sun */
