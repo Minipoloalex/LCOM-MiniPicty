@@ -7,7 +7,7 @@
 #include "../player_drawer/player_drawer.h"
 #include "../../../model/asteroid/asteroid.h"
 
-#define CANVAS_BACKGROUND_COLOR 0XFFFFFF
+#define CANVAS_BACKGROUND_COLOR 0XFFFFFF /**< @brief background color of the canvas */
 
 
 /** @defgroup canvas Canvas

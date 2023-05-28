@@ -6,7 +6,7 @@
 #include "../controllers/i8042.h"
 #include "../controllers/kbc/kbc.h"
 #include "../video_card/video_card.h"
-#include "../../model/drawing_position.h"
+#include "../../model/position/position.h"
 
 /**
  * @brief 

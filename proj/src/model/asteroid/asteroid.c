@@ -10,7 +10,6 @@ asteroid_t *(create_asteroid)(Sprite *xpms[]) {
     free(asteroid);
     return NULL;
   }
-  asteroid->aspeed = ASTEROID_ASPEED;
   asteroid_reset_position(asteroid);
   return asteroid;
 }

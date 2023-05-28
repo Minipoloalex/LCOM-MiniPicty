@@ -1,15 +1,24 @@
 #include "game.h"
 
-#define GRAY_COLOR 0xA0A0A0
-#define NUMBER_GAME_PLAYING_BUTTONS 13
-#define NUMBER_GAME_FINISHED_BUTTONS 3
-#define GAME_WAITING_TIME 5
-#define GAME_ROUND_TIME 60
-#define WON_TEXT "You won"
-#define LOSE_TEXT "You lost"
-#define YOU_ARE_DRAWING_TEXT "Get ready you are drawing"
-#define YOU_ARE_GUESSING_TEXT "Get ready you are guessing"
-#define FINISH_TEXT_SIZE (MAX(sizeof(WON_TEXT), sizeof(LOSE_TEXT)) + 1)
+#define GRAY_COLOR 0xA0A0A0 /**< @brief Gray color */
+#define NUMBER_GAME_PLAYING_BUTTONS 13 /**< @brief Number of game playing buttons */
+#define NUMBER_GAME_FINISHED_BUTTONS 3 /**< @brief Number of game finished buttons */
+#define GAME_WAITING_TIME 5 /**< @brief Time to wait for the drawer to draw */
+#define GAME_ROUND_TIME 60 /**< @brief Time to draw and guess */
+#define WON_TEXT "You won" /**< @brief Text to display on win */
+#define LOSE_TEXT "You lost" /**< @brief Text to display on lose */
+#define YOU_ARE_DRAWING_TEXT "Get ready you are drawing" /**< @brief Text to display when the player is drawing */
+#define YOU_ARE_GUESSING_TEXT "Get ready you are guessing" /**< @brief Text to display when the player is guessing */
+#define FINISH_TEXT_SIZE (MAX(sizeof(WON_TEXT), sizeof(LOSE_TEXT)) + 1) /**< @brief Size of the finish text for allocation purposes */
+
+/**
+ * @brief Sub state types of game state
+ */
+typedef enum game_state {
+  PLAYING,
+  WAITING,
+  FINISHED
+} game_state_t;
 
 static Resources* app_resources;
 static buttons_array_t *game_playing_buttons;
@@ -30,15 +39,6 @@ static int cell_width = 0;
 static int cell_height = 0;
 
 /*==================================================================*/
-
-/**
- * @brief Sub state types of game state
- */
-typedef enum game_state {
-  PLAYING,
-  WAITING,
-  FINISHED
-} game_state_t;
 
 /**
  * @brief Draw the game buttons

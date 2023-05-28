@@ -6,7 +6,7 @@
 #include "cursors/pen.xpm"
 #include "cursors/rubber.xpm"
 
-#define NUMBER_OF_CURSORS 3
+#define NUMBER_OF_CURSORS 3 /**< @brief number of cursor xpms */
 
 /**
  * @brief Cursors xpm array

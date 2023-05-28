@@ -2,7 +2,6 @@
 
 #include <lcom/lcf.h>
 #include "../position/position.h"
-#include "../drawing_position.h"
 #include "../../modules/resources/icons.h"
 
 typedef enum {
@@ -38,11 +37,11 @@ button_t *(create_button)(uint16_t x, uint16_t y, uint16_t width, uint16_t heigh
  * @brief Destroys a button
  */
 void (destroy_button)(button_t *button);
+
 /**
  * @brief Buttons array struct.
  * Has an array of buttons and the corresponded number of buttons in the array.
  */
-
 typedef struct buttons_array {
     button_t **buttons;
     int num_buttons;
@@ -71,5 +70,15 @@ int (get_hovered_button)(buttons_array_t *buttons_array, position_t mouse_positi
  */
 void (change_button_color)(button_t* button, uint32_t new_background_color);
 
-//TODO:
+/**
+ * @brief Processes a button click
+ * Know if a button was clicked or not and which one was clicked.
+ * A state machine is used to know if the mouse was pressed and released inside the button.
+ * 
+ * @param buttons_array array of buttons
+ * @param before position before the click
+ * @param next position after the click
+ * @param button_clicked pointer to the button clicked
+ * @return 0 if no button was clicked, 1 if a button was clicked
+ */
 int (process_buttons_clicks)(buttons_array_t *buttons_array, drawing_position_t before, drawing_position_t next, int *button_clicked);

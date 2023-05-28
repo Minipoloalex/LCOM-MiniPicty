@@ -5,7 +5,7 @@
 struct queue;
 typedef struct queue queue_t;
 
-#define QUEUE_SIZE 100
+#define QUEUE_SIZE 100 /**< @brief maximum size of the queue */
 
 /**
  * @brief Create a queue object\n

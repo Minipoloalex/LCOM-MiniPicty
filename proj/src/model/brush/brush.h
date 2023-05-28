@@ -5,7 +5,8 @@
 #include <stdint.h>
 
 #define MIN_BRUSH_SIZE 1  /**< @brief minimum size of the circles drawn by the brush */
-#define MAX_BRUSH_SIZE 25  /**< @brief maximum size of the circles drawn by the brush*/
+#define MAX_BRUSH_SIZE 35  /**< @brief maximum size of the circles drawn by the brush*/
+#define BRUSH_STEP 3 /**< @brief step of the brush size when increasing or decreasing it */ 
 /**
  * @brief Brush struct. Has a color and size.
  */
@@ -25,14 +26,14 @@ brush_t *(create_brush)(uint32_t color, uint16_t size);
  */
 void (destroy_brush)(brush_t *brush);
 /**
- * @brief Sets the color of a brush.
+ * @brief Sets the color of the brush.
  */
 void (set_brush_color)(brush_t *brush, uint32_t color);
 /**
- * @brief Increases the size of a brush by 2 pixels
+ * @brief Increases the size of a brush by BRUSH_STEP pixels
  */
 void (brush_increase_size)(brush_t *brush);
 /**
- * @brief Decreases the size of a brush by 2 pixels
+ * @brief Decreases the size of a brush by BRUSH_STEP pixels
  */
 void (brush_decrease_size)(brush_t *brush);

@@ -1,13 +1,12 @@
 #include "menu.h"
 
-#define NUMBER_MENU_BUTTONS 3
-
-#define HOVERED_BG_COLOR 0x555555
-#define NOT_HOVERED_BG_COLOR 0x000000
-#define BROWN_COLOR 0xCD853F
-#define TIMER_WIDTH 230
-#define TIMER_HEIGHT 55
-#define TIMER_MARGIN 10
+#define NUMBER_MENU_BUTTONS 3 /**< @brief Number of menu buttons */
+#define HOVERED_BG_COLOR 0x555555 /**< @brief Hovered button background color */
+#define NOT_HOVERED_BG_COLOR 0x000000 /**< @brief Not hovered button background color */
+#define BROWN_COLOR 0xCD853F /**< @brief Brown color */
+#define TIMER_WIDTH 230 /**< @brief Width of the timer */
+#define TIMER_HEIGHT 55 /**< @brief Height of the timer */
+#define TIMER_MARGIN 10 /**< @brief Margin of the timer */
 
 static buttons_array_t *buttons_array;
 
@@ -170,8 +169,8 @@ int (draw_background_scene)(){
 }
 
 int (menu_draw)(){
-  if (draw_player_menu()) {
-    printf("draw_player_menu inside %s\n", __func__);
+  if (update_player_menu()) {
+    printf("update_player_menu inside %s\n", __func__);
     return EXIT_FAILURE;
   }
   if (buffers_need_update()) { 

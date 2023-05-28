@@ -1,12 +1,12 @@
 #include "background.h"
 
-#define STAR_COLOR 0xFFFFFF 
-#define SUN_COLOR 0xFFFF00
-#define SUN_RADIUS 60
-#define TERRAIN_COLOR 0xCD853F
-#define TERRAIN_HEIGHT 300
-#define NUMBER_STARTS 100
-#define BLACK_SKY_COLOR 0x242424
+#define STAR_COLOR 0xFFFFFF /**< @brief Color of the stars */
+#define SUN_COLOR 0xFFFF00 /**< @brief Color of the sun */
+#define SUN_RADIUS 60 /**< @brief Radius of the sun */
+#define TERRAIN_COLOR 0xCD853F /**< @brief Color of the terrain */
+#define TERRAIN_HEIGHT 300 /**< @brief Height of the terrain */
+#define NUMBER_STARTS 100 /**< @brief Number of stars in the sky */
+#define BLACK_SKY_COLOR 0x242424 /**< @brief Color of the sky at night */
 
 /**
  * @brief Draw the sun based on the hour

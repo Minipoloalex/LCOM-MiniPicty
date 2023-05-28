@@ -19,11 +19,9 @@ void (set_brush_color)(brush_t *brush, uint32_t color) {
 }
 
 void (brush_increase_size)(brush_t *brush) {
-  if(brush->size < MAX_BRUSH_SIZE) brush->size++;
-  if(brush->size < MAX_BRUSH_SIZE) brush->size++;
+  if(brush->size + BRUSH_STEP <= MAX_BRUSH_SIZE) brush->size = brush->size + BRUSH_STEP;
 }
 
 void (brush_decrease_size)(brush_t *brush) {
-  if(brush->size > MIN_BRUSH_SIZE)brush->size--;
-  if(brush->size > MIN_BRUSH_SIZE)brush->size--;
+  if(brush->size - BRUSH_STEP > MIN_BRUSH_SIZE) brush->size = brush->size - BRUSH_STEP;
 }

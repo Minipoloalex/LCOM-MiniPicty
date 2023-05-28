@@ -7,7 +7,7 @@
 #include "cursors/rubber.xpm"
 #include "icons/trash.xpm"
 
-#define NUMBER_OF_ICONS 4
+#define NUMBER_OF_ICONS 4 /**< @brief number of icon xpms */
 
 /**
  * @brief Icons xpm array

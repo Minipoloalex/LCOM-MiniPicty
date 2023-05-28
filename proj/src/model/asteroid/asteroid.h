@@ -5,13 +5,13 @@
 #include "../../devices/video_card/video_card.h"
 #include "../../modules/resources/asteroids.h"
 
-#define ASTEROID_INITIAL_X_SPEED 1
-#define ASTEROID_INITIAL_Y_SPEED 1
-#define ASTEROID_INITIAL_XPM DOWN_RIGHT
-#define ASTEROID_ASPEED 1
+#define ASTEROID_INITIAL_X_SPEED 1  /**< @brief Initial x speed of the asteroid */
+#define ASTEROID_INITIAL_Y_SPEED 1 /**< @brief Initial y speed of the asteroid */
+#define ASTEROID_INITIAL_XPM DOWN_RIGHT /**< @brief Initial direction of the asteroid */
+
 /**
  * @brief Asteroid struct.
- * Has a position, x and y speed, an array of xpms, the current xpm and the aspeed.
+ * Has a position, x and y speed, an array of xpms and the current xpm.
  */
 typedef struct {
   position_t position;
@@ -20,7 +20,6 @@ typedef struct {
 
   Sprite **xpms;
   asteroid_type_t current_xpm;
-  int aspeed;
 } asteroid_t;
 
 /**

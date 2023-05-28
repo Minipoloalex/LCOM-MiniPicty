@@ -70,6 +70,5 @@ int (write_KBC_command)(uint8_t port, uint8_t cmd_byte){
 int (read_KBC_output_to_trash)() {
   uint8_t trash;
   util_sys_inb(KBC_OUT_REG, &trash);
-  // printf("Got trash inside kbc: %02x\n", trash);
   return EXIT_SUCCESS;
 }

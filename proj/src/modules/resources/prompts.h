@@ -1,6 +1,6 @@
 #pragma once
 
-#define PROMPT_NUMBER 58
+#define PROMPT_NUMBER 58 /**< @brief number of prompts */
 
 /**
  * @brief Prompts array

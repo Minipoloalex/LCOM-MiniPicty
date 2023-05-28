@@ -2,11 +2,24 @@
 
 #include <lcom/lcf.h>
 
-struct position {
+/**
+ * @brief Position struct
+ * 
+ */
+typedef struct position {
   uint16_t x;
   uint16_t y;
-};
-typedef struct position position_t;
+} position_t;
+
+/**
+ * @brief Drawing position
+ * This struct is used to store the position of the mouse and if it is drawing/clicking or not
+ */
+typedef struct drawing_position {
+  position_t position;
+  bool is_drawing;
+} drawing_position_t;
+
 /**
  * @brief 
  * @param bytes There should be 4 bytes corresponding to:\n
@@ -17,8 +30,15 @@ typedef struct position position_t;
  * @param position return parameter position
  */
 int (get_position)(uint8_t bytes[4], position_t *position);
+
 /**
- * @brief 
+ * @brief Checks if a position is inside an area defined by a start point, width and height
  * 
+ * @param position 
+ * @param start_point 
+ * @param width 
+ * @param height 
+ * @return true 
+ * @return false 
  */
 bool (is_inside_rectangle)(position_t position, position_t start_point, uint16_t width, uint16_t height);
