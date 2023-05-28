@@ -3,6 +3,12 @@
 #include <lcom/lcf.h>
 #include "../i8042.h"
 
+/** @defgroup kbc KBC
+ * @{
+ *
+ * @brief Module responsible for the kbc
+ */
+
 /**
  * @brief Reads the KBC output
  * @param port port to read from

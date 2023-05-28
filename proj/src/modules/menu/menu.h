@@ -13,6 +13,12 @@
 
 #include "../../model/button/button.h"
 
+/** @defgroup menu Menu
+ * @{
+ *
+ * @brief Module responsible for the menu screen
+ */
+
 /**
  * @brief Setup the menu by creating the necessary objects
  * 

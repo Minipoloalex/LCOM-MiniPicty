@@ -3,6 +3,11 @@
 
 #define TIME_STRING_SIZE 8
 
+/** @defgroup rtc RTC
+ * @{
+ *
+ * @brief Module responsible for the real-time clock
+ */
 
 /**
  * @brief initializes the RTC. Should be called before any other function.

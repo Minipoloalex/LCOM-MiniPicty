@@ -7,6 +7,13 @@
 #define MIN_BRUSH_SIZE 1  /**< @brief minimum size of the circles drawn by the brush */
 #define MAX_BRUSH_SIZE 35  /**< @brief maximum size of the circles drawn by the brush*/
 #define BRUSH_STEP 3 /**< @brief step of the brush size when increasing or decreasing it */ 
+
+/** @defgroup brush Brush
+ * @{
+ *
+ * @brief Module responsible for the brush
+ */
+
 /**
  * @brief Brush struct. Has a color and size.
  */

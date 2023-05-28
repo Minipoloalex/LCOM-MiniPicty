@@ -1,6 +1,12 @@
 #ifndef _LCOM_I8042_H_
 #define _LCOM_I8042_H_
 
+/** @defgroup i8042 i8042
+ * @{
+ *
+ * Constants for programming the i8042 KBC (Keyboard and Mouse).
+ */
+
 #ifndef BIT
 #define BIT(n) (1 << (n))
 #endif

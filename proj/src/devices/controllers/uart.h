@@ -1,5 +1,11 @@
 #pragma once
 
+/** @defgroup uart UART
+ * @{
+ *
+ * Constants for programming the UART Serial Port.
+ */
+
 #define SER_COM1 0x3F8  /** @brief IRQ 4, vector 0x0C */ 
 #define SER_COM1_IRQ 4
 

@@ -2,6 +2,12 @@
 
 #include <lcom/lcf.h>
 
+/** @defgroup position Position
+ * @{
+ *
+ * @brief Module responsible for utility functions related to positions on the screen
+ */
+
 /**
  * @brief Position struct
  * 

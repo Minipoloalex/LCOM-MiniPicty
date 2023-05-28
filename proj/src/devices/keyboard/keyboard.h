@@ -4,6 +4,12 @@
 #include "../controllers/i8042.h"
 #include "../controllers/kbc/kbc.h"
 
+/** @defgroup keyboard Keyboard
+ * @{
+ *
+ * @brief Module responsible for the keyboard
+ */
+
 /**
  * @brief Struct that relates scancodes to their characters
  * 

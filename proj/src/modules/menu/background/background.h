@@ -3,6 +3,12 @@
 #include <lcom/lcf.h>
 #include "../../../devices/video_card/video_card.h"
 
+/** @defgroup background Background
+ * @{
+ *
+ * @brief Module responsible for the background of the menu
+ */
+
 typedef uint8_t Background;
 
 /**

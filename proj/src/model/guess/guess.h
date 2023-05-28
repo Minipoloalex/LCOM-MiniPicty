@@ -4,6 +4,12 @@
 
 #define GUESS_LIMIT 15  /**< @brief maximum number of characters in the guess word */
 
+/** @defgroup guess Guess
+ * @{
+ *
+ * @brief Module responsible for the guess word
+ */
+
 /**
  * @brief Guess word struct
  * 

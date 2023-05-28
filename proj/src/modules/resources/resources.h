@@ -9,6 +9,12 @@
 #include "../../devices/video_card/video_card.h"
 #include "../../model/sprite/sprite.h"
 
+/** @defgroup resources Resources
+ * @{
+ *
+ * @brief Module responsible for the resources (xpm images, prompts, icons, fonts, and cursors)
+ */
+
 /**
  * @brief Resources struct
  * Contains all the resources needed for the app

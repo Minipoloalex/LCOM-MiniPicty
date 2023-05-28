@@ -4,6 +4,12 @@
 #include "../../../model/brush/brush.h"
 #include "../../resources/cursors.h"
 
+/** @defgroup player_drawer PlayerDrawer
+ * @{
+ *
+ * @brief Module responsible for the drawing player
+ */
+
 struct PlayerDrawer;
 typedef struct PlayerDrawer player_drawer_t;
 

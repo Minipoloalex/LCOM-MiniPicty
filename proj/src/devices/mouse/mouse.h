@@ -8,6 +8,12 @@
 #include "../video_card/video_card.h"
 #include "../../model/position/position.h"
 
+/** @defgroup mouse Mouse
+ * @{
+ *
+ * @brief Module responsible for the mouse
+ */
+
 /**
  * @brief returns true if the packet is ready to be processed and false otherwise
  * 

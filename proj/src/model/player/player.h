@@ -5,6 +5,12 @@
 #include "../queue/queue.h"
 #include "../position/position.h"
 
+/** @defgroup player Player
+ * @{
+ *
+ * @brief Module responsible for the player and its position on the screen
+ */
+
 typedef enum player_type {
   SELF_PLAYER,   /**< @brief Player that draws */
   OTHER_PLAYER, /**< @brief Player that guesses */

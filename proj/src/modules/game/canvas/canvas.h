@@ -9,13 +9,11 @@
 
 #define CANVAS_BACKGROUND_COLOR 0XFFFFFF /**< @brief background color of the canvas */
 
-
 /** @defgroup canvas Canvas
  * @{
  *
  * @brief Module responsible for the canvas
  */
-
 
 /**
  * @brief canvas struct

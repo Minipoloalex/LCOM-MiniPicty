@@ -2,6 +2,12 @@
 #include <lcom/lcf.h>
 #include <stdint.h>
 
+/** @defgroup queue Queue
+ * @{
+ *
+ * @brief Module responsible for the queue
+ */
+
 struct queue;
 typedef struct queue queue_t;
 

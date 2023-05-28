@@ -9,6 +9,12 @@
 #define ASTEROID_INITIAL_Y_SPEED 1 /**< @brief Initial y speed of the asteroid */
 #define ASTEROID_INITIAL_XPM DOWN_RIGHT /**< @brief Initial direction of the asteroid */
 
+/** @defgroup asteroid Asteroid
+ * @{
+ *
+ * @brief Module responsible for the asteroid
+ */
+
 /**
  * @brief Asteroid struct.
  * Has a position, x and y speed, an array of xpms and the current xpm.

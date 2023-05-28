@@ -23,6 +23,12 @@
 #include "../../devices/rtc/rtc.h"
 #include "../../utils/utils.h"
 
+/** @defgroup game Game
+ * @{
+ *
+ * @brief Module responsible for the game logic
+ */
+
 /**
  * @brief Setup the game by creating the necessary objects
  * 

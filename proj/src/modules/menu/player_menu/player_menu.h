@@ -1,6 +1,12 @@
 #pragma once
 #include "../../../model/player/player.h"
 
+/** @defgroup player_menu PlayerMenu
+ * @{
+ *
+ * @brief Module responsible for the player while on the menu screen
+ */
+
 typedef struct PlayerMenu player_menu_t;
 
 /**

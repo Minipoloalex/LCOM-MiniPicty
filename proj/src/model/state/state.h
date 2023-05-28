@@ -3,6 +3,12 @@
 #include <lcom/lcf.h>
 #include "../button/button.h"
 
+/** @defgroup state State
+ * @{
+ *
+ * @brief Module responsible for the state
+ */
+
 struct State;
 typedef struct State state_t;
 

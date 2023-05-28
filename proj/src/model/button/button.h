@@ -4,6 +4,12 @@
 #include "../position/position.h"
 #include "../../modules/resources/icons.h"
 
+/** @defgroup button Button
+ * @{
+ *
+ * @brief Module responsible for the button
+ */
+
 /**
  * @brief Button icon enum
  * Specifies the icon that the button will have

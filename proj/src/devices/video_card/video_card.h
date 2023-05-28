@@ -10,6 +10,12 @@
 #include "../../model/guess/guess.h"
 #include "../../model/sprite/sprite.h"
 
+/** @defgroup asteroid Asteroid
+ * @{
+ *
+ * @brief Module responsible for the video graphics card
+ */
+
 // guess word
 #define GUESS_POS_X 30
 #define GUESS_POS_Y 800

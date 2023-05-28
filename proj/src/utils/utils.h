@@ -3,6 +3,12 @@
 #include <lcom/lcf.h>
 #include <stdint.h>
 
+/** @defgroup utils Utils
+ * @{
+ *
+ * @brief Module responsible for the utility functions used in the project
+ */
+
 /**
  * @brief Converts a byte to a string
  * 

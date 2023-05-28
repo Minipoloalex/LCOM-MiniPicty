@@ -5,6 +5,12 @@
 #include "../../devices/serial_port/serial_port.h"
 #include "../../devices/serial_port/serial_port.h"
 
+/** @defgroup prompt Prompt
+ * @{
+ *
+ * @brief Module responsible for the word to guess (prompt)
+ */
+
 /**
  * @brief Generate a prompt by picking a random one from the prompts array
  * 
