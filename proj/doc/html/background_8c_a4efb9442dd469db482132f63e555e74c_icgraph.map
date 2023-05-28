@@ -1,0 +1,10 @@
+<map id="calculate_sun_height" name="calculate_sun_height">
+<area shape="rect" id="node1" title="Calculate the height of the sun using a ellipse function." alt="" coords="1156,31,1315,57"/>
+<area shape="rect" id="node2" href="$background_8c.html#a1682ad47cf211a83eb9bd95ea3540eb6" title="Draw the sun based on the hour From 6 to 19 hours the sun will be drawn in the sky with a different h..." alt="" coords="1024,31,1108,57"/>
+<area shape="rect" id="node3" href="$group__background.html#ga91321a8c45d074e5ee3a5f3c21e43944" title="Draw the background to the buffer based on the hour." alt="" coords="849,31,976,57"/>
+<area shape="rect" id="node4" href="$group__menu.html#ga4297b714eb1dbb78fb892693334e8efd" title="Handle the rtc interrupts inside the menu state." alt="" coords="661,5,801,32"/>
+<area shape="rect" id="node5" href="$group__menu.html#ga04f8f095e776c93ec861decc24ad99fd" title="Transition to the menu state by changing the state functions." alt="" coords="465,31,613,57"/>
+<area shape="rect" id="node6" href="$group__proj.html#ga2a16f651eccbd248e1ad3b3b924b143b" title=" " alt="" coords="5,31,128,57"/>
+<area shape="rect" id="node7" href="$game_8c.html#abe0fa2797d6c581f845cb3b1d54787a6" title="Quit game button callback Transition to the menu state." alt="" coords="327,56,417,83"/>
+<area shape="rect" id="node8" href="$group__game.html#ga9de7f1042903ab8ba3b3e471b82758b6" title="Setup the game by creating the necessary objects." alt="" coords="176,56,279,83"/>
+</map>

@@ -1,0 +1,6 @@
+<map id="player_drawer_change_role" name="player_drawer_change_role">
+<area shape="rect" id="node1" title="Change the player type." alt="" coords="561,5,763,32"/>
+<area shape="rect" id="node2" href="$game_8c.html#ab9dfe6919404cb12ddb40780af1a2e23" title="Change roles and play again button callback Change the roles of the players and call play_again." alt="" coords="327,5,513,32"/>
+<area shape="rect" id="node3" href="$group__game.html#ga9de7f1042903ab8ba3b3e471b82758b6" title="Setup the game by creating the necessary objects." alt="" coords="176,5,279,32"/>
+<area shape="rect" id="node4" href="$group__proj.html#ga2a16f651eccbd248e1ad3b3b924b143b" title=" " alt="" coords="5,5,128,32"/>
+</map>

@@ -1,0 +1,4 @@
+<map id="is_cursor_over_button" name="is_cursor_over_button">
+<area shape="rect" id="node1" title="Checks if the mouse position is inside the button This is used for changing its color and knowing if ..." alt="" coords="5,5,171,32"/>
+<area shape="rect" id="node2" href="$group__position.html#ga01d48dad828d0cd96d09cba62a6b3c83" title="Checks if a position is inside an area/rectangle defined by a start point, width and height." alt="" coords="219,5,365,32"/>
+</map>

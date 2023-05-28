@@ -1,6 +1,12 @@
 #ifndef _VBE_H_
 #define _VBE_H_
 
+/** @defgroup uart UART
+ * @{
+ *
+ * @brief Constants for programming the VBE Graphics Card.
+ */
+
 #define INVOKE_VBE_FUNCT 0x4F
 
 #define BIOS_VIDEO_SERVICES 0x10

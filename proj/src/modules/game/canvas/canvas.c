@@ -1,11 +1,12 @@
 #include "canvas.h"
 
 /**
- * @brief Bresenham's algorithm for drawing lines
- * @param pos1
- * @param pos2
- * @param radius
- * @param color
+ * @brief Bresenham's algorithm for drawing lines between two points
+ * @param pos1 position of the first point
+ * @param pos2 position of the second point
+ * @param radius radius of the line
+ * @param color color of the line
+ * @param asteroid asteroid to check if its possible to draw
  */
 int (canvas_draw_line)(uint8_t *buffer, position_t pos1, position_t pos2, uint16_t thickness, uint32_t color, asteroid_t *asteroid);
 
@@ -41,6 +42,7 @@ int (canvas_clear)(canvas_t *canvas) {
   memset(canvas->buffer, canvas->background_color, get_vram_size());
   return EXIT_SUCCESS;
 }
+
 int (canvas_draw_line)(uint8_t *buffer, position_t pos1, position_t pos2, uint16_t thickness, uint32_t color, asteroid_t *asteroid) {
     int x0 = pos1.x;
     int y0 = pos1.y;
@@ -53,7 +55,7 @@ int (canvas_draw_line)(uint8_t *buffer, position_t pos1, position_t pos2, uint16
     int err = dx - dy;
     int e2;
     // draw first point of the line with specified color
-    if (asteroid == NULL || !is_inside(asteroid, pos1)) {
+    if (asteroid == NULL || !is_inside_asteroid(asteroid, pos1)) {
       vg_draw_circle_to_buffer(buffer, x0, y0, thickness / 2, color);
     }
     
@@ -68,12 +70,12 @@ int (canvas_draw_line)(uint8_t *buffer, position_t pos1, position_t pos2, uint16
             y0 += sy;
         }
 
-        if (asteroid == NULL || !is_inside(asteroid, (position_t) {.x = x0, .y = y0})) {
+        if (asteroid == NULL || !is_inside_asteroid(asteroid, (position_t) {.x = x0, .y = y0})) {
           vg_draw_circle_to_buffer(buffer, x0, y0, thickness / 2, color);
         }
     }
 
-    if (asteroid == NULL || !is_inside(asteroid, pos2)) {
+    if (asteroid == NULL || !is_inside_asteroid(asteroid, pos2)) {
       vg_draw_circle_to_buffer(buffer, x1, y1, thickness / 2, color);
     }
 

@@ -1,9 +1,7 @@
 #include "button.h"
 
 bool (is_cursor_over_button)(button_t *button, position_t mouse_position){
-  bool is_between_x = mouse_position.x >= button->x && mouse_position.x <= button->x + button->width;
-  bool is_between_y = mouse_position.y >= button->y && mouse_position.y <= button->y + button->height;
-  return is_between_x && is_between_y;
+  return is_inside_rectangle(mouse_position, (position_t) {.x = button->x, .y = button->y}, button->width, button->height);
 }
 
 void (change_button_color)(button_t* button, uint32_t new_background_color){

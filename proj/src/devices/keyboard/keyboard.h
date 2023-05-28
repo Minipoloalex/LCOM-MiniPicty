@@ -4,18 +4,26 @@
 #include "../controllers/i8042.h"
 #include "../controllers/kbc/kbc.h"
 
-int (keyboard_subscribe_interrupts)(uint8_t *bit_no);
-int (keyboard_unsubscribe_interrupts)();
-void (keyboard_ih)();
-int (keyboard_restore)();
-int (is_breakcode)(uint8_t scancode, bool *is_breakcode);
-int (translate_scancode)(uint8_t scancode, uint8_t *character);
+/** @defgroup keyboard Keyboard
+ * @{
+ *
+ * @brief Module responsible for the keyboard
+ */
 
+/**
+ * @brief Struct that relates scancodes to their characters
+ * 
+ */
 typedef struct Scancode {
     int scancode;
     char character;
 } scancode_t;
 
+
+/**
+ * @brief Maps makecodes to their characters
+ * 
+ */
 static scancode_t makecodes[36] = {
     {0x02, '1'},
     {0x03, '2'},
@@ -55,7 +63,10 @@ static scancode_t makecodes[36] = {
     {0x32, 'M'},
 };
 
-
+/**
+ * @brief Maps breakcodes to their characters
+ * 
+ */
 static scancode_t breakcodes[36] = {
     {0x82, '1'},
     {0x83, '2'},
@@ -94,3 +105,49 @@ static scancode_t breakcodes[36] = {
     {0xB1, 'N'},
     {0xB2, 'M'},
 };
+
+/**
+ * @brief Subscribes keyboard interrupts.
+ * 
+ * @param bit_no pointer to the variable that will store the bit mask returned upon an interrupt
+ * @return 0 upon success, non-zero otherwise
+ */
+int (keyboard_subscribe_interrupts)(uint8_t *bit_no);
+
+/**
+ * @brief Unsubscribes keyboard interrupts.
+ * 
+ * @return 0 upon success, non-zero otherwise
+ */
+int (keyboard_unsubscribe_interrupts)();
+
+/**
+ * @brief Reads the KBC output and checks if it is valid
+ */
+void (keyboard_ih)();
+
+/**
+ * @brief Restores the KBC to its default state
+ * 
+ */
+int (keyboard_restore)();
+
+/**
+ * @brief Checks if the scancode is a breakcode
+ * 
+ * @param scancode scancode to be verified
+ * @param is_breakcode pointer to the variable that will store the result
+ * 
+ * @return 0 upon success, non-zero otherwise
+ */
+int (is_breakcode)(uint8_t scancode, bool *is_breakcode);
+
+/**
+ * @brief Translates a scancode to its character
+ * 
+ * @param scancode scancode to be translated
+ * @param character pointer to the variable that will store the result
+ * 
+ * @return 0 upon success, non-zero otherwise
+ */
+int (translate_scancode)(uint8_t scancode, uint8_t *character);

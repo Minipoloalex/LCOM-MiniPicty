@@ -1,0 +1,25 @@
+<map id="ser_read_line_status" name="ser_read_line_status">
+<area shape="rect" id="node1" title="Reads the LSR &#45; line status register." alt="" coords="1397,56,1553,83"/>
+<area shape="rect" id="node2" href="$group__serial__port.html#ga36fc13a2c6d15746b96d83fe66d62b2d" title="Interrupt handler for the serial port. Checks which interrupt was triggered and either sends bytes to..." alt="" coords="1028,5,1117,32"/>
+<area shape="rect" id="node4" href="$group__serial__port.html#gaf60cabe981466c597a02a3b559f5d175" title="Reads bytes from the serial port fifo into the receiver queue." alt="" coords="1205,56,1349,83"/>
+<area shape="rect" id="node7" href="$group__serial__port.html#ga0f86d0e5d046d37ae1a62481045a2a5a" title="Writes bytes from the transmitter queue into the serial port fifo." alt="" coords="1212,136,1343,163"/>
+<area shape="rect" id="node3" href="$group__proj.html#ga2a16f651eccbd248e1ad3b3b924b143b" title=" " alt="" coords="5,145,128,172"/>
+<area shape="rect" id="node5" href="$serial__port_8c.html#a7f0eb11d3dacfa455fa74575a8cbdded" title="Initializes the serial port communication parameters. They are specified as in the Lab7 handout." alt="" coords="1011,56,1134,83"/>
+<area shape="rect" id="node6" href="$group__serial__port.html#ga0310282e052b0d6daacdcf32745aad12" title="Sets the default communication parameters and enables the serial port interrupts. Also creates a tran..." alt="" coords="192,81,263,108"/>
+<area shape="rect" id="node8" href="$group__serial__port.html#gaff54b69e57d250cf8acb389349aa04e3" title="Adds given button index to the transmitter queue according to the program&#39;s communication protocol." alt="" coords="988,275,1157,317"/>
+<area shape="rect" id="node18" href="$group__serial__port.html#gad02fe61bd5edd0c986d4bb13a75ce6f7" title="Adds given position to the transmitter queue according to the program&#39;s communication protocol." alt="" coords="997,158,1149,199"/>
+<area shape="rect" id="node19" href="$group__serial__port.html#ga194c8384625742806c4ca550cb4f18ee" title="Adds some bytes to the transmitter queue according to the program&#39;s communication protocol,..." alt="" coords="997,107,1148,133"/>
+<area shape="rect" id="node21" href="$group__serial__port.html#ga525a88810266963dd550812fed6fa2d6" title="Adds given word index to the transmitter queue according to the program&#39;s communication protocol." alt="" coords="771,220,926,247"/>
+<area shape="rect" id="node9" href="$group__game.html#gaeaf89b27c7d4f8a12e8561ced4870cd2" title="Handle the mouse interrupts inside the game state." alt="" coords="765,165,932,192"/>
+<area shape="rect" id="node14" href="$group__menu.html#ga21291e7f1bcc6ba010511e1c9eb9a03d" title="Handle the mouse interrupts inside the menu state." alt="" coords="765,296,932,323"/>
+<area shape="rect" id="node10" href="$group__game.html#ga859ad5db5ec47b6125b2d439083befb0" title="Transition to the game state by changing the state functions." alt="" coords="561,157,709,184"/>
+<area shape="rect" id="node11" href="$menu_8c.html#a9b6d5f8b403b5a95417f1d08735a95d2" title="Enter the game button callback." alt="" coords="370,157,470,184"/>
+<area shape="rect" id="node13" href="$menu_8c.html#ac9b72db247a9a1978d9038a1acd46950" title="Enter the hard mode game button callback." alt="" coords="352,107,488,133"/>
+<area shape="rect" id="node12" href="$group__menu.html#gae131bab3ee69a41004c4300694c690a0" title="Setup the menu by creating the necessary objects." alt="" coords="176,145,279,172"/>
+<area shape="rect" id="node15" href="$group__menu.html#ga04f8f095e776c93ec861decc24ad99fd" title="Transition to the menu state by changing the state functions." alt="" coords="561,309,709,336"/>
+<area shape="rect" id="node16" href="$game_8c.html#abe0fa2797d6c581f845cb3b1d54787a6" title="Quit game button callback Transition to the menu state." alt="" coords="375,309,465,336"/>
+<area shape="rect" id="node17" href="$group__game.html#ga9de7f1042903ab8ba3b3e471b82758b6" title="Setup the game by creating the necessary objects." alt="" coords="176,233,279,260"/>
+<area shape="rect" id="node20" href="$group__game.html#ga839c19f02b3effc7a4f0c86ce9862edb" title="Handle the keyboard interrupts inside the game state." alt="" coords="757,111,940,137"/>
+<area shape="rect" id="node22" href="$game_8c.html#a73840b4b79b4bb04835d4b513d1d6c20" title="Play again button callback Set the game state to WAITING and reset the game by clearing the canvas an..." alt="" coords="589,220,682,247"/>
+<area shape="rect" id="node23" href="$game_8c.html#ab9dfe6919404cb12ddb40780af1a2e23" title="Change roles and play again button callback Change the roles of the players and call play_again." alt="" coords="327,208,513,235"/>
+</map>

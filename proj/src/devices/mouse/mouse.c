@@ -9,7 +9,7 @@ struct packet packet;
 static bool packet_ready = false;
 
 /**
- * @brief 
+ * @brief Writes a given command to the mouse directly
  * 
  */
 int (write_to_mouse)(uint8_t command);
@@ -128,11 +128,9 @@ drawing_position_t (mouse_get_drawing_position_from_packet)(position_t before_po
 
   uint16_t new_x = before_position.x + packet.delta_x;
   uint16_t new_y = before_position.y - packet.delta_y;
-  // printf("before_position.x: %d, before_position.y: %d\n", before_position.x, before_position.y);
-  // printf("packet.delta_x: %d, packet.delta_y: %d\n", packet.delta_x, packet.delta_y);
+
   if(new_x >= 0 && new_x < h_res) next_position.x = new_x;
   if(new_y >= 0 && new_y < v_res) next_position.y = new_y;
-  // printf("new_x: %d, new_y: %d\n", new_x, new_y);
 
   drawing_position_t drawing_position = {
     .position = next_position,

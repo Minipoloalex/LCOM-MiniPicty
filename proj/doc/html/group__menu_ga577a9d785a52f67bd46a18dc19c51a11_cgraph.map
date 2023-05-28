@@ -1,0 +1,10 @@
+<map id="update_player_menu" name="update_player_menu">
+<area shape="rect" id="node1" title="Update the player menu position." alt="" coords="5,107,164,133"/>
+<area shape="rect" id="node2" href="$group__player.html#ga8b731e2ed89c6d477da8f10abd8eaba8" title="Get the last position assigned to the player." alt="" coords="215,5,396,32"/>
+<area shape="rect" id="node3" href="$group__player.html#ga2616ed2b111ea5b2645c9391fd87d885" title="Get the next position of the queue of positions of the player." alt="" coords="212,56,399,83"/>
+<area shape="rect" id="node6" href="$group__player__menu.html#ga0df9538ebea62ba49144fbc6d2de0882" title="Get the Player object." alt="" coords="214,107,397,133"/>
+<area shape="rect" id="node7" href="$group__player.html#ga339c9ef3d8b39dd4e1da059ede3c8956" title="Set the last position in the player." alt="" coords="215,157,395,184"/>
+<area shape="rect" id="node8" href="$group__asteroid.html#ga595b2cd1eafe4d4d0c710c913f30cf8a" title="Sets the needs_update variable to the given value. If the value is set to true, it can be expected th..." alt="" coords="235,208,375,235"/>
+<area shape="rect" id="node4" href="$group__queue.html#gaf661eb1ae68c803a345e7c4828139732" title="Pops an element from the queue." alt="" coords="447,56,540,83"/>
+<area shape="rect" id="node5" href="$group__queue.html#gab093a7863520d7159a7b05aef912ae58" title="Returns true if the queue is empty." alt="" coords="588,56,717,83"/>
+</map>

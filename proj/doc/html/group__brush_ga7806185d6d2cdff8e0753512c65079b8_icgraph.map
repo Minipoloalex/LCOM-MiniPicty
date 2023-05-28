@@ -1,0 +1,7 @@
+<map id="set_brush_color" name="set_brush_color">
+<area shape="rect" id="node1" title="Sets the color of the brush." alt="" coords="525,31,649,57"/>
+<area shape="rect" id="node2" href="$game_8c.html#a489303009ce035cbf3e381afe8d20492" title="Change brush color button callback." alt="" coords="327,5,477,32"/>
+<area shape="rect" id="node5" href="$game_8c.html#a12d55c8aff1a3d10f686c8a9a4bf6dcd" title="Set brush to rubber button callback." alt="" coords="357,56,447,83"/>
+<area shape="rect" id="node3" href="$group__game.html#ga9de7f1042903ab8ba3b3e471b82758b6" title="Setup the game by creating the necessary objects." alt="" coords="176,31,279,57"/>
+<area shape="rect" id="node4" href="$group__proj.html#ga2a16f651eccbd248e1ad3b3b924b143b" title=" " alt="" coords="5,31,128,57"/>
+</map>

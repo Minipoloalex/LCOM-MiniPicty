@@ -1,0 +1,23 @@
+<map id="vg_draw_rectangle_to_buffer" name="vg_draw_rectangle_to_buffer">
+<area shape="rect" id="node1" title="Draws a rectangle with a specified color in a specified area of the buffer." alt="" coords="1605,99,1771,141"/>
+<area shape="rect" id="node2" href="$background_8c.html#afd78e72ffe890bfa8f460adb57cfa05e" title="Draw the sky based on the hour." alt="" coords="1443,56,1526,83"/>
+<area shape="rect" id="node9" href="$background_8c.html#a5bab65edde4378ee6821f5777884cb35" title="Draw the terrain of the background, a static rectangle." alt="" coords="1433,107,1537,133"/>
+<area shape="rect" id="node10" href="$group__asteroid.html#ga99d2da2559e11200c6b40c469e9977ec" title="Draws a rectangle on a specified area of the screen with a specified color." alt="" coords="1412,157,1557,184"/>
+<area shape="rect" id="node3" href="$group__background.html#ga91321a8c45d074e5ee3a5f3c21e43944" title="Draw the background to the buffer based on the hour." alt="" coords="1237,56,1364,83"/>
+<area shape="rect" id="node4" href="$group__menu.html#ga4297b714eb1dbb78fb892693334e8efd" title="Handle the rtc interrupts inside the menu state." alt="" coords="861,5,1001,32"/>
+<area shape="rect" id="node5" href="$group__menu.html#ga04f8f095e776c93ec861decc24ad99fd" title="Transition to the menu state by changing the state functions." alt="" coords="511,56,659,83"/>
+<area shape="rect" id="node6" href="$group__proj.html#ga2a16f651eccbd248e1ad3b3b924b143b" title=" " alt="" coords="5,107,128,133"/>
+<area shape="rect" id="node7" href="$game_8c.html#abe0fa2797d6c581f845cb3b1d54787a6" title="Quit game button callback Transition to the menu state." alt="" coords="349,107,440,133"/>
+<area shape="rect" id="node8" href="$group__game.html#ga9de7f1042903ab8ba3b3e471b82758b6" title="Setup the game by creating the necessary objects." alt="" coords="176,107,279,133"/>
+<area shape="rect" id="node11" href="$menu_8c.html#a0635403a6f2f9a5d2cc60dd5c988cb10" title="Draw current time in the menu." alt="" coords="1077,107,1168,133"/>
+<area shape="rect" id="node13" href="$group__game.html#ga32d55ba98626c3abaf67edc11a00026c" title="Draw the game." alt="" coords="707,208,805,235"/>
+<area shape="rect" id="node18" href="$game_8c.html#ad99bafdcccc02f2c9f9e8b35c4ee40df" title="Draw the game buttons." alt="" coords="853,208,1008,235"/>
+<area shape="rect" id="node19" href="$video__card_8c.html#aa8036fc7b6cac28ca121f76d4e996afe" title="Draws a button to the screen." alt="" coords="1237,157,1364,184"/>
+<area shape="rect" id="node12" href="$group__menu.html#ga07dec1ed9700e9df2664e567bb345d74" title="Draw the menu." alt="" coords="707,107,805,133"/>
+<area shape="rect" id="node14" href="$group__game.html#ga859ad5db5ec47b6125b2d439083befb0" title="Transition to the game state by changing the state functions." alt="" coords="511,208,659,235"/>
+<area shape="rect" id="node15" href="$menu_8c.html#a9b6d5f8b403b5a95417f1d08735a95d2" title="Enter the game button callback." alt="" coords="345,157,445,184"/>
+<area shape="rect" id="node17" href="$menu_8c.html#ac9b72db247a9a1978d9038a1acd46950" title="Enter the hard mode game button callback." alt="" coords="327,208,463,235"/>
+<area shape="rect" id="node16" href="$group__menu.html#gae131bab3ee69a41004c4300694c690a0" title="Setup the menu by creating the necessary objects." alt="" coords="176,157,279,184"/>
+<area shape="rect" id="node20" href="$group__asteroid.html#ga81aab3616828f27693616505a917c5e8" title="Draws a array of buttons to the screen." alt="" coords="1056,157,1189,184"/>
+<area shape="rect" id="node21" href="$menu_8c.html#a1963d00df7a322e39ce2e023c1101182" title="Draw the menu buttons." alt="" coords="853,157,1008,184"/>
+</map>

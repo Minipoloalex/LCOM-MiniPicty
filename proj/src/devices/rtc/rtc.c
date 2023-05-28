@@ -23,30 +23,20 @@
 #define RTC_D 13
 
 #define RTC_A_UIP BIT(7)
-// not relevant
-// #define RTC_A_DV2 BIT(6)
-// #define RTC_A_DV1 BIT(5)
-// #define RTC_A_DV0 BIT(4)
-// for periodic interrupts and square wave output
-#define RTC_A_RS3 BIT(3)
-#define RTC_A_RS2 BIT(2)
-#define RTC_A_RS1 BIT(1)
-#define RTC_A_RS0 BIT(0)
 
 #define RTC_B_SET BIT(7)
 #define RTC_B_PIE BIT(6)
 #define RTC_B_AIE BIT(5)
 #define RTC_B_UIE BIT(4)
 #define RTC_B_SQWE BIT(3)
-// shouldn't change this
+
 #define RTC_B_DM BIT(2)
-// #define RTC_B_24_12 BIT(1)
 #define RTC_B_DSE BIT(0)
 
 #define RTC_C_IRQF BIT(7)
-#define RTC_C_PF BIT(6) /* periodic interrupt pending */
-#define RTC_C_AF BIT(5) /* alarm interrupt pending */
-#define RTC_C_UF BIT(4) /* update interrupt pending */
+#define RTC_C_PF BIT(6) /** @brief periodic interrupt pending */
+#define RTC_C_AF BIT(5) /** @brief alarm interrupt pending */
+#define RTC_C_UF BIT(4) /** @brief update interrupt pending */
 
 #define RTC_D_VRT BIT(7)
 
@@ -276,15 +266,12 @@ int (rtc_read_temp_hour)(uint8_t *hour) {
 }
 
 int (convert_bcd_to_binary)(uint8_t *ptr) {
-  uint8_t value = *ptr;
-  uint8_t digit;
-  *ptr = 0;
-  uint8_t positionMultiply = 1;
-  while (value > 0) {
-    digit = value & 0x0F;   // get the first digit in hexadecimal
-    value = value >> 4;
-    *ptr |= digit * positionMultiply;
-    positionMultiply *= 10;
+  if (ptr == NULL) {
+    printf("Invalid pointer inside %s\n", __func__);
+    return EXIT_FAILURE;
   }
+  printf("before conversion: %d\n", *ptr);
+  *ptr = (*ptr & 0x0F) + ((*ptr & 0xF0) >> 4) * 10;
+  printf("converted bcd to binary: %d\n", *ptr);
   return EXIT_SUCCESS;
 }

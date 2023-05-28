@@ -1,0 +1,4 @@
+<map id="create_background" name="create_background">
+<area shape="rect" id="node1" title="Create a new Background." alt="" coords="5,5,152,32"/>
+<area shape="rect" id="node2" href="$group__asteroid.html#ga50eeab41a5f0c4d3f5caad793fb53c4e" title="returns the size of the VRAM" alt="" coords="200,5,317,32"/>
+</map>

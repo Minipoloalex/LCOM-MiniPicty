@@ -1,0 +1,5 @@
+<map id="get_hovered_button" name="get_hovered_button">
+<area shape="rect" id="node1" title="Gets the hovered button&#39;s index." alt="" coords="5,5,157,32"/>
+<area shape="rect" id="node2" href="$group__button.html#gad7b1d353f6b1bf5bc009f49aec65064c" title="Checks if the mouse position is inside the button This is used for changing its color and knowing if ..." alt="" coords="205,5,371,32"/>
+<area shape="rect" id="node3" href="$group__position.html#ga01d48dad828d0cd96d09cba62a6b3c83" title="Checks if a position is inside an area/rectangle defined by a start point, width and height." alt="" coords="419,5,565,32"/>
+</map>

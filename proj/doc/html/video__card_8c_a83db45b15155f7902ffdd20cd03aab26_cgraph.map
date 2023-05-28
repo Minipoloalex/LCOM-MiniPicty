@@ -1,0 +1,5 @@
+<map id="map_phys_mem_to_virtual" name="map_phys_mem_to_virtual">
+<area shape="rect" id="node1" title="Map physical memory to virtual address space of process. Gets the memory (VRAM) for all 3 buffers." alt="" coords="5,31,204,57"/>
+<area shape="rect" id="node2" href="$group__asteroid.html#ga595b2cd1eafe4d4d0c710c913f30cf8a" title="Sets the needs_update variable to the given value. If the value is set to true, it can be expected th..." alt="" coords="252,5,392,32"/>
+<area shape="rect" id="node3" href="$group__asteroid.html#gae4f1fdd1f5a95ca8230d77f0a915bb83" title="Clears the buffer given by the parameter." alt="" coords="261,56,383,83"/>
+</map>

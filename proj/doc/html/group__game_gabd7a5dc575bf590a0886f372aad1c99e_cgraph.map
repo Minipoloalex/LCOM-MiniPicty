@@ -1,0 +1,12 @@
+<map id="destroy_game" name="destroy_game">
+<area shape="rect" id="node1" title="Destroy the game by freeing the necessary objects." alt="" coords="5,107,120,133"/>
+<area shape="rect" id="node2" href="$group__canvas.html#ga7913a143648d8d078ae0a5425945389b" title="Destroys a canvas, by freeing its memory." alt="" coords="191,5,315,32"/>
+<area shape="rect" id="node3" href="$group__asteroid.html#gae6d392aec1f9c85c106acebc89b69b7f" title="Destroys an asteroid." alt="" coords="188,56,319,83"/>
+<area shape="rect" id="node4" href="$group__button.html#ga2c64443d61d8279fa18c5902644bfdbf" title="Destroys an array of buttons by freeing its memory." alt="" coords="169,107,337,133"/>
+<area shape="rect" id="node6" href="$group__guess.html#ga4a01ab94f81590555408f7fbcdb7ad3d" title="Destroy a Guess Word." alt="" coords="176,157,331,184"/>
+<area shape="rect" id="node7" href="$group__player__drawer.html#gae76a0273355a6b0c7ed1569b964b6f64" title="Destroy a Player Drawer." alt="" coords="168,208,339,235"/>
+<area shape="rect" id="node5" href="$group__button.html#gaa70957d471fc38861eb7a63c4bd44e09" title="Destroys a button by freeing its memory." alt="" coords="387,107,507,133"/>
+<area shape="rect" id="node8" href="$group__brush.html#gae86fb1986e661637dc2fe000bc0b4427" title="Destroys a brush." alt="" coords="389,183,504,209"/>
+<area shape="rect" id="node9" href="$group__player.html#gab99707f1436b3a6a72e4302200ad8a17" title="Destroy a Player." alt="" coords="387,233,506,260"/>
+<area shape="rect" id="node10" href="$group__queue.html#gaafc0fe4e7d7d46275df3f4babe1926d2" title="Deletes a queue object Destructor for the queue object." alt="" coords="555,233,665,260"/>
+</map>

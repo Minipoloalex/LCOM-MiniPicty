@@ -1,0 +1,15 @@
+<map id="draw_timelapse" name="draw_timelapse">
+<area shape="rect" id="node1" title="Draw the background to the buffer based on the hour." alt="" coords="5,208,132,235"/>
+<area shape="rect" id="node2" href="$background_8c.html#afd78e72ffe890bfa8f460adb57cfa05e" title="Draw the sky based on the hour." alt="" coords="191,157,273,184"/>
+<area shape="rect" id="node11" href="$background_8c.html#a1682ad47cf211a83eb9bd95ea3540eb6" title="Draw the sun based on the hour From 6 to 19 hours the sun will be drawn in the sky with a different h..." alt="" coords="373,208,457,235"/>
+<area shape="rect" id="node13" href="$background_8c.html#a5bab65edde4378ee6821f5777884cb35" title="Draw the terrain of the background, a static rectangle." alt="" coords="180,288,284,315"/>
+<area shape="rect" id="node3" href="$background_8c.html#a449c4760ed8c81d7aac9a13e9900bf41" title="Calculate the color of the sky based on the hour by using a linear function." alt="" coords="340,5,489,32"/>
+<area shape="rect" id="node4" href="$background_8c.html#afd7e922de7c70c77f8a0a29365061984" title="Draw the stars in the sky." alt="" coords="368,157,461,184"/>
+<area shape="rect" id="node5" href="$group__asteroid.html#gaab0ee43a0f19c6eb0ac13b7b357649fc" title="returns the horizontal resolution of the video mode used" alt="" coords="595,107,680,133"/>
+<area shape="rect" id="node6" href="$group__asteroid.html#gae9c75eaa66222e9130dd1b299ae8b3e6" title="returns the vertical resolution of the video mode used" alt="" coords="595,259,680,285"/>
+<area shape="rect" id="node9" href="$group__asteroid.html#ga983dd8f3e3fde2997fb5aa5b84252e00" title="Draws a rectangle with a specified color in a specified area of the buffer." alt="" coords="332,310,497,351"/>
+<area shape="rect" id="node7" href="$group__asteroid.html#ga4eb4b3b6c39f1d34aa01ab98da45a13d" title="Draws a circle with a specified color in a specified area of the buffer." alt="" coords="545,157,729,184"/>
+<area shape="rect" id="node8" href="$video__card_8c.html#a2edd9c84fd5c596777cdce2ddaaaf7d7" title="draws a pixel in the desired buffer" alt="" coords="777,157,892,184"/>
+<area shape="rect" id="node10" href="$video__card_8c.html#a9177b76545b334e1d3868228d418392d" title="draws a horizontal line in the desired buffer" alt="" coords="589,317,685,344"/>
+<area shape="rect" id="node12" href="$background_8c.html#a4efb9442dd469db482132f63e555e74c" title="Calculate the height of the sun using a ellipse function." alt="" coords="558,208,717,235"/>
+</map>

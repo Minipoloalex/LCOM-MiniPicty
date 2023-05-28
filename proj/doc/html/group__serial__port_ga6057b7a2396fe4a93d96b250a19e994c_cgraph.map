@@ -1,0 +1,10 @@
+<map id="ser_read_bytes_from_receiver_queue" name="ser_read_bytes_from_receiver_queue">
+<area shape="rect" id="node1" title="Reads bytes from the receiver queue according to the program&#39;s communication protocol,..." alt="" coords="5,99,164,141"/>
+<area shape="rect" id="node2" href="$group__position.html#ga5b0348471fb932892eb9f0ff3db15a44" title=" " alt="" coords="256,5,359,32"/>
+<area shape="rect" id="node3" href="$group__queue.html#gab093a7863520d7159a7b05aef912ae58" title="Returns true if the queue is empty." alt="" coords="451,157,580,184"/>
+<area shape="rect" id="node4" href="$group__player.html#ga88ce9ab2449a856d63994f6ecaa0fe27" title="Add a new position to the queue of positions of the player." alt="" coords="213,56,402,83"/>
+<area shape="rect" id="node7" href="$group__player__drawer.html#ga15c97c3eedb81c3b940cdd6069912b11" title="Get the Player object." alt="" coords="212,157,403,184"/>
+<area shape="rect" id="node8" href="$group__queue.html#gaf661eb1ae68c803a345e7c4828139732" title="Pops an element from the queue." alt="" coords="261,208,354,235"/>
+<area shape="rect" id="node5" href="$group__queue.html#gac00389cf1a0ae14e7190267c2c0f0a0f" title="Pushes an element to the queue." alt="" coords="465,56,565,83"/>
+<area shape="rect" id="node6" href="$group__queue.html#ga4d4403de9d9a1dd031f5533c6df214de" title="Returns true if the queue is full." alt="" coords="628,56,736,83"/>
+</map>

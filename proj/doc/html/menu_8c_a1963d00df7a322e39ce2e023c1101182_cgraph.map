@@ -1,0 +1,17 @@
+<map id="menu_draw_buttons" name="menu_draw_buttons">
+<area shape="rect" id="node1" title="Draw the menu buttons." alt="" coords="5,107,160,133"/>
+<area shape="rect" id="node2" href="$group__button.html#gad852b8043f4dd82ddd19bba37f319a61" title="Changes a button&#39;s color." alt="" coords="221,5,378,32"/>
+<area shape="rect" id="node3" href="$group__button.html#gad7b1d353f6b1bf5bc009f49aec65064c" title="Checks if the mouse position is inside the button This is used for changing its color and knowing if ..." alt="" coords="217,56,382,83"/>
+<area shape="rect" id="node5" href="$group__player.html#ga8b731e2ed89c6d477da8f10abd8eaba8" title="Get the last position assigned to the player." alt="" coords="209,107,390,133"/>
+<area shape="rect" id="node6" href="$group__player__menu.html#ga0df9538ebea62ba49144fbc6d2de0882" title="Get the Player object." alt="" coords="208,157,391,184"/>
+<area shape="rect" id="node7" href="$group__asteroid.html#ga81aab3616828f27693616505a917c5e8" title="Draws a array of buttons to the screen." alt="" coords="233,208,366,235"/>
+<area shape="rect" id="node4" href="$group__position.html#ga01d48dad828d0cd96d09cba62a6b3c83" title="Checks if a position is inside an area/rectangle defined by a start point, width and height." alt="" coords="439,56,585,83"/>
+<area shape="rect" id="node8" href="$video__card_8c.html#aa8036fc7b6cac28ca121f76d4e996afe" title="Draws a button to the screen." alt="" coords="449,208,575,235"/>
+<area shape="rect" id="node9" href="$group__asteroid.html#ga99d2da2559e11200c6b40c469e9977ec" title="Draws a rectangle on a specified area of the screen with a specified color." alt="" coords="633,153,779,180"/>
+<area shape="rect" id="node12" href="$group__asteroid.html#ga149feb47586f0ad1c6af10be58de43cb" title="Draws a sprite to a specified position." alt="" coords="1040,233,1161,260"/>
+<area shape="rect" id="node14" href="$group__asteroid.html#ga7e0c2d812860673fd1f9dba59f0d4c05" title="Draws a string to the screen." alt="" coords="651,259,761,285"/>
+<area shape="rect" id="node10" href="$group__asteroid.html#ga983dd8f3e3fde2997fb5aa5b84252e00" title="Draws a rectangle with a specified color in a specified area of the buffer." alt="" coords="827,142,992,183"/>
+<area shape="rect" id="node11" href="$video__card_8c.html#a9177b76545b334e1d3868228d418392d" title="draws a horizontal line in the desired buffer" alt="" coords="1053,149,1149,176"/>
+<area shape="rect" id="node13" href="$video__card_8c.html#a2edd9c84fd5c596777cdce2ddaaaf7d7" title="draws a pixel in the desired buffer" alt="" coords="1209,233,1324,260"/>
+<area shape="rect" id="node15" href="$video__card_8c.html#a223f89b9c44f177e851df52eb669d68b" title="Draws a letter or number to the screen." alt="" coords="853,259,965,285"/>
+</map>

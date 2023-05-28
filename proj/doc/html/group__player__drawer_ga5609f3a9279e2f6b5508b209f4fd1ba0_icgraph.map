@@ -1,0 +1,14 @@
+<map id="player_drawer_get_role" name="player_drawer_get_role">
+<area shape="rect" id="node1" title="Get the Player type object." alt="" coords="976,107,1151,133"/>
+<area shape="rect" id="node2" href="$group__game.html#ga32d55ba98626c3abaf67edc11a00026c" title="Draw the game." alt="" coords="787,5,886,32"/>
+<area shape="rect" id="node3" href="$group__game.html#ga859ad5db5ec47b6125b2d439083befb0" title="Transition to the game state by changing the state functions." alt="" coords="530,101,678,128"/>
+<area shape="rect" id="node8" href="$group__game.html#ga839c19f02b3effc7a4f0c86ce9862edb" title="Handle the keyboard interrupts inside the game state." alt="" coords="745,107,928,133"/>
+<area shape="rect" id="node9" href="$group__game.html#gaeaf89b27c7d4f8a12e8561ced4870cd2" title="Handle the mouse interrupts inside the game state." alt="" coords="753,157,920,184"/>
+<area shape="rect" id="node10" href="$game_8c.html#a73840b4b79b4bb04835d4b513d1d6c20" title="Play again button callback Set the game state to WAITING and reset the game by clearing the canvas an..." alt="" coords="790,208,883,235"/>
+<area shape="rect" id="node4" href="$menu_8c.html#a9b6d5f8b403b5a95417f1d08735a95d2" title="Enter the game button callback." alt="" coords="345,88,445,115"/>
+<area shape="rect" id="node7" href="$menu_8c.html#ac9b72db247a9a1978d9038a1acd46950" title="Enter the hard mode game button callback." alt="" coords="327,139,463,165"/>
+<area shape="rect" id="node5" href="$group__menu.html#gae131bab3ee69a41004c4300694c690a0" title="Setup the menu by creating the necessary objects." alt="" coords="176,139,279,165"/>
+<area shape="rect" id="node6" href="$group__proj.html#ga2a16f651eccbd248e1ad3b3b924b143b" title=" " alt="" coords="5,164,128,191"/>
+<area shape="rect" id="node11" href="$game_8c.html#ab9dfe6919404cb12ddb40780af1a2e23" title="Change roles and play again button callback Change the roles of the players and call play_again." alt="" coords="511,164,697,191"/>
+<area shape="rect" id="node12" href="$group__game.html#ga9de7f1042903ab8ba3b3e471b82758b6" title="Setup the game by creating the necessary objects." alt="" coords="343,189,446,216"/>
+</map>

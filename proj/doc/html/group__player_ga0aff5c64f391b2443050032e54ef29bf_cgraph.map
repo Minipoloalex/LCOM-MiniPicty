@@ -1,0 +1,5 @@
+<map id="player_get_current_position" name="player_get_current_position">
+<area shape="rect" id="node1" title="Get the last position of the queue of positions of the player. In case it is empty,..." alt="" coords="5,5,149,47"/>
+<area shape="rect" id="node2" href="$group__queue.html#gab093a7863520d7159a7b05aef912ae58" title="Returns true if the queue is empty." alt="" coords="373,13,503,39"/>
+<area shape="rect" id="node3" href="$group__queue.html#ga96b3e142d009cb3bdf349a1640c8f3e2" title="Returns by parameter the last inserted element in the queue." alt="" coords="197,38,325,65"/>
+</map>

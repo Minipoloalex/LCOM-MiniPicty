@@ -1,0 +1,4 @@
+<map id="destroy_buttons_array" name="destroy_buttons_array">
+<area shape="rect" id="node1" title="Destroys an array of buttons by freeing its memory." alt="" coords="5,5,173,32"/>
+<area shape="rect" id="node2" href="$group__button.html#gaa70957d471fc38861eb7a63c4bd44e09" title="Destroys a button by freeing its memory." alt="" coords="221,5,341,32"/>
+</map>

@@ -1,0 +1,13 @@
+<map id="rtc_read" name="rtc_read">
+<area shape="rect" id="node1" title="Reads from the RTC given register." alt="" coords="913,107,988,133"/>
+<area shape="rect" id="node2" href="$rtc_8c.html#a905003cf367d12e7ab5df5ea18594c2c" title="Gets the current time from the RTC registers. Should be called from rtc_ih()." alt="" coords="737,5,841,32"/>
+<area shape="rect" id="node3" href="$group__rtc.html#ga0b9ae809cf571f61e54712a23c65348e" title="Interrupt handler for RTC interrupts. Should be called upon an RTC interrupt. To get the time,..." alt="" coords="562,31,621,57"/>
+<area shape="rect" id="node5" href="$group__rtc.html#ga35232e4c879f3cb82678674f56cf4751" title="initializes the RTC. Should be called before any other function." alt="" coords="391,81,457,108"/>
+<area shape="rect" id="node6" href="$group__rtc.html#ga5bb921968a9c40217df4a2b203b0d41e" title="Writes the current hour to the given pointer." alt="" coords="713,157,865,184"/>
+<area shape="rect" id="node10" href="$group__rtc.html#ga6bbe679f115cec90d36d50eb2aac1b89" title="Subscribes RTC interrupts." alt="" coords="723,221,855,248"/>
+<area shape="rect" id="node4" href="$group__proj.html#ga2a16f651eccbd248e1ad3b3b924b143b" title=" " alt="" coords="5,132,128,159"/>
+<area shape="rect" id="node7" href="$group__menu.html#ga04f8f095e776c93ec861decc24ad99fd" title="Transition to the menu state by changing the state functions." alt="" coords="517,157,665,184"/>
+<area shape="rect" id="node8" href="$game_8c.html#abe0fa2797d6c581f845cb3b1d54787a6" title="Quit game button callback Transition to the menu state." alt="" coords="379,183,469,209"/>
+<area shape="rect" id="node9" href="$group__game.html#ga9de7f1042903ab8ba3b3e471b82758b6" title="Setup the game by creating the necessary objects." alt="" coords="202,183,305,209"/>
+<area shape="rect" id="node11" href="$group__interrupts.html#ga1eec6afd3d0d8f337690f957769b27c8" title="Subscribe all the devices interrupts used in the project." alt="" coords="176,233,331,260"/>
+</map>

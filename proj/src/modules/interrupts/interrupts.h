@@ -9,5 +9,22 @@
 #include "../../devices/serial_port/serial_port.h"
 #include "../../devices/rtc/rtc.h"
 
+/** @defgroup interrupts Interrupts
+ * @{
+ *
+ * @brief Module responsible for (un)subscribing the devices interrupts
+ */
+
+/**
+ * @brief Subscribe all the devices interrupts used in the project 
+ * 
+ * @return int 0 if success, 1 otherwise
+ */
 int(subscribe_interrupts)();
+
+/**
+ * @brief Unsubscribe all the devices interrupts used in the project 
+ * 
+ * @return int 0 if success, 1 otherwise
+ */
 int(unsubscribe_interrupts)();

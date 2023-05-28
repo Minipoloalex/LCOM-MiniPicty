@@ -1,0 +1,13 @@
+<map id="ser_read_bytes_from_receiver_queue" name="ser_read_bytes_from_receiver_queue">
+<area shape="rect" id="node1" title="Reads bytes from the receiver queue according to the program&#39;s communication protocol,..." alt="" coords="913,74,1072,115"/>
+<area shape="rect" id="node2" href="$group__game.html#ga673fceeeb24e8b3a1d47f28aaf0ba218" title="Handle the serial port interrupts inside the game state." alt="" coords="707,56,865,83"/>
+<area shape="rect" id="node8" href="$group__menu.html#ga521fb29305979bff8f21fce6613454bd" title="Handle the serial port interrupts inside the menu state." alt="" coords="707,107,865,133"/>
+<area shape="rect" id="node3" href="$group__game.html#ga859ad5db5ec47b6125b2d439083befb0" title="Transition to the game state by changing the state functions." alt="" coords="511,56,659,83"/>
+<area shape="rect" id="node4" href="$menu_8c.html#a9b6d5f8b403b5a95417f1d08735a95d2" title="Enter the game button callback." alt="" coords="345,5,445,32"/>
+<area shape="rect" id="node7" href="$menu_8c.html#ac9b72db247a9a1978d9038a1acd46950" title="Enter the hard mode game button callback." alt="" coords="327,56,463,83"/>
+<area shape="rect" id="node5" href="$group__menu.html#gae131bab3ee69a41004c4300694c690a0" title="Setup the menu by creating the necessary objects." alt="" coords="176,56,279,83"/>
+<area shape="rect" id="node6" href="$group__proj.html#ga2a16f651eccbd248e1ad3b3b924b143b" title=" " alt="" coords="5,107,128,133"/>
+<area shape="rect" id="node9" href="$group__menu.html#ga04f8f095e776c93ec861decc24ad99fd" title="Transition to the menu state by changing the state functions." alt="" coords="511,107,659,133"/>
+<area shape="rect" id="node10" href="$game_8c.html#abe0fa2797d6c581f845cb3b1d54787a6" title="Quit game button callback Transition to the menu state." alt="" coords="349,157,440,184"/>
+<area shape="rect" id="node11" href="$group__game.html#ga9de7f1042903ab8ba3b3e471b82758b6" title="Setup the game by creating the necessary objects." alt="" coords="176,157,279,184"/>
+</map>

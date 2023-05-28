@@ -1,0 +1,9 @@
+<map id="destroy_menu" name="destroy_menu">
+<area shape="rect" id="node1" title="Destroy the menu by freeing the necessary objects." alt="" coords="5,56,120,83"/>
+<area shape="rect" id="node2" href="$group__background.html#ga3473b7fe997a2bdb37225a70642182b8" title="Destroy a Background." alt="" coords="175,5,329,32"/>
+<area shape="rect" id="node3" href="$group__button.html#ga2c64443d61d8279fa18c5902644bfdbf" title="Destroys an array of buttons by freeing its memory." alt="" coords="168,56,336,83"/>
+<area shape="rect" id="node5" href="$group__player__menu.html#gaccb40409296a65bab934bc695de521e7" title="Destroy a Player Menu." alt="" coords="171,107,333,133"/>
+<area shape="rect" id="node4" href="$group__button.html#gaa70957d471fc38861eb7a63c4bd44e09" title="Destroys a button by freeing its memory." alt="" coords="384,56,504,83"/>
+<area shape="rect" id="node6" href="$group__player.html#gab99707f1436b3a6a72e4302200ad8a17" title="Destroy a Player." alt="" coords="385,107,503,133"/>
+<area shape="rect" id="node7" href="$group__queue.html#gaafc0fe4e7d7d46275df3f4babe1926d2" title="Deletes a queue object Destructor for the queue object." alt="" coords="552,107,663,133"/>
+</map>

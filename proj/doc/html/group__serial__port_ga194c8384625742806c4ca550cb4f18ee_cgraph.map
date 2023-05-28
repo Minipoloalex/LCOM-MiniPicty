@@ -1,0 +1,12 @@
+<map id="ser_add_won_round" name="ser_add_won_round">
+<area shape="rect" id="node1" title="Adds some bytes to the transmitter queue according to the program&#39;s communication protocol,..." alt="" coords="5,77,156,104"/>
+<area shape="rect" id="node2" href="$serial__port_8c.html#a4d534181f23c86dc31eaa604f35ccb44" title="Adds a byte to the transmitter queue that will later be communicated/sent to the serial port." alt="" coords="204,19,413,61"/>
+<area shape="rect" id="node5" href="$group__serial__port.html#ga0f86d0e5d046d37ae1a62481045a2a5a" title="Writes bytes from the transmitter queue into the serial port fifo." alt="" coords="243,107,374,133"/>
+<area shape="rect" id="node3" href="$group__queue.html#gac00389cf1a0ae14e7190267c2c0f0a0f" title="Pushes an element to the queue." alt="" coords="489,5,589,32"/>
+<area shape="rect" id="node4" href="$group__queue.html#ga4d4403de9d9a1dd031f5533c6df214de" title="Returns true if the queue is full." alt="" coords="676,5,784,32"/>
+<area shape="rect" id="node6" href="$group__queue.html#gab093a7863520d7159a7b05aef912ae58" title="Returns true if the queue is empty." alt="" coords="665,81,795,108"/>
+<area shape="rect" id="node7" href="$group__queue.html#gaf661eb1ae68c803a345e7c4828139732" title="Pops an element from the queue." alt="" coords="493,107,586,133"/>
+<area shape="rect" id="node8" href="$serial__port_8c.html#a27a3535b6ba1e9dce6f808d508de1bf5" title="Reads the LSR &#45; line status register." alt="" coords="461,157,617,184"/>
+<area shape="rect" id="node10" href="$serial__port_8c.html#ae60b262384b1b42527c199c6bb0c4002" title="Writes data to the Transmitter Holding Register (THR). Assumes that the data is ready to be written." alt="" coords="480,208,599,235"/>
+<area shape="rect" id="node9" href="$group__utils.html#ga79a031a8611f5b2d6afa4158e92b0fb4" title="Invokes sys_inb() system call but reads the value into a uint8_t variable." alt="" coords="681,157,779,184"/>
+</map>

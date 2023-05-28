@@ -1,0 +1,5 @@
+<map id="player_get_next_position" name="player_get_next_position">
+<area shape="rect" id="node1" title="Get the next position of the queue of positions of the player." alt="" coords="5,5,192,32"/>
+<area shape="rect" id="node2" href="$group__queue.html#gaf661eb1ae68c803a345e7c4828139732" title="Pops an element from the queue." alt="" coords="240,5,333,32"/>
+<area shape="rect" id="node3" href="$group__queue.html#gab093a7863520d7159a7b05aef912ae58" title="Returns true if the queue is empty." alt="" coords="381,5,511,32"/>
+</map>

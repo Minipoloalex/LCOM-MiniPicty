@@ -1,9 +1,13 @@
 #include "player_menu.h"
 
+/**
+ * @brief Player Menu struct
+ * Contains a player
+ * 
+ */
 struct PlayerMenu {
   player_t *player;
 };
-
 
 player_menu_t *(create_player_menu)() {
   player_menu_t *player_menu = malloc(sizeof(player_menu_t));

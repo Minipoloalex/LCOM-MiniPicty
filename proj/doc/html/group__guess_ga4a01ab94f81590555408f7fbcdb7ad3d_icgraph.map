@@ -1,0 +1,6 @@
+<map id="destroy_guess_word" name="destroy_guess_word">
+<area shape="rect" id="node1" title="Destroy a Guess Word." alt="" coords="339,31,493,57"/>
+<area shape="rect" id="node2" href="$group__game.html#gabd7a5dc575bf590a0886f372aad1c99e" title="Destroy the game by freeing the necessary objects." alt="" coords="176,5,291,32"/>
+<area shape="rect" id="node4" href="$group__game.html#ga9de7f1042903ab8ba3b3e471b82758b6" title="Setup the game by creating the necessary objects." alt="" coords="182,56,285,83"/>
+<area shape="rect" id="node3" href="$group__proj.html#ga2a16f651eccbd248e1ad3b3b924b143b" title=" " alt="" coords="5,31,128,57"/>
+</map>

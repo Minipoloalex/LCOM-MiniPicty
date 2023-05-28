@@ -1,0 +1,8 @@
+<map id="canvas_draw_line" name="canvas_draw_line">
+<area shape="rect" id="node1" title="Bresenham&#39;s algorithm for drawing lines between two points." alt="" coords="5,81,144,108"/>
+<area shape="rect" id="node2" href="$group__asteroid.html#ga7f56ec86bd6a24a2002f0a1bcbfc93ca" title="Checks if a position collides with an asteroid This is used for checking if the mouse is inside the a..." alt="" coords="215,56,353,83"/>
+<area shape="rect" id="node5" href="$group__asteroid.html#ga4eb4b3b6c39f1d34aa01ab98da45a13d" title="Draws a circle with a specified color in a specified area of the buffer." alt="" coords="192,107,376,133"/>
+<area shape="rect" id="node3" href="$group__asteroid.html#gace8d4e864266e329a2349fa4d4b60b1e" title="returns the number of bytes per pixel of the video mode used" alt="" coords="424,5,576,32"/>
+<area shape="rect" id="node4" href="$group__position.html#ga01d48dad828d0cd96d09cba62a6b3c83" title="Checks if a position is inside an area/rectangle defined by a start point, width and height." alt="" coords="427,56,573,83"/>
+<area shape="rect" id="node6" href="$video__card_8c.html#a2edd9c84fd5c596777cdce2ddaaaf7d7" title="draws a pixel in the desired buffer" alt="" coords="443,107,557,133"/>
+</map>

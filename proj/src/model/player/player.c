@@ -26,10 +26,10 @@ void (destroy_player)(player_t *player) {
 
 drawing_position_t (player_get_current_position)(player_t *player) {
   drawing_position_t drawing_position;
-  if (queue_get_back(player->mouse_positions, &drawing_position) != OK) {
-    // queue is empty
+  if (is_empty_queue(player->mouse_positions)) {
     return player->last_mouse_position;
   }
+  queue_get_back(player->mouse_positions, &drawing_position);
   return drawing_position;
 }
 

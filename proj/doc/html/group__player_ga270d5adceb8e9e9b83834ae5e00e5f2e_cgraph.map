@@ -1,0 +1,4 @@
+<map id="create_player" name="create_player">
+<area shape="rect" id="node1" title="Create a new Player." alt="" coords="5,5,116,32"/>
+<area shape="rect" id="node2" href="$group__queue.html#ga220ab33402f40d8d55ef879ffd7182fe" title="Create a queue object ." alt="" coords="164,5,275,32"/>
+</map>

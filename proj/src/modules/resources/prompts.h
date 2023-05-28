@@ -1,7 +1,11 @@
 #pragma once
 
-#define PROMPT_NUMBER 58
+#define PROMPT_NUMBER 58 /**< @brief number of prompts */
 
+/**
+ * @brief Prompts array
+ * Contains PROMPT_NUMBER prompts
+ */
 static char * const prompts[]={
   "STRAWBERRY",
   "ECLIPSE",

@@ -1,0 +1,5 @@
+<map id="vg_draw_rectangle" name="vg_draw_rectangle">
+<area shape="rect" id="node1" title="Draws a rectangle on a specified area of the screen with a specified color." alt="" coords="5,13,151,39"/>
+<area shape="rect" id="node2" href="$group__asteroid.html#ga983dd8f3e3fde2997fb5aa5b84252e00" title="Draws a rectangle with a specified color in a specified area of the buffer." alt="" coords="199,5,364,47"/>
+<area shape="rect" id="node3" href="$video__card_8c.html#a9177b76545b334e1d3868228d418392d" title="draws a horizontal line in the desired buffer" alt="" coords="412,13,508,39"/>
+</map>

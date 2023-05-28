@@ -1,0 +1,5 @@
+<map id="destroy_asteroid" name="destroy_asteroid">
+<area shape="rect" id="node1" title="Destroys an asteroid." alt="" coords="339,5,469,32"/>
+<area shape="rect" id="node2" href="$group__game.html#gabd7a5dc575bf590a0886f372aad1c99e" title="Destroy the game by freeing the necessary objects." alt="" coords="176,5,291,32"/>
+<area shape="rect" id="node3" href="$group__proj.html#ga2a16f651eccbd248e1ad3b3b924b143b" title=" " alt="" coords="5,5,128,32"/>
+</map>

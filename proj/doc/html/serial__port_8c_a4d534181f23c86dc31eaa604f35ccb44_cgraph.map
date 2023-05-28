@@ -1,0 +1,5 @@
+<map id="ser_add_byte_to_transmitter_queue" name="ser_add_byte_to_transmitter_queue">
+<area shape="rect" id="node1" title="Adds a byte to the transmitter queue that will later be communicated/sent to the serial port." alt="" coords="5,5,215,47"/>
+<area shape="rect" id="node2" href="$group__queue.html#gac00389cf1a0ae14e7190267c2c0f0a0f" title="Pushes an element to the queue." alt="" coords="263,13,363,39"/>
+<area shape="rect" id="node3" href="$group__queue.html#ga4d4403de9d9a1dd031f5533c6df214de" title="Returns true if the queue is full." alt="" coords="411,13,519,39"/>
+</map>

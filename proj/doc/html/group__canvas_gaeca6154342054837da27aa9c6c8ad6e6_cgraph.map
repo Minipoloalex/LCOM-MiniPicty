@@ -1,0 +1,4 @@
+<map id="canvas_init" name="canvas_init">
+<area shape="rect" id="node1" title="Initializes a canvas." alt="" coords="5,5,101,32"/>
+<area shape="rect" id="node2" href="$group__asteroid.html#ga50eeab41a5f0c4d3f5caad793fb53c4e" title="returns the size of the VRAM" alt="" coords="149,5,267,32"/>
+</map>

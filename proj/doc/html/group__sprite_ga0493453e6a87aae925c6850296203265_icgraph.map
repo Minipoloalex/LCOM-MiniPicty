@@ -1,0 +1,5 @@
+<map id="create_sprite" name="create_sprite">
+<area shape="rect" id="node1" title="Create a new Sprite." alt="" coords="344,5,451,32"/>
+<area shape="rect" id="node2" href="$group__resources.html#gaf4093062043d70f42ffcfc5aff75fc49" title="Load all the resources by allocating memory and loading the xpm files into the sprites." alt="" coords="176,5,296,32"/>
+<area shape="rect" id="node3" href="$group__proj.html#ga2a16f651eccbd248e1ad3b3b924b143b" title=" " alt="" coords="5,5,128,32"/>
+</map>

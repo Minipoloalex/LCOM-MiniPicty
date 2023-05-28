@@ -1,0 +1,10 @@
+<map id="util_get_LSB" name="util_get_LSB">
+<area shape="rect" id="node1" title="Returns the LSB of a 2 byte integer." alt="" coords="1121,31,1224,57"/>
+<area shape="rect" id="node2" href="$group__serial__port.html#gad02fe61bd5edd0c986d4bb13a75ce6f7" title="Adds given position to the transmitter queue according to the program&#39;s communication protocol." alt="" coords="921,23,1073,65"/>
+<area shape="rect" id="node3" href="$group__game.html#gaeaf89b27c7d4f8a12e8561ced4870cd2" title="Handle the mouse interrupts inside the game state." alt="" coords="707,31,873,57"/>
+<area shape="rect" id="node4" href="$group__game.html#ga859ad5db5ec47b6125b2d439083befb0" title="Transition to the game state by changing the state functions." alt="" coords="511,31,659,57"/>
+<area shape="rect" id="node5" href="$menu_8c.html#a9b6d5f8b403b5a95417f1d08735a95d2" title="Enter the game button callback." alt="" coords="345,5,445,32"/>
+<area shape="rect" id="node8" href="$menu_8c.html#ac9b72db247a9a1978d9038a1acd46950" title="Enter the hard mode game button callback." alt="" coords="327,56,463,83"/>
+<area shape="rect" id="node6" href="$group__menu.html#gae131bab3ee69a41004c4300694c690a0" title="Setup the menu by creating the necessary objects." alt="" coords="176,31,279,57"/>
+<area shape="rect" id="node7" href="$group__proj.html#ga2a16f651eccbd248e1ad3b3b924b143b" title=" " alt="" coords="5,31,128,57"/>
+</map>

@@ -1,0 +1,20 @@
+<map id="get_v_res" name="get_v_res">
+<area shape="rect" id="node1" title="returns the vertical resolution of the video mode used" alt="" coords="1539,160,1624,187"/>
+<area shape="rect" id="node2" href="$background_8c.html#afd78e72ffe890bfa8f460adb57cfa05e" title="Draw the sky based on the hour." alt="" coords="1106,160,1189,187"/>
+<area shape="rect" id="node8" href="$group__game.html#ga9de7f1042903ab8ba3b3e471b82758b6" title="Setup the game by creating the necessary objects." alt="" coords="176,87,279,114"/>
+<area shape="rect" id="node9" href="$background_8c.html#afd7e922de7c70c77f8a0a29365061984" title="Draw the stars in the sky." alt="" coords="1338,160,1431,187"/>
+<area shape="rect" id="node10" href="$background_8c.html#a1682ad47cf211a83eb9bd95ea3540eb6" title="Draw the sun based on the hour From 6 to 19 hours the sun will be drawn in the sky with a different h..." alt="" coords="1105,110,1189,136"/>
+<area shape="rect" id="node11" href="$background_8c.html#a5bab65edde4378ee6821f5777884cb35" title="Draw the terrain of the background, a static rectangle." alt="" coords="1333,59,1437,86"/>
+<area shape="rect" id="node12" href="$group__mouse.html#ga83ca3d2011fc62fb10c5403a571ba2f4" title="returns a updated drawing position based on a new mouse packet and the previous position Always call ..." alt="" coords="1279,262,1491,304"/>
+<area shape="rect" id="node16" href="$group__menu.html#gae131bab3ee69a41004c4300694c690a0" title="Setup the menu by creating the necessary objects." alt="" coords="488,252,591,279"/>
+<area shape="rect" id="node3" href="$group__background.html#ga91321a8c45d074e5ee3a5f3c21e43944" title="Draw the background to the buffer based on the hour." alt="" coords="869,110,996,136"/>
+<area shape="rect" id="node4" href="$group__menu.html#ga4297b714eb1dbb78fb892693334e8efd" title="Handle the rtc interrupts inside the menu state." alt="" coords="661,75,801,102"/>
+<area shape="rect" id="node5" href="$group__menu.html#ga04f8f095e776c93ec861decc24ad99fd" title="Transition to the menu state by changing the state functions." alt="" coords="465,126,613,152"/>
+<area shape="rect" id="node6" href="$group__proj.html#ga2a16f651eccbd248e1ad3b3b924b143b" title=" " alt="" coords="5,138,128,164"/>
+<area shape="rect" id="node7" href="$game_8c.html#abe0fa2797d6c581f845cb3b1d54787a6" title="Quit game button callback Transition to the menu state." alt="" coords="327,87,417,114"/>
+<area shape="rect" id="node13" href="$group__game.html#gaeaf89b27c7d4f8a12e8561ced4870cd2" title="Handle the mouse interrupts inside the game state." alt="" coords="1064,270,1231,296"/>
+<area shape="rect" id="node18" href="$group__menu.html#ga21291e7f1bcc6ba010511e1c9eb9a03d" title="Handle the mouse interrupts inside the menu state." alt="" coords="849,195,1016,222"/>
+<area shape="rect" id="node14" href="$group__game.html#ga859ad5db5ec47b6125b2d439083befb0" title="Transition to the game state by changing the state functions." alt="" coords="859,270,1007,296"/>
+<area shape="rect" id="node15" href="$menu_8c.html#a9b6d5f8b403b5a95417f1d08735a95d2" title="Enter the game button callback." alt="" coords="681,227,781,254"/>
+<area shape="rect" id="node17" href="$menu_8c.html#ac9b72db247a9a1978d9038a1acd46950" title="Enter the hard mode game button callback." alt="" coords="663,278,799,304"/>
+</map>

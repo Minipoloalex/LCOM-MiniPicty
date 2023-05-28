@@ -1,0 +1,5 @@
+<map id="ser_read_int_id" name="ser_read_int_id">
+<area shape="rect" id="node1" title="Reads the interrupt id, from the IIR (interrupt identification register)" alt="" coords="313,5,435,32"/>
+<area shape="rect" id="node2" href="$group__serial__port.html#ga36fc13a2c6d15746b96d83fe66d62b2d" title="Interrupt handler for the serial port. Checks which interrupt was triggered and either sends bytes to..." alt="" coords="176,5,265,32"/>
+<area shape="rect" id="node3" href="$group__proj.html#ga2a16f651eccbd248e1ad3b3b924b143b" title=" " alt="" coords="5,5,128,32"/>
+</map>

@@ -38,10 +38,14 @@
 #include "font/number_8.xpm"
 #include "font/number_9.xpm"
 
-#define FONT_HEIGHT 35
-#define FONT_WIDTH 26
-#define ALPHABET_SIZE 36
+#define FONT_HEIGHT 35 /**< @brief Height of each letter */
+#define FONT_WIDTH 26 /**< @brief Width of each letter */
+#define ALPHABET_SIZE 36 /**< @brief Number of letters in the alphabet */
 
+/**
+ * @brief Alphabet and numbers xpm array
+ * Contains ALPHABET_SIZE xpms
+ */
 static xpm_map_t uppercase_alphabet[ALPHABET_SIZE] = {
   uppercase_a_xpm,
   uppercase_b_xpm,

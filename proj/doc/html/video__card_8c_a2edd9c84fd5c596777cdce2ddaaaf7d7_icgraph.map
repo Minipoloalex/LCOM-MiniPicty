@@ -1,0 +1,33 @@
+<map id="vg_draw_pixel" name="vg_draw_pixel">
+<area shape="rect" id="node1" title="draws a pixel in the desired buffer" alt="" coords="2029,259,2144,285"/>
+<area shape="rect" id="node2" href="$group__asteroid.html#ga4eb4b3b6c39f1d34aa01ab98da45a13d" title="Draws a circle with a specified color in a specified area of the buffer." alt="" coords="1465,107,1649,133"/>
+<area shape="rect" id="node21" href="$group__asteroid.html#ga149feb47586f0ad1c6af10be58de43cb" title="Draws a sprite to a specified position." alt="" coords="1860,309,1981,336"/>
+<area shape="rect" id="node3" href="$canvas_8c.html#a6dd367374cc1c0e341209cfb4ff546ba" title="Bresenham&#39;s algorithm for drawing lines between two points." alt="" coords="1279,157,1417,184"/>
+<area shape="rect" id="node12" href="$background_8c.html#afd7e922de7c70c77f8a0a29365061984" title="Draw the stars in the sky." alt="" coords="1301,107,1395,133"/>
+<area shape="rect" id="node19" href="$background_8c.html#a1682ad47cf211a83eb9bd95ea3540eb6" title="Draw the sun based on the hour From 6 to 19 hours the sun will be drawn in the sky with a different h..." alt="" coords="1122,56,1206,83"/>
+<area shape="rect" id="node20" href="$group__asteroid.html#ga437c7acd65b322492a34429afea7fa94" title="Draws a circle on a specified area of the screen with a specified color." alt="" coords="1289,5,1407,32"/>
+<area shape="rect" id="node4" href="$group__canvas.html#ga0d96cca715276e4eeb971008f32affb9" title="Draws a line in the canvas." alt="" coords="1101,208,1227,235"/>
+<area shape="rect" id="node5" href="$game_8c.html#ab2d06a82debf0120dbb8c0c932be7dd8" title="Draw to the canvas in the game state." alt="" coords="897,259,1047,285"/>
+<area shape="rect" id="node6" href="$group__game.html#ga32d55ba98626c3abaf67edc11a00026c" title="Draw the game." alt="" coords="727,411,826,437"/>
+<area shape="rect" id="node7" href="$group__game.html#ga859ad5db5ec47b6125b2d439083befb0" title="Transition to the game state by changing the state functions." alt="" coords="511,372,659,399"/>
+<area shape="rect" id="node8" href="$menu_8c.html#a9b6d5f8b403b5a95417f1d08735a95d2" title="Enter the game button callback." alt="" coords="345,321,445,348"/>
+<area shape="rect" id="node11" href="$menu_8c.html#ac9b72db247a9a1978d9038a1acd46950" title="Enter the hard mode game button callback." alt="" coords="327,372,463,399"/>
+<area shape="rect" id="node9" href="$group__menu.html#gae131bab3ee69a41004c4300694c690a0" title="Setup the menu by creating the necessary objects." alt="" coords="176,321,279,348"/>
+<area shape="rect" id="node10" href="$group__proj.html#ga2a16f651eccbd248e1ad3b3b924b143b" title=" " alt="" coords="5,233,128,260"/>
+<area shape="rect" id="node13" href="$background_8c.html#afd78e72ffe890bfa8f460adb57cfa05e" title="Draw the sky based on the hour." alt="" coords="1123,107,1205,133"/>
+<area shape="rect" id="node14" href="$group__background.html#ga91321a8c45d074e5ee3a5f3c21e43944" title="Draw the background to the buffer based on the hour." alt="" coords="909,107,1035,133"/>
+<area shape="rect" id="node15" href="$group__menu.html#ga4297b714eb1dbb78fb892693334e8efd" title="Handle the rtc interrupts inside the menu state." alt="" coords="707,157,847,184"/>
+<area shape="rect" id="node16" href="$group__menu.html#ga04f8f095e776c93ec861decc24ad99fd" title="Transition to the menu state by changing the state functions." alt="" coords="511,183,659,209"/>
+<area shape="rect" id="node17" href="$game_8c.html#abe0fa2797d6c581f845cb3b1d54787a6" title="Quit game button callback Transition to the menu state." alt="" coords="349,233,440,260"/>
+<area shape="rect" id="node18" href="$group__game.html#ga9de7f1042903ab8ba3b3e471b82758b6" title="Setup the game by creating the necessary objects." alt="" coords="176,233,279,260"/>
+<area shape="rect" id="node22" href="$group__asteroid.html#ga8aa3e5dab54a10c973007e41f7ceb38c" title="Draws an asteroid with its current xpm at its current position." alt="" coords="1697,563,1812,589"/>
+<area shape="rect" id="node23" href="$group__menu.html#ga07dec1ed9700e9df2664e567bb345d74" title="Draw the menu." alt="" coords="727,208,826,235"/>
+<area shape="rect" id="node24" href="$video__card_8c.html#aa8036fc7b6cac28ca121f76d4e996afe" title="Draws a button to the screen." alt="" coords="1285,259,1411,285"/>
+<area shape="rect" id="node28" href="$video__card_8c.html#a223f89b9c44f177e851df52eb669d68b" title="Draws a letter or number to the screen." alt="" coords="1699,347,1811,373"/>
+<area shape="rect" id="node25" href="$group__asteroid.html#ga81aab3616828f27693616505a917c5e8" title="Draws a array of buttons to the screen." alt="" coords="1097,259,1231,285"/>
+<area shape="rect" id="node26" href="$game_8c.html#ad99bafdcccc02f2c9f9e8b35c4ee40df" title="Draw the game buttons." alt="" coords="895,360,1049,387"/>
+<area shape="rect" id="node27" href="$menu_8c.html#a1963d00df7a322e39ce2e023c1101182" title="Draw the menu buttons." alt="" coords="895,208,1049,235"/>
+<area shape="rect" id="node29" href="$group__asteroid.html#gafcef2b98a632a9015f843be85e6bb99f" title="Draws the guess word to the screen." alt="" coords="1496,448,1619,475"/>
+<area shape="rect" id="node30" href="$group__asteroid.html#ga7e0c2d812860673fd1f9dba59f0d4c05" title="Draws a string to the screen." alt="" coords="1502,347,1613,373"/>
+<area shape="rect" id="node31" href="$menu_8c.html#a0635403a6f2f9a5d2cc60dd5c988cb10" title="Draw current time in the menu." alt="" coords="1119,309,1209,336"/>
+</map>

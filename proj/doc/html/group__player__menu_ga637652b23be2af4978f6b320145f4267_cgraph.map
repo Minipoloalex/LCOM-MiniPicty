@@ -1,0 +1,5 @@
+<map id="create_player_menu" name="create_player_menu">
+<area shape="rect" id="node1" title="Create a new Player Menu." alt="" coords="5,5,160,32"/>
+<area shape="rect" id="node2" href="$group__player.html#ga270d5adceb8e9e9b83834ae5e00e5f2e" title="Create a new Player." alt="" coords="208,5,319,32"/>
+<area shape="rect" id="node3" href="$group__queue.html#ga220ab33402f40d8d55ef879ffd7182fe" title="Create a queue object ." alt="" coords="367,5,477,32"/>
+</map>

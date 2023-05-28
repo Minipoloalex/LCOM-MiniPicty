@@ -1,0 +1,11 @@
+<map id="destroy_player" name="destroy_player">
+<area shape="rect" id="node1" title="Destroy a Player." alt="" coords="557,56,676,83"/>
+<area shape="rect" id="node2" href="$group__player__drawer.html#ga2e55e5f479245eecba2d64ba6811cb5e" title="Create a new Player Drawer." alt="" coords="343,5,505,32"/>
+<area shape="rect" id="node5" href="$group__player__drawer.html#gae76a0273355a6b0c7ed1569b964b6f64" title="Destroy a Player Drawer." alt="" coords="339,56,509,83"/>
+<area shape="rect" id="node7" href="$group__player__menu.html#gaccb40409296a65bab934bc695de521e7" title="Destroy a Player Menu." alt="" coords="343,107,505,133"/>
+<area shape="rect" id="node3" href="$group__game.html#ga9de7f1042903ab8ba3b3e471b82758b6" title="Setup the game by creating the necessary objects." alt="" coords="182,5,285,32"/>
+<area shape="rect" id="node4" href="$group__proj.html#ga2a16f651eccbd248e1ad3b3b924b143b" title=" " alt="" coords="5,81,128,108"/>
+<area shape="rect" id="node6" href="$group__game.html#gabd7a5dc575bf590a0886f372aad1c99e" title="Destroy the game by freeing the necessary objects." alt="" coords="176,56,291,83"/>
+<area shape="rect" id="node8" href="$group__menu.html#ga104617a50ee02cb853996c81d82a6c89" title="Destroy the menu by freeing the necessary objects." alt="" coords="176,107,291,133"/>
+<area shape="rect" id="node9" href="$group__menu.html#gae131bab3ee69a41004c4300694c690a0" title="Setup the menu by creating the necessary objects." alt="" coords="182,157,285,184"/>
+</map>

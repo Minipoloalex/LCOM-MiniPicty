@@ -1,0 +1,6 @@
+<map id="brush_decrease_size" name="brush_decrease_size">
+<area shape="rect" id="node1" title="Decreases the size of a brush by BRUSH_STEP pixels." alt="" coords="532,5,689,32"/>
+<area shape="rect" id="node2" href="$game_8c.html#a0895e6f4669558c4cf2ee3031bec5a67" title="Decrease brush size button callback." alt="" coords="327,5,484,32"/>
+<area shape="rect" id="node3" href="$group__game.html#ga9de7f1042903ab8ba3b3e471b82758b6" title="Setup the game by creating the necessary objects." alt="" coords="176,5,279,32"/>
+<area shape="rect" id="node4" href="$group__proj.html#ga2a16f651eccbd248e1ad3b3b924b143b" title=" " alt="" coords="5,5,128,32"/>
+</map>

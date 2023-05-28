@@ -1,0 +1,11 @@
+<map id="draw_sky" name="draw_sky">
+<area shape="rect" id="node1" title="Draw the sky based on the hour." alt="" coords="5,107,88,133"/>
+<area shape="rect" id="node2" href="$background_8c.html#a449c4760ed8c81d7aac9a13e9900bf41" title="Calculate the color of the sky based on the hour by using a linear function." alt="" coords="144,5,293,32"/>
+<area shape="rect" id="node3" href="$background_8c.html#afd7e922de7c70c77f8a0a29365061984" title="Draw the stars in the sky." alt="" coords="172,107,265,133"/>
+<area shape="rect" id="node4" href="$group__asteroid.html#gaab0ee43a0f19c6eb0ac13b7b357649fc" title="returns the horizontal resolution of the video mode used" alt="" coords="399,56,484,83"/>
+<area shape="rect" id="node5" href="$group__asteroid.html#gae9c75eaa66222e9130dd1b299ae8b3e6" title="returns the vertical resolution of the video mode used" alt="" coords="399,157,484,184"/>
+<area shape="rect" id="node8" href="$group__asteroid.html#ga983dd8f3e3fde2997fb5aa5b84252e00" title="Draws a rectangle with a specified color in a specified area of the buffer." alt="" coords="136,209,301,250"/>
+<area shape="rect" id="node6" href="$group__asteroid.html#ga4eb4b3b6c39f1d34aa01ab98da45a13d" title="Draws a circle with a specified color in a specified area of the buffer." alt="" coords="349,107,533,133"/>
+<area shape="rect" id="node7" href="$video__card_8c.html#a2edd9c84fd5c596777cdce2ddaaaf7d7" title="draws a pixel in the desired buffer" alt="" coords="581,107,696,133"/>
+<area shape="rect" id="node9" href="$video__card_8c.html#a9177b76545b334e1d3868228d418392d" title="draws a horizontal line in the desired buffer" alt="" coords="393,216,489,243"/>
+</map>

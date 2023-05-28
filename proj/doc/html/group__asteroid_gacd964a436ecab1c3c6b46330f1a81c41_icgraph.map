@@ -1,0 +1,12 @@
+<map id="asteroid_reset_position" name="asteroid_reset_position">
+<area shape="rect" id="node1" title="Updates the asteroid&#39;s position, speed and xpms to be the default initial values." alt="" coords="757,68,932,95"/>
+<area shape="rect" id="node2" href="$group__asteroid.html#gac03b30cef1e6c6dcf37b6210160f3889" title="Creates an asteroid." alt="" coords="574,5,697,32"/>
+<area shape="rect" id="node5" href="$game_8c.html#a73840b4b79b4bb04835d4b513d1d6c20" title="Play again button callback Set the game state to WAITING and reset the game by clearing the canvas an..." alt="" coords="589,68,682,95"/>
+<area shape="rect" id="node7" href="$group__game.html#ga859ad5db5ec47b6125b2d439083befb0" title="Transition to the game state by changing the state functions." alt="" coords="561,144,709,171"/>
+<area shape="rect" id="node3" href="$group__game.html#ga9de7f1042903ab8ba3b3e471b82758b6" title="Setup the game by creating the necessary objects." alt="" coords="176,68,279,95"/>
+<area shape="rect" id="node4" href="$group__proj.html#ga2a16f651eccbd248e1ad3b3b924b143b" title=" " alt="" coords="5,107,128,133"/>
+<area shape="rect" id="node6" href="$game_8c.html#ab9dfe6919404cb12ddb40780af1a2e23" title="Change roles and play again button callback Change the roles of the players and call play_again." alt="" coords="327,93,513,120"/>
+<area shape="rect" id="node8" href="$menu_8c.html#a9b6d5f8b403b5a95417f1d08735a95d2" title="Enter the game button callback." alt="" coords="370,144,470,171"/>
+<area shape="rect" id="node10" href="$menu_8c.html#ac9b72db247a9a1978d9038a1acd46950" title="Enter the hard mode game button callback." alt="" coords="352,195,488,221"/>
+<area shape="rect" id="node9" href="$group__menu.html#gae131bab3ee69a41004c4300694c690a0" title="Setup the menu by creating the necessary objects." alt="" coords="176,144,279,171"/>
+</map>

@@ -1,0 +1,7 @@
+<map id="draw_terrain" name="draw_terrain">
+<area shape="rect" id="node1" title="Draw the terrain of the background, a static rectangle." alt="" coords="5,56,109,83"/>
+<area shape="rect" id="node2" href="$group__asteroid.html#gaab0ee43a0f19c6eb0ac13b7b357649fc" title="returns the horizontal resolution of the video mode used" alt="" coords="197,5,283,32"/>
+<area shape="rect" id="node3" href="$group__asteroid.html#gae9c75eaa66222e9130dd1b299ae8b3e6" title="returns the vertical resolution of the video mode used" alt="" coords="197,56,283,83"/>
+<area shape="rect" id="node4" href="$group__asteroid.html#ga983dd8f3e3fde2997fb5aa5b84252e00" title="Draws a rectangle with a specified color in a specified area of the buffer." alt="" coords="157,107,323,149"/>
+<area shape="rect" id="node5" href="$video__card_8c.html#a9177b76545b334e1d3868228d418392d" title="draws a horizontal line in the desired buffer" alt="" coords="371,115,467,141"/>
+</map>

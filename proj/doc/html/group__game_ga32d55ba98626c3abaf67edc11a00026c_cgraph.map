@@ -1,0 +1,41 @@
+<map id="game_draw" name="game_draw">
+<area shape="rect" id="node1" title="Draw the game." alt="" coords="5,563,104,589"/>
+<area shape="rect" id="node2" href="$group__asteroid.html#gafd4fe50fb3a2d423e7c863689bf7ecca" title="Returns true if the buffers need to be updated, i.e. if they need to be drawn in and flipped to the s..." alt="" coords="168,5,327,32"/>
+<area shape="rect" id="node3" href="$group__utils.html#ga30307ace73adbd1cb3499115fabfa2c6" title="Converts a byte to a string." alt="" coords="200,56,295,83"/>
+<area shape="rect" id="node4" href="$group__asteroid.html#ga8aa3e5dab54a10c973007e41f7ceb38c" title="Draws an asteroid with its current xpm at its current position." alt="" coords="641,461,756,488"/>
+<area shape="rect" id="node5" href="$group__asteroid.html#ga149feb47586f0ad1c6af10be58de43cb" title="Draws a sprite to a specified position." alt="" coords="1254,411,1375,437"/>
+<area shape="rect" id="node7" href="$game_8c.html#ad99bafdcccc02f2c9f9e8b35c4ee40df" title="Draw the game buttons." alt="" coords="170,233,325,260"/>
+<area shape="rect" id="node10" href="$group__asteroid.html#ga99d2da2559e11200c6b40c469e9977ec" title="Draws a rectangle on a specified area of the screen with a specified color." alt="" coords="816,157,961,184"/>
+<area shape="rect" id="node13" href="$group__asteroid.html#ga7e0c2d812860673fd1f9dba59f0d4c05" title="Draws a string to the screen." alt="" coords="833,288,944,315"/>
+<area shape="rect" id="node15" href="$game_8c.html#ab2d06a82debf0120dbb8c0c932be7dd8" title="Draw to the canvas in the game state." alt="" coords="172,639,323,665"/>
+<area shape="rect" id="node23" href="$group__player__drawer.html#ga15c97c3eedb81c3b940cdd6069912b11" title="Get the Player object." alt="" coords="391,867,581,893"/>
+<area shape="rect" id="node30" href="$group__canvas.html#gadbd40c51532074477445bc4c86c08acd" title="Gets the buffer of the canvas." alt="" coords="203,841,291,868"/>
+<area shape="rect" id="node31" href="$group__player__drawer.html#gab8dc917f44068c228ed19595b6b8782b" title="Get the Player Cursor type from the player." alt="" coords="152,892,343,919"/>
+<area shape="rect" id="node32" href="$group__player__drawer.html#ga5609f3a9279e2f6b5508b209f4fd1ba0" title="Get the Player type object." alt="" coords="160,943,335,969"/>
+<area shape="rect" id="node33" href="$group__player.html#ga0aff5c64f391b2443050032e54ef29bf" title="Get the last position of the queue of positions of the player. In case it is empty,..." alt="" coords="414,969,558,1010"/>
+<area shape="rect" id="node35" href="$group__game.html#ga88722baef6719142d5fb08870dab85e5" title="Update the cursor state." alt="" coords="190,563,305,589"/>
+<area shape="rect" id="node37" href="$group__asteroid.html#gaa726d4aa74b0c115a19c0eabdf92c900" title="Flips the current buffer to the screen. This buffer is the one that was being drawn before calling th..." alt="" coords="192,740,303,767"/>
+<area shape="rect" id="node38" href="$group__asteroid.html#gac3287d12fec5b19d728891fff2545d16" title="Copies the contents of the buffer given by parameter to the current buffer that is being prepared to ..." alt="" coords="186,993,309,1020"/>
+<area shape="rect" id="node39" href="$group__asteroid.html#gafcef2b98a632a9015f843be85e6bb99f" title="Draws the guess word to the screen." alt="" coords="637,360,760,387"/>
+<area shape="rect" id="node6" href="$video__card_8c.html#a2edd9c84fd5c596777cdce2ddaaaf7d7" title="draws a pixel in the desired buffer" alt="" coords="1455,461,1569,488"/>
+<area shape="rect" id="node8" href="$group__asteroid.html#ga81aab3616828f27693616505a917c5e8" title="Draws a array of buttons to the screen." alt="" coords="419,208,553,235"/>
+<area shape="rect" id="node9" href="$video__card_8c.html#aa8036fc7b6cac28ca121f76d4e996afe" title="Draws a button to the screen." alt="" coords="635,208,762,235"/>
+<area shape="rect" id="node11" href="$group__asteroid.html#ga983dd8f3e3fde2997fb5aa5b84252e00" title="Draws a rectangle with a specified color in a specified area of the buffer." alt="" coords="1009,150,1175,191"/>
+<area shape="rect" id="node12" href="$video__card_8c.html#a9177b76545b334e1d3868228d418392d" title="draws a horizontal line in the desired buffer" alt="" coords="1267,157,1363,184"/>
+<area shape="rect" id="node14" href="$video__card_8c.html#a223f89b9c44f177e851df52eb669d68b" title="Draws a letter or number to the screen." alt="" coords="1036,360,1148,387"/>
+<area shape="rect" id="node16" href="$group__canvas.html#ga0d96cca715276e4eeb971008f32affb9" title="Draws a line in the canvas." alt="" coords="423,664,549,691"/>
+<area shape="rect" id="node22" href="$group__player__drawer.html#ga7338c83fd15fd1d8200a91cf896a960a" title="Get the Brush object from the player." alt="" coords="393,613,579,640"/>
+<area shape="rect" id="node24" href="$group__player.html#ga8b731e2ed89c6d477da8f10abd8eaba8" title="Get the last position assigned to the player." alt="" coords="395,715,577,741"/>
+<area shape="rect" id="node25" href="$group__player.html#ga2616ed2b111ea5b2645c9391fd87d885" title="Get the next position of the queue of positions of the player." alt="" coords="393,765,579,792"/>
+<area shape="rect" id="node28" href="$group__player.html#ga339c9ef3d8b39dd4e1da059ede3c8956" title="Set the last position in the player." alt="" coords="396,816,576,843"/>
+<area shape="rect" id="node29" href="$group__asteroid.html#ga595b2cd1eafe4d4d0c710c913f30cf8a" title="Sets the needs_update variable to the given value. If the value is set to true, it can be expected th..." alt="" coords="416,917,556,944"/>
+<area shape="rect" id="node17" href="$canvas_8c.html#a6dd367374cc1c0e341209cfb4ff546ba" title="Bresenham&#39;s algorithm for drawing lines between two points." alt="" coords="629,563,768,589"/>
+<area shape="rect" id="node20" href="$group__position.html#ga01d48dad828d0cd96d09cba62a6b3c83" title="Checks if a position is inside an area/rectangle defined by a start point, width and height." alt="" coords="1019,613,1165,640"/>
+<area shape="rect" id="node18" href="$group__asteroid.html#ga7f56ec86bd6a24a2002f0a1bcbfc93ca" title="Checks if a position collides with an asteroid This is used for checking if the mouse is inside the a..." alt="" coords="819,563,958,589"/>
+<area shape="rect" id="node21" href="$group__asteroid.html#ga4eb4b3b6c39f1d34aa01ab98da45a13d" title="Draws a circle with a specified color in a specified area of the buffer." alt="" coords="1223,487,1407,513"/>
+<area shape="rect" id="node19" href="$group__asteroid.html#gace8d4e864266e329a2349fa4d4b60b1e" title="returns the number of bytes per pixel of the video mode used" alt="" coords="1016,563,1168,589"/>
+<area shape="rect" id="node26" href="$group__queue.html#gaf661eb1ae68c803a345e7c4828139732" title="Pops an element from the queue." alt="" coords="652,820,745,847"/>
+<area shape="rect" id="node27" href="$group__queue.html#gab093a7863520d7159a7b05aef912ae58" title="Returns true if the queue is empty." alt="" coords="824,925,953,952"/>
+<area shape="rect" id="node34" href="$group__queue.html#ga96b3e142d009cb3bdf349a1640c8f3e2" title="Returns by parameter the last inserted element in the queue." alt="" coords="635,925,763,952"/>
+<area shape="rect" id="node36" href="$group__player__drawer.html#gab358facf2b7c059cb557149512c9f85e" title="Set the Player Cursor object to the player." alt="" coords="391,512,581,539"/>
+</map>

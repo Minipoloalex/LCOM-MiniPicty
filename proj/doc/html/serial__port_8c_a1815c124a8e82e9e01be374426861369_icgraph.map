@@ -1,0 +1,6 @@
+<map id="ser_write_fifo_control_default" name="ser_write_fifo_control_default">
+<area shape="rect" id="node1" title="Writes the default configuration value to the control register of the FIFO. This is SER_FCR_DEFAULT." alt="" coords="465,5,628,47"/>
+<area shape="rect" id="node2" href="$serial__port_8c.html#a7f0eb11d3dacfa455fa74575a8cbdded" title="Initializes the serial port communication parameters. They are specified as in the Lab7 handout." alt="" coords="295,13,417,39"/>
+<area shape="rect" id="node3" href="$group__serial__port.html#ga0310282e052b0d6daacdcf32745aad12" title="Sets the default communication parameters and enables the serial port interrupts. Also creates a tran..." alt="" coords="176,13,247,39"/>
+<area shape="rect" id="node4" href="$group__proj.html#ga2a16f651eccbd248e1ad3b3b924b143b" title=" " alt="" coords="5,13,128,39"/>
+</map>

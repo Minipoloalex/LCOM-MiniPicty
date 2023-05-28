@@ -1,0 +1,4 @@
+<map id="asteroid_reset_position" name="asteroid_reset_position">
+<area shape="rect" id="node1" title="Updates the asteroid&#39;s position, speed and xpms to be the default initial values." alt="" coords="5,5,180,32"/>
+<area shape="rect" id="node2" href="$group__asteroid.html#gaab0ee43a0f19c6eb0ac13b7b357649fc" title="returns the horizontal resolution of the video mode used" alt="" coords="228,5,313,32"/>
+</map>

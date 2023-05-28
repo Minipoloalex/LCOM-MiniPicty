@@ -1,0 +1,5 @@
+<map id="player_add_next_position" name="player_add_next_position">
+<area shape="rect" id="node1" title="Add a new position to the queue of positions of the player." alt="" coords="5,5,195,32"/>
+<area shape="rect" id="node2" href="$group__queue.html#gac00389cf1a0ae14e7190267c2c0f0a0f" title="Pushes an element to the queue." alt="" coords="243,5,343,32"/>
+<area shape="rect" id="node3" href="$group__queue.html#ga4d4403de9d9a1dd031f5533c6df214de" title="Returns true if the queue is full." alt="" coords="391,5,499,32"/>
+</map>

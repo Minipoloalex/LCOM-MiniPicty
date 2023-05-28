@@ -1,0 +1,6 @@
+<map id="Player" name="Player">
+<area shape="rect" id="node1" title=" " alt="" coords="125,184,187,211"/>
+<area shape="rect" id="node2" href="$structdrawing__position.html" title="Drawing position This struct is used to store the position of the mouse and if it is drawing/clicking..." alt="" coords="5,95,139,121"/>
+<area shape="rect" id="node3" href="$structposition.html" title="Position struct." alt="" coords="35,5,109,32"/>
+<area shape="rect" id="node4" href="$structqueue.html" title=" " alt="" coords="210,95,273,121"/>
+</map>

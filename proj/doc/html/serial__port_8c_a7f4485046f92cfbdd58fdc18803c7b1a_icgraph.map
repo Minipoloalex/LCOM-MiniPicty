@@ -1,0 +1,10 @@
+<map id="ser_read_line_control" name="ser_read_line_control">
+<area shape="rect" id="node1" title="Reads the LCR &#45; line control register." alt="" coords="865,56,1027,83"/>
+<area shape="rect" id="node2" href="$serial__port_8c.html#af8bb685345dc130bf3f305bd25a5ed86" title="Sets the line control register of the serial port with the given parameters. These parameters are not..." alt="" coords="465,5,612,32"/>
+<area shape="rect" id="node6" href="$serial__port_8c.html#a883970045a66f1ef95caeffa148cd9b4" title="Reads the divisor latch register. Reads the line control register and sets the DLAB bit to be able to..." alt="" coords="672,56,805,83"/>
+<area shape="rect" id="node8" href="$serial__port_8c.html#a8014c8ffb8b512f7a559bb5f2473dddb" title="Writes to the IER &#45; interrupt enable register. This register is used to enable the interrupts of the ..." alt="" coords="660,107,817,133"/>
+<area shape="rect" id="node3" href="$serial__port_8c.html#a7f0eb11d3dacfa455fa74575a8cbdded" title="Initializes the serial port communication parameters. They are specified as in the Lab7 handout." alt="" coords="295,56,417,83"/>
+<area shape="rect" id="node4" href="$group__serial__port.html#ga0310282e052b0d6daacdcf32745aad12" title="Sets the default communication parameters and enables the serial port interrupts. Also creates a tran..." alt="" coords="176,56,247,83"/>
+<area shape="rect" id="node5" href="$group__proj.html#ga2a16f651eccbd248e1ad3b3b924b143b" title=" " alt="" coords="5,56,128,83"/>
+<area shape="rect" id="node7" href="$serial__port_8c.html#a51603465ef95bd730440ec3a6be11db4" title="Sets the baud rate of the serial port." alt="" coords="468,56,609,83"/>
+</map>

@@ -1,5 +1,10 @@
 #include "player_drawer.h"
 
+/**
+ * @brief Player Drawer struct
+ * Contains a player, a player type, a brush and a cursor
+ * 
+ */
 struct PlayerDrawer {
   player_t *player;
 

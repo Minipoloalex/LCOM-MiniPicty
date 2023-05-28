@@ -1,0 +1,4 @@
+<map id="ser_init" name="ser_init">
+<area shape="rect" id="node1" title="Sets the default communication parameters and enables the serial port interrupts. Also creates a tran..." alt="" coords="176,5,247,32"/>
+<area shape="rect" id="node2" href="$group__proj.html#ga2a16f651eccbd248e1ad3b3b924b143b" title=" " alt="" coords="5,5,128,32"/>
+</map>

@@ -21,10 +21,6 @@ int(util_sys_inb)(int port, uint8_t *value) {
   if(sys_inb(port, &temp)){
     return EXIT_FAILURE;
   }
-  #ifdef LAB3
-  extern uint32_t cnt_sysinb;
-  cnt_sysinb++;
-  #endif
   (*value) = (uint8_t) temp;
   return 0;
 }

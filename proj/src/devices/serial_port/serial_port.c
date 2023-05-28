@@ -87,10 +87,10 @@ int (ser_write_fifo_control)(uint8_t config);
  */
 int (ser_read_int_id)(uint8_t *id);
 /**
- * @brief This functions assures that no byte sent to the serial port is equal to the end of transmission byte
+ * @brief This functions assures that no byte sent to the serial port is equal to the special byte of the communication protocol
  * The solution used is that if the byte is equal to the end of transmission byte, it is replaced by a replacement byte (0xFF to 0xFE)
  */
-int (replace_ser_end(uint8_t *data));
+int (replace_ser_special(uint8_t *data));
 /**
  * @brief Writes the default configuration value to the control register of the FIFO. This is SER_FCR_DEFAULT.
  */
@@ -175,7 +175,6 @@ int(ser_set_base_addr)(uint16_t addr) {
 
 int (ser_add_byte_to_transmitter_queue)(uint8_t byte) {
   if (push_queue(transmitter_queue, &byte) != OK) {
-    // printf("push_queue() (queue is full) inside %s failed\n", __func__);
     return EXIT_FAILURE;
   }
   return EXIT_SUCCESS;
@@ -183,7 +182,6 @@ int (ser_add_byte_to_transmitter_queue)(uint8_t byte) {
 
 int (ser_add_byte_to_receiver_queue)(uint8_t byte) {
   if (push_queue(receiver_queue, &byte) != OK) {
-    // printf("push_queue() (queue is full) inside %s failed\n", __func__);
   }
   return EXIT_SUCCESS;
 }
@@ -310,9 +308,7 @@ int (ser_set_baud_rate)(uint32_t rate) {
     printf("Invalid baud rate: %d\n", rate);
     return EXIT_FAILURE;
   }
-  printf("Setting baud rate to %d\n", rate);
   uint32_t divisor = SER_MAX_BITRATE / rate;
-  printf("Setting divisor to %d\n", divisor);
   if (ser_write_divisor(divisor) != OK) {
       printf("Error writing divisor: ser_write_divisor() inside %s\n", __func__);
       return EXIT_FAILURE;
@@ -418,7 +414,6 @@ int (ser_write_to_fifo)() {
   }
   while (lsr & SER_LSR_THRE) {
     if (is_empty_queue(transmitter_queue)) {
-      // printf("transmitter queue empty inside %s\n", __func__);
       return EXIT_SUCCESS;
     }
     if (pop_queue(transmitter_queue, &data) != OK) return EXIT_FAILURE;
@@ -510,9 +505,9 @@ int (ser_write_fifo_control)(uint8_t config) {
   return EXIT_SUCCESS;
 }
 
-int (replace_ser_end(uint8_t *data)) {
-  if (*data == SER_END) {
-    *data = SER_END_REPLACEMENT;
+int (replace_ser_special(uint8_t *data)) {
+  if (*data == SER_SPECIAL) {
+    *data = SER_SPECIAL_REPLACEMENT;
   }
   return EXIT_SUCCESS;
 }
@@ -523,28 +518,27 @@ int (ser_add_position_to_transmitter_queue)(drawing_position_t drawing_position)
   util_get_LSB(drawing_position.position.y, &mouse_pos_bytes[2]);
   util_get_MSB(drawing_position.position.y, &mouse_pos_bytes[3]);
   for (int i = 0; i < 4; i++) {
-    if (replace_ser_end(&mouse_pos_bytes[i])) return EXIT_FAILURE;
+    if (replace_ser_special(&mouse_pos_bytes[i])) return EXIT_FAILURE;
   }
-  // maybe send a SER_END byte to synchronize the receiver better
-  if (ser_add_byte_to_transmitter_queue(SER_END)) return EXIT_FAILURE;
+  if (ser_add_byte_to_transmitter_queue(SER_SPECIAL)) return EXIT_FAILURE;
   if (ser_add_byte_to_transmitter_queue(drawing_position.is_drawing ? SER_MOUSE_DRAWING : SER_MOUSE_NOT_DRAWING)) return EXIT_FAILURE;
   if (ser_add_byte_to_transmitter_queue(mouse_pos_bytes[0])) return EXIT_FAILURE;
   if (ser_add_byte_to_transmitter_queue(mouse_pos_bytes[1])) return EXIT_FAILURE;
   if (ser_add_byte_to_transmitter_queue(mouse_pos_bytes[2])) return EXIT_FAILURE;
   if (ser_add_byte_to_transmitter_queue(mouse_pos_bytes[3])) return EXIT_FAILURE;
-  if (ser_add_byte_to_transmitter_queue(SER_END)) return EXIT_FAILURE;
+  if (ser_add_byte_to_transmitter_queue(SER_SPECIAL)) return EXIT_FAILURE;
   if (ser_write_to_fifo()) return EXIT_FAILURE;
   return EXIT_SUCCESS;
 }
 int (ser_add_button_click_to_transmitter_queue)(uint8_t index) {
-  if (ser_add_byte_to_transmitter_queue(SER_END)) return EXIT_FAILURE;
+  if (ser_add_byte_to_transmitter_queue(SER_SPECIAL)) return EXIT_FAILURE;
   if (ser_add_byte_to_transmitter_queue('A' + index)) return EXIT_FAILURE;
   if (ser_write_to_fifo()) return EXIT_FAILURE;
   return EXIT_SUCCESS;
 }
 int (ser_add_word_index)(uint8_t index) {
   printf("Communicating word_index: %d\n", index);
-  if (ser_add_byte_to_transmitter_queue(SER_END)) return EXIT_FAILURE;
+  if (ser_add_byte_to_transmitter_queue(SER_SPECIAL)) return EXIT_FAILURE;
   if (ser_add_byte_to_transmitter_queue(SER_WORD_INDEX)) return EXIT_FAILURE;
   if (ser_add_byte_to_transmitter_queue(index)) return EXIT_FAILURE;
   if (ser_write_to_fifo()) return EXIT_FAILURE;
@@ -552,7 +546,7 @@ int (ser_add_word_index)(uint8_t index) {
 }
 int (ser_add_won_round)() {
   printf("communicating won_round inside %s\n", __func__);
-  if (ser_add_byte_to_transmitter_queue(SER_END)) return EXIT_FAILURE;
+  if (ser_add_byte_to_transmitter_queue(SER_SPECIAL)) return EXIT_FAILURE;
   if (ser_add_byte_to_transmitter_queue(SER_WON_ROUND)) return EXIT_FAILURE;
   if (ser_write_to_fifo()) return EXIT_FAILURE;
   return EXIT_SUCCESS;
@@ -575,7 +569,7 @@ int (ser_read_bytes_from_receiver_queue)(player_drawer_t *drawer, state_t *app_s
     switch (ser_state) {
       case SLEEPING:
         switch (byte) {
-          case SER_END:
+          case SER_SPECIAL:
             break;
           case SER_MOUSE_DRAWING:
             ser_state = RECEIVING_MOUSE_DRAWING;
@@ -616,7 +610,7 @@ int (ser_read_bytes_from_receiver_queue)(player_drawer_t *drawer, state_t *app_s
           byte_index = 0;
           continue;
         }
-        if (byte == SER_END) {
+        if (byte == SER_SPECIAL) {
           if (byte_index != 4) {  // got the end byte before the 4 bytes of the position
             ser_state = SLEEPING;
             byte_index = 0;
@@ -640,7 +634,7 @@ int (ser_read_bytes_from_receiver_queue)(player_drawer_t *drawer, state_t *app_s
         bytes[byte_index++] = byte;
         break;
       case RECEIVING_WORD_INDEX:
-        if (byte == SER_END) {
+        if (byte == SER_SPECIAL) {
           ser_state = SLEEPING;
           printf("lost some bytes inside ser_state RECEIVING_WORD_INDEX\n");
           continue;

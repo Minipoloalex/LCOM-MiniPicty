@@ -1,0 +1,6 @@
+<map id="vg_draw_text" name="vg_draw_text">
+<area shape="rect" id="node1" title="Draws a string to the screen." alt="" coords="5,5,116,32"/>
+<area shape="rect" id="node2" href="$video__card_8c.html#a223f89b9c44f177e851df52eb669d68b" title="Draws a letter or number to the screen." alt="" coords="164,5,276,32"/>
+<area shape="rect" id="node3" href="$group__asteroid.html#ga149feb47586f0ad1c6af10be58de43cb" title="Draws a sprite to a specified position." alt="" coords="324,5,445,32"/>
+<area shape="rect" id="node4" href="$video__card_8c.html#a2edd9c84fd5c596777cdce2ddaaaf7d7" title="draws a pixel in the desired buffer" alt="" coords="493,5,608,32"/>
+</map>

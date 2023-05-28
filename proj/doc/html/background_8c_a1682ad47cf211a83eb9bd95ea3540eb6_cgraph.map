@@ -1,0 +1,8 @@
+<map id="draw_sun" name="draw_sun">
+<area shape="rect" id="node1" title="Draw the sun based on the hour From 6 to 19 hours the sun will be drawn in the sky with a different h..." alt="" coords="5,81,89,108"/>
+<area shape="rect" id="node2" href="$background_8c.html#a4efb9442dd469db482132f63e555e74c" title="Calculate the height of the sun using a ellipse function." alt="" coords="150,5,309,32"/>
+<area shape="rect" id="node3" href="$group__asteroid.html#gaab0ee43a0f19c6eb0ac13b7b357649fc" title="returns the horizontal resolution of the video mode used" alt="" coords="187,56,272,83"/>
+<area shape="rect" id="node4" href="$group__asteroid.html#gae9c75eaa66222e9130dd1b299ae8b3e6" title="returns the vertical resolution of the video mode used" alt="" coords="187,107,272,133"/>
+<area shape="rect" id="node5" href="$group__asteroid.html#ga4eb4b3b6c39f1d34aa01ab98da45a13d" title="Draws a circle with a specified color in a specified area of the buffer." alt="" coords="137,157,321,184"/>
+<area shape="rect" id="node6" href="$video__card_8c.html#a2edd9c84fd5c596777cdce2ddaaaf7d7" title="draws a pixel in the desired buffer" alt="" coords="369,157,484,184"/>
+</map>

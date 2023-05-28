@@ -1,0 +1,13 @@
+<map id="delete_queue" name="delete_queue">
+<area shape="rect" id="node1" title="Deletes a queue object Destructor for the queue object." alt="" coords="724,49,835,75"/>
+<area shape="rect" id="node2" href="$group__serial__port.html#ga631ef45f4acd25d2b71e9ef13d0a18d0" title="Destroys the queues created by ser_init()" alt="" coords="571,11,662,38"/>
+<area shape="rect" id="node4" href="$group__player.html#gab99707f1436b3a6a72e4302200ad8a17" title="Destroy a Player." alt="" coords="557,74,676,101"/>
+<area shape="rect" id="node3" href="$group__proj.html#ga2a16f651eccbd248e1ad3b3b924b143b" title=" " alt="" coords="5,99,128,126"/>
+<area shape="rect" id="node5" href="$group__player__drawer.html#ga2e55e5f479245eecba2d64ba6811cb5e" title="Create a new Player Drawer." alt="" coords="343,49,505,75"/>
+<area shape="rect" id="node7" href="$group__player__drawer.html#gae76a0273355a6b0c7ed1569b964b6f64" title="Destroy a Player Drawer." alt="" coords="339,99,509,126"/>
+<area shape="rect" id="node9" href="$group__player__menu.html#gaccb40409296a65bab934bc695de521e7" title="Destroy a Player Menu." alt="" coords="343,150,505,177"/>
+<area shape="rect" id="node6" href="$group__game.html#ga9de7f1042903ab8ba3b3e471b82758b6" title="Setup the game by creating the necessary objects." alt="" coords="182,49,285,75"/>
+<area shape="rect" id="node8" href="$group__game.html#gabd7a5dc575bf590a0886f372aad1c99e" title="Destroy the game by freeing the necessary objects." alt="" coords="176,99,291,126"/>
+<area shape="rect" id="node10" href="$group__menu.html#ga104617a50ee02cb853996c81d82a6c89" title="Destroy the menu by freeing the necessary objects." alt="" coords="176,150,291,177"/>
+<area shape="rect" id="node11" href="$group__menu.html#gae131bab3ee69a41004c4300694c690a0" title="Setup the menu by creating the necessary objects." alt="" coords="182,201,285,227"/>
+</map>

@@ -1,0 +1,5 @@
+<map id="default_implementation" name="default_implementation">
+<area shape="rect" id="node1" title="Set default functions in all the State fields." alt="" coords="5,31,184,57"/>
+<area shape="rect" id="node2" href="$state_8c.html#ab44e4bc4bd0707beff6dfa6ff12b9cb1" title="Dummy function to replace specific state functions expecting a pointer return value." alt="" coords="232,5,384,32"/>
+<area shape="rect" id="node3" href="$state_8c.html#afd7c59644c350838c4f26995a370d1ba" title="Dummy function to replace specific state functions expecting an int return value." alt="" coords="233,56,383,83"/>
+</map>

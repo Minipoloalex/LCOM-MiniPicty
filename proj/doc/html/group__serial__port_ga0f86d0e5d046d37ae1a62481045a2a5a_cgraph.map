@@ -1,0 +1,8 @@
+<map id="ser_write_to_fifo" name="ser_write_to_fifo">
+<area shape="rect" id="node1" title="Writes bytes from the transmitter queue into the serial port fifo." alt="" coords="5,56,136,83"/>
+<area shape="rect" id="node2" href="$group__queue.html#gab093a7863520d7159a7b05aef912ae58" title="Returns true if the queue is empty." alt="" coords="388,5,517,32"/>
+<area shape="rect" id="node3" href="$group__queue.html#gaf661eb1ae68c803a345e7c4828139732" title="Pops an element from the queue." alt="" coords="215,31,309,57"/>
+<area shape="rect" id="node4" href="$serial__port_8c.html#a27a3535b6ba1e9dce6f808d508de1bf5" title="Reads the LSR &#45; line status register." alt="" coords="184,81,340,108"/>
+<area shape="rect" id="node6" href="$serial__port_8c.html#ae60b262384b1b42527c199c6bb0c4002" title="Writes data to the Transmitter Holding Register (THR). Assumes that the data is ready to be written." alt="" coords="203,132,321,159"/>
+<area shape="rect" id="node5" href="$group__utils.html#ga79a031a8611f5b2d6afa4158e92b0fb4" title="Invokes sys_inb() system call but reads the value into a uint8_t variable." alt="" coords="403,81,502,108"/>
+</map>

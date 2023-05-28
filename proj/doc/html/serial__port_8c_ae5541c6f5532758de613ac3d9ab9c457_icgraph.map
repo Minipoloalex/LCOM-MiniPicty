@@ -1,0 +1,8 @@
+<map id="ser_read_data" name="ser_read_data">
+<area shape="rect" id="node1" title="Reads data from the Receiver Buffer Register (RBR). Assumes that the data is ready to be read." alt="" coords="676,31,791,57"/>
+<area shape="rect" id="node2" href="$group__serial__port.html#gaf60cabe981466c597a02a3b559f5d175" title="Reads bytes from the serial port fifo into the receiver queue." alt="" coords="484,31,628,57"/>
+<area shape="rect" id="node3" href="$group__serial__port.html#ga36fc13a2c6d15746b96d83fe66d62b2d" title="Interrupt handler for the serial port. Checks which interrupt was triggered and either sends bytes to..." alt="" coords="176,5,265,32"/>
+<area shape="rect" id="node5" href="$serial__port_8c.html#a7f0eb11d3dacfa455fa74575a8cbdded" title="Initializes the serial port communication parameters. They are specified as in the Lab7 handout." alt="" coords="313,56,436,83"/>
+<area shape="rect" id="node4" href="$group__proj.html#ga2a16f651eccbd248e1ad3b3b924b143b" title=" " alt="" coords="5,31,128,57"/>
+<area shape="rect" id="node6" href="$group__serial__port.html#ga0310282e052b0d6daacdcf32745aad12" title="Sets the default communication parameters and enables the serial port interrupts. Also creates a tran..." alt="" coords="185,56,256,83"/>
+</map>

@@ -1,0 +1,5 @@
+<map id="clear_canvas" name="clear_canvas">
+<area shape="rect" id="node1" title="Clear canvas button callback." alt="" coords="5,5,112,32"/>
+<area shape="rect" id="node2" href="$group__canvas.html#gad4ffe6cd725905fd1ced79064a9286f2" title="Clears the canvas." alt="" coords="160,5,267,32"/>
+<area shape="rect" id="node3" href="$group__asteroid.html#ga50eeab41a5f0c4d3f5caad793fb53c4e" title="returns the size of the VRAM" alt="" coords="315,5,432,32"/>
+</map>

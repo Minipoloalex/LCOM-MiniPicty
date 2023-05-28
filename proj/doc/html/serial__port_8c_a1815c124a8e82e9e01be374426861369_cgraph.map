@@ -1,0 +1,4 @@
+<map id="ser_write_fifo_control_default" name="ser_write_fifo_control_default">
+<area shape="rect" id="node1" title="Writes the default configuration value to the control register of the FIFO. This is SER_FCR_DEFAULT." alt="" coords="5,5,168,47"/>
+<area shape="rect" id="node2" href="$serial__port_8c.html#ac0ba3ca24ea2192b0c104dcd671fb297" title="Writes the given configuration value to the control register of the FIFO." alt="" coords="216,13,379,39"/>
+</map>

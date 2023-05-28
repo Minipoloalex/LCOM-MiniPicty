@@ -1,0 +1,8 @@
+<map id="destroy_buttons_array" name="destroy_buttons_array">
+<area shape="rect" id="node1" title="Destroys an array of buttons by freeing its memory." alt="" coords="339,81,507,108"/>
+<area shape="rect" id="node2" href="$group__game.html#gabd7a5dc575bf590a0886f372aad1c99e" title="Destroy the game by freeing the necessary objects." alt="" coords="176,5,291,32"/>
+<area shape="rect" id="node4" href="$group__menu.html#ga104617a50ee02cb853996c81d82a6c89" title="Destroy the menu by freeing the necessary objects." alt="" coords="176,56,291,83"/>
+<area shape="rect" id="node5" href="$group__game.html#ga9de7f1042903ab8ba3b3e471b82758b6" title="Setup the game by creating the necessary objects." alt="" coords="182,107,285,133"/>
+<area shape="rect" id="node6" href="$group__menu.html#gae131bab3ee69a41004c4300694c690a0" title="Setup the menu by creating the necessary objects." alt="" coords="182,157,285,184"/>
+<area shape="rect" id="node3" href="$group__proj.html#ga2a16f651eccbd248e1ad3b3b924b143b" title=" " alt="" coords="5,81,128,108"/>
+</map>

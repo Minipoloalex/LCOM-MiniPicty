@@ -9,7 +9,11 @@
 #include "../../model/position/position.h"
 #include "../../model/button/button.h"
 #include "../../model/state/state.h"
-
+/** @defgroup serial_port SerialPort
+ * @{
+ *
+ * @brief Module responsible for the serial port
+ */
 /**
  * @brief Sets the default communication parameters and enables the serial port interrupts. Also creates a transmitter and a receiver queue. These parameters are: 8 bits per character, 1 stop bit, odd parity and 115200 bits per second (max bitrate).
  */

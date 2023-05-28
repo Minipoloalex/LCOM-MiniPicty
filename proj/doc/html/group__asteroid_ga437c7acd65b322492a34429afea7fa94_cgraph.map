@@ -1,0 +1,5 @@
+<map id="vg_draw_circle" name="vg_draw_circle">
+<area shape="rect" id="node1" title="Draws a circle on a specified area of the screen with a specified color." alt="" coords="5,5,124,32"/>
+<area shape="rect" id="node2" href="$group__asteroid.html#ga4eb4b3b6c39f1d34aa01ab98da45a13d" title="Draws a circle with a specified color in a specified area of the buffer." alt="" coords="172,5,356,32"/>
+<area shape="rect" id="node3" href="$video__card_8c.html#a2edd9c84fd5c596777cdce2ddaaaf7d7" title="draws a pixel in the desired buffer" alt="" coords="404,5,519,32"/>
+</map>

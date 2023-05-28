@@ -1,0 +1,15 @@
+<map id="get_vram_size" name="get_vram_size">
+<area shape="rect" id="node1" title="returns the size of the VRAM" alt="" coords="952,132,1069,159"/>
+<area shape="rect" id="node2" href="$group__canvas.html#gad4ffe6cd725905fd1ced79064a9286f2" title="Clears the canvas." alt="" coords="777,81,884,108"/>
+<area shape="rect" id="node12" href="$group__canvas.html#gaeca6154342054837da27aa9c6c8ad6e6" title="Initializes a canvas." alt="" coords="783,132,879,159"/>
+<area shape="rect" id="node13" href="$group__background.html#gadee939e190b3d855305bcfeee34c7378" title="Create a new Background." alt="" coords="757,233,904,260"/>
+<area shape="rect" id="node3" href="$game_8c.html#a715713247f080d220f0daf342bb370bf" title="Clear canvas button callback." alt="" coords="582,5,689,32"/>
+<area shape="rect" id="node6" href="$game_8c.html#a73840b4b79b4bb04835d4b513d1d6c20" title="Play again button callback Set the game state to WAITING and reset the game by clearing the canvas an..." alt="" coords="589,81,682,108"/>
+<area shape="rect" id="node8" href="$group__game.html#ga859ad5db5ec47b6125b2d439083befb0" title="Transition to the game state by changing the state functions." alt="" coords="561,183,709,209"/>
+<area shape="rect" id="node4" href="$group__game.html#ga9de7f1042903ab8ba3b3e471b82758b6" title="Setup the game by creating the necessary objects." alt="" coords="176,81,279,108"/>
+<area shape="rect" id="node5" href="$group__proj.html#ga2a16f651eccbd248e1ad3b3b924b143b" title=" " alt="" coords="5,157,128,184"/>
+<area shape="rect" id="node7" href="$game_8c.html#ab9dfe6919404cb12ddb40780af1a2e23" title="Change roles and play again button callback Change the roles of the players and call play_again." alt="" coords="327,81,513,108"/>
+<area shape="rect" id="node9" href="$menu_8c.html#a9b6d5f8b403b5a95417f1d08735a95d2" title="Enter the game button callback." alt="" coords="370,183,470,209"/>
+<area shape="rect" id="node11" href="$menu_8c.html#ac9b72db247a9a1978d9038a1acd46950" title="Enter the hard mode game button callback." alt="" coords="352,233,488,260"/>
+<area shape="rect" id="node10" href="$group__menu.html#gae131bab3ee69a41004c4300694c690a0" title="Setup the menu by creating the necessary objects." alt="" coords="176,208,279,235"/>
+</map>

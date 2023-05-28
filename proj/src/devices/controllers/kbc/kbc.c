@@ -2,6 +2,17 @@
 
 uint8_t output = 0;
 
+//Private Functions
+//==================================================================================================
+/**
+ * @brief Reads the KBC status register
+ * @param status pointer to the variable that will store the status
+ * @return 0 upon success, non-zero otherwise
+ */
+int (read_KBC_status)(uint8_t *status);
+
+//==================================================================================================
+
 int (read_KBC_status)(uint8_t *status){
   return(util_sys_inb(KBC_STATUS_REG, status));
 }
@@ -17,13 +28,11 @@ int (read_KBC_output)(int8_t port, uint8_t* output, uint8_t mouse){
       return EXIT_FAILURE;
     }
     if(mouse && !(status & AUX)) {
-      printf("expected mouse int but got keyboard int inside %s\n", __func__);
       read_KBC_output_to_trash();
       tickdelay(micros_to_ticks(WAIT_KBC));
       continue;
     }
     if(!mouse && (status & AUX)) {
-      printf("expected keyboard int but got mouse int inside %s\n", __func__);
       read_KBC_output_to_trash();
       tickdelay(micros_to_ticks(WAIT_KBC));
       continue;
@@ -42,7 +51,6 @@ int (read_KBC_output)(int8_t port, uint8_t* output, uint8_t mouse){
     }
     tickdelay(micros_to_ticks(WAIT_KBC));
   }
-  printf("excedeed attempts inside %s\n", __func__);
   return EXIT_FAILURE;
 }
 
@@ -70,6 +78,5 @@ int (write_KBC_command)(uint8_t port, uint8_t cmd_byte){
 int (read_KBC_output_to_trash)() {
   uint8_t trash;
   util_sys_inb(KBC_OUT_REG, &trash);
-  // printf("Got trash inside kbc: %02x\n", trash);
   return EXIT_SUCCESS;
 }

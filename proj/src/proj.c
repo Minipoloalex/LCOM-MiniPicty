@@ -12,6 +12,11 @@
 #include "modules/game/game.h"
 #include "model/state/state.h"
 
+/** @defgroup proj proj
+ * @{
+ *
+ * @brief File containing the main loop of the game
+ */
 
 int main(int argc, char *argv[]) {
   lcf_set_language("EN-US");
@@ -23,7 +28,7 @@ int main(int argc, char *argv[]) {
   return 0;
 }
 
-// Setting up the state
+// App State variable
 state_t *app_state = NULL;
 
 int(proj_main_loop)(int argc, char *argv[]) {
@@ -148,7 +153,6 @@ int(proj_main_loop)(int argc, char *argv[]) {
 
   // Exit graphics mode
   if (vg_exit() != OK) return EXIT_FAILURE;
-  printf("ending\n");
   // Unsubscribe interrupts
   if(unsubscribe_interrupts()) return 1;
 

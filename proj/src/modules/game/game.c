@@ -1,16 +1,19 @@
 #include "game.h"
 
-#define GRAY_COLOR 0xA0A0A0
-#define NUMBER_GAME_PLAYING_BUTTONS 13
-#define NUMBER_GAME_FINISHED_BUTTONS 3
-#define GAME_WAITING_TIME 5
-#define GAME_ROUND_TIME 60
-#define WON_TEXT "You won"
-#define LOSE_TEXT "You lost"
-#define YOU_ARE_DRAWING_TEXT "Get ready you are drawing"
-#define YOU_ARE_GUESSING_TEXT "Get ready you are guessing"
-#define FINISH_TEXT_SIZE (MAX(sizeof(WON_TEXT), sizeof(LOSE_TEXT)) + 1)
+#define GRAY_COLOR 0xA0A0A0 /**< @brief Gray color */
+#define NUMBER_GAME_PLAYING_BUTTONS 13 /**< @brief Number of game playing buttons */
+#define NUMBER_GAME_FINISHED_BUTTONS 3 /**< @brief Number of game finished buttons */
+#define GAME_WAITING_TIME 5 /**< @brief Time to wait for the drawer to draw */
+#define GAME_ROUND_TIME 60 /**< @brief Time to draw and guess */
+#define WON_TEXT "You won" /**< @brief Text to display on win */
+#define LOSE_TEXT "You lost" /**< @brief Text to display on lose */
+#define YOU_ARE_DRAWING_TEXT "Get ready you are drawing" /**< @brief Text to display when the player is drawing */
+#define YOU_ARE_GUESSING_TEXT "Get ready you are guessing" /**< @brief Text to display when the player is guessing */
+#define FINISH_TEXT_SIZE (MAX(sizeof(WON_TEXT), sizeof(LOSE_TEXT)) + 1) /**< @brief Size of the finish text for allocation purposes */
 
+/**
+ * @brief Sub state types of game state
+ */
 typedef enum game_state {
   PLAYING,
   WAITING,
@@ -34,13 +37,28 @@ static asteroid_t *asteroid;
 
 static int cell_width = 0;
 static int cell_height = 0;
+
 /*==================================================================*/
+
 /**
- * @brief
- *
+ * @brief Draw the game buttons
+ * @return int 0 if success, 1 otherwise
  */
+
 int(game_draw_buttons)();
-/*==================================================================*/
+
+/**
+ * @brief Draw to the canvas in the game state
+ * @return int 0 if success, 1 otherwise
+*/
+int(game_draw_canvas)(canvas_t *canvas, player_drawer_t *player_drawer);
+
+/**
+ * @brief Play again button callback
+ * Set the game state to WAITING and reset the game by clearing the canvas and generating a new prompt
+ * 
+ * @param button 
+ */
 void(play_again)(button_t *button) {
   if (game_state != FINISHED) {
     printf("Wrong game state inside %s\n", __func__);
@@ -53,20 +71,29 @@ void(play_again)(button_t *button) {
     uint8_t word_index = prompt_generate(prompt);
     ser_add_word_index(word_index);
     app_state->word_index = word_index;
-    printf("%s inside %s\n", prompt, __func__);
   }
   reset_guess_word(guess);
   if (is_hard_mode) {
     asteroid_reset_position(asteroid);
   }
-  printf("%s inside %s\n", prompt, __func__);
   set_needs_update(true);
 }
+/**
+ * @brief Change roles and play again button callback
+ * Change the roles of the players and call play_again
+ * 
+ * @param button 
+ */
 void(play_again_change_roles)(button_t *button) {
-  printf("CHANGING ROLES OF PLAYERS\n");
   player_drawer_change_role(player_drawer);
   play_again(button);
 }
+/**
+ * @brief Quit game button callback
+ * Transition to the menu state
+ * 
+ * @param button 
+ */
 void(quit_game)(button_t *button) {
   if (game_state != FINISHED) {
     printf("Wrong game state inside %s\n", __func__);
@@ -75,31 +102,55 @@ void(quit_game)(button_t *button) {
   transition_to_menu(app_state);
   set_needs_update(true);
 }
+/**
+ * @brief Change brush color button callback
+ * 
+ * @param button 
+ */
 void (change_brush_color)(button_t *button) {
   brush_t *brush = player_drawer_get_brush(player_drawer);
   if (brush == NULL)
     return;
   set_brush_color(brush, button->background_color);
 }
+/**
+ * @brief Increase brush size button callback
+ * 
+ * @param button 
+ */
 void(increase_brush_size)(button_t *button) {
   brush_t *brush = player_drawer_get_brush(player_drawer);
   if (brush == NULL)
     return;
   brush_increase_size(brush);
 }
-
+/**
+ * @brief Decrease brush size button callback
+ * 
+ * @param button 
+ */
 void(decrease_brush_size)(button_t *button) {
   brush_t *brush = player_drawer_get_brush(player_drawer);
   if (brush == NULL)
     return;
   brush_decrease_size(brush);
 }
+/**
+ * @brief Set brush to rubber button callback
+ * 
+ * @param button 
+ */
 void(set_rubber)(button_t *button) {
   brush_t *brush = player_drawer_get_brush(player_drawer);
   if (brush == NULL)
     return;
   set_brush_color(brush, canvas->background_color);
 }
+/**
+ * @brief Clear canvas button callback
+ * 
+ * @param button 
+ */
 void(clear_canvas)(button_t *button) {
   if (canvas == NULL) {
     printf("canvas is null inside %s\n", __func__);
@@ -108,6 +159,7 @@ void(clear_canvas)(button_t *button) {
   canvas_clear(canvas);
 }
 /*==================================================================*/
+
 int(setup_game)(bool isTransmitter, state_t *state, Resources* resources) {
   app_state = state;
   app_resources = resources;
@@ -316,7 +368,6 @@ int(game_process_keyboard)() {
 
     case MAKE_ENTER:
       validate_guess_word(prompt, guess, &right_guess);
-      printf("correct guess: %d \n", right_guess);
       reset_guess_word(guess);
       if (right_guess) {
         ser_add_won_round();
@@ -365,9 +416,7 @@ int(game_process_mouse)() {
     if (button_to_click != -1) {
       button_t *pressed_button = buttons->buttons[button_to_click];
       ser_add_button_click_to_transmitter_queue(button_to_click);
-      printf("%d - %s", __LINE__, prompt);
       pressed_button->onClick(pressed_button);
-      printf("%d - %s", __LINE__, prompt);
       set_needs_update(true);
     }
   }
@@ -404,23 +453,20 @@ int(game_draw_canvas)(canvas_t *canvas, player_drawer_t *player_drawer) {
 }
 
 int (game_process_serial)() {
-  // player_type_t role = player_drawer_get_role(player_drawer);
-  // if (role == OTHER_PLAYER) {
-    bool won_round = false;
-    ser_read_bytes_from_receiver_queue(player_drawer, app_state, &won_round);
+  bool won_round = false;
+  ser_read_bytes_from_receiver_queue(player_drawer, app_state, &won_round);
 
-    set_needs_update(true);
-    if (app_state->word_index != 255) {
-      get_word_from_index(app_state->word_index, prompt);
+  set_needs_update(true);
+  if (app_state->word_index != 255) {
+    get_word_from_index(app_state->word_index, prompt);
+  }
+  if (won_round) {
+    game_state = FINISHED;
+    if (strcpy(finish_text, WON_TEXT) == NULL) {
+      printf("strcpy failed inside %s\n", __func__);
+      return EXIT_FAILURE;
     }
-    if (won_round) {
-      game_state = FINISHED;
-      if (strcpy(finish_text, WON_TEXT) == NULL) {
-        printf("strcpy failed inside %s\n", __func__);
-        return EXIT_FAILURE;
-      }
-    }
-  // }
+  }
   return EXIT_SUCCESS;
 }
 
@@ -464,7 +510,6 @@ int(game_draw)() {
     player_type_t role = player_drawer_get_role(player_drawer);
     switch (role) {
       case SELF_PLAYER:
-        printf("prompt: %s inside %s\n", prompt, __func__);
         if (vg_draw_text(prompt, GUESS_POS_X, GUESS_POS_Y, app_resources->font) != OK)
           return EXIT_FAILURE;
         break;
@@ -497,7 +542,7 @@ int(game_draw)() {
     }
     player_t *player = player_drawer_get_player(player_drawer);
     drawing_position_t drawing_position = player_get_current_position(player);
-    update_cursor_state(drawing_position.position);
+    update_cursor(drawing_position.position);
     cursor_type_t cursor = player_drawer_get_cursor(player_drawer);
 
     if (vg_draw_sprite(app_resources->cursors[cursor], drawing_position.position.x, drawing_position.position.y)) {
@@ -513,7 +558,7 @@ int(game_draw)() {
   return EXIT_SUCCESS;
 }
 
-void(update_cursor_state)(position_t position) {
+void(update_cursor)(position_t position) {
   brush_t *brush = player_drawer_get_brush(player_drawer);
   if(!is_inside_rectangle(position, canvas->start_point, canvas->width, canvas->height)){
     player_drawer_set_cursor(player_drawer, POINTER);
@@ -527,7 +572,7 @@ void(update_cursor_state)(position_t position) {
 }
 
 buttons_array_t *(game_get_buttons)(state_t *state) {
-  if (game_state == PLAYING) {
+  if (game_state == PLAYING) { //TODO: Delete the brackets
     return game_playing_buttons;
   }
   if (game_state == FINISHED) {

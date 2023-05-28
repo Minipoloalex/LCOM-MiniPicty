@@ -1,0 +1,8 @@
+<map id="create_player_drawer" name="create_player_drawer">
+<area shape="rect" id="node1" title="Create a new Player Drawer." alt="" coords="5,56,168,83"/>
+<area shape="rect" id="node2" href="$group__brush.html#gafc09f4a4c79f07c594e0e44e23c42124" title="Creates a brush with a given color and size." alt="" coords="222,5,329,32"/>
+<area shape="rect" id="node3" href="$group__player.html#ga270d5adceb8e9e9b83834ae5e00e5f2e" title="Create a new Player." alt="" coords="220,56,331,83"/>
+<area shape="rect" id="node5" href="$group__player.html#gab99707f1436b3a6a72e4302200ad8a17" title="Destroy a Player." alt="" coords="216,107,335,133"/>
+<area shape="rect" id="node4" href="$group__queue.html#ga220ab33402f40d8d55ef879ffd7182fe" title="Create a queue object ." alt="" coords="383,56,493,83"/>
+<area shape="rect" id="node6" href="$group__queue.html#gaafc0fe4e7d7d46275df3f4babe1926d2" title="Deletes a queue object Destructor for the queue object." alt="" coords="383,107,493,133"/>
+</map>

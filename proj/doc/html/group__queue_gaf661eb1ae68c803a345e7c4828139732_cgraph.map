@@ -1,0 +1,4 @@
+<map id="pop_queue" name="pop_queue">
+<area shape="rect" id="node1" title="Pops an element from the queue." alt="" coords="5,5,99,32"/>
+<area shape="rect" id="node2" href="$group__queue.html#gab093a7863520d7159a7b05aef912ae58" title="Returns true if the queue is empty." alt="" coords="147,5,276,32"/>
+</map>

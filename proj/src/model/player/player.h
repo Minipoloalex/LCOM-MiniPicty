@@ -4,52 +4,72 @@
 #include "../brush/brush.h"
 #include "../queue/queue.h"
 #include "../position/position.h"
-#include "../drawing_position.h"
+
+/** @defgroup player Player
+ * @{
+ *
+ * @brief Module responsible for the player and its position on the screen
+ */
 
 typedef enum player_type {
-  SELF_PLAYER,  // Drawer
-  OTHER_PLAYER, // Guesser
+  SELF_PLAYER,   /**< @brief Player that draws */
+  OTHER_PLAYER, /**< @brief Player that guesses */
 } player_type_t;
 
 struct Player;
 typedef struct Player player_t;
 
-
+/**
+ * @brief Create a new Player
+ * 
+ * @return Pointer to created player
+ */
 player_t *(create_player)();
+/**
+ * @brief Destroy a Player
+ * 
+ * @param player player to be destroyed
+ */
 void (destroy_player)(player_t *player);
 
 /**
- * @brief 
+ * @brief Add a new position to the queue of positions of the player
  * 
+ * @param player player to add the position
+ * @param position position to be added
+ * @return int returs 0 upon success and non-zero otherwise
  */
 int (player_add_next_position)(player_t *player, drawing_position_t *position);
 /**
- * @brief 
- * @return int 0 if success, different than 0 if the queue is empty
+ * @brief Get the next position of the queue of positions of the player
+ * 
+ * @param player player to get the position
+ * @param position position to be returned
+ * @return int returns 0 upon success and non-zero otherwise
  */
 int (player_get_next_position)(player_t *player, drawing_position_t *position);
 /**
- * @brief 
+ * @brief Get the last position assigned to the player
  * 
+ * @param player player to get the position
+ * @param position position to be returned
+ * @return int returns 0 upon success and non-zero otherwise
  */
 int (player_get_last_position)(player_t *player, drawing_position_t *position);
 /**
- * @brief 
+ * @brief Set the last position in the player
  * 
+ * @param player player to set the position
+ * @param position position to be set
+ * @return int returns 0 upon success and non-zero otherwise
  */
 int (player_set_last_position)(player_t *player, drawing_position_t position);
 
 /**
- * @brief returns the current position of the mouse of the player
- * That position is the last in the queue of positions. In case it is empty, returns the last position of the mouse already drawn.
+ * @brief Get the last position of the queue of positions of the player.
+ * In case it is empty, returns the last position of the mouse already drawn.
+ * 
+ * @param player player to set the position
+ * @return returns the current position of the mouse of the player
  */
 drawing_position_t (player_get_current_position)(player_t *player);
-
-
-
-// PLAYER GUESSER STUFF
-// struct PlayerGuesser;
-// typedef struct PlayerGuesser PlayerGuesser_t;
-// PlayerGuesser_t *(create_player_guesser)(player_type_t player_type);
-// void (destroy_player_guesser)(PlayerGuesser_t *player_guesser);
-// player_type_t (player_guesser_get_state)(PlayerGuesser_t *player_guesser);

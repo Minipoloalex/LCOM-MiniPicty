@@ -1,0 +1,4 @@
+<map id="ser_set_base_addr" name="ser_set_base_addr">
+<area shape="rect" id="node1" title="Sets the base address of the serial port and creates the queues." alt="" coords="5,5,148,32"/>
+<area shape="rect" id="node2" href="$group__queue.html#ga220ab33402f40d8d55ef879ffd7182fe" title="Create a queue object ." alt="" coords="196,5,307,32"/>
+</map>

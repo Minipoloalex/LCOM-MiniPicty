@@ -1,8 +1,22 @@
 #include "state.h"
 
+
+/**
+ * @brief Dummy function to replace specific state functions expecting an int return value
+ * 
+ * @param state - Program's state
+ * @return int - Default return value (0)
+ */
 static int default_int_returner(state_t* state){
   return 0;
 }
+
+/**
+ * @brief Dummy function to replace specific state functions expecting a pointer return value 
+ * 
+ * @param state - Program's state
+ * @return buttons_array_t* - Default return value (NULL)
+ */
 static buttons_array_t *(default_get_buttons)(state_t* state){
   return NULL;
 }

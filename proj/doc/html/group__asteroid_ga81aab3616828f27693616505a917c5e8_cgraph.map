@@ -1,0 +1,11 @@
+<map id="vg_draw_buttons" name="vg_draw_buttons">
+<area shape="rect" id="node1" title="Draws a array of buttons to the screen." alt="" coords="5,71,139,98"/>
+<area shape="rect" id="node2" href="$video__card_8c.html#aa8036fc7b6cac28ca121f76d4e996afe" title="Draws a button to the screen." alt="" coords="187,71,313,98"/>
+<area shape="rect" id="node3" href="$group__asteroid.html#ga99d2da2559e11200c6b40c469e9977ec" title="Draws a rectangle on a specified area of the screen with a specified color." alt="" coords="361,17,507,43"/>
+<area shape="rect" id="node6" href="$group__asteroid.html#ga149feb47586f0ad1c6af10be58de43cb" title="Draws a sprite to a specified position." alt="" coords="768,97,889,123"/>
+<area shape="rect" id="node8" href="$group__asteroid.html#ga7e0c2d812860673fd1f9dba59f0d4c05" title="Draws a string to the screen." alt="" coords="379,122,489,149"/>
+<area shape="rect" id="node4" href="$group__asteroid.html#ga983dd8f3e3fde2997fb5aa5b84252e00" title="Draws a rectangle with a specified color in a specified area of the buffer." alt="" coords="555,5,720,47"/>
+<area shape="rect" id="node5" href="$video__card_8c.html#a9177b76545b334e1d3868228d418392d" title="draws a horizontal line in the desired buffer" alt="" coords="781,13,877,39"/>
+<area shape="rect" id="node7" href="$video__card_8c.html#a2edd9c84fd5c596777cdce2ddaaaf7d7" title="draws a pixel in the desired buffer" alt="" coords="937,97,1052,123"/>
+<area shape="rect" id="node9" href="$video__card_8c.html#a223f89b9c44f177e851df52eb669d68b" title="Draws a letter or number to the screen." alt="" coords="581,122,693,149"/>
+</map>

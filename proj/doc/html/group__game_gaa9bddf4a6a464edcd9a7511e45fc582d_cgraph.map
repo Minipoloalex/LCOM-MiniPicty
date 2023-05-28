@@ -1,0 +1,5 @@
+<map id="game_process_timer" name="game_process_timer">
+<area shape="rect" id="node1" title="Handle the timer interrupts inside the game state." alt="" coords="5,31,164,57"/>
+<area shape="rect" id="node2" href="$group__game.html#gafccc65aafe9aee47306500ad7a502460" title="Update the asteroid position and check if it collides with the canvas." alt="" coords="212,5,375,32"/>
+<area shape="rect" id="node3" href="$group__asteroid.html#ga595b2cd1eafe4d4d0c710c913f30cf8a" title="Sets the needs_update variable to the given value. If the value is set to true, it can be expected th..." alt="" coords="223,56,363,83"/>
+</map>

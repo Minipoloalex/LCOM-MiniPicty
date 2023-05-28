@@ -3,9 +3,17 @@
 #include <lcom/lcf.h>
 #include <stdint.h>
 
+/** @defgroup utils Utils
+ * @{
+ *
+ * @brief Module responsible for the utility functions used in the project
+ */
+
 /**
  * @brief Converts a byte to a string
  * 
+ * @param byte byte to be converted
+ * @return Pointer to string representation of the byte
  */
 char *(byte_to_str)(uint8_t byte);
 
