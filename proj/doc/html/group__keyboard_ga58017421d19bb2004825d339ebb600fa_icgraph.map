@@ -1,0 +1,5 @@
+<map id="keyboard_restore" name="keyboard_restore">
+<area shape="rect" id="node1" title="Restores the KBC to its default state." alt="" coords="395,5,529,32"/>
+<area shape="rect" id="node2" href="$group__interrupts.html#gabd36b37fcff976e74132a23c650d970b" title="Unsubscribe all the devices interrupts used in the project." alt="" coords="176,5,347,32"/>
+<area shape="rect" id="node3" href="$group__proj.html#ga2a16f651eccbd248e1ad3b3b924b143b" title=" " alt="" coords="5,5,128,32"/>
+</map>

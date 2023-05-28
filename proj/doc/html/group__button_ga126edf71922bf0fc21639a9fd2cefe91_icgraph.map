@@ -1,0 +1,6 @@
+<map id="create_buttons_array" name="create_buttons_array">
+<area shape="rect" id="node1" title="Creates an array of buttons." alt="" coords="327,31,487,57"/>
+<area shape="rect" id="node2" href="$group__game.html#ga9de7f1042903ab8ba3b3e471b82758b6" title="Setup the game by creating the necessary objects." alt="" coords="176,5,279,32"/>
+<area shape="rect" id="node4" href="$group__menu.html#gae131bab3ee69a41004c4300694c690a0" title="Setup the menu by creating the necessary objects." alt="" coords="176,56,279,83"/>
+<area shape="rect" id="node3" href="$group__proj.html#ga2a16f651eccbd248e1ad3b3b924b143b" title=" " alt="" coords="5,31,128,57"/>
+</map>

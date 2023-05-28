@@ -1,0 +1,4 @@
+<map id="rtc_read" name="rtc_read">
+<area shape="rect" id="node1" title="Reads from the RTC given register." alt="" coords="5,5,80,32"/>
+<area shape="rect" id="node2" href="$group__utils.html#ga79a031a8611f5b2d6afa4158e92b0fb4" title="Invokes sys_inb() system call but reads the value into a uint8_t variable." alt="" coords="128,5,227,32"/>
+</map>

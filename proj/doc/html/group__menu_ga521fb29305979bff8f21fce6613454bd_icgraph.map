@@ -1,0 +1,7 @@
+<map id="menu_process_serial" name="menu_process_serial">
+<area shape="rect" id="node1" title="Handle the serial port interrupts inside the menu state." alt="" coords="661,5,820,32"/>
+<area shape="rect" id="node2" href="$group__menu.html#ga04f8f095e776c93ec861decc24ad99fd" title="Transition to the menu state by changing the state functions." alt="" coords="465,5,613,32"/>
+<area shape="rect" id="node3" href="$group__proj.html#ga2a16f651eccbd248e1ad3b3b924b143b" title=" " alt="" coords="5,5,128,32"/>
+<area shape="rect" id="node4" href="$game_8c.html#abe0fa2797d6c581f845cb3b1d54787a6" title="Quit game button callback Transition to the menu state." alt="" coords="327,31,417,57"/>
+<area shape="rect" id="node5" href="$group__game.html#ga9de7f1042903ab8ba3b3e471b82758b6" title="Setup the game by creating the necessary objects." alt="" coords="176,31,279,57"/>
+</map>

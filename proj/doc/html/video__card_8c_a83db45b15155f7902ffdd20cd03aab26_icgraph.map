@@ -1,0 +1,5 @@
+<map id="map_phys_mem_to_virtual" name="map_phys_mem_to_virtual">
+<area shape="rect" id="node1" title="Map physical memory to virtual address space of process. Gets the memory (VRAM) for all 3 buffers." alt="" coords="369,5,568,32"/>
+<area shape="rect" id="node2" href="$group__asteroid.html#gaf3213b8264dfbbcea2372a1f5b4165d7" title="calls the functions to enter in graphics mode and map the physical memory to the virtual address spac..." alt="" coords="176,5,321,32"/>
+<area shape="rect" id="node3" href="$group__proj.html#ga2a16f651eccbd248e1ad3b3b924b143b" title=" " alt="" coords="5,5,128,32"/>
+</map>

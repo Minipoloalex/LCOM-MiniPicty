@@ -1,0 +1,4 @@
+<map id="queue_get_back" name="queue_get_back">
+<area shape="rect" id="node1" title="Returns by parameter the last inserted element in the queue." alt="" coords="5,5,133,32"/>
+<area shape="rect" id="node2" href="$group__queue.html#gab093a7863520d7159a7b05aef912ae58" title="Returns true if the queue is empty." alt="" coords="181,5,311,32"/>
+</map>

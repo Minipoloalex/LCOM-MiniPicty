@@ -1,0 +1,5 @@
+<map id="decrease_brush_size" name="decrease_brush_size">
+<area shape="rect" id="node1" title="Decrease brush size button callback." alt="" coords="5,31,163,57"/>
+<area shape="rect" id="node2" href="$group__brush.html#ga74fc42a7883aadfc1a4ab326047a7cc0" title="Decreases the size of a brush by BRUSH_STEP pixels." alt="" coords="225,5,383,32"/>
+<area shape="rect" id="node3" href="$group__player__drawer.html#ga7338c83fd15fd1d8200a91cf896a960a" title="Get the Brush object from the player." alt="" coords="211,56,397,83"/>
+</map>

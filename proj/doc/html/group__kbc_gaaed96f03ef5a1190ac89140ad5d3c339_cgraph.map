@@ -1,0 +1,4 @@
+<map id="read_KBC_output_to_trash" name="read_KBC_output_to_trash">
+<area shape="rect" id="node1" title="Reads KBC output but doesn&#39;t do anything with it." alt="" coords="5,5,160,47"/>
+<area shape="rect" id="node2" href="$group__utils.html#ga79a031a8611f5b2d6afa4158e92b0fb4" title="Invokes sys_inb() system call but reads the value into a uint8_t variable." alt="" coords="208,13,307,39"/>
+</map>

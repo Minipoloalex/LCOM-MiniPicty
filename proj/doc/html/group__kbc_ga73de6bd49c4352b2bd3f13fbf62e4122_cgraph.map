@@ -1,0 +1,6 @@
+<map id="read_KBC_output" name="read_KBC_output">
+<area shape="rect" id="node1" title="Reads the KBC output." alt="" coords="5,71,140,98"/>
+<area shape="rect" id="node2" href="$group__kbc.html#gaaed96f03ef5a1190ac89140ad5d3c339" title="Reads KBC output but doesn&#39;t do anything with it." alt="" coords="188,5,343,47"/>
+<area shape="rect" id="node3" href="$group__utils.html#ga79a031a8611f5b2d6afa4158e92b0fb4" title="Invokes sys_inb() system call but reads the value into a uint8_t variable." alt="" coords="391,71,489,98"/>
+<area shape="rect" id="node4" href="$kbc_8c.html#ac024af91b156e4fc61ee3886b891de21" title="Reads the KBC status register." alt="" coords="199,122,331,149"/>
+</map>

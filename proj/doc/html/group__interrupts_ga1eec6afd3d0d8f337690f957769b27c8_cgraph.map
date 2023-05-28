@@ -1,0 +1,18 @@
+<map id="subscribe_interrupts" name="subscribe_interrupts">
+<area shape="rect" id="node1" title="Subscribe all the devices interrupts used in the project." alt="" coords="5,198,160,225"/>
+<area shape="rect" id="node2" href="$group__keyboard.html#gaa0b3dcafa6ee3a5000cb641a7823482b" title="Subscribes keyboard interrupts." alt="" coords="235,5,386,47"/>
+<area shape="rect" id="node3" href="$group__mouse.html#gaf507b769b437598f2df1a3cee07cb0b1" title="Disables mouse interrupts." alt="" coords="239,71,383,98"/>
+<area shape="rect" id="node4" href="$group__mouse.html#ga74456022e2b29fbc3741dc59bd5033be" title="Enables mouse data reporting mode." alt="" coords="211,122,410,149"/>
+<area shape="rect" id="node11" href="$group__mouse.html#ga6506506cc770f95ebf101e594055ba33" title="Enables mouse interrupts." alt="" coords="240,173,381,199"/>
+<area shape="rect" id="node12" href="$group__mouse.html#ga25ed04b56945b02629171e15a8f23c3f" title="Subscribes and enables Mouse interrupts." alt="" coords="208,223,413,250"/>
+<area shape="rect" id="node13" href="$group__rtc.html#ga6bbe679f115cec90d36d50eb2aac1b89" title="Subscribes RTC interrupts." alt="" coords="245,274,377,301"/>
+<area shape="rect" id="node15" href="$group__serial__port.html#gaf21628f0f9d46b62067ae790f7861e84" title="Subscribes the serial port interrupts." alt="" coords="243,325,378,351"/>
+<area shape="rect" id="node16" href="$group__timer.html#gac57a7e1140a7e00ad95ac5488d2a671b" title="Subscribes and enables Timer 0 interrupts." alt="" coords="235,375,386,402"/>
+<area shape="rect" id="node5" href="$group__kbc.html#ga0cee9b230b812d6261cfe0c72be343a8" title="Writes a given command to the mouse directly." alt="" coords="461,129,588,155"/>
+<area shape="rect" id="node6" href="$group__kbc.html#ga73de6bd49c4352b2bd3f13fbf62e4122" title="Reads the KBC output." alt="" coords="649,129,784,155"/>
+<area shape="rect" id="node10" href="$group__kbc.html#ga7084bac7af5181c81fce9327716a4213" title="Writes a command to the KBC." alt="" coords="636,179,797,206"/>
+<area shape="rect" id="node7" href="$group__kbc.html#gaaed96f03ef5a1190ac89140ad5d3c339" title="Reads KBC output but doesn&#39;t do anything with it." alt="" coords="845,63,1000,104"/>
+<area shape="rect" id="node8" href="$group__utils.html#ga79a031a8611f5b2d6afa4158e92b0fb4" title="Invokes sys_inb() system call but reads the value into a uint8_t variable." alt="" coords="1048,154,1147,181"/>
+<area shape="rect" id="node9" href="$kbc_8c.html#ac024af91b156e4fc61ee3886b891de21" title="Reads the KBC status register." alt="" coords="857,179,989,206"/>
+<area shape="rect" id="node14" href="$rtc_8c.html#a75992a9a58c005a6db594c4f9ce64393" title="Reads from the RTC given register." alt="" coords="487,249,562,275"/>
+</map>

@@ -1,0 +1,4 @@
+<map id="rtc_init" name="rtc_init">
+<area shape="rect" id="node1" title="initializes the RTC. Should be called before any other function." alt="" coords="176,5,243,32"/>
+<area shape="rect" id="node2" href="$group__proj.html#ga2a16f651eccbd248e1ad3b3b924b143b" title=" " alt="" coords="5,5,128,32"/>
+</map>

@@ -1,0 +1,51 @@
+<map id="util_sys_inb" name="util_sys_inb">
+<area shape="rect" id="node1" title="Invokes sys_inb() system call but reads the value into a uint8_t variable." alt="" coords="1663,565,1761,592"/>
+<area shape="rect" id="node2" href="$group__kbc.html#ga73de6bd49c4352b2bd3f13fbf62e4122" title="Reads the KBC output." alt="" coords="1257,131,1392,157"/>
+<area shape="rect" id="node12" href="$group__kbc.html#gaaed96f03ef5a1190ac89140ad5d3c339" title="Reads KBC output but doesn&#39;t do anything with it." alt="" coords="1457,182,1611,223"/>
+<area shape="rect" id="node13" href="$kbc_8c.html#ac024af91b156e4fc61ee3886b891de21" title="Reads the KBC status register." alt="" coords="1468,248,1600,275"/>
+<area shape="rect" id="node15" href="$rtc_8c.html#a75992a9a58c005a6db594c4f9ce64393" title="Reads from the RTC given register." alt="" coords="1074,388,1149,415"/>
+<area shape="rect" id="node24" href="$serial__port_8c.html#ae5541c6f5532758de613ac3d9ab9c457" title="Reads data from the Receiver Buffer Register (RBR). Assumes that the data is ready to be read." alt="" coords="1477,717,1591,744"/>
+<area shape="rect" id="node29" href="$serial__port_8c.html#a00b43768cd5a152ce47a86a3905abddb" title="Reads the interrupt id, from the IIR (interrupt identification register)" alt="" coords="1473,667,1595,693"/>
+<area shape="rect" id="node30" href="$serial__port_8c.html#a7f4485046f92cfbdd58fdc18803c7b1a" title="Reads the LCR &#45; line control register." alt="" coords="1453,844,1615,871"/>
+<area shape="rect" id="node35" href="$serial__port_8c.html#a27a3535b6ba1e9dce6f808d508de1bf5" title="Reads the LSR &#45; line status register." alt="" coords="1456,616,1612,643"/>
+<area shape="rect" id="node3" href="$group__keyboard.html#gafad76a00abafbbd8a712c442b796005d" title="Reads the KBC output and checks if it is valid." alt="" coords="177,51,278,77"/>
+<area shape="rect" id="node5" href="$group__keyboard.html#ga58017421d19bb2004825d339ebb600fa" title="Restores the KBC to its default state." alt="" coords="1044,131,1179,157"/>
+<area shape="rect" id="node7" href="$group__mouse.html#ga210374b50462acdedab00df64d5cea3c" title="Mouse interrupt handler Reads mouse data and checks if it is valid." alt="" coords="185,116,270,143"/>
+<area shape="rect" id="node8" href="$group__kbc.html#ga0cee9b230b812d6261cfe0c72be343a8" title="Writes a command to the mouse." alt="" coords="1048,181,1175,208"/>
+<area shape="rect" id="node4" href="$group__proj.html#ga2a16f651eccbd248e1ad3b3b924b143b" title=" " alt="" coords="5,363,128,389"/>
+<area shape="rect" id="node6" href="$group__interrupts.html#gabd36b37fcff976e74132a23c650d970b" title="Unsubscribe all the devices interrupts used in the project." alt="" coords="561,152,732,179"/>
+<area shape="rect" id="node9" href="$group__mouse.html#ga96841fd4b45902aa9e1124a8b1814e3b" title="Disables mouse data reporting mode." alt="" coords="801,145,957,186"/>
+<area shape="rect" id="node10" href="$group__mouse.html#ga74456022e2b29fbc3741dc59bd5033be" title="Enables mouse data reporting mode." alt="" coords="780,211,979,237"/>
+<area shape="rect" id="node11" href="$group__interrupts.html#ga1eec6afd3d0d8f337690f957769b27c8" title="Subscribe all the devices interrupts used in the project." alt="" coords="569,261,724,288"/>
+<area shape="rect" id="node14" href="$group__kbc.html#ga7084bac7af5181c81fce9327716a4213" title="Writes a command to the KBC." alt="" coords="1244,181,1405,208"/>
+<area shape="rect" id="node16" href="$rtc_8c.html#a905003cf367d12e7ab5df5ea18594c2c" title="Gets the current time from the RTC registers. Should be called from rtc_ih()." alt="" coords="827,363,931,389"/>
+<area shape="rect" id="node17" href="$group__rtc.html#ga0b9ae809cf571f61e54712a23c65348e" title="Interrupt handler for RTC interrupts. Should be called upon an RTC interrupt. To get the time,..." alt="" coords="617,312,676,339"/>
+<area shape="rect" id="node18" href="$group__rtc.html#ga35232e4c879f3cb82678674f56cf4751" title="initializes the RTC. Should be called before any other function." alt="" coords="387,363,453,389"/>
+<area shape="rect" id="node19" href="$group__rtc.html#ga5bb921968a9c40217df4a2b203b0d41e" title="Writes the current hour to the given pointer." alt="" coords="803,464,955,491"/>
+<area shape="rect" id="node23" href="$group__rtc.html#ga6bbe679f115cec90d36d50eb2aac1b89" title="Subscribes RTC interrupts." alt="" coords="813,261,945,288"/>
+<area shape="rect" id="node20" href="$group__menu.html#ga04f8f095e776c93ec861decc24ad99fd" title="Transition to the menu state by changing the state functions." alt="" coords="573,464,721,491"/>
+<area shape="rect" id="node21" href="$game_8c.html#abe0fa2797d6c581f845cb3b1d54787a6" title="Quit game button callback Transition to the menu state." alt="" coords="375,464,465,491"/>
+<area shape="rect" id="node22" href="$group__game.html#ga9de7f1042903ab8ba3b3e471b82758b6" title="Setup the game by creating the necessary objects." alt="" coords="176,591,279,617"/>
+<area shape="rect" id="node25" href="$group__serial__port.html#gaf60cabe981466c597a02a3b559f5d175" title="Reads bytes from the serial port fifo into the receiver queue." alt="" coords="1253,743,1397,769"/>
+<area shape="rect" id="node26" href="$group__serial__port.html#ga36fc13a2c6d15746b96d83fe66d62b2d" title="Interrupt handler for the serial port. Checks which interrupt was triggered and either sends bytes to..." alt="" coords="1067,717,1156,744"/>
+<area shape="rect" id="node27" href="$serial__port_8c.html#a7f0eb11d3dacfa455fa74575a8cbdded" title="Initializes the serial port communication parameters. They are specified as in the Lab7 handout." alt="" coords="818,819,941,845"/>
+<area shape="rect" id="node28" href="$group__serial__port.html#ga0310282e052b0d6daacdcf32745aad12" title="Sets the default communication parameters and enables the serial port interrupts. Also creates a tran..." alt="" coords="192,781,263,808"/>
+<area shape="rect" id="node31" href="$serial__port_8c.html#af8bb685345dc130bf3f305bd25a5ed86" title="Sets the line control register of the serial port with the given parameters. These parameters are not..." alt="" coords="1251,819,1398,845"/>
+<area shape="rect" id="node32" href="$serial__port_8c.html#a883970045a66f1ef95caeffa148cd9b4" title="Reads the divisor latch register. Reads the line control register and sets the DLAB bit to be able to..." alt="" coords="1258,869,1391,896"/>
+<area shape="rect" id="node34" href="$serial__port_8c.html#a8014c8ffb8b512f7a559bb5f2473dddb" title="Writes to the IER &#45; interrupt enable register. This register is used to enable the interrupts of the ..." alt="" coords="1246,920,1403,947"/>
+<area shape="rect" id="node33" href="$serial__port_8c.html#a51603465ef95bd730440ec3a6be11db4" title="Sets the baud rate of the serial port." alt="" coords="1041,869,1182,896"/>
+<area shape="rect" id="node36" href="$group__serial__port.html#ga0f86d0e5d046d37ae1a62481045a2a5a" title="Writes bytes from the transmitter queue into the serial port fifo." alt="" coords="1259,591,1390,617"/>
+<area shape="rect" id="node37" href="$group__serial__port.html#gaff54b69e57d250cf8acb389349aa04e3" title="Adds given button index to the transmitter queue according to the program&#39;s communication protocol." alt="" coords="1027,485,1196,526"/>
+<area shape="rect" id="node44" href="$group__serial__port.html#gad02fe61bd5edd0c986d4bb13a75ce6f7" title="Adds given position to the transmitter queue according to the program&#39;s communication protocol." alt="" coords="1035,550,1187,591"/>
+<area shape="rect" id="node45" href="$group__serial__port.html#ga194c8384625742806c4ca550cb4f18ee" title="Adds some bytes to the transmitter queue according to the program&#39;s communication protocol,..." alt="" coords="1036,616,1187,643"/>
+<area shape="rect" id="node47" href="$group__serial__port.html#ga525a88810266963dd550812fed6fa2d6" title="Adds given word index to the transmitter queue according to the program&#39;s communication protocol." alt="" coords="802,667,957,693"/>
+<area shape="rect" id="node38" href="$group__game.html#gaeaf89b27c7d4f8a12e8561ced4870cd2" title="Handle the mouse interrupts inside the game state." alt="" coords="796,565,963,592"/>
+<area shape="rect" id="node43" href="$group__menu.html#ga21291e7f1bcc6ba010511e1c9eb9a03d" title="Handle the mouse interrupts inside the menu state." alt="" coords="796,515,963,541"/>
+<area shape="rect" id="node39" href="$group__game.html#ga859ad5db5ec47b6125b2d439083befb0" title="Transition to the game state by changing the state functions." alt="" coords="573,565,721,592"/>
+<area shape="rect" id="node40" href="$menu_8c.html#a9b6d5f8b403b5a95417f1d08735a95d2" title="Enter the game button callback." alt="" coords="370,515,470,541"/>
+<area shape="rect" id="node42" href="$menu_8c.html#ac9b72db247a9a1978d9038a1acd46950" title="Enter the hard mode game button callback." alt="" coords="352,565,488,592"/>
+<area shape="rect" id="node41" href="$group__menu.html#gae131bab3ee69a41004c4300694c690a0" title="Setup the menu by creating the necessary objects." alt="" coords="176,515,279,541"/>
+<area shape="rect" id="node46" href="$group__game.html#ga839c19f02b3effc7a4f0c86ce9862edb" title="Handle the keyboard interrupts inside the game state." alt="" coords="788,616,971,643"/>
+<area shape="rect" id="node48" href="$game_8c.html#a73840b4b79b4bb04835d4b513d1d6c20" title="Play again button callback Set the game state to WAITING and reset the game by clearing the canvas an..." alt="" coords="600,667,693,693"/>
+<area shape="rect" id="node49" href="$game_8c.html#ab9dfe6919404cb12ddb40780af1a2e23" title="Change roles and play again button callback Change the roles of the players and call play_again." alt="" coords="327,667,513,693"/>
+</map>

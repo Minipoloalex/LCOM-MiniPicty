@@ -1,0 +1,6 @@
+<map id="rtc_init" name="rtc_init">
+<area shape="rect" id="node1" title="initializes the RTC. Should be called before any other function." alt="" coords="5,31,72,57"/>
+<area shape="rect" id="node2" href="$rtc_8c.html#a75992a9a58c005a6db594c4f9ce64393" title="Reads from the RTC given register." alt="" coords="122,5,197,32"/>
+<area shape="rect" id="node4" href="$rtc_8c.html#a390c37df7d82ba9d76ef49c49dfd4c08" title="Writes to the RTC given register." alt="" coords="120,56,199,83"/>
+<area shape="rect" id="node3" href="$group__utils.html#ga79a031a8611f5b2d6afa4158e92b0fb4" title="Invokes sys_inb() system call but reads the value into a uint8_t variable." alt="" coords="247,5,345,32"/>
+</map>

@@ -1,0 +1,4 @@
+<map id="unload_resources" name="unload_resources">
+<area shape="rect" id="node1" title="Unload all the resources by freeing the memory." alt="" coords="5,5,141,32"/>
+<area shape="rect" id="node2" href="$group__sprite.html#ga63d3011a51cab81f02fcf8aa373f7f3a" title="Destroy a Sprite." alt="" coords="189,5,304,32"/>
+</map>

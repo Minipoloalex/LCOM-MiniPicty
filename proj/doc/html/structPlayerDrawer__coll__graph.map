@@ -1,0 +1,8 @@
+<map id="PlayerDrawer" name="PlayerDrawer">
+<area shape="rect" id="node1" title="Player Drawer struct Contains a player, a player type, a brush and a cursor." alt="" coords="51,273,162,300"/>
+<area shape="rect" id="node2" href="$structbrush.html" title="Brush struct. Has a color and size." alt="" coords="41,184,100,211"/>
+<area shape="rect" id="node3" href="$structPlayer.html" title=" " alt="" coords="125,184,187,211"/>
+<area shape="rect" id="node4" href="$structdrawing__position.html" title="Drawing position This struct is used to store the position of the mouse and if it is drawing/clicking..." alt="" coords="5,95,139,121"/>
+<area shape="rect" id="node5" href="$structposition.html" title="Position struct." alt="" coords="35,5,109,32"/>
+<area shape="rect" id="node6" href="$structqueue.html" title=" " alt="" coords="210,95,273,121"/>
+</map>

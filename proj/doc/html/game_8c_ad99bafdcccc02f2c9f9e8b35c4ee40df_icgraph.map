@@ -1,0 +1,9 @@
+<map id="game_draw_buttons" name="game_draw_buttons">
+<area shape="rect" id="node1" title="Draw the game buttons." alt="" coords="853,31,1008,57"/>
+<area shape="rect" id="node2" href="$group__game.html#ga32d55ba98626c3abaf67edc11a00026c" title="Draw the game." alt="" coords="707,31,805,57"/>
+<area shape="rect" id="node3" href="$group__game.html#ga859ad5db5ec47b6125b2d439083befb0" title="Transition to the game state by changing the state functions." alt="" coords="511,31,659,57"/>
+<area shape="rect" id="node4" href="$menu_8c.html#a9b6d5f8b403b5a95417f1d08735a95d2" title="Enter the game button callback." alt="" coords="345,5,445,32"/>
+<area shape="rect" id="node7" href="$menu_8c.html#ac9b72db247a9a1978d9038a1acd46950" title="Enter the hard mode game button callback." alt="" coords="327,56,463,83"/>
+<area shape="rect" id="node5" href="$group__menu.html#gae131bab3ee69a41004c4300694c690a0" title="Setup the menu by creating the necessary objects." alt="" coords="176,31,279,57"/>
+<area shape="rect" id="node6" href="$group__proj.html#ga2a16f651eccbd248e1ad3b3b924b143b" title=" " alt="" coords="5,31,128,57"/>
+</map>

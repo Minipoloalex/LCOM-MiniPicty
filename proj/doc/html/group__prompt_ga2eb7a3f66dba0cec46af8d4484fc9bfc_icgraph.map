@@ -1,0 +1,11 @@
+<map id="prompt_generate" name="prompt_generate">
+<area shape="rect" id="node1" title="Generate a prompt by picking a random one from the prompts array." alt="" coords="757,81,892,108"/>
+<area shape="rect" id="node2" href="$game_8c.html#a73840b4b79b4bb04835d4b513d1d6c20" title="Play again button callback Set the game state to WAITING and reset the game by clearing the canvas an..." alt="" coords="589,56,682,83"/>
+<area shape="rect" id="node6" href="$group__game.html#ga859ad5db5ec47b6125b2d439083befb0" title="Transition to the game state by changing the state functions." alt="" coords="561,107,709,133"/>
+<area shape="rect" id="node3" href="$game_8c.html#ab9dfe6919404cb12ddb40780af1a2e23" title="Change roles and play again button callback Change the roles of the players and call play_again." alt="" coords="327,5,513,32"/>
+<area shape="rect" id="node4" href="$group__game.html#ga9de7f1042903ab8ba3b3e471b82758b6" title="Setup the game by creating the necessary objects." alt="" coords="176,56,279,83"/>
+<area shape="rect" id="node5" href="$group__proj.html#ga2a16f651eccbd248e1ad3b3b924b143b" title=" " alt="" coords="5,81,128,108"/>
+<area shape="rect" id="node7" href="$menu_8c.html#a9b6d5f8b403b5a95417f1d08735a95d2" title="Enter the game button callback." alt="" coords="370,107,470,133"/>
+<area shape="rect" id="node9" href="$menu_8c.html#ac9b72db247a9a1978d9038a1acd46950" title="Enter the hard mode game button callback." alt="" coords="352,157,488,184"/>
+<area shape="rect" id="node8" href="$group__menu.html#gae131bab3ee69a41004c4300694c690a0" title="Setup the menu by creating the necessary objects." alt="" coords="176,107,279,133"/>
+</map>

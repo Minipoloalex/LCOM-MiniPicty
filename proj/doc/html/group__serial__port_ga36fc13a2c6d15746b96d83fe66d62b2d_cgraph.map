@@ -1,0 +1,15 @@
+<map id="ser_ih_fifo" name="ser_ih_fifo">
+<area shape="rect" id="node1" title="Interrupt handler for the serial port. Checks which interrupt was triggered and either sends bytes to..." alt="" coords="5,134,95,161"/>
+<area shape="rect" id="node2" href="$group__serial__port.html#gaf60cabe981466c597a02a3b559f5d175" title="Reads bytes from the serial port fifo into the receiver queue." alt="" coords="143,109,287,135"/>
+<area shape="rect" id="node8" href="$serial__port_8c.html#a27a3535b6ba1e9dce6f808d508de1bf5" title="Reads the LSR &#45; line status register." alt="" coords="351,159,507,186"/>
+<area shape="rect" id="node9" href="$serial__port_8c.html#a00b43768cd5a152ce47a86a3905abddb" title="Reads the interrupt id, from the IIR (interrupt identification register)" alt="" coords="154,25,275,51"/>
+<area shape="rect" id="node10" href="$group__serial__port.html#ga0f86d0e5d046d37ae1a62481045a2a5a" title="Writes bytes from the transmitter queue into the serial port fifo." alt="" coords="149,210,280,237"/>
+<area shape="rect" id="node3" href="$serial__port_8c.html#abeebee5728137a60639e1cb293140667" title=" " alt="" coords="335,43,524,84"/>
+<area shape="rect" id="node6" href="$serial__port_8c.html#ae5541c6f5532758de613ac3d9ab9c457" title="Reads data from the Receiver Buffer Register (RBR). Assumes that the data is ready to be read." alt="" coords="372,109,487,135"/>
+<area shape="rect" id="node4" href="$group__queue.html#gac00389cf1a0ae14e7190267c2c0f0a0f" title="Pushes an element to the queue." alt="" coords="587,50,687,77"/>
+<area shape="rect" id="node5" href="$group__queue.html#ga4d4403de9d9a1dd031f5533c6df214de" title="Returns true if the queue is full." alt="" coords="749,50,857,77"/>
+<area shape="rect" id="node7" href="$group__utils.html#ga79a031a8611f5b2d6afa4158e92b0fb4" title="Invokes sys_inb() system call but reads the value into a uint8_t variable." alt="" coords="587,109,686,135"/>
+<area shape="rect" id="node11" href="$group__queue.html#gab093a7863520d7159a7b05aef912ae58" title="Returns true if the queue is empty." alt="" coords="572,235,701,262"/>
+<area shape="rect" id="node12" href="$group__queue.html#gaf661eb1ae68c803a345e7c4828139732" title="Pops an element from the queue." alt="" coords="383,210,476,237"/>
+<area shape="rect" id="node13" href="$serial__port_8c.html#ae60b262384b1b42527c199c6bb0c4002" title="Writes data to the Transmitter Holding Register (THR). Assumes that the data is ready to be written." alt="" coords="370,311,489,338"/>
+</map>

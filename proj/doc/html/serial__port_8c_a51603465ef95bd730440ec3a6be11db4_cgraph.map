@@ -1,0 +1,7 @@
+<map id="ser_set_baud_rate" name="ser_set_baud_rate">
+<area shape="rect" id="node1" title="Sets the baud rate of the serial port." alt="" coords="5,31,147,57"/>
+<area shape="rect" id="node2" href="$serial__port_8c.html#a883970045a66f1ef95caeffa148cd9b4" title="Reads the divisor latch register. Reads the line control register and sets the DLAB bit to be able to..." alt="" coords="195,31,328,57"/>
+<area shape="rect" id="node3" href="$serial__port_8c.html#a7f4485046f92cfbdd58fdc18803c7b1a" title="Reads the LCR &#45; line control register." alt="" coords="378,5,539,32"/>
+<area shape="rect" id="node5" href="$serial__port_8c.html#a2e4b96f16f069a6265dd1865b0431c23" title="Writes to the LCR &#45; line control register." alt="" coords="376,56,541,83"/>
+<area shape="rect" id="node4" href="$group__utils.html#ga79a031a8611f5b2d6afa4158e92b0fb4" title="Invokes sys_inb() system call but reads the value into a uint8_t variable." alt="" coords="589,5,688,32"/>
+</map>

@@ -1,0 +1,5 @@
+<map id="draw_asteroid" name="draw_asteroid">
+<area shape="rect" id="node1" title="Draws an asteroid with its current xpm at its current position." alt="" coords="5,5,120,32"/>
+<area shape="rect" id="node2" href="$group__asteroid.html#ga149feb47586f0ad1c6af10be58de43cb" title="Draws a sprite to a specified position." alt="" coords="168,5,289,32"/>
+<area shape="rect" id="node3" href="$video__card_8c.html#a2edd9c84fd5c596777cdce2ddaaaf7d7" title="draws a pixel in the desired buffer" alt="" coords="337,5,452,32"/>
+</map>

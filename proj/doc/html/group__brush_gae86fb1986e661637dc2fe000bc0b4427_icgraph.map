@@ -1,0 +1,7 @@
+<map id="destroy_brush" name="destroy_brush">
+<area shape="rect" id="node1" title="Destroys a brush." alt="" coords="557,31,672,57"/>
+<area shape="rect" id="node2" href="$group__player__drawer.html#gae76a0273355a6b0c7ed1569b964b6f64" title="Destroy a Player Drawer." alt="" coords="339,31,509,57"/>
+<area shape="rect" id="node3" href="$group__game.html#gabd7a5dc575bf590a0886f372aad1c99e" title="Destroy the game by freeing the necessary objects." alt="" coords="176,5,291,32"/>
+<area shape="rect" id="node5" href="$group__game.html#ga9de7f1042903ab8ba3b3e471b82758b6" title="Setup the game by creating the necessary objects." alt="" coords="182,56,285,83"/>
+<area shape="rect" id="node4" href="$group__proj.html#ga2a16f651eccbd248e1ad3b3b924b143b" title=" " alt="" coords="5,31,128,57"/>
+</map>

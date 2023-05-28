@@ -1,0 +1,5 @@
+<map id="State" name="State">
+<area shape="rect" id="node1" title="State struct Contains all the functions that will be called in the main loop in each state." alt="" coords="33,215,89,241"/>
+<area shape="rect" id="node2" href="$structbuttons__array.html" title="Buttons array struct. Has an array of buttons and the corresponded number of buttons in the array." alt="" coords="5,95,117,121"/>
+<area shape="rect" id="node3" href="$structbutton.html" title="Button struct. Has a start x and y position, width, height and a color. Can have also an icon or not,..." alt="" coords="29,5,93,32"/>
+</map>

@@ -1,0 +1,8 @@
+<map id="create_player" name="create_player">
+<area shape="rect" id="node1" title="Create a new Player." alt="" coords="537,31,648,57"/>
+<area shape="rect" id="node2" href="$group__player__drawer.html#ga2e55e5f479245eecba2d64ba6811cb5e" title="Create a new Player Drawer." alt="" coords="327,5,489,32"/>
+<area shape="rect" id="node5" href="$group__player__menu.html#ga637652b23be2af4978f6b320145f4267" title="Create a new Player Menu." alt="" coords="331,56,485,83"/>
+<area shape="rect" id="node3" href="$group__game.html#ga9de7f1042903ab8ba3b3e471b82758b6" title="Setup the game by creating the necessary objects." alt="" coords="176,5,279,32"/>
+<area shape="rect" id="node4" href="$group__proj.html#ga2a16f651eccbd248e1ad3b3b924b143b" title=" " alt="" coords="5,31,128,57"/>
+<area shape="rect" id="node6" href="$group__menu.html#gae131bab3ee69a41004c4300694c690a0" title="Setup the menu by creating the necessary objects." alt="" coords="176,56,279,83"/>
+</map>

@@ -1,0 +1,8 @@
+<map id="write_to_mouse" name="write_to_mouse">
+<area shape="rect" id="node1" title="Writes a command to the mouse." alt="" coords="5,97,132,123"/>
+<area shape="rect" id="node2" href="$group__kbc.html#ga73de6bd49c4352b2bd3f13fbf62e4122" title="Reads the KBC output." alt="" coords="193,71,328,98"/>
+<area shape="rect" id="node6" href="$group__kbc.html#ga7084bac7af5181c81fce9327716a4213" title="Writes a command to the KBC." alt="" coords="180,122,341,149"/>
+<area shape="rect" id="node3" href="$group__kbc.html#gaaed96f03ef5a1190ac89140ad5d3c339" title="Reads KBC output but doesn&#39;t do anything with it." alt="" coords="389,5,544,47"/>
+<area shape="rect" id="node4" href="$group__utils.html#ga79a031a8611f5b2d6afa4158e92b0fb4" title="Invokes sys_inb() system call but reads the value into a uint8_t variable." alt="" coords="592,71,691,98"/>
+<area shape="rect" id="node5" href="$kbc_8c.html#ac024af91b156e4fc61ee3886b891de21" title="Reads the KBC status register." alt="" coords="401,122,533,149"/>
+</map>

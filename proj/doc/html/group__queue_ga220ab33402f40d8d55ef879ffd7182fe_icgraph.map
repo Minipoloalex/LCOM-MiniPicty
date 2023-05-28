@@ -1,0 +1,12 @@
+<map id="create_queue" name="create_queue">
+<area shape="rect" id="node1" title="Create a queue object ." alt="" coords="728,81,839,108"/>
+<area shape="rect" id="node2" href="$group__player.html#ga270d5adceb8e9e9b83834ae5e00e5f2e" title="Create a new Player." alt="" coords="553,56,664,83"/>
+<area shape="rect" id="node8" href="$serial__port_8c.html#ab5e61fe6ea8196c49c3ad31d1cdfba0e" title="Sets the base address of the serial port and creates the queues." alt="" coords="537,107,680,133"/>
+<area shape="rect" id="node3" href="$group__player__drawer.html#ga2e55e5f479245eecba2d64ba6811cb5e" title="Create a new Player Drawer." alt="" coords="327,5,489,32"/>
+<area shape="rect" id="node6" href="$group__player__menu.html#ga637652b23be2af4978f6b320145f4267" title="Create a new Player Menu." alt="" coords="331,56,485,83"/>
+<area shape="rect" id="node4" href="$group__game.html#ga9de7f1042903ab8ba3b3e471b82758b6" title="Setup the game by creating the necessary objects." alt="" coords="176,5,279,32"/>
+<area shape="rect" id="node5" href="$group__proj.html#ga2a16f651eccbd248e1ad3b3b924b143b" title=" " alt="" coords="5,56,128,83"/>
+<area shape="rect" id="node7" href="$group__menu.html#gae131bab3ee69a41004c4300694c690a0" title="Setup the menu by creating the necessary objects." alt="" coords="176,56,279,83"/>
+<area shape="rect" id="node9" href="$serial__port_8c.html#a7f0eb11d3dacfa455fa74575a8cbdded" title="Initializes the serial port communication parameters. They are specified as in the Lab7 handout." alt="" coords="347,107,469,133"/>
+<area shape="rect" id="node10" href="$group__serial__port.html#ga0310282e052b0d6daacdcf32745aad12" title="Sets the default communication parameters and enables the serial port interrupts. Also creates a tran..." alt="" coords="192,107,263,133"/>
+</map>

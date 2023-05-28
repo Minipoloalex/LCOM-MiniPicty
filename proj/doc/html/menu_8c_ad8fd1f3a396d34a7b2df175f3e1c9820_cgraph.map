@@ -1,0 +1,4 @@
+<map id="draw_background_scene" name="draw_background_scene">
+<area shape="rect" id="node1" title="Draw the menu background Draws the background buffer to the memory buffer." alt="" coords="5,5,188,32"/>
+<area shape="rect" id="node2" href="$group__asteroid.html#gac3287d12fec5b19d728891fff2545d16" title="Copies the contents of the buffer given by parameter to the current buffer that is being prepared to ..." alt="" coords="236,5,359,32"/>
+</map>

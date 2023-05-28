@@ -1,0 +1,6 @@
+<map id="ser_write_divisor" name="ser_write_divisor">
+<area shape="rect" id="node1" title="Reads the divisor latch register. Reads the line control register and sets the DLAB bit to be able to..." alt="" coords="5,31,139,57"/>
+<area shape="rect" id="node2" href="$serial__port_8c.html#a7f4485046f92cfbdd58fdc18803c7b1a" title="Reads the LCR &#45; line control register." alt="" coords="189,5,350,32"/>
+<area shape="rect" id="node4" href="$serial__port_8c.html#a2e4b96f16f069a6265dd1865b0431c23" title="Writes to the LCR &#45; line control register." alt="" coords="187,56,352,83"/>
+<area shape="rect" id="node3" href="$group__utils.html#ga79a031a8611f5b2d6afa4158e92b0fb4" title="Invokes sys_inb() system call but reads the value into a uint8_t variable." alt="" coords="400,5,499,32"/>
+</map>

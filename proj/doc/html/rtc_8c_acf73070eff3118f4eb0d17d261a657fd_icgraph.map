@@ -1,0 +1,5 @@
+<map id="increment_one_second" name="increment_one_second">
+<area shape="rect" id="node1" title="Increments the time by one second. Increments the variables hours, minutes and seconds...." alt="" coords="283,5,455,32"/>
+<area shape="rect" id="node2" href="$group__rtc.html#ga0b9ae809cf571f61e54712a23c65348e" title="Interrupt handler for RTC interrupts. Should be called upon an RTC interrupt. To get the time,..." alt="" coords="176,5,235,32"/>
+<area shape="rect" id="node3" href="$group__proj.html#ga2a16f651eccbd248e1ad3b3b924b143b" title=" " alt="" coords="5,5,128,32"/>
+</map>

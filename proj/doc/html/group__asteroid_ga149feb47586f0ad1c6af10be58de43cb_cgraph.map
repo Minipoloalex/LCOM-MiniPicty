@@ -1,0 +1,4 @@
+<map id="vg_draw_sprite" name="vg_draw_sprite">
+<area shape="rect" id="node1" title="Draws a sprite to a specified position." alt="" coords="5,5,127,32"/>
+<area shape="rect" id="node2" href="$video__card_8c.html#a2edd9c84fd5c596777cdce2ddaaaf7d7" title="draws a pixel in the desired buffer" alt="" coords="175,5,289,32"/>
+</map>

@@ -1,0 +1,7 @@
+<map id="setup_video_mode" name="setup_video_mode">
+<area shape="rect" id="node1" title="calls the functions to enter in graphics mode and map the physical memory to the virtual address spac..." alt="" coords="5,56,151,83"/>
+<area shape="rect" id="node2" href="$video__card_8c.html#a83db45b15155f7902ffdd20cd03aab26" title="Map physical memory to virtual address space of process. Gets the memory (VRAM) for all 3 buffers." alt="" coords="199,31,397,57"/>
+<area shape="rect" id="node5" href="$video__card_8c.html#ac34ed31db6d6ef68b7167a0c024cac2b" title="Enter in Graphics mode." alt="" coords="259,81,337,108"/>
+<area shape="rect" id="node3" href="$group__asteroid.html#ga595b2cd1eafe4d4d0c710c913f30cf8a" title="Sets the needs_update variable to the given value. If the value is set to true, it can be expected th..." alt="" coords="445,5,585,32"/>
+<area shape="rect" id="node4" href="$group__asteroid.html#gae4f1fdd1f5a95ca8230d77f0a915bb83" title="Clears the buffer given by the parameter." alt="" coords="454,56,577,83"/>
+</map>

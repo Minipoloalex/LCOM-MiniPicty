@@ -1,0 +1,5 @@
+<map id="set_rubber" name="set_rubber">
+<area shape="rect" id="node1" title="Set brush to rubber button callback." alt="" coords="5,31,96,57"/>
+<area shape="rect" id="node2" href="$group__player__drawer.html#ga7338c83fd15fd1d8200a91cf896a960a" title="Get the Brush object from the player." alt="" coords="144,5,331,32"/>
+<area shape="rect" id="node3" href="$group__brush.html#ga7806185d6d2cdff8e0753512c65079b8" title="Sets the color of the brush." alt="" coords="175,56,299,83"/>
+</map>

@@ -1,0 +1,30 @@
+<map id="push_queue" name="push_queue">
+<area shape="rect" id="node1" title="Pushes an element to the queue." alt="" coords="1463,101,1563,127"/>
+<area shape="rect" id="node2" href="$group__player.html#ga88ce9ab2449a856d63994f6ecaa0fe27" title="Add a new position to the queue of positions of the player." alt="" coords="1215,101,1405,127"/>
+<area shape="rect" id="node16" href="$serial__port_8c.html#abeebee5728137a60639e1cb293140667" title=" " alt="" coords="1215,5,1405,47"/>
+<area shape="rect" id="node21" href="$serial__port_8c.html#a4d534181f23c86dc31eaa604f35ccb44" title="Adds a byte to the transmitter queue that will later be communicated/sent to the serial port." alt="" coords="1205,268,1415,309"/>
+<area shape="rect" id="node3" href="$group__game.html#gaeaf89b27c7d4f8a12e8561ced4870cd2" title="Handle the mouse interrupts inside the game state." alt="" coords="765,210,932,237"/>
+<area shape="rect" id="node9" href="$group__menu.html#ga21291e7f1bcc6ba010511e1c9eb9a03d" title="Handle the mouse interrupts inside the menu state." alt="" coords="765,143,932,170"/>
+<area shape="rect" id="node13" href="$group__serial__port.html#ga6057b7a2396fe4a93d96b250a19e994c" title="Reads bytes from the receiver queue according to the program&#39;s communication protocol,..." alt="" coords="993,35,1152,76"/>
+<area shape="rect" id="node4" href="$group__game.html#ga859ad5db5ec47b6125b2d439083befb0" title="Transition to the game state by changing the state functions." alt="" coords="561,210,709,237"/>
+<area shape="rect" id="node5" href="$menu_8c.html#a9b6d5f8b403b5a95417f1d08735a95d2" title="Enter the game button callback." alt="" coords="370,159,470,186"/>
+<area shape="rect" id="node8" href="$menu_8c.html#ac9b72db247a9a1978d9038a1acd46950" title="Enter the hard mode game button callback." alt="" coords="352,210,488,237"/>
+<area shape="rect" id="node6" href="$group__menu.html#gae131bab3ee69a41004c4300694c690a0" title="Setup the menu by creating the necessary objects." alt="" coords="176,159,279,186"/>
+<area shape="rect" id="node7" href="$group__proj.html#ga2a16f651eccbd248e1ad3b3b924b143b" title=" " alt="" coords="5,109,128,135"/>
+<area shape="rect" id="node10" href="$group__menu.html#ga04f8f095e776c93ec861decc24ad99fd" title="Transition to the menu state by changing the state functions." alt="" coords="561,126,709,153"/>
+<area shape="rect" id="node11" href="$game_8c.html#abe0fa2797d6c581f845cb3b1d54787a6" title="Quit game button callback Transition to the menu state." alt="" coords="375,261,465,287"/>
+<area shape="rect" id="node12" href="$group__game.html#ga9de7f1042903ab8ba3b3e471b82758b6" title="Setup the game by creating the necessary objects." alt="" coords="176,286,279,313"/>
+<area shape="rect" id="node14" href="$group__game.html#ga673fceeeb24e8b3a1d47f28aaf0ba218" title="Handle the serial port interrupts inside the game state." alt="" coords="769,93,928,119"/>
+<area shape="rect" id="node15" href="$group__menu.html#ga521fb29305979bff8f21fce6613454bd" title="Handle the serial port interrupts inside the menu state." alt="" coords="769,42,928,69"/>
+<area shape="rect" id="node17" href="$group__serial__port.html#gaf60cabe981466c597a02a3b559f5d175" title="Reads bytes from the serial port fifo into the receiver queue." alt="" coords="563,7,707,34"/>
+<area shape="rect" id="node18" href="$group__serial__port.html#ga36fc13a2c6d15746b96d83fe66d62b2d" title="Interrupt handler for the serial port. Checks which interrupt was triggered and either sends bytes to..." alt="" coords="183,7,272,34"/>
+<area shape="rect" id="node19" href="$serial__port_8c.html#a7f0eb11d3dacfa455fa74575a8cbdded" title="Initializes the serial port communication parameters. They are specified as in the Lab7 handout." alt="" coords="359,58,481,85"/>
+<area shape="rect" id="node20" href="$group__serial__port.html#ga0310282e052b0d6daacdcf32745aad12" title="Sets the default communication parameters and enables the serial port interrupts. Also creates a tran..." alt="" coords="192,58,263,85"/>
+<area shape="rect" id="node22" href="$group__serial__port.html#gaff54b69e57d250cf8acb389349aa04e3" title="Adds given button index to the transmitter queue according to the program&#39;s communication protocol." alt="" coords="988,203,1157,244"/>
+<area shape="rect" id="node23" href="$group__serial__port.html#gad02fe61bd5edd0c986d4bb13a75ce6f7" title="Adds given position to the transmitter queue according to the program&#39;s communication protocol." alt="" coords="997,268,1149,309"/>
+<area shape="rect" id="node24" href="$group__serial__port.html#ga194c8384625742806c4ca550cb4f18ee" title="Adds some bytes to the transmitter queue according to the program&#39;s communication protocol,..." alt="" coords="997,334,1148,361"/>
+<area shape="rect" id="node26" href="$group__serial__port.html#ga525a88810266963dd550812fed6fa2d6" title="Adds given word index to the transmitter queue according to the program&#39;s communication protocol." alt="" coords="771,337,926,363"/>
+<area shape="rect" id="node25" href="$group__game.html#ga839c19f02b3effc7a4f0c86ce9862edb" title="Handle the keyboard interrupts inside the game state." alt="" coords="757,273,940,299"/>
+<area shape="rect" id="node27" href="$game_8c.html#a73840b4b79b4bb04835d4b513d1d6c20" title="Play again button callback Set the game state to WAITING and reset the game by clearing the canvas an..." alt="" coords="589,337,682,363"/>
+<area shape="rect" id="node28" href="$game_8c.html#ab9dfe6919404cb12ddb40780af1a2e23" title="Change roles and play again button callback Change the roles of the players and call play_again." alt="" coords="327,311,513,338"/>
+</map>

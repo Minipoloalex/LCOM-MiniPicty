@@ -1,0 +1,5 @@
+<map id="rtc_read_temp_hour" name="rtc_read_temp_hour">
+<area shape="rect" id="node1" title="Writes the current hour to the given pointer." alt="" coords="5,5,157,32"/>
+<area shape="rect" id="node2" href="$rtc_8c.html#a75992a9a58c005a6db594c4f9ce64393" title="Reads from the RTC given register." alt="" coords="205,5,280,32"/>
+<area shape="rect" id="node3" href="$group__utils.html#ga79a031a8611f5b2d6afa4158e92b0fb4" title="Invokes sys_inb() system call but reads the value into a uint8_t variable." alt="" coords="328,5,427,32"/>
+</map>

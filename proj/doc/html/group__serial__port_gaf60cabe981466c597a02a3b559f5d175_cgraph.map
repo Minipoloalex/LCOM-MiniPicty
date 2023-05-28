@@ -1,0 +1,9 @@
+<map id="ser_read_from_fifo" name="ser_read_from_fifo">
+<area shape="rect" id="node1" title="Reads bytes from the serial port fifo into the receiver queue." alt="" coords="5,71,149,98"/>
+<area shape="rect" id="node2" href="$serial__port_8c.html#abeebee5728137a60639e1cb293140667" title=" " alt="" coords="197,5,387,47"/>
+<area shape="rect" id="node5" href="$serial__port_8c.html#ae5541c6f5532758de613ac3d9ab9c457" title="Reads data from the Receiver Buffer Register (RBR). Assumes that the data is ready to be read." alt="" coords="235,71,349,98"/>
+<area shape="rect" id="node7" href="$serial__port_8c.html#a27a3535b6ba1e9dce6f808d508de1bf5" title="Reads the LSR &#45; line status register." alt="" coords="214,122,370,149"/>
+<area shape="rect" id="node3" href="$group__queue.html#gac00389cf1a0ae14e7190267c2c0f0a0f" title="Pushes an element to the queue." alt="" coords="435,13,535,39"/>
+<area shape="rect" id="node4" href="$group__queue.html#ga4d4403de9d9a1dd031f5533c6df214de" title="Returns true if the queue is full." alt="" coords="583,13,691,39"/>
+<area shape="rect" id="node6" href="$group__utils.html#ga79a031a8611f5b2d6afa4158e92b0fb4" title="Invokes sys_inb() system call but reads the value into a uint8_t variable." alt="" coords="435,97,534,123"/>
+</map>

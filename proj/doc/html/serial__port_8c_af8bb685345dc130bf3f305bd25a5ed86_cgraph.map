@@ -1,0 +1,6 @@
+<map id="ser_set_line_config" name="ser_set_line_config">
+<area shape="rect" id="node1" title="Sets the line control register of the serial port with the given parameters. These parameters are not..." alt="" coords="5,31,152,57"/>
+<area shape="rect" id="node2" href="$serial__port_8c.html#a7f4485046f92cfbdd58fdc18803c7b1a" title="Reads the LCR &#45; line control register." alt="" coords="202,5,363,32"/>
+<area shape="rect" id="node4" href="$serial__port_8c.html#a2e4b96f16f069a6265dd1865b0431c23" title="Writes to the LCR &#45; line control register." alt="" coords="200,56,365,83"/>
+<area shape="rect" id="node3" href="$group__utils.html#ga79a031a8611f5b2d6afa4158e92b0fb4" title="Invokes sys_inb() system call but reads the value into a uint8_t variable." alt="" coords="413,5,512,32"/>
+</map>

@@ -1,0 +1,6 @@
+<map id="mouse_enable_int" name="mouse_enable_int">
+<area shape="rect" id="node1" title="Enables mouse interrupts." alt="" coords="395,31,536,57"/>
+<area shape="rect" id="node2" href="$group__interrupts.html#ga1eec6afd3d0d8f337690f957769b27c8" title="Subscribe all the devices interrupts used in the project." alt="" coords="184,5,339,32"/>
+<area shape="rect" id="node4" href="$group__interrupts.html#gabd36b37fcff976e74132a23c650d970b" title="Unsubscribe all the devices interrupts used in the project." alt="" coords="176,56,347,83"/>
+<area shape="rect" id="node3" href="$group__proj.html#ga2a16f651eccbd248e1ad3b3b924b143b" title=" " alt="" coords="5,31,128,57"/>
+</map>

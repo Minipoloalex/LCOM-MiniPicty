@@ -1,0 +1,8 @@
+<map id="rtc_get_current_time" name="rtc_get_current_time">
+<area shape="rect" id="node1" title="Returns the current time string in the format hh:mm:ss, size given by TIME_STRING_SIZE." alt="" coords="849,5,1007,32"/>
+<area shape="rect" id="node2" href="$group__menu.html#ga4297b714eb1dbb78fb892693334e8efd" title="Handle the rtc interrupts inside the menu state." alt="" coords="661,5,801,32"/>
+<area shape="rect" id="node3" href="$group__menu.html#ga04f8f095e776c93ec861decc24ad99fd" title="Transition to the menu state by changing the state functions." alt="" coords="465,5,613,32"/>
+<area shape="rect" id="node4" href="$group__proj.html#ga2a16f651eccbd248e1ad3b3b924b143b" title=" " alt="" coords="5,5,128,32"/>
+<area shape="rect" id="node5" href="$game_8c.html#abe0fa2797d6c581f845cb3b1d54787a6" title="Quit game button callback Transition to the menu state." alt="" coords="327,31,417,57"/>
+<area shape="rect" id="node6" href="$group__game.html#ga9de7f1042903ab8ba3b3e471b82758b6" title="Setup the game by creating the necessary objects." alt="" coords="176,31,279,57"/>
+</map>

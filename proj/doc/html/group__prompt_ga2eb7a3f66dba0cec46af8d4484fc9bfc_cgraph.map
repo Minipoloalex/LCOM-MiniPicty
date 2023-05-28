@@ -1,0 +1,4 @@
+<map id="prompt_generate" name="prompt_generate">
+<area shape="rect" id="node1" title="Generate a prompt by picking a random one from the prompts array." alt="" coords="5,5,140,32"/>
+<area shape="rect" id="node2" href="$group__prompt.html#ga12b0b36cabda80601ba7687505f93406" title="Get the word from index object." alt="" coords="188,5,351,32"/>
+</map>

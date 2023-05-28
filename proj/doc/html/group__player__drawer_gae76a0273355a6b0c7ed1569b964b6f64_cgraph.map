@@ -1,0 +1,6 @@
+<map id="destroy_player_drawer" name="destroy_player_drawer">
+<area shape="rect" id="node1" title="Destroy a Player Drawer." alt="" coords="5,31,176,57"/>
+<area shape="rect" id="node2" href="$group__brush.html#gae86fb1986e661637dc2fe000bc0b4427" title="Destroys a brush." alt="" coords="226,5,341,32"/>
+<area shape="rect" id="node3" href="$group__player.html#gab99707f1436b3a6a72e4302200ad8a17" title="Destroy a Player." alt="" coords="224,56,343,83"/>
+<area shape="rect" id="node4" href="$group__queue.html#gaafc0fe4e7d7d46275df3f4babe1926d2" title="Deletes a queue object Destructor for the queue object." alt="" coords="391,56,501,83"/>
+</map>

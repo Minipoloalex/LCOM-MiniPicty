@@ -1,0 +1,26 @@
+<map id="get_h_res" name="get_h_res">
+<area shape="rect" id="node1" title="returns the horizontal resolution of the video mode used" alt="" coords="1524,267,1609,293"/>
+<area shape="rect" id="node2" href="$group__asteroid.html#gacd964a436ecab1c3c6b46330f1a81c41" title="Updates the asteroid&#39;s position, speed and xpms to be the default initial values." alt="" coords="757,117,932,144"/>
+<area shape="rect" id="node4" href="$group__game.html#ga9de7f1042903ab8ba3b3e471b82758b6" title="Setup the game by creating the necessary objects." alt="" coords="176,119,279,145"/>
+<area shape="rect" id="node10" href="$group__menu.html#gae131bab3ee69a41004c4300694c690a0" title="Setup the menu by creating the necessary objects." alt="" coords="176,245,279,272"/>
+<area shape="rect" id="node12" href="$background_8c.html#afd78e72ffe890bfa8f460adb57cfa05e" title="Draw the sky based on the hour." alt="" coords="1241,317,1323,344"/>
+<area shape="rect" id="node17" href="$background_8c.html#afd7e922de7c70c77f8a0a29365061984" title="Draw the stars in the sky." alt="" coords="1377,267,1471,293"/>
+<area shape="rect" id="node18" href="$background_8c.html#a1682ad47cf211a83eb9bd95ea3540eb6" title="Draw the sun based on the hour From 6 to 19 hours the sun will be drawn in the sky with a different h..." alt="" coords="1240,368,1324,395"/>
+<area shape="rect" id="node19" href="$background_8c.html#a5bab65edde4378ee6821f5777884cb35" title="Draw the terrain of the background, a static rectangle." alt="" coords="1372,419,1476,445"/>
+<area shape="rect" id="node20" href="$menu_8c.html#a0635403a6f2f9a5d2cc60dd5c988cb10" title="Draw current time in the menu." alt="" coords="1379,216,1469,243"/>
+<area shape="rect" id="node22" href="$group__mouse.html#ga83ca3d2011fc62fb10c5403a571ba2f4" title="returns a updated drawing position based on a new mouse packet and the previous position Always call ..." alt="" coords="980,166,1192,207"/>
+<area shape="rect" id="node3" href="$group__asteroid.html#gac03b30cef1e6c6dcf37b6210160f3889" title="Creates an asteroid." alt="" coords="574,144,697,171"/>
+<area shape="rect" id="node6" href="$game_8c.html#a73840b4b79b4bb04835d4b513d1d6c20" title="Play again button callback Set the game state to WAITING and reset the game by clearing the canvas an..." alt="" coords="589,93,682,120"/>
+<area shape="rect" id="node8" href="$group__game.html#ga859ad5db5ec47b6125b2d439083befb0" title="Transition to the game state by changing the state functions." alt="" coords="561,195,709,221"/>
+<area shape="rect" id="node5" href="$group__proj.html#ga2a16f651eccbd248e1ad3b3b924b143b" title=" " alt="" coords="5,245,128,272"/>
+<area shape="rect" id="node7" href="$game_8c.html#ab9dfe6919404cb12ddb40780af1a2e23" title="Change roles and play again button callback Change the roles of the players and call play_again." alt="" coords="327,93,513,120"/>
+<area shape="rect" id="node9" href="$menu_8c.html#a9b6d5f8b403b5a95417f1d08735a95d2" title="Enter the game button callback." alt="" coords="370,195,470,221"/>
+<area shape="rect" id="node11" href="$menu_8c.html#ac9b72db247a9a1978d9038a1acd46950" title="Enter the hard mode game button callback." alt="" coords="352,245,488,272"/>
+<area shape="rect" id="node13" href="$group__background.html#ga91321a8c45d074e5ee3a5f3c21e43944" title="Draw the background to the buffer based on the hour." alt="" coords="1023,368,1149,395"/>
+<area shape="rect" id="node14" href="$group__menu.html#ga4297b714eb1dbb78fb892693334e8efd" title="Handle the rtc interrupts inside the menu state." alt="" coords="775,372,915,399"/>
+<area shape="rect" id="node15" href="$group__menu.html#ga04f8f095e776c93ec861decc24ad99fd" title="Transition to the menu state by changing the state functions." alt="" coords="561,309,709,336"/>
+<area shape="rect" id="node16" href="$game_8c.html#abe0fa2797d6c581f845cb3b1d54787a6" title="Quit game button callback Transition to the menu state." alt="" coords="375,296,465,323"/>
+<area shape="rect" id="node21" href="$group__menu.html#ga07dec1ed9700e9df2664e567bb345d74" title="Draw the menu." alt="" coords="1037,251,1135,277"/>
+<area shape="rect" id="node23" href="$group__game.html#gaeaf89b27c7d4f8a12e8561ced4870cd2" title="Handle the mouse interrupts inside the game state." alt="" coords="761,169,928,196"/>
+<area shape="rect" id="node24" href="$group__menu.html#ga21291e7f1bcc6ba010511e1c9eb9a03d" title="Handle the mouse interrupts inside the menu state." alt="" coords="761,220,928,247"/>
+</map>

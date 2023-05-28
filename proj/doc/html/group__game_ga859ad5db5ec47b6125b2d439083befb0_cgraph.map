@@ -1,0 +1,84 @@
+<map id="transition_to_game" name="transition_to_game">
+<area shape="rect" id="node1" title="Transition to the game state by changing the state functions." alt="" coords="5,1668,153,1695"/>
+<area shape="rect" id="node2" href="$group__asteroid.html#gacd964a436ecab1c3c6b46330f1a81c41" title="Updates the asteroid&#39;s position, speed and xpms to be the default initial values." alt="" coords="205,1575,380,1601"/>
+<area shape="rect" id="node4" href="$group__canvas.html#gad4ffe6cd725905fd1ced79064a9286f2" title="Clears the canvas." alt="" coords="239,31,346,57"/>
+<area shape="rect" id="node6" href="$group__state.html#ga50dc3b533cc66f36bdd62fe34583d3dd" title="Set default functions in all the State fields." alt="" coords="203,107,382,133"/>
+<area shape="rect" id="node9" href="$group__game.html#ga32d55ba98626c3abaf67edc11a00026c" title="Draw the game." alt="" coords="243,689,342,716"/>
+<area shape="rect" id="node40" href="$group__player__drawer.html#ga5609f3a9279e2f6b5508b209f4fd1ba0" title="Get the Player type object." alt="" coords="451,968,625,995"/>
+<area shape="rect" id="node48" href="$group__game.html#ga8a1eb570770a6eb925f935a9189a2f11" title="Get the buttons array object." alt="" coords="467,2044,609,2071"/>
+<area shape="rect" id="node49" href="$group__game.html#ga839c19f02b3effc7a4f0c86ce9862edb" title="Handle the keyboard interrupts inside the game state." alt="" coords="201,1196,384,1223"/>
+<area shape="rect" id="node64" href="$group__game.html#gaeaf89b27c7d4f8a12e8561ced4870cd2" title="Handle the mouse interrupts inside the game state." alt="" coords="209,1668,376,1695"/>
+<area shape="rect" id="node75" href="$group__game.html#ga673fceeeb24e8b3a1d47f28aaf0ba218" title="Handle the serial port interrupts inside the game state." alt="" coords="213,1977,372,2004"/>
+<area shape="rect" id="node76" href="$group__prompt.html#ga12b0b36cabda80601ba7687505f93406" title="Get the word from index object." alt="" coords="457,2313,619,2340"/>
+<area shape="rect" id="node79" href="$group__game.html#gaa9bddf4a6a464edcd9a7511e45fc582d" title="Handle the timer interrupts inside the game state." alt="" coords="213,1760,372,1787"/>
+<area shape="rect" id="node81" href="$group__prompt.html#ga2eb7a3f66dba0cec46af8d4484fc9bfc" title="Generate a prompt by picking a random one from the prompts array." alt="" coords="225,2303,360,2329"/>
+<area shape="rect" id="node82" href="$group__serial__port.html#ga525a88810266963dd550812fed6fa2d6" title="Adds given word index to the transmitter queue according to the program&#39;s communication protocol." alt="" coords="461,2145,615,2172"/>
+<area shape="rect" id="node3" href="$group__asteroid.html#gaab0ee43a0f19c6eb0ac13b7b357649fc" title="returns the horizontal resolution of the video mode used" alt="" coords="754,1533,839,1560"/>
+<area shape="rect" id="node5" href="$group__asteroid.html#ga50eeab41a5f0c4d3f5caad793fb53c4e" title="returns the size of the VRAM" alt="" coords="479,5,597,32"/>
+<area shape="rect" id="node7" href="$state_8c.html#ab44e4bc4bd0707beff6dfa6ff12b9cb1" title="Dummy function to replace specific state functions expecting a pointer return value." alt="" coords="462,107,614,133"/>
+<area shape="rect" id="node8" href="$state_8c.html#afd7c59644c350838c4f26995a370d1ba" title="Dummy function to replace specific state functions expecting an int return value." alt="" coords="463,56,613,83"/>
+<area shape="rect" id="node10" href="$group__asteroid.html#gafd4fe50fb3a2d423e7c863689bf7ecca" title="Returns true if the buffers need to be updated, i.e. if they need to be drawn in and flipped to the s..." alt="" coords="459,867,617,893"/>
+<area shape="rect" id="node11" href="$group__utils.html#ga30307ace73adbd1cb3499115fabfa2c6" title="Converts a byte to a string." alt="" coords="491,917,585,944"/>
+<area shape="rect" id="node12" href="$group__asteroid.html#ga8aa3e5dab54a10c973007e41f7ceb38c" title="Draws an asteroid with its current xpm at its current position." alt="" coords="1392,461,1507,488"/>
+<area shape="rect" id="node13" href="$group__asteroid.html#ga149feb47586f0ad1c6af10be58de43cb" title="Draws a sprite to a specified position." alt="" coords="1611,461,1733,488"/>
+<area shape="rect" id="node15" href="$game_8c.html#ad99bafdcccc02f2c9f9e8b35c4ee40df" title="Draw the game buttons." alt="" coords="461,284,615,311"/>
+<area shape="rect" id="node18" href="$group__asteroid.html#ga99d2da2559e11200c6b40c469e9977ec" title="Draws a rectangle on a specified area of the screen with a specified color." alt="" coords="1163,208,1309,235"/>
+<area shape="rect" id="node21" href="$group__asteroid.html#ga7e0c2d812860673fd1f9dba59f0d4c05" title="Draws a string to the screen." alt="" coords="1181,339,1291,365"/>
+<area shape="rect" id="node23" href="$game_8c.html#ab2d06a82debf0120dbb8c0c932be7dd8" title="Draw to the canvas in the game state." alt="" coords="463,613,613,640"/>
+<area shape="rect" id="node31" href="$group__player__drawer.html#ga15c97c3eedb81c3b940cdd6069912b11" title="Get the Player object." alt="" coords="701,1247,892,1273"/>
+<area shape="rect" id="node38" href="$group__canvas.html#gadbd40c51532074477445bc4c86c08acd" title="Gets the buffer of the canvas." alt="" coords="494,664,582,691"/>
+<area shape="rect" id="node39" href="$group__player__drawer.html#gab8dc917f44068c228ed19595b6b8782b" title="Get the Player Cursor type from the player." alt="" coords="443,715,633,741"/>
+<area shape="rect" id="node41" href="$group__player.html#ga0aff5c64f391b2443050032e54ef29bf" title="Get the last position of the queue of positions of the player. In case it is empty,..." alt="" coords="466,1425,610,1466"/>
+<area shape="rect" id="node43" href="$group__game.html#ga88722baef6719142d5fb08870dab85e5" title="Update the cursor state." alt="" coords="481,563,595,589"/>
+<area shape="rect" id="node45" href="$group__asteroid.html#gaa726d4aa74b0c115a19c0eabdf92c900" title="Flips the current buffer to the screen. This buffer is the one that was being drawn before calling th..." alt="" coords="483,1608,593,1635"/>
+<area shape="rect" id="node46" href="$group__asteroid.html#gac3287d12fec5b19d728891fff2545d16" title="Copies the contents of the buffer given by parameter to the current buffer that is being prepared to ..." alt="" coords="477,765,599,792"/>
+<area shape="rect" id="node47" href="$group__asteroid.html#gafcef2b98a632a9015f843be85e6bb99f" title="Draws the guess word to the screen." alt="" coords="966,411,1089,437"/>
+<area shape="rect" id="node14" href="$video__card_8c.html#a2edd9c84fd5c596777cdce2ddaaaf7d7" title="draws a pixel in the desired buffer" alt="" coords="1812,512,1927,539"/>
+<area shape="rect" id="node16" href="$group__asteroid.html#ga81aab3616828f27693616505a917c5e8" title="Draws a array of buttons to the screen." alt="" coords="730,259,863,285"/>
+<area shape="rect" id="node17" href="$video__card_8c.html#aa8036fc7b6cac28ca121f76d4e996afe" title="Draws a button to the screen." alt="" coords="964,259,1091,285"/>
+<area shape="rect" id="node19" href="$group__asteroid.html#ga983dd8f3e3fde2997fb5aa5b84252e00" title="Draws a rectangle with a specified color in a specified area of the buffer." alt="" coords="1367,201,1532,242"/>
+<area shape="rect" id="node20" href="$video__card_8c.html#a9177b76545b334e1d3868228d418392d" title="draws a horizontal line in the desired buffer" alt="" coords="1624,208,1720,235"/>
+<area shape="rect" id="node22" href="$video__card_8c.html#a223f89b9c44f177e851df52eb669d68b" title="Draws a letter or number to the screen." alt="" coords="1393,411,1505,437"/>
+<area shape="rect" id="node24" href="$group__canvas.html#ga0d96cca715276e4eeb971008f32affb9" title="Draws a line in the canvas." alt="" coords="733,588,860,615"/>
+<area shape="rect" id="node30" href="$group__player__drawer.html#ga7338c83fd15fd1d8200a91cf896a960a" title="Get the Brush object from the player." alt="" coords="703,740,890,767"/>
+<area shape="rect" id="node32" href="$group__player.html#ga8b731e2ed89c6d477da8f10abd8eaba8" title="Get the last position assigned to the player." alt="" coords="706,841,887,868"/>
+<area shape="rect" id="node33" href="$group__player.html#ga2616ed2b111ea5b2645c9391fd87d885" title="Get the next position of the queue of positions of the player." alt="" coords="703,993,890,1020"/>
+<area shape="rect" id="node36" href="$group__player.html#ga339c9ef3d8b39dd4e1da059ede3c8956" title="Set the last position in the player." alt="" coords="707,791,887,817"/>
+<area shape="rect" id="node37" href="$group__asteroid.html#ga595b2cd1eafe4d4d0c710c913f30cf8a" title="Sets the needs_update variable to the given value. If the value is set to true, it can be expected th..." alt="" coords="727,1684,867,1711"/>
+<area shape="rect" id="node25" href="$canvas_8c.html#a6dd367374cc1c0e341209cfb4ff546ba" title="Bresenham&#39;s algorithm for drawing lines between two points." alt="" coords="958,588,1097,615"/>
+<area shape="rect" id="node28" href="$group__position.html#ga01d48dad828d0cd96d09cba62a6b3c83" title="Checks if a position is inside an area/rectangle defined by a start point, width and height." alt="" coords="1376,689,1523,716"/>
+<area shape="rect" id="node26" href="$group__asteroid.html#ga7f56ec86bd6a24a2002f0a1bcbfc93ca" title="Checks if a position collides with an asteroid This is used for checking if the mouse is inside the a..." alt="" coords="1167,613,1305,640"/>
+<area shape="rect" id="node29" href="$group__asteroid.html#ga4eb4b3b6c39f1d34aa01ab98da45a13d" title="Draws a circle with a specified color in a specified area of the buffer." alt="" coords="1580,537,1764,564"/>
+<area shape="rect" id="node27" href="$group__asteroid.html#gace8d4e864266e329a2349fa4d4b60b1e" title="returns the number of bytes per pixel of the video mode used" alt="" coords="1373,613,1525,640"/>
+<area shape="rect" id="node34" href="$group__queue.html#gaf661eb1ae68c803a345e7c4828139732" title="Pops an element from the queue." alt="" coords="981,1876,1074,1903"/>
+<area shape="rect" id="node35" href="$group__queue.html#gab093a7863520d7159a7b05aef912ae58" title="Returns true if the queue is empty." alt="" coords="1171,1775,1301,1801"/>
+<area shape="rect" id="node42" href="$group__queue.html#ga96b3e142d009cb3bdf349a1640c8f3e2" title="Returns by parameter the last inserted element in the queue." alt="" coords="963,1603,1091,1629"/>
+<area shape="rect" id="node44" href="$group__player__drawer.html#gab358facf2b7c059cb557149512c9f85e" title="Set the Player Cursor object to the player." alt="" coords="702,689,891,716"/>
+<area shape="rect" id="node50" href="$group__guess.html#gaa7e93eaf62ce2b14a4158c5c5fcecf50" title="Delete the last character of the guess word if the length of the word is greater than 0." alt="" coords="473,1019,603,1045"/>
+<area shape="rect" id="node51" href="$group__keyboard.html#ga47d9803949e72a10b7dd012094090c16" title="Checks if the scancode is a breakcode." alt="" coords="484,1069,592,1096"/>
+<area shape="rect" id="node52" href="$group__guess.html#ga80347d60ea01ebc11a71d8f5351e7bde" title="Reset the guess word." alt="" coords="469,1120,607,1147"/>
+<area shape="rect" id="node53" href="$group__serial__port.html#ga194c8384625742806c4ca550cb4f18ee" title="Adds some bytes to the transmitter queue according to the program&#39;s communication protocol,..." alt="" coords="463,1861,613,1888"/>
+<area shape="rect" id="node61" href="$group__keyboard.html#ga23b13cf6ad253e4f115e0d69fbf4c19a" title="Translates a scancode to its character." alt="" coords="464,1171,612,1197"/>
+<area shape="rect" id="node62" href="$group__guess.html#gaec85f1ac8e1c36eed3fceff6e3436994" title="Validate the guess word by comparing it to the correct word and setting the right flag to true if it&#39;..." alt="" coords="459,1221,617,1248"/>
+<area shape="rect" id="node63" href="$group__guess.html#ga12fabd510822a2c210d6f480b3fbd23c" title="Insert a character in the guess word." alt="" coords="477,1272,599,1299"/>
+<area shape="rect" id="node54" href="$serial__port_8c.html#a4d534181f23c86dc31eaa604f35ccb44" title="Adds a byte to the transmitter queue that will later be communicated/sent to the serial port." alt="" coords="692,1927,901,1969"/>
+<area shape="rect" id="node57" href="$group__serial__port.html#ga0f86d0e5d046d37ae1a62481045a2a5a" title="Writes bytes from the transmitter queue into the serial port fifo." alt="" coords="731,1876,862,1903"/>
+<area shape="rect" id="node55" href="$group__queue.html#gac00389cf1a0ae14e7190267c2c0f0a0f" title="Pushes an element to the queue." alt="" coords="977,2235,1077,2261"/>
+<area shape="rect" id="node56" href="$group__queue.html#ga4d4403de9d9a1dd031f5533c6df214de" title="Returns true if the queue is full." alt="" coords="1182,2235,1290,2261"/>
+<area shape="rect" id="node58" href="$serial__port_8c.html#a27a3535b6ba1e9dce6f808d508de1bf5" title="Reads the LSR &#45; line status register." alt="" coords="949,1927,1105,1953"/>
+<area shape="rect" id="node60" href="$serial__port_8c.html#ae60b262384b1b42527c199c6bb0c4002" title="Writes data to the Transmitter Holding Register (THR). Assumes that the data is ready to be written." alt="" coords="968,1825,1087,1852"/>
+<area shape="rect" id="node59" href="$group__utils.html#ga79a031a8611f5b2d6afa4158e92b0fb4" title="Invokes sys_inb() system call but reads the value into a uint8_t variable." alt="" coords="1187,1927,1285,1953"/>
+<area shape="rect" id="node65" href="$group__mouse.html#ga83ca3d2011fc62fb10c5403a571ba2f4" title="returns a updated drawing position based on a new mouse packet and the previous position Always call ..." alt="" coords="432,1542,644,1583"/>
+<area shape="rect" id="node67" href="$group__player.html#ga88ce9ab2449a856d63994f6ecaa0fe27" title="Add a new position to the queue of positions of the player." alt="" coords="702,2253,891,2280"/>
+<area shape="rect" id="node68" href="$group__button.html#ga3db8c51d6c1cdcfebb5c992055972a74" title="Processes a button click Know if a button was clicked or not and which one was clicked...." alt="" coords="452,1373,624,1400"/>
+<area shape="rect" id="node71" href="$group__serial__port.html#gaff54b69e57d250cf8acb389349aa04e3" title="Adds given button index to the transmitter queue according to the program&#39;s communication protocol." alt="" coords="453,1913,623,1954"/>
+<area shape="rect" id="node72" href="$group__serial__port.html#gad02fe61bd5edd0c986d4bb13a75ce6f7" title="Adds given position to the transmitter queue according to the program&#39;s communication protocol." alt="" coords="462,1978,614,2019"/>
+<area shape="rect" id="node66" href="$group__asteroid.html#gae9c75eaa66222e9130dd1b299ae8b3e6" title="returns the vertical resolution of the video mode used" alt="" coords="754,1584,839,1611"/>
+<area shape="rect" id="node69" href="$group__button.html#ga6d833ed9ca74f92502a573ab79817a60" title="Gets the hovered button&#39;s index." alt="" coords="721,1323,873,1349"/>
+<area shape="rect" id="node70" href="$group__button.html#gad7b1d353f6b1bf5bc009f49aec65064c" title="Checks if the mouse position is inside the button This is used for changing its color and knowing if ..." alt="" coords="1153,1069,1319,1096"/>
+<area shape="rect" id="node73" href="$group__utils.html#ga81621440b3d65680979425e39aa8c789" title="Returns the LSB of a 2 byte integer." alt="" coords="745,1993,848,2020"/>
+<area shape="rect" id="node74" href="$group__utils.html#ga6a880076cd2ec468834438b6e0c58836" title="Returns the MSB of a 2 byte integer." alt="" coords="743,2044,850,2071"/>
+<area shape="rect" id="node77" href="$group__serial__port.html#ga6057b7a2396fe4a93d96b250a19e994c" title="Reads bytes from the receiver queue according to the program&#39;s communication protocol,..." alt="" coords="459,2197,617,2238"/>
+<area shape="rect" id="node78" href="$group__position.html#ga5b0348471fb932892eb9f0ff3db15a44" title=" " alt="" coords="745,2203,848,2229"/>
+<area shape="rect" id="node80" href="$group__game.html#gafccc65aafe9aee47306500ad7a502460" title="Update the asteroid position and check if it collides with the canvas." alt="" coords="457,2095,619,2121"/>
+</map>

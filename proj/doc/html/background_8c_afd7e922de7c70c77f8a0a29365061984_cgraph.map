@@ -1,0 +1,7 @@
+<map id="draw_stars" name="draw_stars">
+<area shape="rect" id="node1" title="Draw the stars in the sky." alt="" coords="5,56,99,83"/>
+<area shape="rect" id="node2" href="$group__asteroid.html#gaab0ee43a0f19c6eb0ac13b7b357649fc" title="returns the horizontal resolution of the video mode used" alt="" coords="196,5,281,32"/>
+<area shape="rect" id="node3" href="$group__asteroid.html#gae9c75eaa66222e9130dd1b299ae8b3e6" title="returns the vertical resolution of the video mode used" alt="" coords="196,56,281,83"/>
+<area shape="rect" id="node4" href="$group__asteroid.html#ga4eb4b3b6c39f1d34aa01ab98da45a13d" title="Draws a circle with a specified color in a specified area of the buffer." alt="" coords="147,107,331,133"/>
+<area shape="rect" id="node5" href="$video__card_8c.html#a2edd9c84fd5c596777cdce2ddaaaf7d7" title="draws a pixel in the desired buffer" alt="" coords="379,107,493,133"/>
+</map>

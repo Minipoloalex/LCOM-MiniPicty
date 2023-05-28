@@ -1,0 +1,6 @@
+<map id="update_cursor" name="update_cursor">
+<area shape="rect" id="node1" title="Update the cursor state." alt="" coords="5,56,120,83"/>
+<area shape="rect" id="node2" href="$group__position.html#ga01d48dad828d0cd96d09cba62a6b3c83" title="Checks if a position is inside an area/rectangle defined by a start point, width and height." alt="" coords="189,5,336,32"/>
+<area shape="rect" id="node3" href="$group__player__drawer.html#ga7338c83fd15fd1d8200a91cf896a960a" title="Get the Brush object from the player." alt="" coords="169,56,356,83"/>
+<area shape="rect" id="node4" href="$group__player__drawer.html#gab358facf2b7c059cb557149512c9f85e" title="Set the Player Cursor object to the player." alt="" coords="168,107,357,133"/>
+</map>

@@ -1,0 +1,4 @@
+<map id="canvas_clear" name="canvas_clear">
+<area shape="rect" id="node1" title="Clears the canvas." alt="" coords="5,5,112,32"/>
+<area shape="rect" id="node2" href="$group__asteroid.html#ga50eeab41a5f0c4d3f5caad793fb53c4e" title="returns the size of the VRAM" alt="" coords="160,5,277,32"/>
+</map>

@@ -1,0 +1,6 @@
+<map id="process_buttons_clicks" name="process_buttons_clicks">
+<area shape="rect" id="node1" title="Processes a button click Know if a button was clicked or not and which one was clicked...." alt="" coords="5,5,177,32"/>
+<area shape="rect" id="node2" href="$group__button.html#ga6d833ed9ca74f92502a573ab79817a60" title="Gets the hovered button&#39;s index." alt="" coords="225,5,377,32"/>
+<area shape="rect" id="node3" href="$group__button.html#gad7b1d353f6b1bf5bc009f49aec65064c" title="Checks if the mouse position is inside the button This is used for changing its color and knowing if ..." alt="" coords="425,5,591,32"/>
+<area shape="rect" id="node4" href="$group__position.html#ga01d48dad828d0cd96d09cba62a6b3c83" title="Checks if a position is inside an area/rectangle defined by a start point, width and height." alt="" coords="639,5,785,32"/>
+</map>

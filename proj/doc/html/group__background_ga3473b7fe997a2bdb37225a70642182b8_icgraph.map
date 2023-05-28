@@ -1,0 +1,5 @@
+<map id="destroy_background" name="destroy_background">
+<area shape="rect" id="node1" title="Destroy a Background." alt="" coords="339,5,493,32"/>
+<area shape="rect" id="node2" href="$group__menu.html#ga104617a50ee02cb853996c81d82a6c89" title="Destroy the menu by freeing the necessary objects." alt="" coords="176,5,291,32"/>
+<area shape="rect" id="node3" href="$group__proj.html#ga2a16f651eccbd248e1ad3b3b924b143b" title=" " alt="" coords="5,5,128,32"/>
+</map>

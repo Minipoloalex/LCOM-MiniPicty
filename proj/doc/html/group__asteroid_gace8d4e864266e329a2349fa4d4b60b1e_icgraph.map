@@ -1,0 +1,13 @@
+<map id="get_bytes_per_pixel" name="get_bytes_per_pixel">
+<area shape="rect" id="node1" title="returns the number of bytes per pixel of the video mode used" alt="" coords="1600,31,1752,57"/>
+<area shape="rect" id="node2" href="$group__asteroid.html#ga7f56ec86bd6a24a2002f0a1bcbfc93ca" title="Checks if a position collides with an asteroid This is used for checking if the mouse is inside the a..." alt="" coords="1413,31,1552,57"/>
+<area shape="rect" id="node3" href="$canvas_8c.html#a6dd367374cc1c0e341209cfb4ff546ba" title="Bresenham&#39;s algorithm for drawing lines between two points." alt="" coords="1227,31,1365,57"/>
+<area shape="rect" id="node4" href="$group__canvas.html#ga0d96cca715276e4eeb971008f32affb9" title="Draws a line in the canvas." alt="" coords="1052,31,1179,57"/>
+<area shape="rect" id="node5" href="$game_8c.html#ab2d06a82debf0120dbb8c0c932be7dd8" title="Draw to the canvas in the game state." alt="" coords="853,31,1004,57"/>
+<area shape="rect" id="node6" href="$group__game.html#ga32d55ba98626c3abaf67edc11a00026c" title="Draw the game." alt="" coords="707,31,805,57"/>
+<area shape="rect" id="node7" href="$group__game.html#ga859ad5db5ec47b6125b2d439083befb0" title="Transition to the game state by changing the state functions." alt="" coords="511,31,659,57"/>
+<area shape="rect" id="node8" href="$menu_8c.html#a9b6d5f8b403b5a95417f1d08735a95d2" title="Enter the game button callback." alt="" coords="345,5,445,32"/>
+<area shape="rect" id="node11" href="$menu_8c.html#ac9b72db247a9a1978d9038a1acd46950" title="Enter the hard mode game button callback." alt="" coords="327,56,463,83"/>
+<area shape="rect" id="node9" href="$group__menu.html#gae131bab3ee69a41004c4300694c690a0" title="Setup the menu by creating the necessary objects." alt="" coords="176,31,279,57"/>
+<area shape="rect" id="node10" href="$group__proj.html#ga2a16f651eccbd248e1ad3b3b924b143b" title=" " alt="" coords="5,31,128,57"/>
+</map>

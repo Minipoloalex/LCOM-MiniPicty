@@ -1,0 +1,5 @@
+<map id="create_asteroid" name="create_asteroid">
+<area shape="rect" id="node1" title="Creates an asteroid." alt="" coords="5,5,128,32"/>
+<area shape="rect" id="node2" href="$group__asteroid.html#gacd964a436ecab1c3c6b46330f1a81c41" title="Updates the asteroid&#39;s position, speed and xpms to be the default initial values." alt="" coords="176,5,351,32"/>
+<area shape="rect" id="node3" href="$group__asteroid.html#gaab0ee43a0f19c6eb0ac13b7b357649fc" title="returns the horizontal resolution of the video mode used" alt="" coords="399,5,484,32"/>
+</map>
