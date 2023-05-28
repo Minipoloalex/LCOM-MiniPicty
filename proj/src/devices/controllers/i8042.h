@@ -4,7 +4,7 @@
 /** @defgroup i8042 i8042
  * @{
  *
- * Constants for programming the i8042 KBC (Keyboard and Mouse).
+ * @brief Constants for programming the i8042 KBC (Keyboard and Mouse).
  */
 
 #ifndef BIT

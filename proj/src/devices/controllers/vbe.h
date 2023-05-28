@@ -4,7 +4,7 @@
 /** @defgroup uart UART
  * @{
  *
- * Constants for programming the VBE Graphics Card.
+ * @brief Constants for programming the VBE Graphics Card.
  */
 
 #define INVOKE_VBE_FUNCT 0x4F

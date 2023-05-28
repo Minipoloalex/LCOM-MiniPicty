@@ -12,6 +12,11 @@
 #include "modules/game/game.h"
 #include "model/state/state.h"
 
+/** @defgroup proj proj
+ * @{
+ *
+ * @brief File containing the main loop of the game
+ */
 
 int main(int argc, char *argv[]) {
   lcf_set_language("EN-US");
