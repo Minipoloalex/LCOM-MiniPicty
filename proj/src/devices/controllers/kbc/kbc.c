@@ -2,6 +2,17 @@
 
 uint8_t output = 0;
 
+//Private Functions
+//==================================================================================================
+/**
+ * @brief Reads the KBC status register
+ * @param status pointer to the variable that will store the status
+ * @return 0 upon success, non-zero otherwise
+ */
+int (read_KBC_status)(uint8_t *status);
+
+//==================================================================================================
+
 int (read_KBC_status)(uint8_t *status){
   return(util_sys_inb(KBC_STATUS_REG, status));
 }

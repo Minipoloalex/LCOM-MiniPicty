@@ -9,7 +9,7 @@ struct packet packet;
 static bool packet_ready = false;
 
 /**
- * @brief 
+ * @brief Writes a given command to the mouse directly
  * 
  */
 int (write_to_mouse)(uint8_t command);

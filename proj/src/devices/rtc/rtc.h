@@ -31,12 +31,13 @@ void (rtc_ih)();
  */
 char* (rtc_get_current_time)();
 /**
- * @brief 
+ * @brief Returns the current hour.
  * 
  */
 uint8_t (rtc_get_hour)();
 /**
- * @brief 
+ * @brief Writes the current hour to the given pointer.
  * 
+ * @return return 0 upon success, non-zero otherwise
  */
 int (rtc_read_temp_hour)(uint8_t *hour);
