@@ -1,11 +1,8 @@
 #include "serial_port.h"
 
-static uint16_t base_addr;
-static int hook_id;
-
-static queue_t *transmitter_queue = NULL;
-static queue_t *receiver_queue = NULL;
-
+/**
+ * @brief Enumerates the possible receiving states of the serial port from the communication protocol.
+ */
 typedef enum {
   SLEEPING,
   RECEIVING_MOUSE_DRAWING,
@@ -13,61 +10,80 @@ typedef enum {
   RECEIVING_WORD_INDEX,
 } ser_state_t;
 
+static uint16_t base_addr;
+static int hook_id;
+
+static queue_t *transmitter_queue = NULL;
+static queue_t *receiver_queue = NULL;
+
 static ser_state_t ser_state = SLEEPING;
 
 int ser_return_value = 0;
 
 /* ========== Functions only used inside this module (serial port) ========= */
 /**
- * @brief 
- * 
+ * @brief Sets the base address of the serial port and creates the queues.
+ * @param addr base address of the serial port
  */
 int (ser_set_base_addr)(uint16_t addr);
 /**
- * @brief 
- * 
+ * @brief Reads the LCR - line control register
+ * @param lcr pointer to the variable that will store the line control register value
  */
 int (ser_read_line_control)(uint8_t *lcr);
 /**
- * @brief 
- * 
+ * @brief Writes to the LCR - line control register
+ * @param lcr value to be written to the line control register
  */
 int (ser_write_line_control)(uint8_t lcr);
 /**
- * @brief 
- * 
+ * @brief Sets the line control register of the serial port with the given parameters. These parameters are not passed blindly, but they are interpreted as given in Lab7.
+ * @param word_length number of bits per character
+ * @param stop_bit number of stop bits
+ * @param parity parity of the serial port
  */
 int (ser_set_line_config)(uint8_t word_length, uint8_t stop_bit, int8_t parity);
 /**
- * @brief Reads the divisor latch register
+ * @brief Reads the divisor latch register.
  * Reads the line control register and sets the DLAB bit to be able to access DLL and DLM (if it is not already set)
  * @param divisor pointer to the variable that will store the divisor
  * @param lcr pointer to the variable that may store the line control register (can be NULL and in that case it will be read and updated)
- * @return 0 if everything went well, different than 0 otherwise
+ * @return 0 if success, different than 0 otherwise
  */
 int (ser_write_divisor)(uint16_t divisor);
+/**
+ * @brief Sets the baud rate of the serial port
+ * @param rate baud rate of the serial port
+ */
 int (ser_set_baud_rate)(uint32_t rate);
-int (ser_read_int_enable)(uint8_t *ier);
+/**
+ * @brief Writes to the IER - interrupt enable register. This register is used to enable the interrupts of the serial port.
+ * @param ier value to be written to the interrupt enable register
+ */
 int (ser_write_int_enable)(uint8_t ier);
+/**
+ * @brief Reads the LSR - line status register
+ * @param status pointer to the variable that will store the line status register value
+ */
 int (ser_read_line_status)(uint8_t *status);
 /**
- * @brief Reads data from the Receiver Buffer Register (RBR)
- * Assumes that the data is ready to be read
+ * @brief Reads data from the Receiver Buffer Register (RBR). Assumes that the data is ready to be read
+ * @param data pointer to the variable that will store the data read from the RBR
  */
 int (ser_read_data)(uint8_t *data);
 /**
- * @brief Writes data to the Transmitter Holding Register (THR)
- * Assumes that the data is ready to be written
+ * @brief Writes data to the Transmitter Holding Register (THR). Assumes that the data is ready to be written
+ * @param data data to be written to the THR
  */
 int (ser_write_data)(uint8_t data);
 /**
- * @brief 
- * 
+ * @brief Writes the given configuration value to the control register of the FIFO
+ * @param config configuration value to be written to the control register of the FIFO
  */
 int (ser_write_fifo_control)(uint8_t config);
 /**
- * @brief 
- * 
+ * @brief Reads the interrupt id, from the IIR (interrupt identification register)
+ * @param id return value of the interrupt id
  */
 int (ser_read_int_id)(uint8_t *id);
 /**
@@ -75,16 +91,33 @@ int (ser_read_int_id)(uint8_t *id);
  * The solution used is that if the byte is equal to the end of transmission byte, it is replaced by a replacement byte (0xFF to 0xFE)
  */
 int (replace_ser_end(uint8_t *data));
-
-// TODO: remove reading of lcr each time we read data (checking that DLAB is not set)
-// assure that DLAB is not set normally, only set for setting the divisor
-// we can already do that in the init of the serial port
-
-
+/**
+ * @brief Writes the default configuration value to the control register of the FIFO. This is SER_FCR_DEFAULT.
+ */
+int (ser_write_fifo_control_default)();
+/**
+ * @brief Adds a byte to the transmitter queue that will later be communicated/sent to the serial port
+ */
+int (ser_add_byte_to_transmitter_queue)(uint8_t c);
+/**
+ * @brief Initializes the serial port communication parameters. They are specified as in the Lab7 handout.
+ * @param base_addr base address of the serial port
+ * @param baud_rate baud rate of the serial port
+ * @param word_length number of bits per character
+ * @param stop_bit number of stop bits
+ * @param parity parity of the serial port
+ */
+int (ser_init_private)(uint16_t base_addr, uint32_t baud_rate, uint8_t word_length, uint8_t stop_bit, int8_t parity);
 /* =========================================================================================== */
 
-int (ser_init)(uint16_t base_addr, uint32_t baud_rate, uint8_t word_length, uint8_t stop_bit, 
-int8_t parity){
+int (ser_init)() {
+  if (ser_init_private(SER_COM1, SER_MAX_BITRATE, 8, 1, 1) != OK) {
+    printf("ser_init_private() inside %s failed\n", __func__);
+    return EXIT_FAILURE;
+  }
+  return EXIT_SUCCESS;
+}
+int (ser_init_private)(uint16_t base_addr, uint32_t baud_rate, uint8_t word_length, uint8_t stop_bit, int8_t parity){
   if (ser_set_base_addr(base_addr) != EXIT_SUCCESS) {
     printf("ser_set_base_addr() inside %s failed", __func__);
     return EXIT_FAILURE;
@@ -105,7 +138,10 @@ int8_t parity){
     printf("ser_write_int_enable() inside %s failed", __func__);
     return EXIT_FAILURE;
   }
-  printf("Finished setting up serial port inside %s\n", __func__);
+  if (ser_read_from_fifo() != OK) {
+    printf("ser_read_from_fifo() inside %s failed", __func__);
+    return EXIT_FAILURE;
+  }
   return EXIT_SUCCESS;
 }
 void (delete_ser)() {
@@ -139,7 +175,7 @@ int(ser_set_base_addr)(uint16_t addr) {
 
 int (ser_add_byte_to_transmitter_queue)(uint8_t byte) {
   if (push_queue(transmitter_queue, &byte) != OK) {
-    printf("push_queue() (queue is full) inside %s failed\n", __func__);
+    // printf("push_queue() (queue is full) inside %s failed\n", __func__);
     return EXIT_FAILURE;
   }
   return EXIT_SUCCESS;
@@ -147,7 +183,7 @@ int (ser_add_byte_to_transmitter_queue)(uint8_t byte) {
 
 int (ser_add_byte_to_receiver_queue)(uint8_t byte) {
   if (push_queue(receiver_queue, &byte) != OK) {
-    printf("push_queue() (queue is full) inside %s failed\n", __func__);
+    // printf("push_queue() (queue is full) inside %s failed\n", __func__);
   }
   return EXIT_SUCCESS;
 }
@@ -284,32 +320,6 @@ int (ser_set_baud_rate)(uint32_t rate) {
   return EXIT_SUCCESS;
 }
 
-int(ser_read_int_enable)(uint8_t *ier) {
-  if (ier == NULL) {
-    printf("ier is NULL inside %s\n", __func__);
-    return EXIT_FAILURE;
-  }
-  uint8_t lcr;
-  if (ser_read_line_control(&lcr) != OK) {
-    printf("ser_read_line_control() inside %s\n", __func__);
-    return EXIT_FAILURE;
-  }
-
-  // if dlab is set, we need to unset it (set it to 0)
-  if (lcr & SER_LCR_DLAB) {
-    if (ser_write_line_control(lcr & ~SER_LCR_DLAB) != OK) {
-      printf("ser_write_line_control() inside %s\n", __func__);
-      return EXIT_FAILURE;
-    }
-  }
-
-  if (util_sys_inb(base_addr + SER_IER, ier) != OK) {
-    printf("util_sys_inb() inside %s\n", __func__);
-    return EXIT_FAILURE;
-  }
-  return EXIT_SUCCESS;
-}
-
 int (ser_write_int_enable)(uint8_t ier) {
   uint8_t lcr;
   if (ser_read_line_control(&lcr) != OK) {
@@ -361,54 +371,6 @@ int (ser_write_data)(uint8_t data) {
     return EXIT_FAILURE;
   }
   return EXIT_SUCCESS;
-}
-
-int(ser_read_char)(uint8_t *data) {
-  if (data == NULL) {
-    printf("Invalid pointer inside %s\n", __func__);
-    return EXIT_FAILURE;
-  }
-  uint8_t status;
-  if (ser_read_line_status(&status) != OK) {
-    printf("ser_read_line_status() inside %s\n", __func__);
-    return EXIT_FAILURE;
-  }
-  if (status & SER_LSR_DATA_READY) {  /* ready to be read */
-    if (ser_read_data(data) != OK) {
-      printf("ser_read_data() inside %s\n", __func__);
-      return EXIT_FAILURE;
-    }
-    if (status & SER_LSR_OE) {
-      printf("Overrun Error inside %s: a character in RBR was overwritten by another\n", __func__);
-      return EXIT_FAILURE;
-    }
-    if (status & SER_LSR_PE) {
-      printf("Parity Error inside %s: received character does not have expected parity\n", __func__);
-      return EXIT_FAILURE;
-    }
-    if (status & SER_LSR_FE) {
-      printf("Framing Error inside %s: received character does not have expected stop bit\n", __func__);
-      return EXIT_FAILURE;
-    }
-    return EXIT_SUCCESS;
-  }
-  return EXIT_FAILURE;
-}
-
-int (ser_write_char)(uint8_t c) {
-  uint8_t status;
-  if (ser_read_line_status(&status) != OK) {
-    printf("ser_read_line_status() inside %s\n", __func__);
-    return EXIT_FAILURE;
-  }
-  if (status & SER_LSR_THRE) {  /* ready to be written */
-    if (ser_write_data(c) != OK) {
-      printf("ser_write_data() inside %s\n", __func__);
-      return EXIT_FAILURE;
-    }
-    return EXIT_SUCCESS;
-  }
-  return EXIT_FAILURE;
 }
 
 int (ser_read_int_id)(uint8_t *id) {
@@ -465,7 +427,6 @@ int (ser_write_to_fifo)() {
       printf("ser_write_data() inside %s\n", __func__);
       return EXIT_FAILURE;
     }
-
     if (ser_read_line_status(&lsr) != OK) {
       printf("ser_read_line_status() inside %s\n", __func__);
       return EXIT_FAILURE;
@@ -482,12 +443,10 @@ void (ser_ih_fifo)() {
     ser_return_value = EXIT_FAILURE;
     return;
   }
-  // printf("Interrupt id: %02x\n", iir);
   uint8_t lsr;
   if (!(iir & SER_IIR_INT_NOT_PEND)) {  /* interrupt pending */
     switch ((iir & SER_IIR_INT_ID) >> SER_IIR_INT_ID_POSITION) {
       case SER_IIR_INT_ID_RDA:      // data ready
-        // printf("Received interrupt RDA\n");
         if (ser_read_from_fifo() != OK) {
           printf("ser_read_from_fifo() inside %s\n", __func__);
           ser_return_value = EXIT_FAILURE;
@@ -495,22 +454,20 @@ void (ser_ih_fifo)() {
         }
         break;
       case SER_IIR_INT_ID_THRE:   // transmitter empty
-        // printf("Transmit interrupt THRE\n");
         if (ser_write_to_fifo() != OK) {
           printf("ser_write_to_fifo() inside %s\n", __func__);
           ser_return_value = EXIT_FAILURE;
           return;
         }
         break;
-      case SER_IIR_INT_ID_CTI:
-        // printf("Received interrupt CTI\n");
+      case SER_IIR_INT_ID_CTI:    // character timeout
         if (ser_read_from_fifo() != OK) {
           printf("ser_read_from_fifo() inside %s\n", __func__);
           ser_return_value = EXIT_FAILURE;
           return;
         }
         break;
-      case SER_IIR_INT_ID_LS:       // error interrupt: Line status
+      case SER_IIR_INT_ID_LS:     // error interrupt: Line status
         printf("Receive error interrupt\n");
         ser_return_value = EXIT_FAILURE;
         if (ser_read_line_status(&lsr) != OK) {
@@ -538,7 +495,6 @@ void (ser_ih_fifo)() {
     ser_return_value = EXIT_SUCCESS;
     return;
   }
-  // printf("No interrupt pending inside %s\n", __func__);
   ser_return_value = EXIT_FAILURE;
 }
 
@@ -557,7 +513,6 @@ int (ser_write_fifo_control)(uint8_t config) {
 int (replace_ser_end(uint8_t *data)) {
   if (*data == SER_END) {
     *data = SER_END_REPLACEMENT;
-    // printf("replaced byte");
   }
   return EXIT_SUCCESS;
 }
@@ -571,6 +526,7 @@ int (ser_add_position_to_transmitter_queue)(drawing_position_t drawing_position)
     if (replace_ser_end(&mouse_pos_bytes[i])) return EXIT_FAILURE;
   }
   // maybe send a SER_END byte to synchronize the receiver better
+  if (ser_add_byte_to_transmitter_queue(SER_END)) return EXIT_FAILURE;
   if (ser_add_byte_to_transmitter_queue(drawing_position.is_drawing ? SER_MOUSE_DRAWING : SER_MOUSE_NOT_DRAWING)) return EXIT_FAILURE;
   if (ser_add_byte_to_transmitter_queue(mouse_pos_bytes[0])) return EXIT_FAILURE;
   if (ser_add_byte_to_transmitter_queue(mouse_pos_bytes[1])) return EXIT_FAILURE;
@@ -586,8 +542,23 @@ int (ser_add_button_click_to_transmitter_queue)(uint8_t index) {
   if (ser_write_to_fifo()) return EXIT_FAILURE;
   return EXIT_SUCCESS;
 }
+int (ser_add_word_index)(uint8_t index) {
+  printf("Communicating word_index: %d\n", index);
+  if (ser_add_byte_to_transmitter_queue(SER_END)) return EXIT_FAILURE;
+  if (ser_add_byte_to_transmitter_queue(SER_WORD_INDEX)) return EXIT_FAILURE;
+  if (ser_add_byte_to_transmitter_queue(index)) return EXIT_FAILURE;
+  if (ser_write_to_fifo()) return EXIT_FAILURE;
+  return EXIT_SUCCESS;
+}
+int (ser_add_won_round)() {
+  printf("communicating won_round inside %s\n", __func__);
+  if (ser_add_byte_to_transmitter_queue(SER_END)) return EXIT_FAILURE;
+  if (ser_add_byte_to_transmitter_queue(SER_WON_ROUND)) return EXIT_FAILURE;
+  if (ser_write_to_fifo()) return EXIT_FAILURE;
+  return EXIT_SUCCESS;
+}
 
-int (ser_read_bytes_from_receiver_queue)(player_drawer_t *drawer, state_t *app_state) {
+int (ser_read_bytes_from_receiver_queue)(player_drawer_t *drawer, state_t *app_state, bool *won_round) {
   uint8_t byte;
   static uint8_t bytes[4];
   static uint8_t byte_index = 0;
@@ -601,13 +572,10 @@ int (ser_read_bytes_from_receiver_queue)(player_drawer_t *drawer, state_t *app_s
       printf("pop_queue() inside %s failed\n", __func__);
       return EXIT_FAILURE;
     }
-    // printf("byte: %02x\n", byte);
     switch (ser_state) {
       case SLEEPING:
-        // printf("state: sleeping\n");
         switch (byte) {
           case SER_END:
-            ser_state = SLEEPING;
             break;
           case SER_MOUSE_DRAWING:
             ser_state = RECEIVING_MOUSE_DRAWING;
@@ -618,6 +586,14 @@ int (ser_read_bytes_from_receiver_queue)(player_drawer_t *drawer, state_t *app_s
           case SER_WORD_INDEX:
             ser_state = RECEIVING_WORD_INDEX;
             break;
+          case SER_WON_ROUND:
+            if (won_round == NULL) {
+              printf("won_round is null inside %s\n", __func__);
+              continue;
+            }
+            *won_round = true;
+            printf("Received won round inside%s\n", __func__);
+            break;
           default:
             buttons = app_state->get_buttons(app_state);
             if (buttons == NULL) {
@@ -626,24 +602,20 @@ int (ser_read_bytes_from_receiver_queue)(player_drawer_t *drawer, state_t *app_s
             }
             if (byte >= SER_FIRST_BUTTON && byte < SER_FIRST_BUTTON + buttons->num_buttons){
               // case SER_BUTTON_INDEX
-              printf("button_clicked: %d,", byte - SER_FIRST_BUTTON);
+              printf("button_clicked: %d, ", byte - SER_FIRST_BUTTON);
 
               button_t *clicked_button = buttons->buttons[byte - SER_FIRST_BUTTON];
-              printf("text: %s\n", clicked_button->text);
               clicked_button->onClick(clicked_button);
-              printf("After clicking on button\n");
             }
             break;
         }
         break;
       case RECEIVING_MOUSE_DRAWING: case RECEIVING_MOUSE_NOT_DRAWING:
         if (player == NULL) {
-          printf("player is NULL inside %s\n", __func__);
           ser_state = SLEEPING;
           byte_index = 0;
           continue;
         }
-        // printf("state: receiving mouse\n");
         if (byte == SER_END) {
           if (byte_index != 4) {  // got the end byte before the 4 bytes of the position
             ser_state = SLEEPING;
@@ -661,7 +633,6 @@ int (ser_read_bytes_from_receiver_queue)(player_drawer_t *drawer, state_t *app_s
             printf("player_add_next_position() inside %s failed\n", __func__);
             return EXIT_FAILURE;
           }
-          // printf("received position: %d %d\n", position.x, position.y);
           ser_state = SLEEPING;
           byte_index = 0;
           break;
@@ -669,11 +640,13 @@ int (ser_read_bytes_from_receiver_queue)(player_drawer_t *drawer, state_t *app_s
         bytes[byte_index++] = byte;
         break;
       case RECEIVING_WORD_INDEX:
-        // word_idnex = byte
-        // if (byte < size of words) {
-        //   // valid byte
-        //   app_state->set_word(app_state, byte);
-        // }
+        if (byte == SER_END) {
+          ser_state = SLEEPING;
+          printf("lost some bytes inside ser_state RECEIVING_WORD_INDEX\n");
+          continue;
+        }
+        app_state->word_index = byte;
+        ser_state = SLEEPING;
         break;
 
       default:

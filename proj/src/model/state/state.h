@@ -23,6 +23,7 @@ struct State {
   Event process_rtc;
   ButtonsGetter get_buttons;
   bool running_app;
+  uint8_t word_index;
 };
 
 /**

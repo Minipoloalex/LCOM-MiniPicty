@@ -30,7 +30,6 @@ int (validate_guess_word)(char *correct, guess_word_t *gwt, bool *right){
   if (strlen(correct) != (gwt->pointer)) {
     return EXIT_SUCCESS;
   }
-
   for (size_t i = 0; i < strlen(correct); i++){
     if (gwt->string[i] != correct[i]) {
       return EXIT_SUCCESS;
