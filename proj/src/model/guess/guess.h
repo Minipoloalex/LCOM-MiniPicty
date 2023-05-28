@@ -8,6 +8,7 @@ typedef struct{
   char *string;
   size_t pointer;
 } guess_word_t;
+
 /**
  * @brief 
  * 

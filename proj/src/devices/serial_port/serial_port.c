@@ -79,11 +79,6 @@ int (replace_ser_end(uint8_t *data));
  * @brief 
  * 
  */
-int (ser_read_from_fifo)();
-/**
- * @brief 
- * 
- */
 int (ser_write_fifo_control_default)();
 /**
  * @brief 
@@ -618,7 +613,7 @@ int (ser_add_won_round)() {
   return EXIT_SUCCESS;
 }
 
-int (ser_read_bytes_from_receiver_queue)(player_drawer_t *drawer, state_t *app_state, uint8_t *word_index, bool *won_round) {
+int (ser_read_bytes_from_receiver_queue)(player_drawer_t *drawer, state_t *app_state, bool *won_round) {
   uint8_t byte;
   static uint8_t bytes[4];
   static uint8_t byte_index = 0;
@@ -670,7 +665,10 @@ int (ser_read_bytes_from_receiver_queue)(player_drawer_t *drawer, state_t *app_s
               if (clicked_button->text != NULL) {
                 printf("text: %s\n", clicked_button->text);
               }
+              printf("word_index: %d , %d\n", app_state->word_index, __LINE__);
               clicked_button->onClick(clicked_button);
+              printf("word_index: %d , %d\n", app_state->word_index, __LINE__);
+
               printf("After clicking on button\n");
             }
             break;
@@ -714,12 +712,7 @@ int (ser_read_bytes_from_receiver_queue)(player_drawer_t *drawer, state_t *app_s
           printf("lost some bytes inside ser_state RECEIVING_WORD_INDEX\n");
           continue;
         }
-        if (word_index == NULL){
-          ser_state = SLEEPING;
-          printf("word_index is NULL inside %s\n", __func__);
-          continue;
-        }
-        *word_index = byte;
+        app_state->word_index = byte;
         ser_state = SLEEPING;
         printf("received word_index: %d inside %s\n", byte, __func__);
         break;

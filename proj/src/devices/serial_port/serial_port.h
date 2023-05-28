@@ -40,6 +40,11 @@ void (ser_ih_fifo)();
  * @brief 
  * 
  */
+int (ser_read_from_fifo)();
+/**
+ * @brief 
+ * 
+ */
 int (ser_write_to_fifo)();
 /**
  * @brief 
@@ -75,4 +80,4 @@ int (ser_add_won_round)();
  * @brief 
  * 
  */
-int (ser_read_bytes_from_receiver_queue)(player_drawer_t *drawer, state_t *app_state, uint8_t *word_index, bool *won_round);
+int (ser_read_bytes_from_receiver_queue)(player_drawer_t *drawer, state_t *app_state, bool *won_round);
