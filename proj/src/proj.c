@@ -31,8 +31,6 @@ int(proj_main_loop)(int argc, char *argv[]) {
     printf("Usage: lcom_run proj <host|remote>\n");
     return EXIT_FAILURE;
   }
-
-  // Setting up Serial Port
   bool isTransmitter = strcmp(argv[0], "host") == 0;
   if (ser_init()) {
     printf("ser_init inside %s\n", __func__);
