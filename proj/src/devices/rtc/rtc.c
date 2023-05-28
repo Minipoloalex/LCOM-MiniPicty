@@ -28,7 +28,6 @@
 #define RTC_B_PIE BIT(6)
 #define RTC_B_AIE BIT(5)
 #define RTC_B_UIE BIT(4)
-#define RTC_B_SQWE BIT(3)
 
 #define RTC_B_DM BIT(2)
 #define RTC_B_DSE BIT(0)
@@ -37,8 +36,6 @@
 #define RTC_C_PF BIT(6) /** @brief periodic interrupt pending */
 #define RTC_C_AF BIT(5) /** @brief alarm interrupt pending */
 #define RTC_C_UF BIT(4) /** @brief update interrupt pending */
-
-#define RTC_D_VRT BIT(7)
 
 #define MAX_TIME_DIFFERENCE 1
 #define INITIAL_HOUR_VALUE 255
@@ -86,8 +83,8 @@ void (increment_one_second)();
  */
 int (rtc_get_time)(uint8_t *_hours, uint8_t *_minutes, uint8_t *_seconds);
 /**
- * @brief 
- * 
+ * @brief Converts the given value from BCD to binary. Assumes the value is in BCD.
+ * @param ptr pointer to the value to convert. Also stores the converted value.
  */
 int (convert_bcd_to_binary)(uint8_t *ptr);
 
@@ -262,6 +259,9 @@ int (rtc_read_temp_hour)(uint8_t *hour) {
     printf("Error reading RTC_HOUR\n");
     return EXIT_FAILURE;
   }
+  if (isBCD) {
+    convert_bcd_to_binary(hour);
+  }
   return EXIT_SUCCESS;
 }
 
@@ -270,8 +270,6 @@ int (convert_bcd_to_binary)(uint8_t *ptr) {
     printf("Invalid pointer inside %s\n", __func__);
     return EXIT_FAILURE;
   }
-  printf("before conversion: %d\n", *ptr);
   *ptr = (*ptr & 0x0F) + ((*ptr & 0xF0) >> 4) * 10;
-  printf("converted bcd to binary: %d\n", *ptr);
   return EXIT_SUCCESS;
 }

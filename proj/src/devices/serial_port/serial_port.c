@@ -537,7 +537,6 @@ int (ser_add_button_click_to_transmitter_queue)(uint8_t index) {
   return EXIT_SUCCESS;
 }
 int (ser_add_word_index)(uint8_t index) {
-  printf("Communicating word_index: %d\n", index);
   if (ser_add_byte_to_transmitter_queue(SER_SPECIAL)) return EXIT_FAILURE;
   if (ser_add_byte_to_transmitter_queue(SER_WORD_INDEX)) return EXIT_FAILURE;
   if (ser_add_byte_to_transmitter_queue(index)) return EXIT_FAILURE;
@@ -545,7 +544,6 @@ int (ser_add_word_index)(uint8_t index) {
   return EXIT_SUCCESS;
 }
 int (ser_add_won_round)() {
-  printf("communicating won_round inside %s\n", __func__);
   if (ser_add_byte_to_transmitter_queue(SER_SPECIAL)) return EXIT_FAILURE;
   if (ser_add_byte_to_transmitter_queue(SER_WON_ROUND)) return EXIT_FAILURE;
   if (ser_write_to_fifo()) return EXIT_FAILURE;
@@ -586,7 +584,6 @@ int (ser_read_bytes_from_receiver_queue)(player_drawer_t *drawer, state_t *app_s
               continue;
             }
             *won_round = true;
-            printf("Received won round inside%s\n", __func__);
             break;
           default:
             buttons = app_state->get_buttons(app_state);
@@ -596,8 +593,6 @@ int (ser_read_bytes_from_receiver_queue)(player_drawer_t *drawer, state_t *app_s
             }
             if (byte >= SER_FIRST_BUTTON && byte < SER_FIRST_BUTTON + buttons->num_buttons){
               // case SER_BUTTON_INDEX
-              printf("button_clicked: %d, ", byte - SER_FIRST_BUTTON);
-
               button_t *clicked_button = buttons->buttons[byte - SER_FIRST_BUTTON];
               clicked_button->onClick(clicked_button);
             }
