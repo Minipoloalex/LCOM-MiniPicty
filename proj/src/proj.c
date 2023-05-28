@@ -34,11 +34,10 @@ int(proj_main_loop)(int argc, char *argv[]) {
 
   // Setting up Serial Port
   bool isTransmitter = strcmp(argv[0], "host") == 0;
-  if (ser_init(0x3F8, 115200, 8, 1, 1)) {
+  if (ser_init()) {
     printf("ser_init inside %s\n", __func__);
     return EXIT_FAILURE;
   }
-  printf("isTransmitter: %d\n", isTransmitter);
   if (rtc_init() != OK) {
     printf("rtc_init inside %s\n", __func__);
     return EXIT_FAILURE;

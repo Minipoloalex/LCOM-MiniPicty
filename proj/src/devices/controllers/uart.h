@@ -45,11 +45,7 @@
  * 1 1 1 - parity bit is 0 (always)
  */
 #define SER_LCR_PARITY_CTRL BIT(3) | BIT(4) | BIT(5)
-/* CHECK IF PARITIES ARE CORRECT */
-#define SER_LCR_8BIT_PAR BIT(3) // 8 bits, parity, 1 stop bit
-#define SER_LCR_8BIT_2SB BIT(2) // 8 bits, no parity, 2 stop bits
-#define SER_LCR_8BIT_PAR_2SB (BIT(3) | BIT(2)) // 8 bits, parity, 2 stop bits
-#define SER_LCR_BREAK_CTRL BIT(6) // not needed
+
 /**
  * @brief 
  * 1 - Divisor latch access
@@ -57,19 +53,12 @@
  */
 #define SER_LCR_DLAB BIT(7) // divisor latch access
 
-
 #define SER_LCR_PARITY_NONE 0x00
 #define SER_LCR_PARITY_ODD BIT(3)
 #define SER_LCR_PARITY_EVEN (BIT(3) | BIT(4))
 #define SER_LCR_PARITY_1 (BIT(3) | BIT(5))
 #define SER_LCR_PARITY_0 (BIT(3) | BIT(4) | BIT(5))
 
-
-/*
-DLL and DLM access (DLAB = 1 in LCR)
-To access DLL and DLM, a programmer must first set the DL Access bit (DLAB) in the LCR register.
-Then, access DLL/DLM register and finally reset the DLAB bit, so other registers can be accessed.
-*/
 
 #define SER_LSR_DATA_READY BIT(0)   // data ready
 #define SER_LSR_OE BIT(1)   // overrun error
