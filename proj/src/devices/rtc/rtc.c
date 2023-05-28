@@ -29,14 +29,14 @@
 #define RTC_B_AIE BIT(5)
 #define RTC_B_UIE BIT(4)
 #define RTC_B_SQWE BIT(3)
-// shouldn't change this
+
 #define RTC_B_DM BIT(2)
 #define RTC_B_DSE BIT(0)
 
 #define RTC_C_IRQF BIT(7)
-#define RTC_C_PF BIT(6) /* periodic interrupt pending */
-#define RTC_C_AF BIT(5) /* alarm interrupt pending */
-#define RTC_C_UF BIT(4) /* update interrupt pending */
+#define RTC_C_PF BIT(6) /** @brief periodic interrupt pending */
+#define RTC_C_AF BIT(5) /** @brief alarm interrupt pending */
+#define RTC_C_UF BIT(4) /** @brief update interrupt pending */
 
 #define RTC_D_VRT BIT(7)
 

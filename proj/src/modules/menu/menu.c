@@ -235,7 +235,6 @@ int (menu_process_serial)() {
     printf("ser_read_bytes_from_receiver_queue inside %s\n", __func__);
     return EXIT_FAILURE;
   }
-  printf("finished %s\n", __func__);
   set_needs_update(true);
   return EXIT_SUCCESS;
 }

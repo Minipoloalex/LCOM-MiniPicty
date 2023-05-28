@@ -71,13 +71,11 @@ void(play_again)(button_t *button) {
     uint8_t word_index = prompt_generate(prompt);
     ser_add_word_index(word_index);
     app_state->word_index = word_index;
-    printf("%s inside %s\n", prompt, __func__);
   }
   reset_guess_word(guess);
   if (is_hard_mode) {
     asteroid_reset_position(asteroid);
   }
-  printf("%s inside %s\n", prompt, __func__);
   set_needs_update(true);
 }
 /**
@@ -87,7 +85,6 @@ void(play_again)(button_t *button) {
  * @param button 
  */
 void(play_again_change_roles)(button_t *button) {
-  printf("CHANGING ROLES OF PLAYERS\n");
   player_drawer_change_role(player_drawer);
   play_again(button);
 }
@@ -371,7 +368,6 @@ int(game_process_keyboard)() {
 
     case MAKE_ENTER:
       validate_guess_word(prompt, guess, &right_guess);
-      printf("correct guess: %d \n", right_guess);
       reset_guess_word(guess);
       if (right_guess) {
         ser_add_won_round();
@@ -420,9 +416,7 @@ int(game_process_mouse)() {
     if (button_to_click != -1) {
       button_t *pressed_button = buttons->buttons[button_to_click];
       ser_add_button_click_to_transmitter_queue(button_to_click);
-      printf("%d - %s", __LINE__, prompt);
       pressed_button->onClick(pressed_button);
-      printf("%d - %s", __LINE__, prompt);
       set_needs_update(true);
     }
   }
@@ -516,7 +510,6 @@ int(game_draw)() {
     player_type_t role = player_drawer_get_role(player_drawer);
     switch (role) {
       case SELF_PLAYER:
-        printf("prompt: %s inside %s\n", prompt, __func__);
         if (vg_draw_text(prompt, GUESS_POS_X, GUESS_POS_Y, app_resources->font) != OK)
           return EXIT_FAILURE;
         break;

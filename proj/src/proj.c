@@ -148,7 +148,6 @@ int(proj_main_loop)(int argc, char *argv[]) {
 
   // Exit graphics mode
   if (vg_exit() != OK) return EXIT_FAILURE;
-  printf("ending\n");
   // Unsubscribe interrupts
   if(unsubscribe_interrupts()) return 1;
 

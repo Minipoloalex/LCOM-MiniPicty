@@ -91,6 +91,5 @@ int(unsubscribe_interrupts)(){
     printf("keyboard_restore inside %s\n", __func__);
     return EXIT_FAILURE;
   }
-  printf("Finished unsubscribing interrupts\n");
   return EXIT_SUCCESS;
 }
