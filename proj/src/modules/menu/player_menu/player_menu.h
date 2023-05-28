@@ -1,14 +1,7 @@
 #pragma once
 #include "../../../model/player/player.h"
 
-/**
- * @brief Player Menu struct
- * Contains a player
- * 
- */
-typedef struct PlayerMenu {
-  player_t *player;
-} player_menu_t;
+typedef struct PlayerMenu player_menu_t;
 
 /**
  * @brief Create a new Player Menu
