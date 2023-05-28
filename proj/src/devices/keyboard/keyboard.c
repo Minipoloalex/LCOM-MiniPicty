@@ -20,9 +20,7 @@ void (keyboard_ih)(){
 int (keyboard_restore)(){
   uint8_t command_word = minix_get_dflt_kbc_cmd_byte();
   uint8_t trash;
-  if(read_KBC_output(KBC_OUT_REG, &trash, 0) != 0) {
-    printf("read_kbc_output inside %s\n", __func__);
-  }
+  read_KBC_output(KBC_OUT_REG, &trash, 0);
   if(write_KBC_command(KBC_IN_REG, KBC_WRITE_CMD_BYTE) != 0) {
     printf("1st write_kbc_command inside %s\n", __func__);
     return EXIT_FAILURE;

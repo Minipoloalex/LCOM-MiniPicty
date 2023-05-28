@@ -266,15 +266,12 @@ int (rtc_read_temp_hour)(uint8_t *hour) {
 }
 
 int (convert_bcd_to_binary)(uint8_t *ptr) {
-  uint8_t value = *ptr;
-  uint8_t digit;
-  *ptr = 0;
-  uint8_t positionMultiply = 1;
-  while (value > 0) {
-    digit = value & 0x0F;   // get the first digit in hexadecimal
-    value = value >> 4;
-    *ptr |= digit * positionMultiply;
-    positionMultiply *= 10;
+  if (ptr == NULL) {
+    printf("Invalid pointer inside %s\n", __func__);
+    return EXIT_FAILURE;
   }
+  printf("before conversion: %d\n", *ptr);
+  *ptr = (*ptr & 0x0F) + ((*ptr & 0xF0) >> 4) * 10;
+  printf("converted bcd to binary: %d\n", *ptr);
   return EXIT_SUCCESS;
 }

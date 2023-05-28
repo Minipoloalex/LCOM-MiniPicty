@@ -308,9 +308,7 @@ int (ser_set_baud_rate)(uint32_t rate) {
     printf("Invalid baud rate: %d\n", rate);
     return EXIT_FAILURE;
   }
-  printf("Setting baud rate to %d\n", rate);
   uint32_t divisor = SER_MAX_BITRATE / rate;
-  printf("Setting divisor to %d\n", divisor);
   if (ser_write_divisor(divisor) != OK) {
       printf("Error writing divisor: ser_write_divisor() inside %s\n", __func__);
       return EXIT_FAILURE;

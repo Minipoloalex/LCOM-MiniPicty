@@ -45,7 +45,6 @@ int(subscribe_interrupts)(){
     printf("ser_subscribe_int inside %s\n", __func__);
     return EXIT_FAILURE;
   }
-  printf("Finished subscribing interrupts\n");
   return EXIT_SUCCESS;
 }
 
