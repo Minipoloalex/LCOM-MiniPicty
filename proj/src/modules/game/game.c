@@ -11,12 +11,6 @@
 #define YOU_ARE_GUESSING_TEXT "Get ready you are guessing"
 #define FINISH_TEXT_SIZE (MAX(sizeof(WON_TEXT), sizeof(LOSE_TEXT)) + 1)
 
-typedef enum game_state {
-  PLAYING,
-  WAITING,
-  FINISHED
-} game_state_t;
-
 static Resources* app_resources;
 static buttons_array_t *game_playing_buttons;
 static buttons_array_t *game_finished_buttons;
@@ -34,13 +28,31 @@ static asteroid_t *asteroid;
 
 static int cell_width = 0;
 static int cell_height = 0;
+
 /*==================================================================*/
+
 /**
- * @brief
- *
+ * @brief Sub state types of game state
  */
+typedef enum game_state {
+  PLAYING,
+  WAITING,
+  FINISHED
+} game_state_t;
+
+/**
+ * @brief Draw the game buttons
+ * @return int 0 if success, 1 otherwise
+ */
+
 int(game_draw_buttons)();
-/*==================================================================*/
+
+/**
+ * @brief Play again button callback
+ * Set the game state to WAITING and reset the game by clearing the canvas and generating a new prompt
+ * 
+ * @param button 
+ */
 void(play_again)(button_t *button) {
   if (game_state != FINISHED) {
     printf("Wrong game state inside %s\n", __func__);
@@ -60,11 +72,23 @@ void(play_again)(button_t *button) {
     asteroid_reset_position(asteroid);
   }
 }
+/**
+ * @brief Change roles and play again button callback
+ * Change the roles of the players and call play_again
+ * 
+ * @param button 
+ */
 void(play_again_change_roles)(button_t *button) {
   printf("CHANGING ROLES OF PLAYERS\n");
   player_drawer_change_role(player_drawer);
   play_again(button);
 }
+/**
+ * @brief Quit game button callback
+ * Transition to the menu state
+ * 
+ * @param button 
+ */
 void(quit_game)(button_t *button) {
   if (game_state != FINISHED) {
     printf("Wrong game state inside %s\n", __func__);
@@ -72,31 +96,55 @@ void(quit_game)(button_t *button) {
   }
   transition_to_menu(app_state);
 }
+/**
+ * @brief Change brush color button callback
+ * 
+ * @param button 
+ */
 void (change_brush_color)(button_t *button) {
   brush_t *brush = player_drawer_get_brush(player_drawer);
   if (brush == NULL)
     return;
   set_brush_color(brush, button->background_color);
 }
+/**
+ * @brief Increase brush size button callback
+ * 
+ * @param button 
+ */
 void(increase_brush_size)(button_t *button) {
   brush_t *brush = player_drawer_get_brush(player_drawer);
   if (brush == NULL)
     return;
   brush_increase_size(brush);
 }
-
+/**
+ * @brief Decrease brush size button callback
+ * 
+ * @param button 
+ */
 void(decrease_brush_size)(button_t *button) {
   brush_t *brush = player_drawer_get_brush(player_drawer);
   if (brush == NULL)
     return;
   brush_decrease_size(brush);
 }
+/**
+ * @brief Set brush to rubber button callback
+ * 
+ * @param button 
+ */
 void(set_rubber)(button_t *button) {
   brush_t *brush = player_drawer_get_brush(player_drawer);
   if (brush == NULL)
     return;
   set_brush_color(brush, canvas->background_color);
 }
+/**
+ * @brief Clear canvas button callback
+ * 
+ * @param button 
+ */
 void(clear_canvas)(button_t *button) {
   if (canvas == NULL) {
     printf("canvas is null inside %s\n", __func__);
@@ -105,6 +153,7 @@ void(clear_canvas)(button_t *button) {
   canvas_clear(canvas);
 }
 /*==================================================================*/
+
 int(setup_game)(bool isTransmitter, state_t *state, Resources* resources) {
   app_state = state;
   app_resources = resources;
@@ -473,7 +522,7 @@ int(game_draw)() {
     }
     player_t *player = player_drawer_get_player(player_drawer);
     drawing_position_t drawing_position = player_get_current_position(player);
-    update_cursor_state(drawing_position.position);
+    update_cursor(drawing_position.position);
     cursor_type_t cursor = player_drawer_get_cursor(player_drawer);
 
     if (vg_draw_sprite(app_resources->cursors[cursor], drawing_position.position.x, drawing_position.position.y)) {
@@ -489,7 +538,7 @@ int(game_draw)() {
   return EXIT_SUCCESS;
 }
 
-void(update_cursor_state)(position_t position) {
+void(update_cursor)(position_t position) {
   brush_t *brush = player_drawer_get_brush(player_drawer);
   if(!is_inside_rectangle(position, canvas->start_point, canvas->width, canvas->height)){
     player_drawer_set_cursor(player_drawer, POINTER);
@@ -503,7 +552,7 @@ void(update_cursor_state)(position_t position) {
 }
 
 buttons_array_t *(game_get_buttons)(state_t *state) {
-  if (game_state == PLAYING) {
+  if (game_state == PLAYING) { //TODO: Delete the brackets
     return game_playing_buttons;
   }
   if (game_state == FINISHED) {

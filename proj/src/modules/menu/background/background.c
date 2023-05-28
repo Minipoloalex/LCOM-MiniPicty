@@ -7,34 +7,51 @@
 #define TERRAIN_HEIGHT 300
 #define NUMBER_STARTS 100
 #define BLACK_SKY_COLOR 0x242424
+
 /**
- * @brief 
- * 
- */
+ * @brief Draw the sun based on the hour
+ * From 6 to 19 hours the sun will be drawn in the sky with a different height
+ *
+ * @param background_scene buffer to draw the sun
+ * @param hour a number between 0 and 23 that represents the hour of the day
+*/
 void (draw_sun)(Background* background_scene, uint32_t hour);
+
 /**
- * @brief 
+ * @brief Draw the stars in the sky
  * 
+ * @param background_scene buffer to draw the stars
  */
 void (draw_stars)(Background* background_scene);
+
 /**
- * @brief 
- * 
- */
+ * @brief Draw the sky based on the hour
+ *
+ * @param background_scene buffer to draw the sky
+ * @param hour a number between 0 and 23 that represents the hour of the day
+*/
 void (draw_sky)(Background* background_scene, uint32_t hour);
+
 /**
- * @brief 
+ * @brief Draw the terrain of the background, a static rectangle
  * 
+ * @param background_scene buffer to draw the terrain
  */
 void (draw_terrain)(Background* background_scene);
+
 /**
- * @brief 
+ * @brief Calculate the height of the sun using a ellipse function
  * 
+ * @param hour a number between 0 and 23 that represents the hour of the day
+ * @return the height of the sun
  */
 int (calculate_sun_height)(int hour);
+
 /**
- * @brief 
+ * @brief Calculate the color of the sky based on the hour by using a linear function
  * 
+ * @param hour a number between 0 and 23 that represents the hour of the day
+ * @return the color of the sky
  */
 uint32_t (calculate_sky_color)(int hour);
 

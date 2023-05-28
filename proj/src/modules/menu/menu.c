@@ -4,6 +4,10 @@
 
 #define HOVERED_BG_COLOR 0x555555
 #define NOT_HOVERED_BG_COLOR 0x000000
+#define BROWN_COLOR 0xCD853F
+#define TIMER_WIDTH 230
+#define TIMER_HEIGHT 55
+#define TIMER_MARGIN 10
 
 static buttons_array_t *buttons_array;
 
@@ -15,17 +19,49 @@ static Resources* app_resources;
 Background* background_scene;
 static char* time_str;
 
+/*==================================================================*/
+/**
+ * @brief Enter the game button callback
+ * 
+ * @param button 
+ */
 void (enter_game)(button_t *button){
   transition_to_game(app_state, false);
 }
-
+/**
+ * @brief Enter the hard mode game button callback
+ * 
+ * @param button 
+ */
 void (enter_hard_mode)(button_t *button){
   transition_to_game(app_state, true);
 }
-
+/**
+ * @brief Quit the application button callback
+ * 
+ * @param button 
+ */
 void (quit_app)(button_t *button) {
   app_state->running_app = false;
 }
+/**
+ * @brief Draw the menu buttons
+ * 
+ */
+int (menu_draw_buttons)();
+
+/**
+ * @brief Draw current time in the menu
+ * 
+ */
+int (draw_time)();
+
+/**
+ * @brief Draw the menu background
+ * Draws the background buffer to the memory buffer
+ */
+int (draw_background_scene)();
+/*==================================================================*/
 
 void (transition_to_menu)(state_t* state){
   default_implementation(state);
@@ -80,7 +116,7 @@ int (setup_menu)(state_t *state, Resources* resources) {
   return EXIT_SUCCESS;
 }
 
-int (draw_player_menu)() {
+int (update_player_menu)() {
   player_t *player = player_menu_get_player(player_menu);
   drawing_position_t drawing_position;
   drawing_position_t last_position;
@@ -93,7 +129,7 @@ int (draw_player_menu)() {
   return EXIT_SUCCESS;
 }
 
-int (draw_buttons)() {
+int (menu_draw_buttons)() {
   drawing_position_t last_position;
   player_t *player = player_menu_get_player(player_menu);
   if (player_get_last_position(player, &last_position)) return EXIT_FAILURE;
@@ -115,17 +151,13 @@ int (draw_buttons)() {
 }
 
 int (draw_time)(){
-  int space = 10;
-  int width = 230;
-  int x = get_h_res() - width - space;
-  uint32_t brown = 0xCD853F;
-  
-  if(vg_draw_rectangle(x, space, width, 55, brown)){
+  int x = get_h_res() - TIMER_WIDTH - TIMER_MARGIN;
+  if(vg_draw_rectangle(x, TIMER_MARGIN, TIMER_WIDTH, TIMER_HEIGHT, BROWN_COLOR)){
     printf("vg_draw_rectangle inside %s\n", __func__);
     return EXIT_FAILURE;
   }
   if (time_str != NULL) {
-    if(vg_draw_text(time_str, x+space, 2*space, app_resources->font)){
+    if(vg_draw_text(time_str, x+TIMER_MARGIN, 2*TIMER_MARGIN, app_resources->font)){
       printf("vg_draw_text inside %s\n", __func__);
       return EXIT_FAILURE;
     }
@@ -142,7 +174,7 @@ int (menu_draw)(){
     printf("draw_player_menu inside %s\n", __func__);
     return EXIT_FAILURE;
   }
-  if (buffers_need_update()) {  // if no new mouse positions, don't update anything
+  if (buffers_need_update()) { 
     if(draw_background_scene()){
       printf("draw_background inside %s\n", __func__);
       return EXIT_FAILURE;
@@ -151,7 +183,7 @@ int (menu_draw)(){
       printf("draw_time inside %s\n", __func__);
       return EXIT_FAILURE;
     }
-    if(draw_buttons()) {
+    if(menu_draw_buttons()) {
       printf("Error drawing buttons\n");
       return EXIT_FAILURE;
     }

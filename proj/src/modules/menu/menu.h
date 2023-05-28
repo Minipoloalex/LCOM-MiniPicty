@@ -13,18 +13,68 @@
 
 #include "../../model/button/button.h"
 
-int (setup_menu)(state_t *state, Resources *resources);
+/**
+ * @brief Setup the menu by creating the necessary objects
+ * 
+ * @param state Reference to the app state object
+ * @param resources Reference to an already loaded resources object
+ * @return int 0 if success, 1 otherwise
+ */
+int (setup_menu)(state_t *state, Resources *resources); //TODO: I think we dont need the state argument here
 
-int (draw_player_menu)();
+/**
+ * @brief Update the player menu position
+ * 
+ * @param state Reference to the app state object
+ * @return int 0 if success, 1 otherwise
+ */
+int (update_player_menu)();
 
+/**
+ * @brief Draw the menu
+ * 
+ * @param state Reference to the app state object
+ * @return int 0 if success, 1 otherwise
+ */
 int (menu_draw)();
+/**
+ * @brief Handle the mouse interrupts inside the menu state
+ * 
+ * @param state Reference to the app state object
+ * @return int 0 if success, 1 otherwise
+ */
 int (menu_process_mouse)();
+/**
+ * @brief Handle the serial port interrupts inside the menu state
+ * 
+ * @param state Reference to the app state object
+ * @return int 0 if success, 1 otherwise
+ */
 int (menu_process_serial)();
+/**
+ * @brief Handle the rtc interrupts inside the menu state
+ * 
+ * @param state Reference to the app state object
+ * @return int 0 if success, 1 otherwise
+ */
 int (menu_process_rtc)();
+/**
+ * @brief Get the buttons array object
+ * 
+ * @param state Reference to the app state object
+ * @return buttons_array_t*
+ */
+buttons_array_t *(menu_get_buttons)(state_t *state);
+
+/**
+ * @brief Transition to the menu state by changing the state functions
+ * 
+ * @param state Reference to the app state object
+ */
 void (transition_to_menu)(state_t* state);
 
-
+/**
+ * @brief Destroy the menu by freeing the necessary objects
+ * 
+ */
 void (destroy_menu)();
-int (calculate_sun_height)(int hour);
-
-buttons_array_t *(menu_get_buttons)(state_t *state);

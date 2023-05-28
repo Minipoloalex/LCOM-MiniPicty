@@ -40,6 +40,7 @@ int(subscribe_interrupts)(){
     printf("mouse_enable_int inside %s\n", __func__);
     return EXIT_FAILURE;
   }
+  // Serial Port
   if (ser_subscribe_int(&ser_bit_no) != 0) {
     printf("ser_subscribe_int inside %s\n", __func__);
     return EXIT_FAILURE;
@@ -59,11 +60,11 @@ int(unsubscribe_interrupts)(){
     printf("rtc_subscribe_int inside %s\n", __func__);
     return EXIT_FAILURE;
   }
+  // Serial Port
   if (ser_unsubscribe_int() != 0) {
     printf("ser_unsubscribe_int inside %s\n", __func__);
     return EXIT_FAILURE;
   }
- 
   // Mouse
   if(mouse_disable_int() != 0) {
     printf("mouse_disable_int inside %s\n", __func__);

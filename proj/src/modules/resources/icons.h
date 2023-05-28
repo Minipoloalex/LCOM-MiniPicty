@@ -9,6 +9,10 @@
 
 #define NUMBER_OF_ICONS 4
 
+/**
+ * @brief Icons xpm array
+ * Contains NUMBER_OF_ICONS xpms
+ */
 static xpm_map_t icons[NUMBER_OF_ICONS] = {
   plus_xpm,
   minus_xpm,

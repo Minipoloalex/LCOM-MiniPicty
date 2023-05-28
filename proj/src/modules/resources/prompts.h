@@ -2,6 +2,10 @@
 
 #define PROMPT_NUMBER 58
 
+/**
+ * @brief Prompts array
+ * Contains PROMPT_NUMBER prompts
+ */
 static char * const prompts[]={
   "STRAWBERRY",
   "ECLIPSE",

@@ -42,6 +42,10 @@
 #define FONT_WIDTH 26
 #define ALPHABET_SIZE 36
 
+/**
+ * @brief Alphabet and numbers xpm array
+ * Contains ALPHABET_SIZE xpms
+ */
 static xpm_map_t uppercase_alphabet[ALPHABET_SIZE] = {
   uppercase_a_xpm,
   uppercase_b_xpm,

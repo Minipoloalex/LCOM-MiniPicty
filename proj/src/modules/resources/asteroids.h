@@ -8,8 +8,8 @@
 #define NUMBER_OF_ASTEROIDS 4 /**< @brief number of asteroid xpms */
 
 /**
- * @brief Array of asteroid xpms.
- * Contains NUMBER_OF_ASTEROIDS xpms.
+ * @brief Asteroids xpm array
+ * Contains NUMBER_OF_ASTEROIDS xpms
  */
 static xpm_map_t asteroids[NUMBER_OF_ASTEROIDS] = {
   meteor_ne_xpm,
@@ -17,7 +17,9 @@ static xpm_map_t asteroids[NUMBER_OF_ASTEROIDS] = {
   meteor_sw_xpm,
   meteor_nw_xpm
 };
+
 /**
- * @brief enum with asteroid directions
+ * @brief Asteroid directions types 
+ * 
  */
 typedef enum {UP_RIGHT, DOWN_RIGHT, DOWN_LEFT, UP_LEFT} asteroid_type_t;
