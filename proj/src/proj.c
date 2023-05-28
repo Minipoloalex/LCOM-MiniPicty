@@ -8,11 +8,8 @@
 #include "modules/interrupts/interrupts.h"
 #include "modules/menu/menu.h"
 #include "modules/resources/resources.h"
-// #include "modules/game/player_drawer/player_drawer.h" included in game.h
 #include "modules/menu/player_menu/player_menu.h"
 #include "modules/game/game.h"
-// #include "model/player/player.h" included in game.h
-// #include "model/button/button.h" included in game.h
 #include "model/state/state.h"
 
 
@@ -34,14 +31,11 @@ int(proj_main_loop)(int argc, char *argv[]) {
     printf("Usage: lcom_run proj <host|remote>\n");
     return EXIT_FAILURE;
   }
-
-  // Setting up Serial Port
   bool isTransmitter = strcmp(argv[0], "host") == 0;
-  if (ser_init(0x3F8, 115200, 8, 1, 1)) {
+  if (ser_init()) {
     printf("ser_init inside %s\n", __func__);
     return EXIT_FAILURE;
   }
-  printf("isTransmitter: %d\n", isTransmitter);
   if (rtc_init() != OK) {
     printf("rtc_init inside %s\n", __func__);
     return EXIT_FAILURE;
@@ -68,7 +62,6 @@ int(proj_main_loop)(int argc, char *argv[]) {
     printf("create_state inside %s\n", __func__);
     return EXIT_FAILURE;
   }
-
   // Setup the app states
   if (setup_menu(app_state, resources) != OK) {
     printf("setup inside %s\n", __func__);
@@ -143,7 +136,7 @@ int(proj_main_loop)(int argc, char *argv[]) {
         }
       }
     } while (app_state->running_app && scancode != BREAK_ESC);
-  
+
   // Unload resources
   destroy_game();
   destroy_menu();

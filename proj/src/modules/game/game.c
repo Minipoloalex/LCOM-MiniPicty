@@ -50,15 +50,17 @@ void(play_again)(button_t *button) {
   round_timer = GAME_WAITING_TIME;
   canvas_clear(canvas);
   if (player_drawer_get_role(player_drawer) == SELF_PLAYER) {
-    if (prompt_generate(prompt) != OK) { //TODO: communication of word index is not implemented yet
-      printf("prompt_generate inside %s\n", __func__);
-      return;
-    }
+    uint8_t word_index = prompt_generate(prompt);
+    ser_add_word_index(word_index);
+    app_state->word_index = word_index;
+    printf("%s inside %s\n", prompt, __func__);
   }
   reset_guess_word(guess);
   if (is_hard_mode) {
     asteroid_reset_position(asteroid);
   }
+  printf("%s inside %s\n", prompt, __func__);
+  set_needs_update(true);
 }
 void(play_again_change_roles)(button_t *button) {
   printf("CHANGING ROLES OF PLAYERS\n");
@@ -71,6 +73,7 @@ void(quit_game)(button_t *button) {
     return;
   }
   transition_to_menu(app_state);
+  set_needs_update(true);
 }
 void (change_brush_color)(button_t *button) {
   brush_t *brush = player_drawer_get_brush(player_drawer);
@@ -201,16 +204,6 @@ int(setup_game)(bool isTransmitter, state_t *state, Resources* resources) {
     destroy_buttons_array(game_finished_buttons);
     return EXIT_FAILURE;
   }
-  
-  if (prompt_generate(prompt) != OK) {
-    free(finish_text);
-    destroy_player_drawer(player_drawer);
-    canvas_destroy(canvas);
-    destroy_buttons_array(game_playing_buttons);
-    destroy_buttons_array(game_finished_buttons);
-    destroy_guess_word(guess);
-  }
-
 
   asteroid = create_asteroid(app_resources->asteroids);
   if (asteroid == NULL) {
@@ -235,7 +228,9 @@ void(destroy_game)() {
   destroy_asteroid(asteroid);
 }
 
+extern int timer_counter;
 void(transition_to_game)(state_t *state, bool hard_mode) {
+  timer_counter = 0;
   default_implementation(state);
   state->draw = game_draw;
   state->process_mouse = game_process_mouse;
@@ -244,17 +239,26 @@ void(transition_to_game)(state_t *state, bool hard_mode) {
   state->process_timer = game_process_timer;
   state->get_buttons = game_get_buttons;
   is_hard_mode = hard_mode;
-  prompt_generate(prompt);
+  if (player_drawer_get_role(player_drawer) == SELF_PLAYER) {
+    uint8_t word_index = prompt_generate(prompt);
+    ser_add_word_index(word_index);
+    app_state->word_index = word_index;
+  }
+  else if (app_state->word_index != 255) {
+    /* this is done because the word_index might be received by menu_process_serial */
+    get_word_from_index(app_state->word_index, prompt);
+  }
   canvas_clear(canvas);
   game_state = WAITING;
   round_timer = GAME_WAITING_TIME;
   if (strcpy(finish_text, LOSE_TEXT) == NULL) {
     printf("strcpy failed inside %s\n", __func__);
   }
-  asteroid_reset_position(asteroid);
+  if (is_hard_mode) {
+    asteroid_reset_position(asteroid);
+  }
 }
 
-extern int timer_counter;
 int (game_process_timer)() {
   if (game_state == FINISHED) {
     return EXIT_SUCCESS;
@@ -278,6 +282,10 @@ int (game_process_timer)() {
       if (game_state == PLAYING) {
         game_state = FINISHED;
         round_timer = 0;
+        if (strcpy(finish_text, LOSE_TEXT) == NULL) {
+          printf("strcpy failed inside %s\n", __func__);
+          return EXIT_FAILURE;
+        }
         return EXIT_SUCCESS;
       }
     }
@@ -311,9 +319,10 @@ int(game_process_keyboard)() {
       printf("correct guess: %d \n", right_guess);
       reset_guess_word(guess);
       if (right_guess) {
+        ser_add_won_round();
         set_needs_update(true);
         game_state = FINISHED;
-        if (strcpy(finish_text, WON_TEXT) != OK) {
+        if (strcpy(finish_text, WON_TEXT) == NULL) {
           printf("strcpy failed inside %s\n", __func__);
           return EXIT_FAILURE;
         }
@@ -326,7 +335,7 @@ int(game_process_keyboard)() {
       if (!is_break) {
         uint8_t caracter;
         if (translate_scancode(scancode, &caracter))
-          return EXIT_FAILURE;
+          return EXIT_SUCCESS;
         if (write_character(guess, caracter))
           return EXIT_FAILURE;
       }
@@ -356,7 +365,9 @@ int(game_process_mouse)() {
     if (button_to_click != -1) {
       button_t *pressed_button = buttons->buttons[button_to_click];
       ser_add_button_click_to_transmitter_queue(button_to_click);
+      printf("%d - %s", __LINE__, prompt);
       pressed_button->onClick(pressed_button);
+      printf("%d - %s", __LINE__, prompt);
       set_needs_update(true);
     }
   }
@@ -392,12 +403,24 @@ int(game_draw_canvas)(canvas_t *canvas, player_drawer_t *player_drawer) {
   return EXIT_SUCCESS;
 }
 
-int(game_process_serial)() {
-  player_type_t role = player_drawer_get_role(player_drawer);
-  if (role == OTHER_PLAYER) {
-    ser_read_bytes_from_receiver_queue(player_drawer, app_state);
-  }
-  set_needs_update(true);
+int (game_process_serial)() {
+  // player_type_t role = player_drawer_get_role(player_drawer);
+  // if (role == OTHER_PLAYER) {
+    bool won_round = false;
+    ser_read_bytes_from_receiver_queue(player_drawer, app_state, &won_round);
+
+    set_needs_update(true);
+    if (app_state->word_index != 255) {
+      get_word_from_index(app_state->word_index, prompt);
+    }
+    if (won_round) {
+      game_state = FINISHED;
+      if (strcpy(finish_text, WON_TEXT) == NULL) {
+        printf("strcpy failed inside %s\n", __func__);
+        return EXIT_FAILURE;
+      }
+    }
+  // }
   return EXIT_SUCCESS;
 }
 
@@ -441,6 +464,7 @@ int(game_draw)() {
     player_type_t role = player_drawer_get_role(player_drawer);
     switch (role) {
       case SELF_PLAYER:
+        printf("prompt: %s inside %s\n", prompt, __func__);
         if (vg_draw_text(prompt, GUESS_POS_X, GUESS_POS_Y, app_resources->font) != OK)
           return EXIT_FAILURE;
         break;
@@ -451,13 +475,13 @@ int(game_draw)() {
     }
     if (game_state == WAITING) {
       if (role == SELF_PLAYER) {
-        if (vg_draw_rectangle(0, cell_height, cell_width*5 + 30, cell_height, GRAY_COLOR) != OK)
+        if (vg_draw_rectangle(0, cell_height, cell_width*5 + 50, cell_height, GRAY_COLOR) != OK)
           return EXIT_FAILURE;
         if (vg_draw_text(YOU_ARE_DRAWING_TEXT, 10, cell_height+cell_height/4, app_resources->font) != OK)
           return EXIT_FAILURE;
       }
       else {
-        if (vg_draw_rectangle(0, cell_height, cell_width*5 + 30, cell_height, GRAY_COLOR) != OK)
+        if (vg_draw_rectangle(0, cell_height, cell_width*5 + 70, cell_height, GRAY_COLOR) != OK)
           return EXIT_FAILURE;
         if (vg_draw_text(YOU_ARE_GUESSING_TEXT, 10, cell_height+cell_height/4, app_resources->font) != OK)
           return EXIT_FAILURE;

@@ -20,6 +20,7 @@ void default_implementation(state_t* state){
 state_t *(create_state)() {
   state_t *state = malloc(sizeof(state_t));
   state->running_app = true;
+  state->word_index = 255;
   return state;
 }
 
