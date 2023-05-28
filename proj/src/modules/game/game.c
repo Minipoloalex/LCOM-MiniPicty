@@ -459,23 +459,20 @@ int(game_draw_canvas)(canvas_t *canvas, player_drawer_t *player_drawer) {
 }
 
 int (game_process_serial)() {
-  // player_type_t role = player_drawer_get_role(player_drawer);
-  // if (role == OTHER_PLAYER) {
-    bool won_round = false;
-    ser_read_bytes_from_receiver_queue(player_drawer, app_state, &won_round);
+  bool won_round = false;
+  ser_read_bytes_from_receiver_queue(player_drawer, app_state, &won_round);
 
-    set_needs_update(true);
-    if (app_state->word_index != 255) {
-      get_word_from_index(app_state->word_index, prompt);
+  set_needs_update(true);
+  if (app_state->word_index != 255) {
+    get_word_from_index(app_state->word_index, prompt);
+  }
+  if (won_round) {
+    game_state = FINISHED;
+    if (strcpy(finish_text, WON_TEXT) == NULL) {
+      printf("strcpy failed inside %s\n", __func__);
+      return EXIT_FAILURE;
     }
-    if (won_round) {
-      game_state = FINISHED;
-      if (strcpy(finish_text, WON_TEXT) == NULL) {
-        printf("strcpy failed inside %s\n", __func__);
-        return EXIT_FAILURE;
-      }
-    }
-  // }
+  }
   return EXIT_SUCCESS;
 }
 

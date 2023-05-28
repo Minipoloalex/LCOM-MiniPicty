@@ -55,7 +55,7 @@ int (canvas_draw_line)(uint8_t *buffer, position_t pos1, position_t pos2, uint16
     int err = dx - dy;
     int e2;
     // draw first point of the line with specified color
-    if (asteroid == NULL || !is_inside(asteroid, pos1)) {
+    if (asteroid == NULL || !is_inside_asteroid(asteroid, pos1)) {
       vg_draw_circle_to_buffer(buffer, x0, y0, thickness / 2, color);
     }
     
@@ -70,12 +70,12 @@ int (canvas_draw_line)(uint8_t *buffer, position_t pos1, position_t pos2, uint16
             y0 += sy;
         }
 
-        if (asteroid == NULL || !is_inside(asteroid, (position_t) {.x = x0, .y = y0})) {
+        if (asteroid == NULL || !is_inside_asteroid(asteroid, (position_t) {.x = x0, .y = y0})) {
           vg_draw_circle_to_buffer(buffer, x0, y0, thickness / 2, color);
         }
     }
 
-    if (asteroid == NULL || !is_inside(asteroid, pos2)) {
+    if (asteroid == NULL || !is_inside_asteroid(asteroid, pos2)) {
       vg_draw_circle_to_buffer(buffer, x1, y1, thickness / 2, color);
     }
 

@@ -20,7 +20,7 @@
  * @param resources Reference to an already loaded resources object
  * @return int 0 if success, 1 otherwise
  */
-int (setup_menu)(state_t *state, Resources *resources); //TODO: I think we dont need the state argument here
+int (setup_menu)(state_t *state, Resources *resources);
 
 /**
  * @brief Update the player menu position

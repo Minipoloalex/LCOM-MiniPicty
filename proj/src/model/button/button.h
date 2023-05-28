@@ -67,7 +67,7 @@ buttons_array_t *(create_buttons_array)(int num_buttons);
 void (destroy_buttons_array)(buttons_array_t *buttons_array);
 
 /**
- * @brief Checks if the mouse position in inside the button
+ * @brief Checks if the mouse position is inside the button
  * This is used for changing its color and knowing if it was clicked or not.
  * 
  * @param button button to check

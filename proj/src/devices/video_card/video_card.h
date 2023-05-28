@@ -30,13 +30,12 @@
 #define WHITE 0XFFFFFF
 
 /**
- * @brief 
- * 
+ * @brief Returns true if the buffers need to be updated, i.e. if they need to be drawn in and flipped to the screen by vg_buffer_flip()
+ * @return true if the buffers need to be updated, false otherwise
  */
 bool (buffers_need_update)();
 /**
- * @brief 
- * 
+ * @brief Sets the needs_update variable to the given value. If the value is set to true, it can be expected that buffers_need_update() returns true.
  */
 void (set_needs_update)(bool value);
 /**
@@ -107,26 +106,22 @@ int (vg_draw_guess)(guess_word_t *gwt, uint16_t x, uint16_t y, Sprite* font[]);
 int (vg_draw_buttons)(buttons_array_t *buttons, Sprite* font[], Sprite* icons[]);
 
 /**
- * @brief 
- * 
+ * @brief Flips the current buffer to the screen. This buffer is the one that was being drawn before calling this function. By flipping the buffers, every video graphics function call starts to draw in the next buffer.
+ * @return returns 0 upon success, 1 otherwise
  */
 int (vg_buffer_flip)();
 /**
- * @brief 
- * 
+ * @brief Clears the buffer given by the parameter
+ * @param buffer buffer index to be cleared. Can be 0 up to BUFFER_NUMBER
+ * @return returns 0 upon success, 1 otherwise
  */
 int (vg_clear_buffer)(uint8_t buffer);
 
 /**
- * @brief 
- * 
+ * @brief Copies the contents of the buffer given by parameter to the current buffer that is being prepared to flip later.
+ * @param buffer buffer to be copied into the current buffer being drawn.
  */
 int (vg_draw_buffer)(uint8_t * buffer);
-/**
- * @brief 
- * 
- */
-int (vg_clear_buffers)();
 
 /**
  * @brief returns the size of the VRAM

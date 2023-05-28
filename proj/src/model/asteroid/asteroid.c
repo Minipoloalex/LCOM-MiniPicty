@@ -18,7 +18,7 @@ void (destroy_asteroid)(asteroid_t *asteroid) {
   free(asteroid);
 }
 
-bool (is_inside)(asteroid_t *asteroid, position_t position){
+bool (is_inside_asteroid)(asteroid_t *asteroid, position_t position){
   Sprite *xpm = asteroid->xpms[asteroid->current_xpm];
   uint8_t *colors = xpm->colors;
   position_t asteroid_position = asteroid->position;

@@ -213,7 +213,10 @@ int (menu_process_mouse)() {
   }
   if (button_to_click != -1) {
     button_t *pressed_button = buttons_array->buttons[button_to_click];
-    ser_add_button_click_to_transmitter_queue(button_to_click);
+    if (pressed_button->text == NULL || strcmp(pressed_button->text, "EXIT") != 0) {
+      // if the button is not the exit button, we need to add the button click to the transmitter queue
+      ser_add_button_click_to_transmitter_queue(button_to_click);  
+    }
     pressed_button->onClick(pressed_button);
     set_needs_update(true);
   }

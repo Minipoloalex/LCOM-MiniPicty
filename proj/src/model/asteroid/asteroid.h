@@ -39,7 +39,7 @@ void (destroy_asteroid)(asteroid_t *asteroid);
  * This is used for checking if the mouse is inside the asteroid to prevent drawing.
  * The algorithm used for this is pixel-perfect-collision.
  */
-bool (is_inside)(asteroid_t *asteroid, position_t position);
+bool (is_inside_asteroid)(asteroid_t *asteroid, position_t position);
 /**
  * @brief Draws an asteroid with its current xpm at its current position.
  * 

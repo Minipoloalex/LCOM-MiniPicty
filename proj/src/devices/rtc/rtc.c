@@ -23,15 +23,6 @@
 #define RTC_D 13
 
 #define RTC_A_UIP BIT(7)
-// not relevant
-// #define RTC_A_DV2 BIT(6)
-// #define RTC_A_DV1 BIT(5)
-// #define RTC_A_DV0 BIT(4)
-// for periodic interrupts and square wave output
-#define RTC_A_RS3 BIT(3)
-#define RTC_A_RS2 BIT(2)
-#define RTC_A_RS1 BIT(1)
-#define RTC_A_RS0 BIT(0)
 
 #define RTC_B_SET BIT(7)
 #define RTC_B_PIE BIT(6)
@@ -40,7 +31,6 @@
 #define RTC_B_SQWE BIT(3)
 // shouldn't change this
 #define RTC_B_DM BIT(2)
-// #define RTC_B_24_12 BIT(1)
 #define RTC_B_DSE BIT(0)
 
 #define RTC_C_IRQF BIT(7)

@@ -33,12 +33,12 @@ typedef struct drawing_position {
 int (get_position)(uint8_t bytes[4], position_t *position);
 
 /**
- * @brief Checks if a position is inside an area defined by a start point, width and height
+ * @brief Checks if a position is inside an area/rectangle defined by a start point, width and height
  * 
- * @param position 
- * @param start_point 
- * @param width 
- * @param height 
+ * @param position position to check if it is inside the area/rectangle
+ * @param start_point top left point of the area/rectangle
+ * @param width width of the area/rectangle
+ * @param height height of the area/rectangle
  * @return bool - true if the position is inside the area, false otherwise
  */
 bool (is_inside_rectangle)(position_t position, position_t start_point, uint16_t width, uint16_t height);

@@ -17,8 +17,7 @@ static bool needs_update = false;
 //Private functions
 //==================================================================================================
 /**
- * @brief Map physical memory to virtual address space of process
- * Gets the memory for all 3 buffers
+ * @brief Map physical memory to virtual address space of process. Gets the memory (VRAM) for all 3 buffers.
  */
 int (map_phys_mem_to_virtual)(uint16_t mode);
 /**
@@ -176,14 +175,6 @@ int (vg_buffer_flip)() {
   return EXIT_SUCCESS;
 }
 
-int (vg_clear_buffers)() {
-  for (int i = 0; i < BUFFER_NUMBER; i++) {
-    if (vg_clear_buffer(i)) {
-      printf("vg_clear_buffer %d inside %s\n", i, __func__);
-    }
-  }
-  return EXIT_SUCCESS;
-}
 int (vg_clear_buffer)(uint8_t buffer){
   if (memset(video_mem[buffer], 0, vram_size) == NULL) {
     printf("memset inside %s\n", __func__);
