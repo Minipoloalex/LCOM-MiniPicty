@@ -8,3 +8,7 @@ Group members:
 2. Francisco da Ana (up202108762@edu.fe.up.pt)
 3. João Pereira (up202108848@edu.fe.up.pt)
 4. Tomás Vicente (up202108717@edu.fe.up.pt)
+
+
+## Report
+Checkout the [report](proj/doc/report.pdf) of the project.
